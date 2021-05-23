@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>WebMineSweeperDemo</title>
+</head>
+
+<body style="background-color: #cccccc;height: 120vh;width: 120vw;margin: 0">
+
+<!-- First: add a container for playing the video -->
+<div id="video-stage" style="position: absolute;z-index: 999;background-color: rgba(0 ,0 ,0 ,0.33)">
+    <iframe id="video-iframe" src="./src/video.html?v=20210522" style="border: 0;width: 0;height: 0;" scrolling="no"></iframe>
+</div>
+
+<div>
+    <button type="button" onclick="playVideo('../videos/arbiter_beg.avf')">arbiter_beg.avf</button>
+    <button type="button" onclick="playVideo('../videos/arbiter_int.avf')">arbiter_int.avf</button>
+    <button type="button" onclick="playVideo('../videos/arbiter_exp.avf')">arbiter_exp.avf</button>
+    <br/><br/>
+    <button type="button" onclick="playVideo('../videos/arbiter_beg_translated.rawvf')">arbiter_beg_translated.rawvf</button>
+    <button type="button" onclick="playVideo('../videos/arbiter_int_translated.rawvf')">arbiter_int_translated.rawvf</button>
+    <button type="button" onclick="playVideo('../videos/arbiter_exp_translated.rawvf')">arbiter_exp_translated.rawvf</button>
+    <br/><br/>
+    <button type="button" onclick="playVideo('../videos/arbiter52.txt')">arbiter52.txt</button>
+    <button type="button" onclick="playVideo('../videos/arbiter52_raw.txt')">arbiter52_raw.txt</button>
+    <button type="button" onclick="playVideo('../videos/vsweep30.txt')">vsweep30.txt</button>
+    <button type="button" onclick="playVideo('../videos/vsweep30_raw.txt')">vsweep30_raw.txt</button>
+    <button type="button" onclick="playVideo('../videos/freesweeper_bombed.rawvf')">freesweeper_bombed.rawvf</button>
+</div>
+
+<script>
+    function playVideo(filePath) {
+        <!-- Second: call the "loadVideo" function when you need to play the video -->
+        document.getElementById('video-iframe').contentWindow.loadVideo(filePath);
+    }
+
+    window.onload = function () {
+        playVideo("../videos/arbiter_exp.avf");
+    };
+</script>
+
+</body>
+</html>
