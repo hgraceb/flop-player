@@ -1,0 +1,533 @@
+body {
+    /*cursor: default为浏览器默认光标*/
+    cursor: default;
+    /*background:rgba(192,192,192,0.2);*/
+    font-family: Microsoft Yahei, Verdana, sans-serif, 宋体;
+    font-size: 12px;
+    margin: 0px;
+    text-align: center;
+}
+
+input {
+    width: 100%;
+    float: left;
+}
+
+button {
+    width: 100%;
+    float: left;
+}
+
+/*关闭图标*/
+.close {
+    position: absolute;
+    right: 0px;
+    top: -3px;
+    width: 25px;
+    height: 22px;
+    /*background: silver;*/
+    border-radius: 2px;
+    /*box-shadow: 2px 2px 5px 0px black;*/
+    cursor: pointer;
+}
+
+.close:hover {
+    /*background: red;*/
+}
+
+.close:before {
+    position: absolute;
+    content: '';
+    width: 15px;
+    height: 3px;
+    background: #999999;
+    transform: rotate(45deg);
+    top: 10px;
+    left: 5px;
+}
+
+.close:hover:before {
+    background: red;
+}
+
+.close:hover:after {
+    background: red;
+}
+
+.close:after {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 3px;
+    background: #999999;
+    transform: rotate(-45deg);
+    top: 10px;
+    left: 5px;
+}
+
+
+#border {
+    padding: 4px;
+    display: inline-block;
+    height: auto;
+    width: auto;
+}
+
+
+/*录像控制*/
+#video_control {
+    display: none;
+    position: absolute;
+    width: 467px;
+    height: 30px;
+    margin-top: 355px;
+    margin-left: 0px;
+    margin-bottom: 20px;
+    background: rgb(192, 192, 192);
+    border-radius: 1px;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
+}
+
+#video_control img {
+    margin-top: 3px;
+    margin-left: 4px;
+    width: 24px;
+    height: 24px;
+    float: left;
+}
+
+/*速度控制*/
+#speed_control {
+    float: left;
+    width: 70px;
+    height: 24px;
+    margin-left: 4px;
+    margin-top: 3px;
+    background: rgba(160, 160, 160, 0.5);
+}
+
+#speed_control input[type=range] {
+    margin-top: 10px;
+    outline: none;
+    -webkit-appearance: none; /*清除系统默认样式*/
+    width: 96% !important;
+    background: -webkit-linear-gradient(left, deepskyblue, dodgerblue) no-repeat, #ddd;
+    background-size: 50% 100%; /*设置左右宽度比例*/
+    height: 3px; /*横条的高度*/
+}
+
+/*拖动块的样式*/
+#speed_control input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; /*清除系统默认样式*/
+    height: 15px; /*拖动块高度*/
+    width: 7px; /*拖动块宽度*/
+    background: aliceblue; /*拖动块背景*/
+    border-radius: 10%; /*外观设置为圆形*/
+    border: solid 1px #ddd; /*设置边框*/
+    /*边框*/
+    /*border:1px solid;
+    border-color: skyblue;*/
+}
+
+#speed_control span {
+    margin-left: 70px;
+    margin-top: -20px;
+}
+
+#speed_value {
+    float: left;
+    margin-top: 6px;
+    margin-left: 3px;
+}
+
+/*录像进度控制*/
+#rate_control {
+    float: left;
+    width: 220px;
+    height: 24px;
+    margin-left: 4px;
+    margin-top: 3px;
+    background: rgba(160, 160, 160, 0.5);
+}
+
+#rate_control input[type=range] {
+    margin-top: 10px;
+    margin-left: 3px;
+    outline: none;
+    -webkit-appearance: none; /*清除系统默认样式*/
+    width: 97% !important;
+    background: -webkit-linear-gradient(left, dodgerblue, deepskyblue, dodgerblue) no-repeat, #ddd;
+    background-size: 0% 100%; /*设置左右宽度比例*/
+    height: 3px; /*横条的高度*/
+}
+
+/*拖动块的样式*/
+#rate_control input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; /*清除系统默认样式*/
+    height: 15px; /*拖动块高度*/
+    width: 7px; /*拖动块宽度*/
+    background: aliceblue; /*拖动块背景*/
+    border-radius: 10%; /*外观设置为圆形*/
+    border: solid 1px #ddd; /*设置边框*/
+    /*边框*/
+    /*border:1px solid;
+    border-color: skyblue;*/
+}
+
+#rate_control span {
+    margin-left: 70px;
+    margin-top: -20px;
+}
+
+#rate_value {
+    float: right;
+    margin-top: 6px;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+#mouse_point {
+    display: none;
+    position: absolute;
+    width: 19px;
+    height: 19px;
+}
+
+#mouse_point img {
+    width: 100%;
+    height: 100%;
+}
+
+#outborder {
+    width: 146px;
+    height: 210px;
+    margin: 0px auto;
+    float: right;
+    border: 3px solid;
+    border-top-color: blue;
+    border-left-color: blue;
+    border-right-color: blue;
+    border-bottom-color: blue;
+}
+
+#counters table {
+    background: rgb(128, 128, 128);
+}
+
+#counters table td {
+    text-align: left;
+    padding-left: 2px;
+    background: rgb(192, 192, 192);
+    height: 17px;
+}
+
+#container {
+    margin-top: 6px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: auto;
+    /*边框*/
+    border: 3px solid;
+    border-top-color: rgb(160, 160, 160);
+    border-left-color: rgb(160, 160, 160);
+    border-right-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    /*背景线条*/
+    background: rgb(192, 192, 192);
+    background-image: linear-gradient(0deg, rgb(128, 128, 128) 1px, transparent 0),
+    linear-gradient(90deg, rgb(128, 128, 128) 1px, transparent 0);
+    background-size: 16px 16px;
+    /*外轮廓*/
+    outline-style: solid;
+    outline-color: rgb(192, 192, 192);
+    outline-width: 6px;
+    /*文本*/
+    line-height: 14px;
+    text-align: center;
+    font-weight: 900;
+}
+
+/*标识*/
+#mark {
+    width: 134px;
+    height: 20px;
+    background-color: rgb(224, 224, 224);
+    border: 6px solid;
+    border-color: rgb(192, 192, 192);
+}
+
+#mark span {
+    display: block;
+    overflow: hidden;
+    width: 134px;
+    height: 20px;
+    /*靠上1px显示视觉效果较好*/
+    line-height: 19px;
+    margin: auto;
+}
+
+#mark input {
+    text-align: center;
+}
+
+#containers {
+    position: relative;
+    width: 146px;
+    height: 234px;
+    margin: 0px auto;
+    /*手机端上下滑动的空间*/
+    /*暂定为无，避免手机端扫雷时屏幕滑动影响操作*/
+    /*margin-bottom: 20px;*/
+    float: right;
+    /*边框*/
+    border: 3px solid;
+    border-top-color: rgb(255, 255, 255);
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(160, 160, 160);
+    border-bottom-color: rgb(160, 160, 160);
+    border-radius: 1px;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
+}
+
+#top {
+    width: 130px;
+    height: 33px;
+    background: rgb(192, 192, 192);
+    margin-top: 6px;
+    margin-left: 6px;
+    border: 2px solid;
+    border-top-color: rgb(160, 160, 160);
+    border-left-color: rgb(160, 160, 160);
+    border-right-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    outline-style: solid;
+    outline-color: rgb(192, 192, 192);
+    outline-width: 6px;
+}
+
+#mine_count {
+    width: 39px;
+    height: 23px;
+    float: left;
+    margin-top: 4px;
+    margin-left: 4px;
+    border: 1px solid;
+    border-top-color: rgb(160, 160, 160);
+    border-left-color: rgb(160, 160, 160);
+    border-right-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+}
+
+#face {
+    width: 26px;
+    height: 26px;
+    margin: auto;
+    margin-top: 3px;
+}
+
+#face img {
+    width: 100%;
+    height: 100%;
+}
+
+#counters {
+    width: 120px;
+    height: 343px;
+    margin: 0px auto;
+    /*手机端上下滑动的空间*/
+    /*暂定为无，避免手机端扫雷时屏幕滑动影响操作*/
+    /*margin-bottom: 20px;*/
+    float: left;
+    background: rgb(192, 192, 192);
+    /*边框*/
+    border: 3px solid;
+    border-top-color: rgb(255, 255, 255);
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(160, 160, 160);
+    border-bottom-color: rgb(160, 160, 160);
+    border-radius: 1px;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
+}
+
+#mine {
+    margin-left: auto;
+    margin-right: auto;
+    width: 284px;
+}
+
+#time_count {
+    width: 39px;
+    height: 23px;
+    float: right;
+    margin-top: -25px;
+    margin-right: 6px;
+    border: 1px solid;
+    border-top-color: rgb(160, 160, 160);
+    border-left-color: rgb(160, 160, 160);
+    border-right-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+}
+
+#mine_count img, #time_count img {
+    float: left;
+    width: 33.3%;
+    height: 100%;
+}
+
+.block {
+    width: 12px;
+    height: 12px;
+    border: 2px solid;
+    border-top-color: rgb(255, 255, 255);
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(128, 128, 128);
+    border-bottom-color: rgb(128, 128, 128);
+    float: left;
+    margin: 0 0 0 0px;
+}
+
+.openedBlockBomb {
+    width: 12px;
+    height: 12px;
+    border: 2px solid;
+    border-top-color: rgb(255, 255, 255);
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(128, 128, 128);
+    border-bottom-color: rgb(128, 128, 128);
+    float: left;
+    margin: 0 0 0 0px;
+}
+
+.question {
+    width: 12px;
+    height: 12px;
+    border: 2px solid;
+    border-top-color: rgb(255, 255, 255);
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(128, 128, 128);
+    border-bottom-color: rgb(128, 128, 128);
+    float: left;
+    margin: 0 0 0 0px;
+}
+
+.opening {
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin: 0px;
+}
+
+.bomb {
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin: 0px;
+}
+
+.firstbomb {
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin: 0px;
+}
+
+.number {
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin: 0px;
+}
+
+.number img, .firstbomb img, .bomb img, .openedBlockBomb img, .block img, .opening img, .question img {
+    width: 100%;
+    height: 100%;
+}
+
+.preload_image {
+    display: none;
+}
+
+
+/* 下拉按钮样式 */
+.dropbtn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    line-height: 18px;
+    margin-top: -1px;
+}
+
+/* 容器 <div> - 需要定位下拉内容 */
+.dropdown {
+    top: -1px;
+    float: left;
+    position: relative;
+    display: inline-block;
+}
+
+/* 下拉内容 (默认隐藏) */
+.dropdown-content {
+    margin-top: 19px;
+    display: none;
+    background-color: #f1f1f1;
+    min-width: 145px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.6);
+    z-index: 999;
+    position: absolute;
+}
+
+/* 鼠标移上去后修改下拉菜单链接颜色 */
+.dropdown-content button:hover {
+    background-color: #CCCCFF;
+}
+
+/* 下拉菜单的按键 */
+.dropdown-content button {
+    height: 24px;
+    text-align: left;
+    float: left;
+    border: 0px;
+    background-color: transparent;
+}
+
+/* 下拉菜单的按键 */
+.dropdown-content input {
+    height: 24px;
+    text-align: left;
+    float: left;
+    border: 0px;
+    background-color: transparent;
+}
+
+/* 下拉菜单的链接 */
+.dropdown-content a {
+    color: black;
+    padding: 5px 10px;
+    text-decoration: none;
+    display: block;
+}
+
+/* 鼠标移上去后修改下拉菜单链接颜色 */
+.dropdown-content a:hover {
+    background-color: #CCCCFF;
+}
+
+/* 鼠标移上去后修改下拉菜单链接颜色 */
+.dropdown-content input:hover {
+    background-color: #CCCCFF;
+}
+
+/* 当下拉内容显示后修改下拉按钮的背景颜色 */
+.dropdown:hover .dropbtn {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+#menu span {
+    float: right;
+}
+
+#menu {
+    width: 146px;
+    height: 19px;
+    background: linear-gradient(rgb(255, 255, 240), rgb(212, 219, 237), rgb(225, 230, 246));
+}
