@@ -21,7 +21,7 @@ function Container(d, e, f) {
     this.rows = d;//行
     this.columns = e;//列
     this.bombNumber = f;//总雷数
-    this.childObject = new Array();//block
+    this.childObject = [];//block
     this.html = null;
     this.minenumber = f;//剩余雷数
     this.level = 1;
@@ -29,7 +29,6 @@ function Container(d, e, f) {
 
 Container.prototype.init = function (level) {
     reset();
-    // log("newgame");
     gameover = false;
     firstclick = true;
     leftClick = false;
@@ -42,8 +41,8 @@ Container.prototype.init = function (level) {
     double_count = 0;
     ces_count = 0;
     path = 0;
-    var exist = document.getElementById("container");
-    if ((window.orientation == 0 || window.orientation == 180) && (level == 3 || (level == 0 && this.level == 3))) {//手机exp屏幕自适应
+    const exist = document.getElementById("container");
+    if ((window.orientation === 0 || window.orientation === 180) && (level === 3 || (level === 0 && this.level === 3))) {//手机exp屏幕自适应
         document.getElementsByTagName("meta")[1]["content"] = ('width=device-width, initial-scale=1, user-scalable=no, minimum-scale=' + window.screen.width / 640 + ', maximum-scale=' + window.screen.width / 640 + '');
     } else {
         document.getElementsByTagName("meta")[1]["content"] = ('width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0');
@@ -53,15 +52,13 @@ Container.prototype.init = function (level) {
             $("div#mouse_point").remove();
         }
         document.getElementById("video_control").style.display = "none";
-        var parent = document.getElementById("container");
-        var grandparent = document.getElementById("containers");
-        for (var i = 0; i < this.rows * this.columns; i++) {
+        const parent = document.getElementById("container");
+        const grandparent = document.getElementById("containers");
+        for (let i = 0; i < this.rows * this.columns; i++) {
             parent.removeChild(parent.childNodes[0]);//移除block
         }
 
-        //屏幕可用高度，最大值针对手机竖屏设置，避免录像窗口位置过低
-        var clientHeight = window.parent.document.body.clientHeight < 1100 ? window.parent.document.body.clientHeight : 1100;
-        if (level == 3) {//高级
+        if (level === 3) {//高级
             parent.style = "width:480px;height:256px;";
             grandparent.style = "width:498px;height:362px;";
             document.getElementById("top").style = "width:482px;";
@@ -75,7 +72,7 @@ Container.prototype.init = function (level) {
             this.columns = 30;
             this.bombNumber = 99;
             this.level = 3;
-        } else if (level == 2) {//中级
+        } else if (level === 2) {//中级
             parent.style = "width:256px;height:256px;";
             grandparent.style = "width:274px;height:362px;";
             document.getElementById("top").style = "width:258px;";
@@ -89,7 +86,7 @@ Container.prototype.init = function (level) {
             this.columns = 16;
             this.bombNumber = 40;
             this.level = 2;
-        } else if (level == 1) {//初级
+        } else if (level === 1) {//初级
             parent.style = "width:128px;height:128px;";
             grandparent.style = "width:146px;height:234px;";
             document.getElementById("top").style = "width:130px;";
@@ -105,12 +102,14 @@ Container.prototype.init = function (level) {
             this.level = 1;
         }
         this.childObject.splice(0, this.childObject.length);
-        for (var i = 0; i < this.rows * this.columns; i++) {
-            var f = new Block("block", i);
-            this.childObject.push(f);
-            document.getElementById("container").appendChild(f.html);
-            var img = document.createElement("img");
+        for (let i = 0; i < this.rows * this.columns; i++) {
+            const block = new Block("block", i);
+            this.childObject.push(block);
+            document.getElementById("container").appendChild(block.html);
+            const img = document.createElement("img");
             document.getElementById(i).appendChild(img);
+            // todo 将方块样式初始化放到构造函数中
+            block.changeStyle("block");
         }
         //当前frame宽高
         window.parent.document.getElementById('video-iframe').width = document.getElementById('border').offsetWidth;
@@ -122,10 +121,10 @@ Container.prototype.init = function (level) {
         //首次加载(主界面)时不显示录像iframe
         this.html = document.createElement("div");
         this.html.id = "container";
-        for (var i = 0; i < this.rows * this.columns; i++) {
-            var f = new Block("block", i);
-            this.childObject.push(f);
-            this.html.appendChild(f.html);
+        for (let i = 0; i < this.rows * this.columns; i++) {
+            const block = new Block("block", i);
+            this.childObject.push(block);
+            this.html.appendChild(block.html);
         }
     }
     change_top_image("face", "face_normal");
@@ -479,18 +478,22 @@ Block.prototype.init = function () {
     this.html.setAttribute("id", c.id);
 };
 
-Block.prototype.changeStyle = function (a) {
-    // HTML DOM setAttribute() 方法
-    // http://www.runoob.com/jsref/met-element-setattribute.html
-    this.html.setAttribute("class", a);
-    if (a == "openedBlockBomb") {
-        document.getElementById(this.id).getElementsByTagName("img")[0].src = "image/flag.bmp";
-    } else if (a == "block") {
-        document.getElementById(this.id).getElementsByTagName("img")[0].src = "image/blank.bmp";
-    } else if (a == "opening") {
-        document.getElementById(this.id).getElementsByTagName("img")[0].src = "image/opening.bmp";
-    } else if (a == "question") {
-        document.getElementById(this.id).getElementsByTagName("img")[0].src = "image/question.bmp";
+Block.prototype.changeStyle = function (className) {
+    this.html.setAttribute("class", className);
+    const imgElement = document.getElementById(this.id).getElementsByTagName("img")[0];
+    switch (className) {
+        case "openedBlockBomb":
+            imgElement.src = "image/flag.bmp";
+            break;
+        case "block":
+            imgElement.src = "image/blank.bmp";
+            break;
+        case "opening":
+            imgElement.src = "image/opening.bmp";
+            break;
+        case "question":
+            imgElement.src = "image/question.bmp";
+            break;
     }
 };
 
