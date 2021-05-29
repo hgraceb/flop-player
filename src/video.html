@@ -261,11 +261,40 @@
             console.warn(msg);
         }
     }
+
+    window.onload = function () {
+        console.time("normal");
+        const request = new XMLHttpRequest();
+        let url = "../videos/arbiter_exp.avf";
+        request.open("GET", url, true);
+        request.responseType = "arraybuffer";
+        request.url = url;
+        request.onreadystatechange = function () {
+            if (request.readyState === 4) {
+                if (request.status === 200) {
+                    const uint8Array = new Uint8Array(request.response);
+                    Module.ccall('on_message', 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
+                } else {
+                    console.log(`http request failed. URL: ${request.url}  error code: ${request.status}`);
+                }
+            }
+        };
+        request.send();
+    };
+
+    function onSuccess(result) {
+        playRawVideo(result);
+    }
+
+    function onError(errCode, errMsg) {
+        console.log(`errCode = ${errCode}, errMsg = ${errMsg}`);
+    }
 </script>
 
 <script type="text/javascript" src="js/public.js?v=20210524"></script>
 <script type="text/javascript" src="js/mine.js?v=20210524"></script>
 <script type="text/javascript" src="js/player.js?v=20210524"></script>
+<script type="text/javascript" src="js/parser/parser.js?v=20210524"></script>
 
 </body>
 

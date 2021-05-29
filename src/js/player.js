@@ -11,6 +11,7 @@ let number = 0;//字符读取进度
 const fade = 500;//淡入淡出时间
 
 function loadVideo(path) {
+    console.time("normal");
     if (isIE()) {
         alert('暂不支持 IE 内核 ,请更换浏览器或内核！');
         return;
@@ -74,6 +75,7 @@ function charCodeAt(char) {
 }
 
 function playAvfVideo(result) {
+    console.timeEnd("normal");
     reset();
     //当读取完成后回调这个函数,然后此时文件的内容存储到了result中,直接操作即可
     var board = [];//雷的分布
@@ -281,6 +283,7 @@ function playMvfVideo(result) {
  * @param result 文件内容
  */
 function playRawVideo(result) {
+    console.timeEnd("normal");
     reset();
     video = [];
     const rawArray = result.split("\n");

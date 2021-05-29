@@ -30,6 +30,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <emscripten.h>
+#ifndef EM_PORT_API
+#	if defined(__EMSCRIPTEN__)
+#		include <emscripten.h>
+#		if defined(__cplusplus)
+#			define EM_PORT_API(rettype) extern "C" rettype EMSCRIPTEN_KEEPALIVE
+#		else
+#			define EM_PORT_API(rettype) rettype EMSCRIPTEN_KEEPALIVE
+#		endif
+#	else
+#		if defined(__cplusplus)
+#			define EM_PORT_API(rettype) extern "C" rettype
+#		else
+#			define EM_PORT_API(rettype) rettype
+#		endif
+#	endif
+#endif
 
 #define MAXREP 100000
 #define MAXNAME 1000
@@ -44,7 +61,8 @@ struct event
 typedef struct event event;
 
 
-FILE* AVF;
+unsigned char* AVF;
+unsigned char* RAWVF;
 
 //Initialise global variables
 int mode,w,h,m;					//Mode, Width, Height, Mines
@@ -58,7 +76,7 @@ char program[MAXNAME];			//Program
 char value[MAXNAME];			//Used in getpair() function
 char timestamp_a[MAXNAME];		//Timestamp (when game started)
 char customdata[MAXNAME];		//Custom games have 4 extra bytes
-event video[MAXREP];			//Game events	
+event video[MAXREP];			//Game events
 int score_sec,score_hun;		//Time in seconds and decimals
 char spacer;					//The period or space before 3rd part of Version
 char versionend[MAXNAME];		//Substring used to fetch Version
@@ -66,27 +84,59 @@ char versionprint[MAXNAME];		//Substring used to fetch Version
 int bbbv;						//3bv
 float realtime;					//Realtime (since version 0.47)
 float bbbvs;					//3bvs
+int length;					//File byte data length
+int position;				//Current processed byte index
 
 
 
 //==============================================================================================
-//Function asks user to exit after program has run successfully
+//Function is used to free memory
 //==============================================================================================
-void pause()
+void free_memory()
 {
-	//fprintf(stderr,"Press enter to exit\n");
-	//while(getchar()!='\n');
+	if (NULL != board)
+	{
+		free(board);
+		board = NULL;
+	}
+	if (NULL != AVF)
+	{
+		free(AVF);
+		AVF = NULL;
+	}
+	if (NULL != RAWVF)
+	{
+		free(RAWVF);
+		RAWVF = NULL;
+	}
 }
+
+
+//==============================================================================================
+//Function is used to callback success message, imp by C, call by JavaScript
+//==============================================================================================
+EM_PORT_API(void) on_success(const char *result);
+
+
+//==============================================================================================
+//Function is used to callback error message, imp by C, call by JavaScript
+//==============================================================================================
+EM_PORT_API(void) on_error(const int error_code, const char *error_msg);
 
 
 //==============================================================================================
 //Function is run if there is a parsing error
 //==============================================================================================
-_fgetc(FILE* f)
+_fgetc(unsigned char *f)
 {
-	if(!feof(f)) return fgetc(f); else
+	if (position < length)
 	{
-		printf("Error 4: Unexpected end of file\n");
+		return f[position++];
+	}
+	else
+	{
+		free_memory();
+		on_error(4, "Unexpected end of file");
 		exit(1);
 	}
 }
@@ -95,7 +145,7 @@ _fgetc(FILE* f)
 //==============================================================================================
 //Function is used to read Realtime and Skin values
 //==============================================================================================
-void getpair(FILE* f,char* c1,char* c2)
+void getpair(unsigned char* f,char* c1,char* c2)
 {
 	//Initialise local variables
 	int i=0;
@@ -366,77 +416,78 @@ void writetxt()
 	int curx,cury;
 	const char* level_names[]={"null","Beginner","Intermediate","Expert","Custom"};
 	const char* mode_names[]={"null","Classic","Classic","Classic","Density"};
+	RAWVF = (char *)malloc(0);
 
 	//Code version and Program
-	printf("RawVF_Version: Rev6\n");
-	printf("Program: %s\n",program);
+	sprintf(RAWVF,"%sRawVF_Version: Rev6\n",RAWVF);
+	sprintf(RAWVF,"%sProgram: %s\n",RAWVF,program);
 
 	//Print Version details
 	//Prints first two parts of version (ie., '0.52')
-	printf("Version: 0.%d",ver);
-		
+	sprintf(RAWVF,"%sVersion: 0.%d",RAWVF,ver);
+
 	//Prints third part of version if it exists (ie, '.3' or ' DEBUG')
 	if(versionprint[0]!=' ' && spacer=='.')
 	{
-		printf(".%s\n",versionprint);
-	}	
+		sprintf(RAWVF,"%s.%s\n",RAWVF,versionprint);
+	}
 	else if(versionprint[0]!=' '&& spacer==' ')
 	{
-		printf(" %s\n",versionprint);
-	}		
-	else printf("\n");
-	
+		sprintf(RAWVF,"%s %s\n",RAWVF,versionprint);
+	}
+	else sprintf(RAWVF,"%s\n",RAWVF);
+
 	//Print Player
-	printf("Player: %s\n",name);
+	sprintf(RAWVF,"%sPlayer: %s\n",RAWVF,name);
 
 	//Print grid details
-	printf("Level: %s\n",level_names[mode]);
-	printf("Width: %d\n",w);
-	printf("Height: %d\n",h);
-	printf("Mines: %d\n",m);
-	
+	sprintf(RAWVF,"%sLevel: %s\n",RAWVF,level_names[mode]);
+	sprintf(RAWVF,"%sWidth: %d\n",RAWVF,w);
+	sprintf(RAWVF,"%sHeight: %d\n",RAWVF,h);
+	sprintf(RAWVF,"%sMines: %d\n",RAWVF,m);
+
 	//Print Marks
-	if(!qm)printf("Marks: Off\n");
-	else {printf("Marks: On\n");}
+	if(!qm)sprintf(RAWVF,"%sMarks: Off\n",RAWVF);
+	else {sprintf(RAWVF,"%sMarks: On\n",RAWVF);}
 
 	//Print Time
 	//If score_hun starts with a 0 the 0 is dropped to prevent a calculation bug
 	realtime=((score_sec*100)+(score_hun));
 	realtime=realtime/100;
-	printf("Time: %.03f\n",realtime);
+	sprintf(RAWVF,"%sTime: %.03f\n",RAWVF,realtime);
 
 	//Print 3bv
-	printf("BBBV: %d\n",bbbv);
+	sprintf(RAWVF,"%sBBBV: %d\n",RAWVF,bbbv);
 
 	//Calculate 3bvs
 	bbbvs=(bbbv*100000)/((score_sec*100)+(score_hun));
 	bbbvs=bbbvs/1000;
-	printf("BBBVS: %.03f\n",bbbvs);
+	sprintf(RAWVF,"%sBBBVS: %.03f\n",RAWVF,bbbvs);
 
 	//Print Timestamp
-	printf("Timestamp: %s\n",timestamp_a);
+	sprintf(RAWVF,"%sTimestamp: %s\n",RAWVF,timestamp_a);
 
 	//Print Mode
-	printf("Mode: %s\n",mode_names[mode]);
+	sprintf(RAWVF,"%sMode: %s\n",RAWVF,mode_names[mode]);
 
 	//Print Skin
-	if(skin) printf("Skin: %s\n",skin);
-	else {printf("Skin: '%s\n"," ");}
+	if(skin) sprintf(RAWVF,"%sSkin: %s\n",RAWVF,skin);
+	else {sprintf(RAWVF,"%sSkin: '%s\n",RAWVF," ");}
 
 	//Print Board
-	printf("Board:\n");
+	sprintf(RAWVF,"%sBoard:\n",RAWVF);
 	for(i=0;i<h;++i)
 	{
 		for(j=0;j<w;++j)
 			if(board[i*w+j])
-				printf("*");
+				sprintf(RAWVF,"%s*",RAWVF);
 			else
-				printf("0");
-		printf("\n");
+				sprintf(RAWVF,"%s0",RAWVF);
+		sprintf(RAWVF,"%s\n",RAWVF);
 	}
 
 	//Print Mouse events
-	printf("Events:\n");
+	sprintf(RAWVF,"%sEvents:\n",RAWVF);
 	curx=cury=-1;
 
 	for(i=0;i<size;++i)
@@ -445,74 +496,52 @@ void writetxt()
 		curx=video[i].x;cury=video[i].y;
 		
 		//For consistency with other programs add fake 0 as third decimal
-		printf("%d.%02d0 ",video[i].sec,video[i].hun);
-		
+		sprintf(RAWVF,"%s%d.%02d0 ",RAWVF,video[i].sec,video[i].hun);
+
 		if(video[i].mouse==1)
-			printf("mv ");
+			sprintf(RAWVF,"%smv ",RAWVF);
 		else if(video[i].mouse==3)
-			printf("lc ");
+			sprintf(RAWVF,"%slc ",RAWVF);
 		else if(video[i].mouse==5)
-			printf("lr ");
+			sprintf(RAWVF,"%slr ",RAWVF);
 		else if(video[i].mouse==9)
-			printf("rc ");
+			sprintf(RAWVF,"%src ",RAWVF);
 		else if(video[i].mouse==17)
-			printf("rr ");
+			sprintf(RAWVF,"%srr ",RAWVF);
 		else if(video[i].mouse==33)
-			printf("mc ");
+			sprintf(RAWVF,"%smc ",RAWVF);
 		else if(video[i].mouse==65)
-			printf("mr ");
+			sprintf(RAWVF,"%smr ",RAWVF);
 		else if(video[i].mouse==145)
-			printf("rr ");
+			sprintf(RAWVF,"%srr ",RAWVF);
 		else if(video[i].mouse==193)
-			printf("mr ");
+			sprintf(RAWVF,"%smr ",RAWVF);
 		else if(video[i].mouse==11)
-			printf("sc ");
+			sprintf(RAWVF,"%ssc ",RAWVF);
 		else if(video[i].mouse==21)
-			printf("lr ");
-		printf("%d %d (%d %d)\n",video[i].x/16+1,video[i].y/16+1,video[i].x,video[i].y);
+			sprintf(RAWVF,"%slr ",RAWVF);
+		sprintf(RAWVF,"%s%d %d (%d %d)\n",RAWVF,video[i].x/16+1,video[i].y/16+1,video[i].x,video[i].y);
 	}
 }
 
-
-
 //==============================================================================================
-//Run program and display any error messages
+//Function is used to handling file byte data, imp by C, call by JavaScript:
 //==============================================================================================
-int main(int argc,char** argv)
-{
-	//Program can be run in command line as "program video.avf>output.txt"
-	//The output file is optional if you prefer printing to screen	
-	if(argc<2)
-	{
-		printf("Error 1: Name of input file missing\n");
-		printf("Usage: %s <input avf> [nopause]\n",argv[0]);
-		pause();
-		return 0;
-	}
-
-	//Open video file
-	AVF=fopen(argv[1],"rb");
-
-	//Error if video is not an AVF file
-	if(!AVF)
-	{
-		printf("Error 2: Could not open AVF\n");
-		return 1;
-	}
+EM_PORT_API(void) on_message(const int len, const unsigned char* byte_array){
+	position = 0;
+	length = len;
+	AVF = byte_array;
 
 	//Error if video parsing fails
 	if(!readavf())
 	{
-		printf("Error 3: Invalid AVF\n");
-		return 1;
+	    on_error(3, "Invalid AVF");
+	    free_memory();
+		return;
 	}
-	
-	//Print results, close file and free memory
-	writetxt();
-	fclose(AVF);free(board);
-	
-	//Program ends with message to exit	
-	if(argc==2) pause();
-	return 0;
-}
 
+	//Callback results and free memory
+	writetxt();
+	on_success(RAWVF);
+	free_memory();
+}
