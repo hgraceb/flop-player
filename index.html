@@ -29,6 +29,9 @@
     <button type="button" onclick="playVideo('../videos/vsweep30.txt')">vsweep30.txt</button>
     <button type="button" onclick="playVideo('../videos/vsweep30_raw.txt')">vsweep30_raw.txt</button>
     <button type="button" onclick="playVideo('../videos/freesweeper_bombed.rawvf')">freesweeper_bombed.rawvf</button>
+    <br/><br/>
+    <button type="button" onclick="document.getElementById('video-iframe').contentWindow.emscripten()">emscripten_arbiter_exp.avf</button>
+    <button type="button" onclick="playVideo('../videos/arbiter_exp.avf')">arbiter_exp.avf</button>
 </div>
 
 <script>
@@ -38,7 +41,7 @@
     }
 
     window.onload = function () {
-        // playVideo("../videos/arbiter_exp.avf");
+        document.getElementById('video-iframe').contentWindow.emscripten();
     };
 </script>
 

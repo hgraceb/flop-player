@@ -283,7 +283,7 @@ function playMvfVideo(result) {
  * @param result 文件内容
  */
 function playRawVideo(result) {
-    console.timeEnd("normal");
+    console.timeEnd("emscripten");
     reset();
     video = [];
     const rawArray = result.split("\n");

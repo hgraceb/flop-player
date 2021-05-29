@@ -262,8 +262,23 @@
         }
     }
 
-    window.onload = function () {
-        console.time("normal");
+    /**
+     * 测试使用 emscripten 进行录像解析的时间，同等条件下，与正常读取 AVF 高级录像分别测试 10 次，结果如下：
+     * | Emscripten(JavaScript + C) | JavaScript         |
+     * | -------------------------- | ------------------ |
+     * | 872.339111328125 ms        | 32.373046875 ms    |
+     * | 842.116943359375 ms        | 34.52490234375 ms  |
+     * | 876.037109375 ms           | 87.323974609375 ms |
+     * | 814.992919921875 ms        | 34.25390625 ms     |
+     * | 894.02099609375 ms         | 32.983154296875 ms |
+     * | 888.8876953125 ms          | 31.300048828125 ms |
+     * | 859.2939453125 ms          | 32.154052734375 ms |
+     * | 835.98388671875 ms         | 32.26708984375 ms  |
+     * | 878.14794921875 ms         | 32.203857421875 ms |
+     * | 966.215087890625 ms        | 33.01513671875 ms  |
+     */
+    function emscripten() {
+        console.time("emscripten");
         const request = new XMLHttpRequest();
         let url = "../videos/arbiter_exp.avf";
         request.open("GET", url, true);
@@ -280,9 +295,14 @@
             }
         };
         request.send();
-    };
+    }
 
     function onSuccess(result) {
+        $('#video-stage', parent.document).fadeIn(fade);
+        $('#video-iframe', parent.document).fadeIn(fade, function () {
+            pause_avf();
+            pause_avf();//走遍两个分支
+        });
         playRawVideo(result);
     }
 
