@@ -30,7 +30,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 #include <emscripten.h>
+
 #ifndef EM_PORT_API
 #	if defined(__EMSCRIPTEN__)
 #		include <emscripten.h>
@@ -62,7 +64,6 @@ typedef struct event event;
 
 
 unsigned char* AVF;
-unsigned char* RAWVF;
 
 //Initialise global variables
 int mode,w,h,m;					//Mode, Width, Height, Mines
@@ -90,38 +91,52 @@ int position;				//Current processed byte index
 
 
 //==============================================================================================
-//Function is used to free memory
+//Function is used to return formatted results, imp by C, call by JavaScript
 //==============================================================================================
-void free_memory()
-{
-	if (NULL != board)
-	{
-		free(board);
-		board = NULL;
-	}
-	if (NULL != AVF)
-	{
-		free(AVF);
-		AVF = NULL;
-	}
-	if (NULL != RAWVF)
-	{
-		free(RAWVF);
-		RAWVF = NULL;
-	}
-}
+EM_PORT_API(void) onprogress(const char *result);
 
 
 //==============================================================================================
 //Function is used to callback success message, imp by C, call by JavaScript
 //==============================================================================================
-EM_PORT_API(void) on_success(const char *result);
+EM_PORT_API(void) onsuccess();
 
 
 //==============================================================================================
 //Function is used to callback error message, imp by C, call by JavaScript
 //==============================================================================================
-EM_PORT_API(void) on_error(const int error_code, const char *error_msg);
+EM_PORT_API(void) onerror(const int error_code, const char *error_msg);
+
+
+//==============================================================================================
+//Function is used to free memory
+//==============================================================================================
+void freememory()
+{
+	if (NULL != AVF)
+	{
+		free(AVF);
+		AVF = NULL;
+	}
+	if (NULL != board)
+	{
+		free(board);
+		board = NULL;
+	}
+}
+
+//==============================================================================================
+//Function is used to return formatted results
+//==============================================================================================
+void writef(char *format, ...)
+{
+    char str[MAXNAME];
+    va_list args;
+    va_start(args, format);
+    vsprintf(str, format, args);
+    onprogress(str);
+    va_end(args);
+}
 
 
 //==============================================================================================
@@ -135,8 +150,8 @@ _fgetc(unsigned char *f)
 	}
 	else
 	{
-		free_memory();
-		on_error(4, "Unexpected end of file");
+		freememory();
+		onerror(4, "Unexpected end of file");
 		exit(1);
 	}
 }
@@ -416,78 +431,77 @@ void writetxt()
 	int curx,cury;
 	const char* level_names[]={"null","Beginner","Intermediate","Expert","Custom"};
 	const char* mode_names[]={"null","Classic","Classic","Classic","Density"};
-	RAWVF = (char *)malloc(0);
 
 	//Code version and Program
-	sprintf(RAWVF,"%sRawVF_Version: Rev6\n",RAWVF);
-	sprintf(RAWVF,"%sProgram: %s\n",RAWVF,program);
+	writef("RawVF_Version: Rev6\n");
+	writef("Program: %s\n",program);
 
 	//Print Version details
 	//Prints first two parts of version (ie., '0.52')
-	sprintf(RAWVF,"%sVersion: 0.%d",RAWVF,ver);
+	writef("Version: 0.%d",ver);
 
 	//Prints third part of version if it exists (ie, '.3' or ' DEBUG')
 	if(versionprint[0]!=' ' && spacer=='.')
 	{
-		sprintf(RAWVF,"%s.%s\n",RAWVF,versionprint);
+		writef(".%s\n",versionprint);
 	}
 	else if(versionprint[0]!=' '&& spacer==' ')
 	{
-		sprintf(RAWVF,"%s %s\n",RAWVF,versionprint);
+		writef(" %s\n",versionprint);
 	}
-	else sprintf(RAWVF,"%s\n",RAWVF);
+	else writef("\n");
 
 	//Print Player
-	sprintf(RAWVF,"%sPlayer: %s\n",RAWVF,name);
+	writef("Player: %s\n",name);
 
 	//Print grid details
-	sprintf(RAWVF,"%sLevel: %s\n",RAWVF,level_names[mode]);
-	sprintf(RAWVF,"%sWidth: %d\n",RAWVF,w);
-	sprintf(RAWVF,"%sHeight: %d\n",RAWVF,h);
-	sprintf(RAWVF,"%sMines: %d\n",RAWVF,m);
+	writef("Level: %s\n",level_names[mode]);
+	writef("Width: %d\n",w);
+	writef("Height: %d\n",h);
+	writef("Mines: %d\n",m);
 
 	//Print Marks
-	if(!qm)sprintf(RAWVF,"%sMarks: Off\n",RAWVF);
-	else {sprintf(RAWVF,"%sMarks: On\n",RAWVF);}
+	if(!qm)writef("Marks: Off\n");
+	else {writef("Marks: On\n");}
 
 	//Print Time
 	//If score_hun starts with a 0 the 0 is dropped to prevent a calculation bug
 	realtime=((score_sec*100)+(score_hun));
 	realtime=realtime/100;
-	sprintf(RAWVF,"%sTime: %.03f\n",RAWVF,realtime);
+	writef("Time: %.03f\n",realtime);
 
 	//Print 3bv
-	sprintf(RAWVF,"%sBBBV: %d\n",RAWVF,bbbv);
+	writef("BBBV: %d\n",bbbv);
 
 	//Calculate 3bvs
 	bbbvs=(bbbv*100000)/((score_sec*100)+(score_hun));
 	bbbvs=bbbvs/1000;
-	sprintf(RAWVF,"%sBBBVS: %.03f\n",RAWVF,bbbvs);
+	writef("BBBVS: %.03f\n",bbbvs);
 
 	//Print Timestamp
-	sprintf(RAWVF,"%sTimestamp: %s\n",RAWVF,timestamp_a);
+	writef("Timestamp: %s\n",timestamp_a);
 
 	//Print Mode
-	sprintf(RAWVF,"%sMode: %s\n",RAWVF,mode_names[mode]);
+	writef("Mode: %s\n",mode_names[mode]);
 
 	//Print Skin
-	if(skin) sprintf(RAWVF,"%sSkin: %s\n",RAWVF,skin);
-	else {sprintf(RAWVF,"%sSkin: '%s\n",RAWVF," ");}
+	if(skin) writef("Skin: %s\n",skin);
+	else {writef("Skin: '%s\n"," ");}
 
 	//Print Board
-	sprintf(RAWVF,"%sBoard:\n",RAWVF);
+	writef("Board:\n");
 	for(i=0;i<h;++i)
 	{
 		for(j=0;j<w;++j)
 			if(board[i*w+j])
-				sprintf(RAWVF,"%s*",RAWVF);
+				writef("*");
 			else
-				sprintf(RAWVF,"%s0",RAWVF);
-		sprintf(RAWVF,"%s\n",RAWVF);
+				writef("0");
+		writef("\n");
 	}
 
 	//Print Mouse events
-	sprintf(RAWVF,"%sEvents:\n",RAWVF);
+	writef("Events:\n");
 	curx=cury=-1;
 
 	for(i=0;i<size;++i)
@@ -496,38 +510,38 @@ void writetxt()
 		curx=video[i].x;cury=video[i].y;
 		
 		//For consistency with other programs add fake 0 as third decimal
-		sprintf(RAWVF,"%s%d.%02d0 ",RAWVF,video[i].sec,video[i].hun);
+		writef("%d.%02d0 ",video[i].sec,video[i].hun);
 
 		if(video[i].mouse==1)
-			sprintf(RAWVF,"%smv ",RAWVF);
+			writef("mv ");
 		else if(video[i].mouse==3)
-			sprintf(RAWVF,"%slc ",RAWVF);
+			writef("lc ");
 		else if(video[i].mouse==5)
-			sprintf(RAWVF,"%slr ",RAWVF);
+			writef("lr ");
 		else if(video[i].mouse==9)
-			sprintf(RAWVF,"%src ",RAWVF);
+			writef("rc ");
 		else if(video[i].mouse==17)
-			sprintf(RAWVF,"%srr ",RAWVF);
+			writef("rr ");
 		else if(video[i].mouse==33)
-			sprintf(RAWVF,"%smc ",RAWVF);
+			writef("mc ");
 		else if(video[i].mouse==65)
-			sprintf(RAWVF,"%smr ",RAWVF);
+			writef("mr ");
 		else if(video[i].mouse==145)
-			sprintf(RAWVF,"%srr ",RAWVF);
+			writef("rr ");
 		else if(video[i].mouse==193)
-			sprintf(RAWVF,"%smr ",RAWVF);
+			writef("mr ");
 		else if(video[i].mouse==11)
-			sprintf(RAWVF,"%ssc ",RAWVF);
+			writef("sc ");
 		else if(video[i].mouse==21)
-			sprintf(RAWVF,"%slr ",RAWVF);
-		sprintf(RAWVF,"%s%d %d (%d %d)\n",RAWVF,video[i].x/16+1,video[i].y/16+1,video[i].x,video[i].y);
+			writef("lr ");
+		writef("%d %d (%d %d)\n",video[i].x/16+1,video[i].y/16+1,video[i].x,video[i].y);
 	}
 }
 
 //==============================================================================================
-//Function is used to handling file byte data, imp by C, call by JavaScript:
+//Function is used to start processing data, imp by C, call by JavaScript
 //==============================================================================================
-EM_PORT_API(void) on_message(const int len, const unsigned char* byte_array){
+EM_PORT_API(void) onstart(const int len, const unsigned char* byte_array) {
 	position = 0;
 	length = len;
 	AVF = byte_array;
@@ -535,13 +549,13 @@ EM_PORT_API(void) on_message(const int len, const unsigned char* byte_array){
 	//Error if video parsing fails
 	if(!readavf())
 	{
-	    on_error(3, "Invalid AVF");
-	    free_memory();
+	    onerror(3, "Invalid AVF");
+	    freememory();
 		return;
 	}
 
 	//Callback results and free memory
 	writetxt();
-	on_success(RAWVF);
-	free_memory();
+	freememory();
+	onsuccess();
 }

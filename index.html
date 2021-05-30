@@ -11,7 +11,7 @@
 <body style="background-color: #cccccc;height: 120vh;width: 120vw;margin: 0">
 
 <!-- First: add a container for playing the video -->
-<div id="video-stage" style="position: absolute;z-index: 999;background-color: rgba(0 ,0 ,0 ,0.33)">
+<div id="video-stage" style="display: none;position: absolute;z-index: 999;background-color: rgba(0 ,0 ,0 ,0.33)">
     <iframe id="video-iframe" src="./src/video.html?v=20210524" style="border: 0;width: 0;height: 0;" scrolling="no"></iframe>
 </div>
 
@@ -19,6 +19,10 @@
     <button type="button" onclick="playVideo('../videos/arbiter_beg.avf')">arbiter_beg.avf</button>
     <button type="button" onclick="playVideo('../videos/arbiter_int.avf')">arbiter_int.avf</button>
     <button type="button" onclick="playVideo('../videos/arbiter_exp.avf')">arbiter_exp.avf</button>
+    <br/><br/>
+    <button type="button" onclick="emscripten('../videos/arbiter_beg.avf')">emscripten_arbiter_beg.avf</button>
+    <button type="button" onclick="emscripten('../videos/arbiter_int.avf')">emscripten_arbiter_int.avf</button>
+    <button type="button" onclick="emscripten('../videos/arbiter_exp.avf')">emscripten_arbiter_exp.avf</button>
     <br/><br/>
     <button type="button" onclick="playVideo('../videos/arbiter_beg_translated.rawvf')">arbiter_beg_translated.rawvf</button>
     <button type="button" onclick="playVideo('../videos/arbiter_int_translated.rawvf')">arbiter_int_translated.rawvf</button>
@@ -30,18 +34,20 @@
     <button type="button" onclick="playVideo('../videos/vsweep30_raw.txt')">vsweep30_raw.txt</button>
     <button type="button" onclick="playVideo('../videos/freesweeper_bombed.rawvf')">freesweeper_bombed.rawvf</button>
     <br/><br/>
-    <button type="button" onclick="document.getElementById('video-iframe').contentWindow.emscripten()">emscripten_arbiter_exp.avf</button>
-    <button type="button" onclick="playVideo('../videos/arbiter_exp.avf')">arbiter_exp.avf</button>
 </div>
 
 <script>
+    function emscripten(filePath){
+        document.getElementById('video-iframe').contentWindow.emscripten(filePath);
+    }
+
     function playVideo(filePath) {
         /* Second: call the "loadVideo" function when you need to play the video */
         document.getElementById('video-iframe').contentWindow.loadVideo(filePath);
     }
 
     window.onload = function () {
-        document.getElementById('video-iframe').contentWindow.emscripten();
+        emscripten("../videos/arbiter_exp.avf");
     };
 </script>
 

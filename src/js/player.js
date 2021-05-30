@@ -75,7 +75,6 @@ function charCodeAt(char) {
 }
 
 function playAvfVideo(result) {
-    console.timeEnd("normal");
     reset();
     //当读取完成后回调这个函数,然后此时文件的内容存储到了result中,直接操作即可
     var board = [];//雷的分布
@@ -211,6 +210,7 @@ function playAvfVideo(result) {
                         video[0].board = board;
                         start_avf(video);
                         video_invalid = false;
+                        console.timeEnd("normal");
                     }
                     break;
                 } else if (index == player.length - 1) {//全部不包含中文字符
@@ -221,6 +221,7 @@ function playAvfVideo(result) {
                     video[0].board = board;
                     start_avf(video);
                     video_invalid = false;
+                    console.timeEnd("normal");
                 }
             }
         }
@@ -283,7 +284,7 @@ function playMvfVideo(result) {
  * @param result 文件内容
  */
 function playRawVideo(result) {
-    console.timeEnd("emscripten");
+    console.time("rawvf");
     reset();
     video = [];
     const rawArray = result.split("\n");
@@ -343,6 +344,8 @@ function playRawVideo(result) {
     container.init(video[0].level);
     container.set_viedo_mine(video[0].board); // 按录像布雷
     start_avf(video);
+    console.timeEnd("rawvf");
+    console.timeEnd("emscripten");
 }
 
 //选择本地文件进行录像播放

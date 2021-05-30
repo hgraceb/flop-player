@@ -263,24 +263,11 @@
     }
 
     /**
-     * 测试使用 emscripten 进行录像解析的时间，同等条件下，与正常读取 AVF 高级录像分别测试 10 次，结果如下：
-     * | Emscripten(JavaScript + C) | JavaScript         |
-     * | -------------------------- | ------------------ |
-     * | 872.339111328125 ms        | 32.373046875 ms    |
-     * | 842.116943359375 ms        | 34.52490234375 ms  |
-     * | 876.037109375 ms           | 87.323974609375 ms |
-     * | 814.992919921875 ms        | 34.25390625 ms     |
-     * | 894.02099609375 ms         | 32.983154296875 ms |
-     * | 888.8876953125 ms          | 31.300048828125 ms |
-     * | 859.2939453125 ms          | 32.154052734375 ms |
-     * | 835.98388671875 ms         | 32.26708984375 ms  |
-     * | 878.14794921875 ms         | 32.203857421875 ms |
-     * | 966.215087890625 ms        | 33.01513671875 ms  |
+     * 测试使用 emscripten 进行录像解析
      */
-    function emscripten() {
+    function emscripten(url) {
         console.time("emscripten");
         const request = new XMLHttpRequest();
-        let url = "../videos/arbiter_exp.avf";
         request.open("GET", url, true);
         request.responseType = "arraybuffer";
         request.url = url;
@@ -288,7 +275,12 @@
             if (request.readyState === 4) {
                 if (request.status === 200) {
                     const uint8Array = new Uint8Array(request.response);
-                    Module.ccall('on_message', 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
+                    console.time("parser");
+                    try {
+                        Module.ccall('onstart', 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
+                    } catch (e) {
+                        // ignore
+                    }
                 } else {
                     console.log(`http request failed. URL: ${request.url}  error code: ${request.status}`);
                 }
@@ -297,16 +289,24 @@
         request.send();
     }
 
-    function onSuccess(result) {
+    let results = "";
+
+    function onprogress(result) {
+        results += result;
+    }
+
+    function onsuccess() {
+        console.timeEnd("parser");
         $('#video-stage', parent.document).fadeIn(fade);
         $('#video-iframe', parent.document).fadeIn(fade, function () {
             pause_avf();
             pause_avf();//走遍两个分支
         });
-        playRawVideo(result);
+        playRawVideo(results);
+        results = null;
     }
 
-    function onError(errCode, errMsg) {
+    function onerror(errCode, errMsg) {
         console.log(`errCode = ${errCode}, errMsg = ${errMsg}`);
     }
 </script>

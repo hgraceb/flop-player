@@ -1,8 +1,11 @@
 mergeInto(LibraryManager.library, {
-    on_success: function (results) {
-        return onSuccess(UTF8ToString(results));
+    onprogress: function (result) {
+        return onprogress(UTF8ToString(result));
     },
-    on_error: function (results) {
-        return onError(UTF8ToString(results));
+    onsuccess: function () {
+        return onsuccess();
+    },
+    onerror: function (errCode, errMsg) {
+        return onerror(errCode, UTF8ToString(errMsg));
     },
 });
