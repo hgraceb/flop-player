@@ -11,7 +11,6 @@ let number = 0;//字符读取进度
 const fade = 500;//淡入淡出时间
 
 function loadVideo(path) {
-    console.time("normal");
     if (isIE()) {
         alert('暂不支持 IE 内核 ,请更换浏览器或内核！');
         return;
@@ -210,7 +209,6 @@ function playAvfVideo(result) {
                         video[0].board = board;
                         start_avf(video);
                         video_invalid = false;
-                        console.timeEnd("normal");
                     }
                     break;
                 } else if (index == player.length - 1) {//全部不包含中文字符
@@ -221,7 +219,6 @@ function playAvfVideo(result) {
                     video[0].board = board;
                     start_avf(video);
                     video_invalid = false;
-                    console.timeEnd("normal");
                 }
             }
         }
@@ -284,7 +281,6 @@ function playMvfVideo(result) {
  * @param result 文件内容
  */
 function playRawVideo(result) {
-    console.time("rawvf");
     reset();
     video = [];
     const rawArray = result.split("\n");
@@ -344,8 +340,6 @@ function playRawVideo(result) {
     container.init(video[0].level);
     container.set_viedo_mine(video[0].board); // 按录像布雷
     start_avf(video);
-    console.timeEnd("rawvf");
-    console.timeEnd("emscripten");
 }
 
 //选择本地文件进行录像播放

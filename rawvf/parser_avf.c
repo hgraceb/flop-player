@@ -541,7 +541,7 @@ void writetxt()
 //==============================================================================================
 //Function is used to start processing data, imp by C, call by JavaScript
 //==============================================================================================
-EM_PORT_API(void) onstart(const int len, const unsigned char *byte_array)
+EM_PORT_API(void) parser_avf(const int len, const unsigned char *byte_array)
 {
 	position = 0;
 	length = len;
