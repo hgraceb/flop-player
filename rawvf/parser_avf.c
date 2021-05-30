@@ -63,7 +63,7 @@ struct event
 typedef struct event event;
 
 
-unsigned char* AVF;
+unsigned char *AVF;
 
 //Initialise global variables
 int mode,w,h,m;					//Mode, Width, Height, Mines
@@ -85,8 +85,8 @@ char versionprint[MAXNAME];		//Substring used to fetch Version
 int bbbv;						//3bv
 float realtime;					//Realtime (since version 0.47)
 float bbbvs;					//3bvs
-int length;					//File byte data length
-int position;				//Current processed byte index
+int length;					    //File byte data length
+int position;				    //Current processed byte index
 
 
 
@@ -130,12 +130,12 @@ void freememory()
 //==============================================================================================
 void writef(char *format, ...)
 {
-    char str[MAXNAME];
-    va_list args;
-    va_start(args, format);
-    vsprintf(str, format, args);
-    onprogress(str);
-    va_end(args);
+	char str[MAXNAME];
+	va_list args;
+	va_start(args, format);
+	vsprintf(str, format, args);
+	onprogress(str);
+	va_end(args);
 }
 
 
@@ -541,16 +541,17 @@ void writetxt()
 //==============================================================================================
 //Function is used to start processing data, imp by C, call by JavaScript
 //==============================================================================================
-EM_PORT_API(void) onstart(const int len, const unsigned char* byte_array) {
+EM_PORT_API(void) onstart(const int len, const unsigned char *byte_array)
+{
 	position = 0;
 	length = len;
 	AVF = byte_array;
 
 	//Error if video parsing fails
-	if(!readavf())
+	if (!readavf())
 	{
-	    onerror(3, "Invalid AVF");
-	    freememory();
+		onerror(3, "Invalid AVF");
+		freememory();
 		return;
 	}
 
