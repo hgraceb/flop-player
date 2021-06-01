@@ -85,8 +85,8 @@ char versionprint[MAXNAME];		//Substring used to fetch Version
 int bbbv;						//3bv
 float realtime;					//Realtime (since version 0.47)
 float bbbvs;					//3bvs
-int length;					    //File byte data length
-int position;				    //Current processed byte index
+long length;					//File byte data length
+long position;				    //Current processed byte index
 
 
 
@@ -142,7 +142,7 @@ void writef(char *format, ...)
 //==============================================================================================
 //Function is run if there is a parsing error
 //==============================================================================================
-_fgetc(unsigned char *f)
+int _fgetc(unsigned char *f)
 {
 	if (position < length)
 	{
@@ -287,42 +287,42 @@ int readavf()
 	i=0;
 	
 	//Fetch 3BV
-	while(c=_fgetc(AVF))
+	while((c=_fgetc(AVF)))
 	{
 		if (c=='T') break;
 		cr[i]=c;i++;
 	}
 	
 	//Convert array string to an integer
-	bbbv=atoi(cr);
+	bbbv=atoi((const char *)cr);
 
 	//Clear the 8 byte array we are using to store data 
 	for(i=0;i<7;++i) cr[i]=0;
 	i=0;
 
     //Fetch the seconds part of time (stop at decimal) and subtract 1s for real time
-	while(c=_fgetc(AVF))
+	while((c=_fgetc(AVF)))
 	{
 		if (c=='.'||c==',') break;
 		cr[i]=c;i++;
 	}
 
 	//Convert array string to an integer	
-	score_sec=atoi(cr)-1;
+	score_sec=atoi((const char *)cr)-1;
 
 	//Clear the 8 byte array we are using to store data 
 	for(i=0;i<7;++i) cr[i]=0;
 	i=0;
 
 	//Fetch the decimal part of Time (2 decimal places)
-	while(c=_fgetc(AVF))
+	while((c=_fgetc(AVF)))
 	{
 		if (c==']') break;
 		cr[i]=c;i++;
 	}
 
 	//Convert array string to an integer		
-	score_hun=atoi(cr);
+	score_hun=atoi((const char *)cr);
 
 	//Clear the 8 byte array we are using to store data 
 	for(i=0;i<7;++i) cr[i]=0;
@@ -485,8 +485,7 @@ void writetxt()
 	writef("Mode: %s\n",mode_names[mode]);
 
 	//Print Skin
-	if(skin) writef("Skin: %s\n",skin);
-	else {writef("Skin: '%s\n"," ");}
+	writef("Skin: %s\n",skin);
 
 	//Print Board
 	writef("Board:\n");
@@ -541,7 +540,7 @@ void writetxt()
 //==============================================================================================
 //Function is used to start processing data, imp by C, call by JavaScript
 //==============================================================================================
-EM_PORT_API(void) parser_avf(const int len, const unsigned char *byte_array)
+EM_PORT_API(void) parser_avf(const long len, unsigned char *byte_array)
 {
 	position = 0;
 	length = len;
