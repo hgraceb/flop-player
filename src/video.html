@@ -267,6 +267,8 @@
      */
     function emscripten(url) {
         const request = new XMLHttpRequest();
+        const type = url.substring(url.lastIndexOf('.'), url.length);
+        // TODO 先对文件后缀进行判断，不符合条件则直接报错
         request.open("GET", url, true);
         request.responseType = "arraybuffer";
         request.url = url;
@@ -275,11 +277,21 @@
                 if (request.status === 200) {
                     const uint8Array = new Uint8Array(request.response);
                     try {
-                        Module.ccall('parser_avf', 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
+                        switch (type) {
+                            case ".avf":
+                                Module.ccall('parser_avf', 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
+                                break;
+                            case ".mvf":
+                                Module.ccall('parser_mvf', 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
+                                break;
+                            default:
+                            // TODO 处理错误情况
+                        }
                     } catch (e) {
                         // ignore
                     }
                 } else {
+                    // TODO 处理错误情况
                     console.log(`http request failed. URL: ${request.url}  error code: ${request.status}`);
                 }
             }
