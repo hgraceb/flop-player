@@ -284,6 +284,9 @@
                             case ".mvf":
                                 Module.ccall('parser_mvf', 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
                                 break;
+                            case ".rmv":
+                                Module.ccall('parser_rmv', 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
+                                break;
                             default:
                             // TODO 处理错误情况
                         }

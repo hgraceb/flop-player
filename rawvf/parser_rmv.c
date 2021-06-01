@@ -23,6 +23,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#include <stdarg.h>
+#include <emscripten.h>
+
+#ifndef EM_PORT_API
+#	if defined(__EMSCRIPTEN__)
+#		include <emscripten.h>
+#		if defined(__cplusplus)
+#			define EM_PORT_API(rettype) extern "C" rettype EMSCRIPTEN_KEEPALIVE
+#		else
+#			define EM_PORT_API(rettype) rettype EMSCRIPTEN_KEEPALIVE
+#		endif
+#	else
+#		if defined(__cplusplus)
+#			define EM_PORT_API(rettype) extern "C" rettype
+#		else
+#			define EM_PORT_API(rettype) rettype
+#		endif
+#	endif
+#endif
+
+#define ERR_TOO_LARGE	          1	/* Too large video */
+#define ERR_UNEXPECTED_END	      2	/* Unexpected end of file */
+#define ERR_INVALID_FILE	      3	/* Invalid file */
+#define ERR_INVALID_EVENT         4	/* Invalid event */
+#define ERR_INVALID_VIDEO_TYPE    5	/* Invalid video type */
+#define ERR_INVALID_BOARD_SIZE	  6	/* Invalid board size */
+#define ERR_INVALID_VIDEO_HEADER  7	/* Invalid video header */
+#define ERR_INVALID_MINE_POSITION 8	/* Invalid mine position */
 
 #define MAXREP 100000
 #define MAXNAME 1000
@@ -36,7 +65,7 @@ struct event
 typedef struct event event;
 
 
-FILE* RMV;
+unsigned char *RMV;
 
 //Initialise global variables
 int mode,level,w,h,m;		//Mode, Level, Width, Height, Mines
@@ -60,39 +89,81 @@ char bbbv[MAXNAME];			//3bv as a string
 int bbbvint;				//3bv as an integer
 int bbbvs; 					//3bvs during calculations
 float bbbvs_final;			//3bvs with decimals
+long length;					            //File byte data length
+long position;				                //Current processed byte index
 
 
 
 //==============================================================================================
-//Function asks user to exit after program has run successfully
+//Function to return formatted results, imp by C, call by JavaScript
 //==============================================================================================
-void pause()
+EM_PORT_API(void) onprogress(const char *result);
+
+
+//==============================================================================================
+//Function to callback success message, imp by C, call by JavaScript
+//==============================================================================================
+EM_PORT_API(void) onsuccess();
+
+
+//==============================================================================================
+//Function to callback error message, imp by C, call by JavaScript
+//==============================================================================================
+EM_PORT_API(void) onerror(const int error_code, const char *error_msg);
+
+
+//==============================================================================================
+//Function to free memory
+//==============================================================================================
+void freememory()
 {
-	//fprintf(stderr,"Press enter to exit\n");
-	//while(getchar()!='\n');
+	if (NULL != board)
+	{
+		free(board);
+		board = NULL;
+	}
+}
+
+
+//==============================================================================================
+//Function to return formatted results
+//==============================================================================================
+void writef(char *format, ...)
+{
+	char str[MAXNAME];
+	va_list args;
+	va_start(args, format);
+	vsprintf(str, format, args);
+	onprogress(str);
+	va_end(args);
 }
 
 
 //==============================================================================================
 //Function to print error messages
 //==============================================================================================
-void error(const char* msg)
+void error(const int code, const char* msg)
 {
-	fprintf(stderr,"%s\n",msg);
-	pause();
-	exit(1);
+	freememory();
+    onerror(code, msg);
+    exit(1);
 }
 
 
 //==============================================================================================
 //Function is run if there is a parsing error
 //==============================================================================================
-_fgetc(FILE* f)
+int _fgetc(unsigned char *f)
 {
-	if(!feof(f)) return fgetc(f); else
-	{
-	error("Error 4: Unexpected end of file");
-	}
+    if (position < length)
+    {
+        return f[position++];
+    }
+    else
+    {
+        error(ERR_UNEXPECTED_END, "Unexpected end of file");
+        exit(1);
+    }
 }
 
 
@@ -100,7 +171,7 @@ _fgetc(FILE* f)
 //==============================================================================================
 //Functions to parse either 2, 3 or 4 bytes at a time
 //==============================================================================================
-int getint2(FILE* f)
+int getint2(unsigned char *f)
 {
 	//Creates a string array called c holding 2 bytes
 	unsigned char c[2];
@@ -114,14 +185,14 @@ int getint2(FILE* f)
 	return (int)c[1]+c[0]*256;
 }
 
-int getint3(FILE* f)
+int getint3(unsigned char *f)
 {
 	//Creates a string array called c holding 3 bytes
 	unsigned char c[3];
 	c[0]=_fgetc(f);c[1]=_fgetc(f);c[2]=_fgetc(f);
 	return (int)c[2]+c[1]*256+c[0]*65536;
 }
-int getint(FILE* f)
+int getint(unsigned char *f)
 {
 	//Creates a string array called c holding 4 bytes
 	unsigned char c[4];
@@ -145,7 +216,7 @@ void print_event(event* e)
 	//Mouse event	
 	if(c<=7)
 	{
-		printf("%d.%03d %s %d %d (%d %d)\n",
+		writef("%d.%03d %s %d %d (%d %d)\n",
 			e->time/1000,e->time%1000,
 			event_names[c],
 			e->x/square_size+1,e->y/square_size+1,
@@ -154,14 +225,14 @@ void print_event(event* e)
 	//Board event	
 	else if(c<=14 || (c>=18 && c<=27))
 	{
-		printf("%s %d %d\n",
+		writef("%s %d %d\n",
 			event_names[c],
 			e->x,e->y);
 	}
 	//End event (ie, 'blast')
 	else if(c<=17)
 	{
-		printf("%s\n",
+		writef("%s\n",
 			event_names[c]);
 	}
 }
@@ -188,7 +259,7 @@ void print_event2(event* e)
 	//Win or lose status
 	if(c==16||c==15)
 	{
-	printf("%s\n",event_names[c]);
+	writef("%s\n",event_names[c]);
 	}
 }
 
@@ -220,11 +291,11 @@ int readrmv()
 	int is_first_event=1;
 
 	//Check first 4 bytes of header is *rmv
-	for(i=0;i<4;++i) if(c=_fgetc(RMV)!=header_1[i]) error("No RMV header");
+	for(i=0;i<4;++i) if((c=_fgetc(RMV)!=header_1[i])) error(ERR_INVALID_VIDEO_HEADER,"No RMV header");
 
 	//The getint2 function reads 2 bytes at a time
 	//In legitimate videos byte 4=0 and byte 5=1, getint2 sum is thus 1
-	if(getint2(RMV)!=1) error("Invalid video type");
+	if(getint2(RMV)!=1) error(ERR_INVALID_VIDEO_TYPE,"Invalid video type");
 
 	//The getint functions reads 4 bytes at a time
 	fs=getint(RMV); 					//Gets byte 6-9
@@ -335,7 +406,7 @@ int readrmv()
 	for(i=0;i<m;++i)
 	{
 		c=_fgetc(RMV);d=_fgetc(RMV);
-		if(c>w || d>h) error("Invalid mine position");
+		if(c>w || d>h) error(ERR_INVALID_MINE_POSITION,"Invalid mine position");
 		board[d*w+c]=1;
 	}
    
@@ -407,7 +478,7 @@ int readrmv()
 				cur++;
 			}
 		}
-		else if(c==8) error("Invalid event");
+		else if(c==8) error(ERR_INVALID_EVENT,"Invalid event");
 		//Get board event (ie, 'pressed' or 'number 3')
 		else if(c<=14 || (c>=18 && c<=27))
 		{
@@ -423,7 +494,7 @@ int readrmv()
 		}
 		else 
 		{
-			error("Invalid event");
+			error(ERR_INVALID_EVENT,"Invalid event");
 		}
 	}
 	
@@ -446,11 +517,11 @@ void writetxt()
 	const char* mode_names[]={"Classic","UPK","Cheat","Density"};
 
 	//Code version and Program
-	printf("RawVF_Version: Rev6\n");
-	printf("Program: %s\n",program);
+	writef("RawVF_Version: Rev6\n");
+	writef("Program: %s\n",program);
 
 	//Print Version
-    printf("Version: ");
+    writef("Version: ");
 
 	//There are several different Version string formats
 	//For example, 'Vienna Minesweeper - Scoreganizer Client Edition - Release 3.0C Copyright (C) 2008-2012'
@@ -473,7 +544,7 @@ void writetxt()
 		{
 		verlength[i]=verstring[i];
 		}
-		printf("%s\n",verlength);
+		writef("%s\n",verlength);
     }
 	
 	//This terminates the above string at the period for Release 2 beta and earlier
@@ -483,51 +554,51 @@ void writetxt()
 		{
 		verlength[i]=verstring[i];
 		}
-		printf("%s\n",verlength);
+		writef("%s\n",verlength);
 	}
 	
 	//This is for any versions without a copyright notice or period in Version string
 	else
 	{
-		printf("%s\n",verstring);
+		writef("%s\n",verstring);
 	}
 
 	//Print Player 
-	printf("Player: %s\n",name);
+	writef("Player: %s\n",name);
 	
 	//Print grid details	
-	printf("Level: %s\n",level_names[level]);
-	printf("Width: %d\n",w);
-	printf("Height: %d\n",h);
-	printf("Mines: %d\n",m);
+	writef("Level: %s\n",level_names[level]);
+	writef("Width: %d\n",w);
+	writef("Height: %d\n",h);
+	writef("Mines: %d\n",m);
 
 	//Print Marks
-	if(qm) printf("Marks: On\n");
-    else printf("Marks: Off\n");
+	if(qm) writef("Marks: On\n");
+    else writef("Marks: Off\n");
 
 	//Print Time
-    printf("Time: ");
+    writef("Time: ");
 
 	//Time is taken from the last mouse event
 	//Usually this is the 3rd last printed event
-	if(i=size-3)
+	if((i=size-3))
 	{
 		print_event2(video+i);
 		if(score!=0)
 		{
-			printf("%d.%03d\n",score/1000,score%1000);
+			writef("%d.%03d\n",score/1000,score%1000);
 			score_check=1;
 		}
    }
 	//Sometimes it is the 4th last printed event
 	if(score_check!=1)
 	{
-		if(i=size-4)
+		if((i=size-4))
 		{
 			print_event2(video+i);
 			if(score!=0)
 			{
-				printf("%d.%03d\n",score/1000,score%1000);
+				writef("%d.%03d\n",score/1000,score%1000);
 				score_check=1;
 			}
 		}
@@ -538,58 +609,58 @@ void writetxt()
 	{
 		//Convert string to an integer
 		bbbvint=atoi(bbbv);
-		printf("BBBV: %d\n",bbbvint);
+		writef("BBBV: %d\n",bbbvint);
 		//You need to float 3bvs int otherwise integer/integer = integer.
 		bbbvs=(bbbvint*1000000)/(score);
 		bbbvs_final=(float)bbbvs/1000;
-		printf("BBBVS: %.03f\n",bbbvs_final);	
+		writef("BBBVS: %.03f\n",bbbvs_final);
 	}   
 	//Release 2 beta and earlier do not have these values so print blank rows
 	else
 	{
-		printf("BBBV: \n");
-		printf("BBBVS: \n");		
+		writef("BBBV: \n");
+		writef("BBBVS: \n");
 	}	
 
 	//Print Status
-	if(i=size-1)
+	if((i=size-1))
 	{
-		printf("Status: ");
+		writef("Status: ");
 		print_event2(video+i);
 	}	
 	
 	//Print Timestamp
 	if(timestamp[0]!='0')
 	{
-		printf("Timestamp: %s\n",timestamp);
+		writef("Timestamp: %s\n",timestamp);
 	}
 	else
 	{
-		printf("Timestamp: \n");
+		writef("Timestamp: \n");
 	}	
 
 	//Print Mode
-	printf("Mode: %s\n",mode_names[mode]);
+	writef("Mode: %s\n",mode_names[mode]);
 
 	//Print Style
-	if(nf) printf("Style: NF\n");
-	else printf("Style: FL\n");         
+	if(nf) writef("Style: NF\n");
+	else writef("Style: FL\n");
 
 	//Print Board
-	printf("Board:\n");
+	writef("Board:\n");
 	for(i=0;i<h;++i)
 	{
 		for(j=0;j<w;++j)
 			if(board[i*w+j])
-				printf("*");
+				writef("*");
 			else
-				printf("0");
-		printf("\n");
+				writef("0");
+		writef("\n");
 	}
 
 	//Print Mouse events
-	printf("Events:\n");
-	printf("0.000 start\n");
+	writef("Events:\n");
+	writef("0.000 start\n");
 	for(i=0;i<size;++i)
 	{
 		print_event(video+i);
@@ -597,45 +668,25 @@ void writetxt()
 }
 
 
-
 //==============================================================================================
-//Run program and display any error messages
+//Function to parse file data, imp by C, call by JavaScript
 //==============================================================================================
-int main(int argc,char** argv)
+EM_PORT_API(void) parser_rmv(const long len, unsigned char *byte_array)
 {
-	//Program can be run in command line as "program video.rmv>output.txt"
-	//The output file is optional if you prefer printing to screen		
-	if(argc<2)
-	{
-		printf("Error 1: Name of input file missing\n");
-		printf("Usage: %s <input rmv> [nopause]\n",argv[0]);
-		pause();
-		return 0;
-	}
-	
-	//Open video file	
-	RMV=fopen(argv[1],"rb");
-
-	//Error if video is not an RMV file	
-	if(!RMV)
-	{
-		printf("Error 2: Could not open RMV\n");
-		return 1;
-	}
+	position = 0;
+	length = len;
+	RMV = byte_array;
 
 	//Error if video parsing fails
-	if(!readrmv())
+	if (!readrmv())
 	{
-		printf("Error 3: Invalid RMV\n");
-		return 1;
+		error(ERR_INVALID_FILE, "Invalid RMV");
+		return;
 	}
-	
-	//Print results, close file and free memory
-	writetxt();
-	fclose(RMV);free(board);
 
-	//Program ends with message to exit		
-	if(argc==2) pause();
-	return 0;
+	//Callback results and free memory
+	writetxt();
+	freememory();
+	onsuccess();
 }
 

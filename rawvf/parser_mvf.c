@@ -45,10 +45,13 @@
 #endif
 
 #define ERR_TOO_LARGE	          1	/* Too large video */
-#define ERR_INVALID_FILE	      2	/* Invalid file */
-#define ERR_UNEXPECTED_END	      3	/* Unexpected end of file */
-#define ERR_INVALID_BOARD_SIZE	  4	/* Invalid board size */
-#define ERR_INVALID_MINE_POSITION 5	/* Invalid mine position */
+#define ERR_UNEXPECTED_END	      2	/* Unexpected end of file */
+#define ERR_INVALID_FILE	      3	/* Invalid file */
+#define ERR_INVALID_EVENT         4	/* Invalid event */
+#define ERR_INVALID_VIDEO_TYPE    5	/* Invalid video type */
+#define ERR_INVALID_BOARD_SIZE	  6	/* Invalid board size */
+#define ERR_INVALID_VIDEO_HEADER  7	/* Invalid video header */
+#define ERR_INVALID_MINE_POSITION 8	/* Invalid mine position */
 
 #define MAXREP 100000
 #define MAXNAME 1000
