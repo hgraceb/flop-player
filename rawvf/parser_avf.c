@@ -50,6 +50,15 @@
 #	endif
 #endif
 
+#define ERR_TOO_LARGE	          1	/* Too large video */
+#define ERR_UNEXPECTED_END	      2	/* Unexpected end of file */
+#define ERR_INVALID_FILE	      3	/* Invalid file */
+#define ERR_INVALID_EVENT         4	/* Invalid event */
+#define ERR_INVALID_VIDEO_TYPE    5	/* Invalid video type */
+#define ERR_INVALID_BOARD_SIZE	  6	/* Invalid board size */
+#define ERR_INVALID_VIDEO_HEADER  7	/* Invalid video header */
+#define ERR_INVALID_MINE_POSITION 8	/* Invalid mine position */
+
 #define MAXREP 100000
 #define MAXNAME 1000
 
@@ -63,30 +72,30 @@ struct event
 typedef struct event event;
 
 
-unsigned char *AVF;
+static unsigned char *AVF;
 
 //Initialise global variables
-int mode,w,h,m;					//Mode, Width, Height, Mines
-int size;						//Number of game events
-int* board;						//Stores board and mine locations
-int qm;							//Questionmarks
-int ver;						//Version
-char name[MAXNAME];				//Player name
-char skin[MAXNAME];				//Skin (since version 0.47)
-char program[MAXNAME];			//Program
-char value[MAXNAME];			//Used in getpair() function
-char timestamp_a[MAXNAME];		//Timestamp (when game started)
-char customdata[MAXNAME];		//Custom games have 4 extra bytes
-event video[MAXREP];			//Game events
-int score_sec,score_hun;		//Time in seconds and decimals
-char spacer;					//The period or space before 3rd part of Version
-char versionend[MAXNAME];		//Substring used to fetch Version
-char versionprint[MAXNAME];		//Substring used to fetch Version
-int bbbv;						//3bv
-float realtime;					//Realtime (since version 0.47)
-float bbbvs;					//3bvs
-long length;					//File byte data length
-long position;				    //Current processed byte index
+static int mode, w, h, m;          //Mode, Width, Height, Mines
+static int size;                   //Number of game events
+static int *board;                 //Stores board and mine locations
+static int qm;                     //Questionmarks
+static int ver;                    //Version
+static char name[MAXNAME];         //Player name
+static char skin[MAXNAME];         //Skin (since version 0.47)
+static char program[MAXNAME];      //Program
+static char value[MAXNAME];        //Used in getpair() function
+static char timestamp_a[MAXNAME];  //Timestamp (when game started)
+static char customdata[MAXNAME];   //Custom games have 4 extra bytes
+static event video[MAXREP];        //Game events
+static int score_sec, score_hun;   //Time in seconds and decimals
+static char spacer;                //The period or space before 3rd part of Version
+static char versionend[MAXNAME];   //Substring used to fetch Version
+static char versionprint[MAXNAME]; //Substring used to fetch Version
+static int bbbv;                   //3bv
+static float realtime;             //Realtime (since version 0.47)
+static float bbbvs;                //3bvs
+static long length;                //File byte data length
+static long position;              //Current processed byte index
 
 
 
@@ -109,9 +118,38 @@ EM_PORT_API(void) onerror(const int error_code, const char *error_msg);
 
 
 //==============================================================================================
+//Function is used to reset global variables
+//==============================================================================================
+static void init()
+{
+    AVF = NULL;
+    mode = w = h = m = 0;                            //Mode, Width, Height, Mines
+    size = 0;                                        //Number of game events
+    qm = 0;                                          //Questionmarks
+    ver = 0;                                         //Version
+    memset(name, 0, MAXNAME);                        //Player name
+    memset(skin, 0, MAXNAME);                        //Skin (since version 0.47)
+    memset(program, 0, MAXNAME);                     //Program
+    memset(value, 0, MAXNAME);                       //Used in getpair() function
+    memset(timestamp_a, 0, MAXNAME);                 //Timestamp (when game started)
+    memset(customdata, 0, MAXNAME);                  //Custom games have 4 extra bytes
+    memset(video, 0, sizeof(struct event) * MAXREP); //Game events
+    score_sec = score_hun = 0;                       //Time in seconds and decimals
+    spacer = 0;                                      //The period or space before 3rd part of Version
+    memset(versionend, 0, MAXNAME);                  //Substring used to fetch Version
+    memset(versionprint, 0, MAXNAME);                //Substring used to fetch Version
+    bbbv = 0;                                        //3bv
+    realtime = 0;                                    //Realtime (since version 0.47)
+    bbbvs = 0;                                       //3bvs
+    length = 0;                                      //File byte data length
+    position = 0;                                    //Current processed byte index
+}
+
+
+//==============================================================================================
 //Function is used to free memory
 //==============================================================================================
-void freememory()
+static void freememory()
 {
 	if (NULL != AVF)
 	{
@@ -128,7 +166,7 @@ void freememory()
 //==============================================================================================
 //Function is used to return formatted results
 //==============================================================================================
-void writef(char *format, ...)
+static void writef(char *format, ...)
 {
 	char str[MAXNAME];
 	va_list args;
@@ -140,9 +178,20 @@ void writef(char *format, ...)
 
 
 //==============================================================================================
+//Function is used to handle error messages
+//==============================================================================================
+static void error(const int code, const char* msg)
+{
+	freememory();
+    onerror(code, msg);
+    exit(1);
+}
+
+
+//==============================================================================================
 //Function is run if there is a parsing error
 //==============================================================================================
-int _fgetc(unsigned char *f)
+static int _fgetc(unsigned char *f)
 {
 	if (position < length)
 	{
@@ -150,8 +199,7 @@ int _fgetc(unsigned char *f)
 	}
 	else
 	{
-		freememory();
-		onerror(4, "Unexpected end of file");
+		error(ERR_UNEXPECTED_END, "Unexpected end of file");
 		exit(1);
 	}
 }
@@ -160,7 +208,7 @@ int _fgetc(unsigned char *f)
 //==============================================================================================
 //Function is used to read Realtime and Skin values
 //==============================================================================================
-void getpair(unsigned char* f,char* c1,char* c2)
+static void getpair(unsigned char* f,char* c1,char* c2)
 {
 	//Initialise local variables
 	int i=0;
@@ -191,7 +239,7 @@ void getpair(unsigned char* f,char* c1,char* c2)
 //==============================================================================================
 //Function is used to read video data
 //==============================================================================================
-int readavf()
+static int readavf()
 {
 	//Initialise local variables
 	int i,cur=0;
@@ -424,7 +472,7 @@ int readavf()
 //==============================================================================================
 //Function is used to print video data
 //==============================================================================================
-void writetxt()
+static void writetxt()
 {
 	//Initialise local variables
 	int i,j;
@@ -542,15 +590,14 @@ void writetxt()
 //==============================================================================================
 EM_PORT_API(void) parser_avf(const long len, unsigned char *byte_array)
 {
-	position = 0;
+    init();
 	length = len;
 	AVF = byte_array;
 
 	//Error if video parsing fails
 	if (!readavf())
 	{
-		onerror(3, "Invalid AVF");
-		freememory();
+		error(ERR_UNEXPECTED_END, "Invalid AVF");
 		return;
 	}
 

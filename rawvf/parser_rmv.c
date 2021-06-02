@@ -65,32 +65,32 @@ struct event
 typedef struct event event;
 
 
-unsigned char *RMV;
+static unsigned char *RMV;
 
 //Initialise global variables
-int mode,level,w,h,m;		//Mode, Level, Width, Height, Mines
-int size;					//Number of game events
-int* board;					//Stores board and mine locations
-int qm,nf;					//Questionmarks, Style
-char name[MAXNAME];			//Player name
-char nick[MAXNAME];			//Player nickname
-char country[MAXNAME];		//Player country
-char token[MAXNAME];		//Player token
-char program[MAXNAME];		//Program
-char version[MAXNAME];		//Version string
-char verstring[MAXNAME];	//Substring of Version
-char verlength[MAXNAME];	//Substring of Version
-char timestamp[MAXNAME];	//Timestamp
-event video[MAXREP];		//Game events
-const int square_size=16;	//Cell size used in mouse movement calculations
-int score;					//Time
-int score_check;			//Boolean used to check if Time found from game events
-char bbbv[MAXNAME];			//3bv as a string
-int bbbvint;				//3bv as an integer
-int bbbvs; 					//3bvs during calculations
-float bbbvs_final;			//3bvs with decimals
-long length;					            //File byte data length
-long position;				                //Current processed byte index
+static int mode, level, w, h, m;   //Mode, Level, Width, Height, Mines
+static int size;                   //Number of game events
+static int *board;                 //Stores board and mine locations
+static int qm, nf;                 //Questionmarks, Style
+static char name[MAXNAME];         //Player name
+static char nick[MAXNAME];         //Player nickname
+static char country[MAXNAME];      //Player country
+static char token[MAXNAME];        //Player token
+static char program[MAXNAME];      //Program
+static char version[MAXNAME];      //Version string
+static char verstring[MAXNAME];    //Substring of Version
+static char verlength[MAXNAME];    //Substring of Version
+static char timestamp[MAXNAME];    //Timestamp
+static event video[MAXREP];        //Game events
+static const int square_size = 16; //Cell size used in mouse movement calculations
+static int score;                  //Time
+static int score_check;            //Boolean used to check if Time found from game events
+static char bbbv[MAXNAME];         //3bv as a string
+static int bbbvint;                //3bv as an integer
+static int bbbvs;                  //3bvs during calculations
+static float bbbvs_final;          //3bvs with decimals
+static long length;                //File byte data length
+static long position;              //Current processed byte index
 
 
 
@@ -113,9 +113,39 @@ EM_PORT_API(void) onerror(const int error_code, const char *error_msg);
 
 
 //==============================================================================================
+//Function is used to reset global variables
+//==============================================================================================
+static void init()
+{
+    RMV = NULL;
+    mode = level = w = h = m = 0;                    //Mode, Level, Width, Height, Mines
+    size = 0;                                        //Number of game events
+    qm = nf = 0;                                     //Questionmarks, Style
+    memset(name, 0, MAXNAME);                        //Player name
+    memset(nick, 0, MAXNAME);                        //Player nickname
+    memset(country, 0, MAXNAME);                     //Player country
+    memset(token, 0, MAXNAME);                       //Player token
+    memset(program, 0, MAXNAME);                     //Program
+    memset(version, 0, MAXNAME);                     //Version string
+    memset(verstring, 0, MAXNAME);                   //Substring of Version
+    memset(verlength, 0, MAXNAME);                   //Substring of Version
+    memset(timestamp, 0, MAXNAME);                   //Timestamp
+    memset(video, 0, sizeof(struct event) * MAXREP); //Game events
+    score = 0;                                       //Time
+    score_check = 0;                                 //Boolean used to check if Time found from game events
+    memset(bbbv, 0, MAXNAME);                        //3bv as a string
+    bbbvint = 0;                                     //3bv as an integer
+    bbbvs = 0;                                       //3bvs during calculations
+    bbbvs_final = 0;                                 //3bvs with decimals
+    length = 0;                                      //File byte data length
+    position = 0;                                    //Current processed byte index
+}
+
+
+//==============================================================================================
 //Function to free memory
 //==============================================================================================
-void freememory()
+static void freememory()
 {
 	if (NULL != board)
 	{
@@ -128,7 +158,7 @@ void freememory()
 //==============================================================================================
 //Function to return formatted results
 //==============================================================================================
-void writef(char *format, ...)
+static void writef(char *format, ...)
 {
 	char str[MAXNAME];
 	va_list args;
@@ -140,9 +170,9 @@ void writef(char *format, ...)
 
 
 //==============================================================================================
-//Function to print error messages
+//Function to handle error messages
 //==============================================================================================
-void error(const int code, const char* msg)
+static void error(const int code, const char* msg)
 {
 	freememory();
     onerror(code, msg);
@@ -153,7 +183,7 @@ void error(const int code, const char* msg)
 //==============================================================================================
 //Function is run if there is a parsing error
 //==============================================================================================
-int _fgetc(unsigned char *f)
+static int _fgetc(unsigned char *f)
 {
     if (position < length)
     {
@@ -171,7 +201,7 @@ int _fgetc(unsigned char *f)
 //==============================================================================================
 //Functions to parse either 2, 3 or 4 bytes at a time
 //==============================================================================================
-int getint2(unsigned char *f)
+static int getint2(unsigned char *f)
 {
 	//Creates a string array called c holding 2 bytes
 	unsigned char c[2];
@@ -185,14 +215,14 @@ int getint2(unsigned char *f)
 	return (int)c[1]+c[0]*256;
 }
 
-int getint3(unsigned char *f)
+static int getint3(unsigned char *f)
 {
 	//Creates a string array called c holding 3 bytes
 	unsigned char c[3];
 	c[0]=_fgetc(f);c[1]=_fgetc(f);c[2]=_fgetc(f);
 	return (int)c[2]+c[1]*256+c[0]*65536;
 }
-int getint(unsigned char *f)
+static int getint(unsigned char *f)
 {
 	//Creates a string array called c holding 4 bytes
 	unsigned char c[4];
@@ -206,7 +236,7 @@ int getint(unsigned char *f)
 //==============================================================================================
 //Function is used to print game events
 //==============================================================================================
-void print_event(event* e)
+static void print_event(event* e)
 {
 	const char* event_names[]={"","mv","lc","lr","rc","rr","mc","mr","","pressed","pressedqm","closed",
 		"questionmark","flag","blast","lost","won","nonstandard","number0","number1","number2","number3",
@@ -241,7 +271,7 @@ void print_event(event* e)
 //==============================================================================================
 //Function is used to fetch Time and Status
 //==============================================================================================
-void print_event2(event* e)
+static void print_event2(event* e)
 {	
 	const char* event_names[]={"","mv","lc","lr","rc","rr","mc","mr","","pressed","pressedqm","closed",
 		"questionmark","flag","blast","lost","won","nonstandard","number0","number1","number2","number3",
@@ -267,7 +297,7 @@ void print_event2(event* e)
 //==============================================================================================
 //Function is used to read video data
 //==============================================================================================
-int readrmv()
+static int readrmv()
 {	
 	//Initialise local variables	
 	int i,j,cur=0;
@@ -509,7 +539,7 @@ int readrmv()
 //==============================================================================================
 //Function is used to print video data
 //==============================================================================================
-void writetxt()
+static void writetxt()
 {
 	//Initialise local variables	
 	int i,j;
@@ -673,7 +703,7 @@ void writetxt()
 //==============================================================================================
 EM_PORT_API(void) parser_rmv(const long len, unsigned char *byte_array)
 {
-	position = 0;
+    init();
 	length = len;
 	RMV = byte_array;
 
