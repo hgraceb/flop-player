@@ -261,66 +261,6 @@
             console.warn(msg);
         }
     }
-
-    /**
-     * 测试使用 emscripten 进行录像解析
-     */
-    function emscripten(url) {
-        const request = new XMLHttpRequest();
-        const type = url.substring(url.lastIndexOf('.'), url.length);
-        // TODO 先对文件后缀进行判断，不符合条件则直接报错
-        request.open("GET", url, true);
-        request.responseType = "arraybuffer";
-        request.url = url;
-        request.onreadystatechange = function () {
-            if (request.readyState === 4) {
-                if (request.status === 200) {
-                    const uint8Array = new Uint8Array(request.response);
-                    try {
-                        switch (type) {
-                            case ".avf":
-                                Module.ccall('parser_avf', 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
-                                break;
-                            case ".mvf":
-                                Module.ccall('parser_mvf', 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
-                                break;
-                            case ".rmv":
-                                Module.ccall('parser_rmv', 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
-                                break;
-                            default:
-                            // TODO 处理错误情况
-                        }
-                    } catch (e) {
-                        // ignore
-                    }
-                } else {
-                    // TODO 处理错误情况
-                    console.log(`http request failed. URL: ${request.url}  error code: ${request.status}`);
-                }
-            }
-        };
-        request.send();
-    }
-
-    let results = "";
-
-    function onprogress(result) {
-        results += result;
-    }
-
-    function onsuccess() {
-        $('#video-stage', parent.document).fadeIn(fade);
-        $('#video-iframe', parent.document).fadeIn(fade, function () {
-            pause_avf();
-            pause_avf();//走遍两个分支
-        });
-        playRawVideo(results);
-        results = null;
-    }
-
-    function onerror(errCode, errMsg) {
-        console.log(`errCode = ${errCode}, errMsg = ${errMsg}`);
-    }
 </script>
 
 <script type="text/javascript" src="js/public.js?v=20210524"></script>

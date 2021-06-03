@@ -20,10 +20,6 @@
     <button type="button" onclick="playVideo('../videos/arbiter_int.avf')">arbiter_int.avf</button>
     <button type="button" onclick="playVideo('../videos/arbiter_exp.avf')">arbiter_exp.avf</button>
     <br/><br/>
-    <button type="button" onclick="emscripten('../videos/arbiter_beg.avf')">emscripten_arbiter_beg.avf</button>
-    <button type="button" onclick="emscripten('../videos/arbiter_int.avf')">emscripten_arbiter_int.avf</button>
-    <button type="button" onclick="emscripten('../videos/arbiter_exp.avf')">emscripten_arbiter_exp.avf</button>
-    <br/><br/>
     <button type="button" onclick="playVideo('../videos/arbiter_beg_translated.rawvf')">arbiter_beg_translated.rawvf</button>
     <button type="button" onclick="playVideo('../videos/arbiter_int_translated.rawvf')">arbiter_int_translated.rawvf</button>
     <button type="button" onclick="playVideo('../videos/arbiter_exp_translated.rawvf')">arbiter_exp_translated.rawvf</button>
@@ -37,17 +33,13 @@
 </div>
 
 <script>
-    function emscripten(filePath){
-        document.getElementById('video-iframe').contentWindow.emscripten(filePath);
-    }
-
     function playVideo(filePath) {
         /* Second: call the "loadVideo" function when you need to play the video */
         document.getElementById('video-iframe').contentWindow.loadVideo(filePath);
     }
 
     window.onload = function () {
-        emscripten("../videos/arbiter_exp.avf");
+        playVideo("../videos/arbiter_exp.avf");
     };
 </script>
 
