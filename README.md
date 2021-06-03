@@ -32,6 +32,6 @@
 
 ## About
 
-- Example video sources：Personal、[Authoritative Mineweeper](https://minesweepergame.com/)、[Saolei.wang](http://www.saolei.wang/)
+- Example video sources：Personal、[minesweepergame.com](https://minesweepergame.com/) (World Rankings)、[saolei.wang](http://www.saolei.wang/) (China Rankings)
 
 - Minesweeper RAW Video Format：https://github.com/thefinerminer/minesweeper-rawvf
