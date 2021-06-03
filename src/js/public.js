@@ -487,7 +487,6 @@ function timer_avf() {
 
 function stop()//暂停函数
 {
-    // console.timeEnd("控制台计时器");
     window.clearInterval(int);
     var stoptime = new Date();
     log("stop:" + stoptime.getMinutes() + '.' + stoptime.getSeconds() + '.' + stoptime.getMilliseconds());

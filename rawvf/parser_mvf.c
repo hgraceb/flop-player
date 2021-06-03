@@ -23,6 +23,35 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#include <stdarg.h>
+#include <emscripten.h>
+
+#ifndef EM_PORT_API
+#	if defined(__EMSCRIPTEN__)
+#		include <emscripten.h>
+#		if defined(__cplusplus)
+#			define EM_PORT_API(rettype) extern "C" rettype EMSCRIPTEN_KEEPALIVE
+#		else
+#			define EM_PORT_API(rettype) rettype EMSCRIPTEN_KEEPALIVE
+#		endif
+#	else
+#		if defined(__cplusplus)
+#			define EM_PORT_API(rettype) extern "C" rettype
+#		else
+#			define EM_PORT_API(rettype) rettype
+#		endif
+#	endif
+#endif
+
+#define ERR_TOO_LARGE	          1	/* Too large video */
+#define ERR_UNEXPECTED_END	      2	/* Unexpected end of file */
+#define ERR_INVALID_FILE	      3	/* Invalid file */
+#define ERR_INVALID_EVENT         4	/* Invalid event */
+#define ERR_INVALID_VIDEO_TYPE    5	/* Invalid video type */
+#define ERR_INVALID_BOARD_SIZE	  6	/* Invalid board size */
+#define ERR_INVALID_VIDEO_HEADER  7	/* Invalid video header */
+#define ERR_INVALID_MINE_POSITION 8	/* Invalid mine position */
 
 #define MAXREP 100000
 #define MAXNAME 1000
@@ -37,45 +66,138 @@ struct event
 };
 typedef struct event event;
 
-FILE* MVF;
-FILE* RAWVF;
+static unsigned char *MVF;
 
 //Initialise global variables
-int mode,level,w,h,m;						//Mode, Level, Width, Height, Mines
-int size; 									//Number of game events
-int* board;									//Array to store board cells
-int qm;										//Questionmarks
-int has_date;								//TRUE if Clone 0.97, 2006, 2007
-char timestamp[MAXNAME];					//Timestamp
-int month,year,day,hour,minute,second;		//Date variables taken from Timestamp
-int has_info;								//TRUE if Clone 0.97
-int bbbv,lcl,rcl,dcl,solved_bbbv;			//Stats only available in Clone 0.97 videos
-int score_sec,score_ths;					//Time in seconds and decimals
-char name[MAXNAME];							//Player name
-const char program[]="Minesweeper Clone";	//Program defined here instead of reading from video
-char *version;								//Version
-event video[MAXREP];						//Game events
-const int square_size=16;					//Cell size used in mouse movement calculations
-float bbbvs;								//3bvs
-
+static int mode, level, w, h, m;                   //Mode, Level, Width, Height, Mines
+static int size;                                   //Number of game events
+static int *board;                                 //Array to store board cells
+static int qm;                                     //Questionmarks
+static int has_date;                               //TRUE if Clone 0.97, 2006, 2007
+static char timestamp[MAXNAME];                    //Timestamp
+static int month, year, day, hour, minute, second; //Date variables taken from Timestamp
+static int has_info;                               //TRUE if Clone 0.97
+static int bbbv, lcl, rcl, dcl, solved_bbbv;       //Stats only available in Clone 0.97 videos
+static int score_sec, score_ths;                   //Time in seconds and decimals
+static char name[MAXNAME];                         //Player name
+static const char program[] = "Minesweeper Clone"; //Program defined here instead of reading from video
+static char *version;                              //Version
+static event video[MAXREP];                        //Game events
+static const int square_size = 16;                 //Cell size used in mouse movement calculations
+static float bbbvs;                                //3bvs
+static long length;                                //File byte data length
+static long position;                              //Current processed byte index
 
 
 //==============================================================================================
-//Function asks user to exit after program has run successfully
+//Function to return formatted results, imp by C, call by JavaScript
 //==============================================================================================
-void pause()
+EM_PORT_API(void) onprogress(const char *result);
+
+
+//==============================================================================================
+//Function to callback success message, imp by C, call by JavaScript
+//==============================================================================================
+EM_PORT_API(void) onsuccess();
+
+
+//==============================================================================================
+//Function to callback error message, imp by C, call by JavaScript
+//==============================================================================================
+EM_PORT_API(void) onerror(const int error_code, const char *error_msg);
+
+
+//==============================================================================================
+//Function is used to reset global variables
+//==============================================================================================
+static void init()
 {
-	//fprintf(stderr,"Press enter to exit\n");
+    MVF = NULL;
+    mode = level = w = h = m = 0;                    //Mode, Level, Width, Height, Mines
+    size = 0;                                        //Number of game events
+    qm = 0;                                          //Questionmarks
+    has_date = 0;                                    //TRUE if Clone 0.97, 2006, 2007
+    memset(timestamp, 0, MAXNAME);                   //Timestamp
+    month = year = day = hour = minute = second = 0; //Date variables taken from Timestamp
+    has_info = 0;                                    //TRUE if Clone 0.97
+    bbbv = lcl = rcl = dcl = solved_bbbv = 0;        //Stats only available in Clone 0.97 videos
+    score_sec = score_ths = 0;                       //Time in seconds and decimals
+    memset(name, 0, MAXNAME);                        //Player name
+    memset(video, 0, sizeof(struct event) * MAXREP); //Game events
+    bbbvs = 0;                                       //3bvs
+    length = 0;                                      //File byte data length
+    position = 0;                                    //Current processed byte index
 }
 
 
 //==============================================================================================
-//Function to print error messages
+//Function to free memory
 //==============================================================================================
-void error(const char* msg)
+static void freememory()
 {
-    fprintf(stderr,"Offset %d : %s\n",(int)ftell(MVF),msg);
-	pause();
+	if (NULL != board)
+	{
+		free(board);
+		board = NULL;
+	}
+	if (NULL != version)
+    {
+        free(version);
+        version = NULL;
+    }
+}
+
+
+//==============================================================================================
+//Function to return formatted results
+//==============================================================================================
+static void writef(char *format, ...)
+{
+	char str[MAXNAME];
+	va_list args;
+	va_start(args, format);
+	vsprintf(str, format, args);
+	onprogress(str);
+	va_end(args);
+}
+
+
+//==============================================================================================
+//Function to proxy fseek
+//==============================================================================================
+static void _fseek(unsigned char *stream, long offset, int whence)
+{
+    if (SEEK_SET == whence)
+    {
+        position = offset;
+    }
+    else if (SEEK_CUR == whence)
+    {
+        position += offset;
+    }
+    else if (SEEK_END == whence)
+    {
+        position = length + offset;
+    }
+}
+
+
+//==============================================================================================
+//Function to proxy ftell
+//==============================================================================================
+static long _ftell(unsigned char *stream)
+{
+    return position;
+}
+
+
+//==============================================================================================
+//Function to handle error messages
+//==============================================================================================
+static void error(const int code, const char* msg)
+{
+	freememory();
+    onerror(code, msg);
     exit(1);
 }
 
@@ -84,16 +206,20 @@ void error(const char* msg)
 //==============================================================================================
 //Functions to parse either 1, 2 or 3 bytes at a time
 //==============================================================================================
-_fgetc(FILE* f)
+static int _fgetc(unsigned char *f)
 {
-    if(!feof(f)) return fgetc(f); else
+    if (position < length)
     {
-        error("Error 4: Unexpected end of file");
+        return f[position++];
+    }
+    else
+    {
+        error(ERR_UNEXPECTED_END, "Unexpected end of file");
         exit(1);
     }
 }
 
-int getint2(FILE* f)
+static int getint2(unsigned char *f)
 {
     unsigned char c[2];
     c[0]=_fgetc(f);c[1]=_fgetc(f);
@@ -104,7 +230,7 @@ int getint2(FILE* f)
     return (int)c[1]+c[0]*256;
 }
 
-int getint3(FILE* f)
+static int getint3(unsigned char *f)
 {
     unsigned char c[3];
     c[0]=_fgetc(f);c[1]=_fgetc(f);c[2]=_fgetc(f);
@@ -116,7 +242,7 @@ int getint3(FILE* f)
 //==============================================================================================
 //Function to read board layout into memory
 //==============================================================================================
-void read_board(int add)
+static void read_board(int add)
 {
     unsigned char c;
     int board_sz,i,pos;
@@ -131,9 +257,9 @@ void read_board(int add)
 	
     for(i=0;i<m;++i)
     {
-        c=fgetc(MVF);pos=c+add;
-        c=fgetc(MVF);pos+=(c+add)*w;
-        if(pos>=board_sz || pos<0) error("Invalid mine position");
+        c=_fgetc(MVF);pos=c+add;
+        c=_fgetc(MVF);pos+=(c+add)*w;
+        if(pos>=board_sz || pos<0) error(ERR_INVALID_MINE_POSITION,"Invalid mine position");
         board[pos]=1;
     }   
 }
@@ -145,14 +271,14 @@ void read_board(int add)
 //==============================================================================================
 
 //Put event bytes into e variable
-void read_event(int size,unsigned char* e)
+static void read_event(int size,unsigned char* e)
 {
     int i;
     for(i=0;i<size;++i) e[i]=_fgetc(MVF);
 }
 
 //Time
-void read_score()
+static void read_score()
 {
     unsigned char c,d;
     c=_fgetc(MVF);d=_fgetc(MVF);
@@ -161,7 +287,7 @@ void read_score()
 }
 
 //Decode event
-int apply_perm(int num,int* byte,unsigned char* bit,unsigned char* event)
+static int apply_perm(int num,int* byte,unsigned char* bit,unsigned char* event)
 {
     return (event[byte[num]]&bit[num])?1:0;
 }
@@ -170,7 +296,7 @@ int apply_perm(int num,int* byte,unsigned char* bit,unsigned char* event)
 //==============================================================================================
 //Function to read Clone 0.97 videos
 //==============================================================================================
-int read_097()
+static int read_097()
 {
 	//Initialise local variables
     unsigned char c;
@@ -241,7 +367,7 @@ int read_097()
 			
 	//Get number of bytes that store mouse events		
     size=getint3(MVF);
-    if(size>=MAXREP) error("Too large video");
+    if(size>=MAXREP) error(ERR_TOO_LARGE,"Too large video");
 	
 	//Read mouse events
     for(i=0;i<size;++i)
@@ -268,7 +394,7 @@ int read_097()
 //==============================================================================================
 //Function to read Clone 2006 and 2007 videos
 //==============================================================================================
-int read_2007()
+static int read_2007()
 {
 	//Initialise local variables	
     unsigned char c;
@@ -337,7 +463,7 @@ int read_2007()
 			
 	//Get number of bytes that store mouse events				
     size=getint3(MVF);
-    if(size>=MAXREP) error("Too large video");  
+    if(size>=MAXREP) error(ERR_TOO_LARGE,"Too large video");
 	
 	//Read mouse events	
     for(i=0;i<size;++i)
@@ -367,7 +493,7 @@ int read_2007()
 //==============================================================================================
 //Function to check version and parse if not standard Clone 0.97, 2006 or 2007
 //==============================================================================================
-int readmvf()
+static int readmvf()
 {   
 	//Initialise local variables	   
     unsigned char c,d;    
@@ -381,34 +507,34 @@ int readmvf()
     if(c==0x11 && d==0x4D)
     {
 		//The byte after offset 27 in "new" versions is last digit of year
-        fseek(MVF,27,SEEK_SET);
+        _fseek(MVF,27,SEEK_SET);
         c=_fgetc(MVF);
 		
 		//Clone 0.97		
         if(c=='5')
         {
             //Relevant data starts from offset 74
-            fseek(MVF,74,SEEK_SET);
+            _fseek(MVF,74,SEEK_SET);
             version="0.97 beta";
             return read_097();
         }
 		//Clone 2006 or 2007
         else if(c=='6' || c=='7')
         {
-            fseek(MVF,53,SEEK_SET);
+            _fseek(MVF,53,SEEK_SET);
             c=_fgetc(MVF);
             version=(char*)malloc(c+1);
             for(d=0;d<c;++d) version[d]=_fgetc(MVF);
             version[d]=0;
             //Relevant data starts from offset 71
-            fseek(MVF,71,SEEK_SET);
+            _fseek(MVF,71,SEEK_SET);
             return read_2007();
         }
 		//Clone 0.97 Funny Mode hack by Abiu in June 2008
         else if(c=='8')
         {
             //Relevant data starts from offset 74			
-            fseek(MVF,74,SEEK_SET);
+            _fseek(MVF,74,SEEK_SET);
             version="0.97 Funny Mode Hack";
             c=read_097();
 			//All Funny Mode videos are UPK
@@ -419,7 +545,7 @@ int readmvf()
 	//Clone 0.97 hack by an unknown person
     else if (c==0x00 && d==0x00)
     {
-        fseek(MVF,7,SEEK_SET);
+        _fseek(MVF,7,SEEK_SET);
         version="0.97 Unknown Hack";
         return read_097();
     }
@@ -438,7 +564,7 @@ int readmvf()
         int has_name;
 
 		//There is no header so read from start of file
-        fseek(MVF,0,SEEK_SET);
+        _fseek(MVF,0,SEEK_SET);
 		
 		//Function reads Width, Height, Mines and the X,Y for each Mine
         read_board(0);
@@ -450,16 +576,16 @@ int readmvf()
         c=_fgetc(MVF);
 		
 		//Store current byte position for later when reading mouse events
-		current=ftell(MVF);
+		current=_ftell(MVF);
 		
 		//Get number of bytes in file
-		fseek(MVF,0,SEEK_END);		
-		filesize=ftell(MVF);				
+		_fseek(MVF,0,SEEK_END);
+		filesize=_ftell(MVF);
 
 		//Check if 20 byte checksum is bookended by zero
-        fseek(MVF,filesize-1,SEEK_SET);
+        _fseek(MVF,filesize-1,SEEK_SET);
 		char checksum_a = _fgetc(MVF);
-        fseek(MVF,filesize-22,SEEK_SET);
+        _fseek(MVF,filesize-22,SEEK_SET);
 		char checksum_b = _fgetc(MVF);		
 
 		if(isdigit(checksum_a)==0 && isdigit(checksum_b)==0)
@@ -470,15 +596,15 @@ int readmvf()
 			after_events=filesize-125;			
 			
 			//Get Player name
-			fseek(MVF,filesize-122,SEEK_SET);	
+			_fseek(MVF,filesize-122,SEEK_SET);
 			for(i=0;i<100;++i) name[i]=_fgetc(MVF);		
 		}
 		else
 		{
 			//Assumption is last 3 bytes of 100 byte of Player name are blank			
-			fseek(MVF,filesize-13,SEEK_SET);
+			_fseek(MVF,filesize-13,SEEK_SET);
 			
-			if(_fgetc(MVF)==' ' && _fgetc(MVF)==' ' && fgetc(MVF)==' ')	
+			if(_fgetc(MVF)==' ' && _fgetc(MVF)==' ' && _fgetc(MVF)==' ')	
 			{
 				version = "0.76 beta";
 				
@@ -486,7 +612,7 @@ int readmvf()
 				after_events=filesize-113;
 
 				//Get Player name
-				fseek(MVF,filesize-110,SEEK_SET);
+				_fseek(MVF,filesize-110,SEEK_SET);
 				for(i=0;i<100;++i) name[i]=_fgetc(MVF);
 			}
 			else
@@ -510,14 +636,14 @@ int readmvf()
         if(w==8 && h==8) level=1;
         else if(w==16 && h==16) level=2;
         else if(w==30 && h==16) level=3;
-        else error("Invalid board size");
+        else error(ERR_INVALID_BOARD_SIZE,"Invalid board size");
 
 		//Get Time (3 bytes)
-        fseek(MVF,after_events,SEEK_SET);
+        _fseek(MVF,after_events,SEEK_SET);
         read_score();
 		
 		//Read mouse events	
-        fseek(MVF,current,SEEK_SET);
+        _fseek(MVF,current,SEEK_SET);
         while(current<=after_events)
         {
             read_event(8,e);
@@ -544,7 +670,7 @@ int readmvf()
             video[size].y=(int)e[5]*256+e[6];
             video[size++].weirdness_bit=e[7];
             current+=8;
-            if(size>=MAXREP) error("Too large video");
+            if(size>=MAXREP) error(ERR_TOO_LARGE,"Too large video");
         }
 
         video[size].lb=video[size].mb=video[size].rb=0;
@@ -553,7 +679,7 @@ int readmvf()
         video[size].sec=video[size-1].sec;
         video[size].ths=video[size-1].ths;
         ++size;
-        if(size>=MAXREP) error("Too large video");
+        if(size>=MAXREP) error(ERR_TOO_LARGE,"Too large video");
         return 1;
     }
     return 0;
@@ -566,14 +692,14 @@ int readmvf()
 
 //Clone does not save mouse events before timer starts (on button release)
 //This creates the missing button press by cloning details from the first event
-void print_first_event(event* e)
+static void print_first_event(event* e)
 {
     char* ev=0;
     if(e->lb) ev="lc";
     if(e->rb) ev="rc";
     if(e->mb) ev="mc";
     if(!ev) ev="mv";
-    fprintf(RAWVF,"%d.%03d %s %d %d (%d %d)\n",
+    writef("%d.%03d %s %d %d (%d %d)\n",
             e->sec,e->ths,  
             ev,
             e->x/square_size+1,e->y/square_size+1,
@@ -584,7 +710,7 @@ void print_first_event(event* e)
 //==============================================================================================
 //Function to print rest of mouse events
 //==============================================================================================
-void print_event(event* e,event* prev_e)
+static void print_event(event* e,event* prev_e)
 {
     int num_events=0,i;
     char* evs[MAXEV];
@@ -599,7 +725,7 @@ void print_event(event* e,event* prev_e)
 
     for(i=0;i<num_events;++i)
     {       
-        fprintf(RAWVF,"%d.%03d %s %d %d (%d %d)\n",
+        writef("%d.%03d %s %d %d (%d %d)\n",
                 e->sec,e->ths,  
                 evs[i],
                 e->x/square_size+1,e->y/square_size+1,
@@ -610,9 +736,9 @@ void print_event(event* e,event* prev_e)
 
 
 //==============================================================================================
-//Function is used to print video data
+//Function to print video data
 //==============================================================================================
-void writetxt()
+static void writetxt()
 {
 	//Initialise local variables	
     int i,j;
@@ -622,49 +748,49 @@ void writetxt()
     if(mode>4) mode=4;
 	
 	//Code version and Program	    
-	fprintf(RAWVF,"RawVF_Version: 6\n");
-    fprintf(RAWVF,"Program: %s\n",program);
+	writef("RawVF_Version: 6\n");
+    writef("Program: %s\n",program);
 	
 	//Print Version	
-    fprintf(RAWVF,"Version: %s\n",version);
+    writef("Version: %s\n",version);
 	
 	//Print Player		
-    fprintf(RAWVF,"Player: %s\n",name);
+    writef("Player: %s\n",name);
 	
 	//Print grid details 	
-    fprintf(RAWVF,"Level: %s\n",level_names[level]);
-    fprintf(RAWVF,"Width: %d\n",w);
-    fprintf(RAWVF,"Height: %d\n",h);
-    fprintf(RAWVF,"Mines: %d\n",m);
+    writef("Level: %s\n",level_names[level]);
+    writef("Width: %d\n",w);
+    writef("Height: %d\n",h);
+    writef("Mines: %d\n",m);
 
 	//Print Marks   
-    if(!qm) fprintf(RAWVF,"Marks: Off\n");
-    else {fprintf(RAWVF,"Marks: On\n");}	
+    if(!qm) writef("Marks: Off\n");
+    else {writef("Marks: On\n");}
 
 	//Print Time
-    fprintf(RAWVF,"Time: %d.%03d\n",score_sec,score_ths);
+    writef("Time: %d.%03d\n",score_sec,score_ths);
 
     //Print additional stats only available to Clone 0.97 videos
     if(has_info)
     {
 		//Print 3bv
-        fprintf(RAWVF,"BBBV: %d\n",bbbv);
+        writef("BBBV: %d\n",bbbv);
 
 		//Print 3bvs (this truncates instead of rounds)
         bbbvs=(bbbv*1000000)/((score_sec*1000)+(score_ths));
         bbbvs=bbbvs/1000;
-        printf("BBBVS: %.3f\n",bbbvs);
-        printf("Solved3BV: %d\n",solved_bbbv);
+        writef("BBBVS: %.3f\n",bbbvs);
+        writef("Solved3BV: %d\n",solved_bbbv);
 
 		//Print Status
         if(bbbv==solved_bbbv)
-        printf("Status: Won\n");
-        else {printf("Status: Lost\n");}
+        writef("Status: Won\n");
+        else {writef("Status: Lost\n");}
 
 		//Print Left Clicks, Right Clicks, Double Clicks
-        fprintf(RAWVF,"LClicks: %d\n",lcl);
-        fprintf(RAWVF,"RClicks: %d\n",rcl);
-        fprintf(RAWVF,"DClicks: %d\n",dcl);
+        writef("LClicks: %d\n",lcl);
+        writef("RClicks: %d\n",rcl);
+        writef("DClicks: %d\n",dcl);
      }
 
 	//Date (Timestamp) is only available in Clone 0.97 and later versions
@@ -672,29 +798,29 @@ void writetxt()
     {
 		//Clone 2007 has a bug where sometimes it saves the day as 00
         if(day)
-            fprintf(RAWVF,"Timestamp: %d-%02d-%02d %02d:%02d:%02d\n",year,month,day,hour,minute,second);
+            writef("Timestamp: %d-%02d-%02d %02d:%02d:%02d\n",year,month,day,hour,minute,second);
         else
-            fprintf(RAWVF,"Timestamp: %d-%02d-?? %02d:%02d:%02d\n",year,month,hour,minute,second);
+            writef("Timestamp: %d-%02d-?? %02d:%02d:%02d\n",year,month,hour,minute,second);
     }
 
 	//Print Mode
-    fprintf(RAWVF,"Mode: %s\n",mode_names[mode]);
+    writef("Mode: %s\n",mode_names[mode]);
    
 	//Print Board
-    fprintf(RAWVF,"Board:\n");
+    writef("Board:\n");
     for(i=0;i<h;++i)
     {
         for(j=0;j<w;++j)
             if(board[i*w+j])
-                fprintf(RAWVF,"*");
+                writef("*");
             else
-                fprintf(RAWVF,"0");
-        fprintf(RAWVF,"\n");
+                writef("0");
+        writef("\n");
     }
 
     //Print mouse events
-    fprintf(RAWVF,"Events:\n");
-    fprintf(RAWVF,"0.000 start\n");
+    writef("Events:\n");
+    writef("0.000 start\n");
     print_first_event(video);
     for(i=1;i<size;++i)
     {
@@ -704,56 +830,25 @@ void writetxt()
 }
 
 
-
 //==============================================================================================
-//Run program and display any error messages
+//Function to parse file data, imp by C, call by JavaScript
 //==============================================================================================
-int main(int argc,char** argv)
+EM_PORT_API(void) parser_mvf(const long len, unsigned char *byte_array)
 {
-	//Program can be run in command line as "program video.mvf>output.txt"
-	//The output file is optional if you want output printed to screen		
-    if(argc<2)
-    {
-        printf("Error 1: Name of input file missing\n");
-		printf("Usage: %s <input mvf> [nopause]\n");
-		pause();
-        return 8;
-    }
-	
-	//Error if too many command line inputs
-    if(argc>=3)
-    {
-        RAWVF=fopen(argv[2],"w+");
-        if(!RAWVF)
-        {
-            printf("Error 5: Too many inputs\n");
-            return 3;
-        }
-    }	
+    init();
+	length = len;
+	MVF = byte_array;
 
-	//Open video file    
-    MVF=fopen(argv[1],"rb");
-	
-	//Error if video is not an MVF file	
-    if(!MVF)
-    {
-        printf("Error 2: Could not open MVF\n");
-        return 2;
-    }
-	//Pass stream selected output device (ie, screen or file)
-    else RAWVF=stdout;    
-	
-	//Error if video parsing fails	
-    if(!readmvf())
-    {
-        printf("Error 3: Invalid MVF\n");
-        return 1;
-    }
-	
-	//Print results, close file and free memory	
-    writetxt();
-    fclose(MVF);if(argc>=3) fclose(RAWVF); free(board);
-    
-    return 0;
+	//Error if video parsing fails
+	if (!readmvf())
+	{
+		error(ERR_INVALID_FILE, "Invalid MVF");
+		return;
+	}
+
+	//Callback results and free memory
+	writetxt();
+	freememory();
+	onsuccess();
 }
 
