@@ -154,6 +154,15 @@ function playRawVideo(result) {
     video[0].size = count;
     video_invalid = false;
 
+    // 是否为问号标记模式
+    if (data["Marks"] && data["Marks"].toLowerCase() === "on") {
+        document.getElementById("question").innerHTML = '取消问号';
+        question = true;
+    } else {
+        document.getElementById("question").innerHTML = '标记问号';
+        question = false;
+    }
+
     container.init(video[0].level);
     container.set_viedo_mine(video[0].board); // 按录像布雷
     start_avf(video);

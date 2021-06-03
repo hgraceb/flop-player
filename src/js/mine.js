@@ -667,16 +667,17 @@ Block.prototype.around_open = function ()
 };
 
 function lose() {
-    if (gameover == true && video != 0) {
+    if (gameover === true && video !== 0) {
         path = parseInt(video[size - 1].path);
     }
     gameover = true;
-    var parent = document.getElementById("container");
-    for (var i = 0; i < container.childObject.length; i++) {
-        if (container.childObject[i].html.className == "block" && container.childObject[i].isBomb == true) {
+    const parent = document.getElementById("container");
+    for (let i = 0; i < container.childObject.length; i++) {
+        const className = container.childObject[i].html.className;
+        if (className === "block" && container.childObject[i].isBomb === true) {
             parent.childNodes[i].className = "bomb";
             document.getElementById(i).getElementsByTagName("img")[0].src = "image/bomb.bmp";
-        } else if (container.childObject[i].html.className == "openedBlockBomb" && container.childObject[i].isBomb == false) {
+        } else if (className === "openedBlockBomb" && container.childObject[i].isBomb === false) {
             parent.childNodes[i].className = "bomb";
             document.getElementById(i).getElementsByTagName("img")[0].src = "image/wrongflag.bmp";
         }
@@ -685,25 +686,26 @@ function lose() {
 }
 
 Block.prototype.win = function () {
-    var type = document.getElementById('container').getElementsByTagName("div");
-    var count = 0;
-    for (var i = 0; i < type.length; i++) {
-        var a = type[i].className;
-        if (a == "opening" || a == "number")
+    const type = document.getElementById('container').getElementsByTagName("div");
+    let count = 0;
+    for (let i = 0; i < type.length; i++) {
+        const a = type[i].className;
+        if (a === "opening" || a === "number") {
             count++;
+        }
     }
-    if (count == container.rows * container.columns - container.bombNumber) {
-        // alert("You Win!");
+    if (count === container.rows * container.columns - container.bombNumber) {
         stop();
         change_top_image("face", "face_sunglasses");
-        if (gameover == true && video != 0) {
+        if (gameover === true && video !== 0) {
             path = parseInt(video[size - 1].path);
         }
         gameover = true;
         log("You Win!");
-        var parent = document.getElementById("container");
-        for (var i = 0; i < container.childObject.length; i++) {
-            if (container.childObject[i].html.className == "block") {
+        const parent = document.getElementById("container");
+        for (let i = 0; i < container.childObject.length; i++) {
+            const className = container.childObject[i].html.className;
+            if (className === "block" || className === "question") {
                 parent.childNodes[i].className = "openedBlockBomb";
                 document.getElementById(i).getElementsByTagName("img")[0].src = "image/flag.bmp";
             }
@@ -712,7 +714,7 @@ Block.prototype.win = function () {
     }
 }
 
-var EventUtil = new Object;
+var EventUtil = {};
 // addEventListener() 方法
 // http://www.runoob.com/js/js-htmldom-eventlistener.html
 EventUtil.addEvent = function (a, b, c) {
