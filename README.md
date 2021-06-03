@@ -13,8 +13,8 @@
    ...
    
    <!-- First: add a container for playing the video -->
-   <div id="video-stage" style="position: absolute;z-index: 999;background-color: rgba(0 ,0 ,0 ,0.33)">
-       <iframe id="video-iframe" src="./src/video.html?v=20210524" style="border: 0;width: 0;height: 0;" scrolling="no"></iframe>
+   <div id="video-stage" style="display: none;position: absolute;z-index: 999;background-color: rgba(0 ,0 ,0 ,0.33)">
+       <iframe id="video-iframe" src="./src/video.html?v=20210603" style="border: 0;width: 0;height: 0;" scrolling="no"></iframe>
    </div>
    
    ...
@@ -29,4 +29,9 @@
    ...
    ```
 
-   
+
+## About
+
+- Example video sources：Personal、[Authoritative Mineweeper](https://minesweepergame.com/)、[Saolei.wang](http://www.saolei.wang/)、
+
+- Minesweeper RAW Video Format：https://github.com/thefinerminer/minesweeper-rawvf
