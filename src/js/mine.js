@@ -27,7 +27,7 @@ function Container(d, e, f) {
     this.level = 1;
 }
 
-Container.prototype.init = function (level) {
+Container.prototype.init = function (level, columns, rows, bombNumber) {
     reset();
     gameover = false;
     firstclick = true;
@@ -58,49 +58,49 @@ Container.prototype.init = function (level) {
             parent.removeChild(parent.childNodes[0]);//移除block
         }
 
-        if (level === 3) {//高级
-            parent.style = "width:480px;height:256px;";
-            grandparent.style = "width:498px;height:362px;";
-            document.getElementById("top").style = "width:482px;";
-            document.getElementById("mine").style = "width:636px;";
-            document.getElementById("menu").style = "width:498px;";
-            document.getElementById("mark").style = "width:486px;";
-            document.getElementById("mark_span").style = "width:486px;";
-            document.getElementById("video_control").style = "margin-top:374px;margin-left:132px;";
-            document.getElementById("video_control").style.left = '4px';
+        // 自定义
+        if (level === 4) {
+            this.rows = rows;
+            this.columns = columns;
+            this.bombNumber = bombNumber;
+            this.level = 4;
+        }
+        // 高级
+        else if (level === 3) {
             this.rows = 16;
             this.columns = 30;
             this.bombNumber = 99;
             this.level = 3;
-        } else if (level === 2) {//中级
-            parent.style = "width:256px;height:256px;";
-            grandparent.style = "width:274px;height:362px;";
-            document.getElementById("top").style = "width:258px;";
-            document.getElementById("mine").style = "width:412px;";
-            document.getElementById("menu").style = "width:274px;";
-            document.getElementById("mark").style = "width:262px;";
-            document.getElementById("mark_span").style = "width:262px;";
-            document.getElementById("video_control").style = "margin-top:374px;margin-left:0px;";
-            document.getElementById("video_control").style.left = '4px';
+        }
+        // 中级
+        else if (level === 2) {
             this.rows = 16;
             this.columns = 16;
             this.bombNumber = 40;
             this.level = 2;
-        } else if (level === 1) {//初级
-            parent.style = "width:128px;height:128px;";
-            grandparent.style = "width:146px;height:234px;";
-            document.getElementById("top").style = "width:130px;";
-            document.getElementById("mine").style = "width:284px;";
-            document.getElementById("menu").style = "width:146px;";
-            document.getElementById("mark").style = "width:134px;";
-            document.getElementById("mark_span").style = "width:134px;";
-            document.getElementById("video_control").style = "margin-top:355px;margin-left:0px;";
-            document.getElementById("video_control").style.left = '4px';
+        }
+        // 初级
+        else if (level === 1) {
             this.rows = 8;
             this.columns = 8;
             this.bombNumber = 10;
             this.level = 1;
         }
+
+        // 调整布局和样式
+        if (level !== 0) {
+            const slideLength = 16; // 边长
+            parent.setAttribute("style", `width:${slideLength * this.columns}px;height:${slideLength * this.rows}px;`);
+            grandparent.setAttribute("style", `width:${18 + slideLength * this.columns}px;height:${106 + slideLength * this.rows}px;`);
+            $("#top").css("width", 2 + slideLength * this.columns);
+            $("#mine").css("width", 156 + slideLength * this.columns);
+            $("#menu").css("width", 18 + slideLength * this.columns);
+            $("#mark").css("width", 6 + slideLength * this.columns);
+            $("#mark_span").css("width", 6 + slideLength * this.columns);
+            // TODO 根据宽度设置左外边距
+            $("#video_control").css({"margin-top": $("#border").outerHeight() - 2, "margin-left": 0, "left": 4});
+        }
+
         this.childObject.splice(0, this.childObject.length);
         for (let i = 0; i < this.rows * this.columns; i++) {
             const block = new Block("block", i);
@@ -292,16 +292,6 @@ Container.prototype.reset_mine = function () {
     }
 };
 
-Container.prototype.play_avf = function (video, size, realtime, player) {
-    var id = 0;
-    for (var i = 0; i < size; i++) {
-        id = (video[i].columns - 1) * container.columns + (video[i].rows - 1);
-        if (container.childObject[id].isBomb == false) {
-            container.childObject[id].open()
-        }
-    }
-};
-
 function Direction() {
     this.up = null;
     this.right = null;
@@ -327,10 +317,11 @@ function Block(className, id) {
 
 Block.prototype.calcBombAround = function () {
     if (!this.isBomb) {
-        var a = 0;
-        for (var p in this.neighbors) {
-            if (typeof (this.neighbors[p]) != "function") {
-                if (null != this.neighbors[p] && this.neighbors[p].isBomb) {
+        let a = 0;
+        for (const key in this.neighbors) {
+            if (this.neighbors.hasOwnProperty(key)) {
+                const neighbor = this.neighbors[key];
+                if (null != neighbor && typeof neighbor !== "function" && neighbor.isBomb) {
                     a++;
                 }
             }

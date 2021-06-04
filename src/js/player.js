@@ -144,6 +144,8 @@ function playRawVideo(result) {
         video[0].level = 2;
     } else if ("expert" === data["Level"].toLowerCase()) {
         video[0].level = 3;
+    } else if ("custom" === data["Level"].toLowerCase()) {
+        video[0].level = 4;
     } else {
         throw(`不支持的游戏级别: ${data["Level"]}`);
     }
@@ -163,7 +165,7 @@ function playRawVideo(result) {
         question = false;
     }
 
-    container.init(video[0].level);
+    container.init(video[0].level, parseInt(data["Width"]), parseInt(data["Height"]), parseInt(data["Mines"]));
     container.set_viedo_mine(video[0].board); // 按录像布雷
     start_avf(video);
 }
