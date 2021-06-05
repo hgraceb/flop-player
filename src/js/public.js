@@ -110,20 +110,8 @@ function adjustLayout() {
 
     // 当前所在 iframe 居中（可能要考虑手机竖屏，避免播放器位置过低）
     const scrollbarWidth = hasScrollbar(parent.window, parent.document) ? getScrollbarWidth() : 0; // 滚动条宽度
-    const innerWidth = parent.window.innerWidth - scrollbarWidth;
-    const innerHeight = parent.window.innerHeight - scrollbarWidth;
-    let top = 0;
-    let left = 0;
-    if (game_level === 3) {
-        top = (innerHeight - 412) / 2;
-        left = (innerWidth - 644) / 2;
-    } else if (game_level === 2) {
-        top = (innerHeight - 412) / 2;
-        left = (innerWidth - 475) / 2;
-    } else if (game_level === 1) {
-        top = (innerHeight - 393) / 2;
-        left = (innerWidth - 475) / 2;
-    }
+    let top = (parent.window.innerHeight - scrollbarWidth - $videoIframe.outerHeight()) / 2; // 窗口可用高度减去 iframe 高度
+    let left = (parent.window.innerWidth - scrollbarWidth - $videoIframe.outerWidth()) / 2;  // 窗口可用宽度减去 iframe 宽度
     $videoIframe.css("margin-top", parent.window.scrollY + (top > 0 ? top : 0) + "px");
     $videoIframe.css("margin-left", parent.window.scrollX + (left > 0 ? left : 0) + "px");
 

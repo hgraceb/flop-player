@@ -102,9 +102,12 @@ Container.prototype.init = function (level, columns, rows, bombNumber) {
             const borderWidth = $border.outerWidth();
             const controlWidth = $videoControl.outerWidth() + parseInt($border.css("padding-left")) + parseInt($border.css("padding-right"));
             let marginLeft = 0;
+            // 如果游戏区域的宽度大于速度控制条的宽度，则将速度控制条与游戏区域进行左对齐
             if ($("#containers").outerWidth() > $videoControl.outerWidth()) {
-                marginLeft = $("#counters").outerWidth() + 6;
-            } else if (borderWidth > controlWidth) {
+                marginLeft = $("#counters").outerWidth() + 6; // 阴影为 3 px
+            }
+            // 如果计数器和游戏区域的宽度大于速度控制条的宽度，则将速度控制条居中显示
+            else if (borderWidth > controlWidth) {
                 marginLeft = (borderWidth - controlWidth) / 2;
             }
             $videoControl.css({"margin-top": $border.outerHeight() - 2, "margin-left": marginLeft, "left": 4});
@@ -259,8 +262,8 @@ Container.prototype.set_viedo_mine = function (board) {
 };
 
 Container.prototype.replay_video = function () {
-    if (video_invalid == false) {
-        container.init(video[0].level);
+    if (video_invalid === false) {
+        container.init(video[0].level, this.columns, this.rows, this.bombNumber);
         container.set_viedo_mine(video[0].board);
         start_avf(video);
     } else {
