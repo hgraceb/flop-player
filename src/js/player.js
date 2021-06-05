@@ -46,7 +46,7 @@ function loadVideo(url) {
                 } catch (e) {
                     // 正常解析代码退出程序不额外进行处理
                     if (e.name !== "ExitStatus") {
-                        log(e);
+                        error(e);
                         videoError(e.toString());
                     }
                 }

@@ -257,13 +257,17 @@
     const EMPTY_FUNCTION = function () {
     };
     let log = EMPTY_FUNCTION;
+    let error = EMPTY_FUNCTION;
     let time = EMPTY_FUNCTION;
     let timeLog = EMPTY_FUNCTION;
     let timeEnd = EMPTY_FUNCTION;
     let clear = EMPTY_FUNCTION;
-    if (location.hostname === "localhost") {
+    if (location.hostname === "localhost" || location.hostname === "hgraceb.github.io") {
         log = function (...data) {
             console.log(...data);
+        }
+        error = function (...data) {
+            console.error(...data);
         }
         time = function (label) {
             console.time(label);
