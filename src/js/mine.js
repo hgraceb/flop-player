@@ -41,21 +41,20 @@ Container.prototype.init = function (level, columns, rows, bombNumber) {
     double_count = 0;
     ces_count = 0;
     path = 0;
-    const exist = document.getElementById("container");
+    const container = document.getElementById("container");
     if ((window.orientation === 0 || window.orientation === 180) && (level === 3 || (level === 0 && this.level === 3))) {//手机exp屏幕自适应
         document.getElementsByTagName("meta")[1]["content"] = ('width=device-width, initial-scale=1, user-scalable=no, minimum-scale=' + window.screen.width / 640 + ', maximum-scale=' + window.screen.width / 640 + '');
     } else {
         document.getElementsByTagName("meta")[1]["content"] = ('width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0');
     }
-    if (exist != null) {
+    if (container) {
         if (document.getElementById("mouse_point")) {
             $("div#mouse_point").remove();
         }
         document.getElementById("video_control").style.display = "none";
-        const parent = document.getElementById("container");
         const grandparent = document.getElementById("containers");
         for (let i = 0; i < this.rows * this.columns; i++) {
-            parent.removeChild(parent.childNodes[0]);//移除block
+            container.removeChild(container.childNodes[0]);//移除block
         }
 
         // 自定义
@@ -90,7 +89,7 @@ Container.prototype.init = function (level, columns, rows, bombNumber) {
         // 调整布局和样式
         if (level !== 0) {
             const slideLength = 16; // 边长
-            parent.setAttribute("style", `width:${slideLength * this.columns}px;height:${slideLength * this.rows}px;`);
+            container.setAttribute("style", `width:${slideLength * this.columns}px;height:${slideLength * this.rows}px;`);
             grandparent.setAttribute("style", `width:${18 + slideLength * this.columns}px;height:${106 + slideLength * this.rows}px;`);
             $("#top").css("width", 2 + slideLength * this.columns);
             $("#mine").css("width", 156 + slideLength * this.columns);
@@ -117,11 +116,7 @@ Container.prototype.init = function (level, columns, rows, bombNumber) {
         for (let i = 0; i < this.rows * this.columns; i++) {
             const block = new Block("block", i);
             this.childObject.push(block);
-            document.getElementById("container").appendChild(block.html);
-            const img = document.createElement("img");
-            document.getElementById(i).appendChild(img);
-            // todo 将方块样式初始化放到构造函数中
-            block.changeStyle("block");
+            container.appendChild(block.root);
         }
         //当前frame宽高
         window.parent.document.getElementById('video-iframe').width = document.getElementById('border').offsetWidth;
@@ -136,7 +131,7 @@ Container.prototype.init = function (level, columns, rows, bombNumber) {
         for (let i = 0; i < this.rows * this.columns; i++) {
             const block = new Block("block", i);
             this.childObject.push(block);
-            this.html.appendChild(block.html);
+            this.html.appendChild(block.root);
         }
     }
     change_top_image("face", "face_normal");
@@ -316,7 +311,7 @@ function Direction() {
 
 function Block(className, id) {
     this.neighbors = new Direction();
-    this.html = null;
+    this.root = null;
     this.isBomb = false;
     this.bombNumAround = -1;
     this.className = className;
@@ -341,148 +336,172 @@ Block.prototype.calcBombAround = function () {
     }
 };
 
+const EventUtil = {};
+EventUtil.addEvent = function (a, b, c) {
+    if (a.addEventListener) {
+        a.addEventListener(b, c, false);
+    } else if (a.attachEvent) {
+        a.attachEvent("on" + b, c);
+    } else {
+        a["on" + b] = c;
+    }
+};
+EventUtil.removeEvent = function (a, b, c) {
+    if (a.removeEventListener) {
+        a.removeEventListener(b, c, false);
+    } else if (a.detachEvent) {
+        a.detachEvent("on" + b, c);
+    } else {
+        a["on" + b] = null;
+    }
+};
+
 Block.prototype.init = function () {
-    var c = this;
-    this.html = document.createElement("div");
+    const that = this;
+    const divElement = document.createElement("div");
+    const imageElement = document.createElement("img");
+    divElement.appendChild(imageElement);
+    this.root = divElement;
 
-    EventUtil.addEvent(this.html, "mouseover", function (a) {
-            if (gameover == true) {
+    EventUtil.addEvent(this.root, "mouseover", function (a) {
+            if (gameover === true) {
                 return false;
             }
-            if (c.isOpen == false && rightClick == false && leftClick == true) {
-                if (c.getStyle() == "block" && left_invalid == false) {
-                    c.changeStyle("opening");
+            if (that.isOpen === false && rightClick === false && leftClick === true) {
+                if (that.getStyle() === "block" && left_invalid === false) {
+                    that.changeStyle("opening");
                 }
-            } else if (rightClick == true && leftClick == true) {
-                c.change_around_opening();
-            } else if (middle_invalid == true) {
-                c.change_around_opening();
+            } else if (rightClick === true && leftClick === true) {
+                that.change_around_opening();
+            } else if (middle_invalid === true) {
+                that.change_around_opening();
             }
         }
     );
-    EventUtil.addEvent(this.html, "mouseout", function (a) {
-            if (gameover == true) {
+    EventUtil.addEvent(this.root, "mouseout", function (a) {
+            if (gameover === true) {
                 return false;
             }
-            if (c.isOpen == false && leftClick == true && rightClick == false) {
-                if (c.getStyle() == "opening") {
-                    c.changeStyle("block");
+            if (that.isOpen === false && leftClick === true && rightClick === false) {
+                if (that.getStyle() === "opening") {
+                    that.changeStyle("block");
                 }
-            } else if (rightClick == true && leftClick == true) {
-                c.change_around_normal();
-            } else if (middle_invalid == true) {
-                c.change_around_normal();
+            } else if (rightClick === true && leftClick === true) {
+                that.change_around_normal();
+            } else if (middle_invalid === true) {
+                that.change_around_normal();
             }
         }
     );
 
-    EventUtil.addEvent(this.html, "mousedown", function (a) {
-            if (gameover == true) {
+    EventUtil.addEvent(this.root, "mousedown", function (a) {
+            if (gameover === true) {
                 return false;
             }
-            c.change_around_normal();//复原因为中键改变的block样式
+            that.change_around_normal();//复原因为中键改变的block样式
             change_top_image("face", "face_click");
-            if (a.button == 0) {
-                if (rightClick == true) {
+            if (a.button === 0) {
+                if (rightClick === true) {
                     left_invalid = true;
-                    c.change_around_opening();
-                } else if (c.getStyle() == "block") {
-                    c.changeStyle("opening");
+                    that.change_around_opening();
+                } else if (that.getStyle() === "block") {
+                    that.changeStyle("opening");
                 }
-            } else if (a.button == 2) {
-                if (leftClick == true) {
+            } else if (a.button === 2) {
+                if (leftClick === true) {
                     left_invalid = true;
-                    c.change_around_opening();
+                    that.change_around_opening();
                 } else {
                     right_count++;
 
-                    if (c.getStyle() == "openedBlockBomb") {
-                        if (question == false) {
+                    if (that.getStyle() === "openedBlockBomb") {
+                        if (question === false) {
                             ces_count++;
-                            c.changeStyle("block");
+                            that.changeStyle("block");
                             change_top_count("mine_count", container.minenumber = container.minenumber + 1);
                         } else {
                             ces_count++;
-                            c.changeStyle("question");
+                            that.changeStyle("question");
                             change_top_count("mine_count", container.minenumber = container.minenumber + 1);
                         }
-                    } else if (c.getStyle() == "block") {
+                    } else if (that.getStyle() === "block") {
                         ces_count++;
-                        c.changeStyle("openedBlockBomb");
+                        that.changeStyle("openedBlockBomb");
                         change_top_count("mine_count", container.minenumber = container.minenumber - 1);
-                    } else if (c.getStyle() == "question") {
+                    } else if (that.getStyle() === "question") {
                         ces_count++;
-                        c.changeStyle("block");
+                        that.changeStyle("block");
                     } else {
                         right_invalid = true;
                     }
 
                 }
-            } else if (a.button == 1) {
+            } else if (a.button === 1) {
                 middle_invalid = true;
-                c.change_around_opening();
+                that.change_around_opening();
             }
         }
     );
 
-    EventUtil.addEvent(this.html, "mouseup", function (a) {
-            if (gameover == true) {
+    EventUtil.addEvent(this.root, "mouseup", function (a) {
+            if (gameover === true) {
                 return false;
             }
-            if (reset_begin == true) {
+            if (reset_begin === true) {
                 reset_begin = false;
                 start();
             }
             change_top_image("face", "face_normal");
-            if (a.button == 0) {
-                if (rightClick == true) {
-                    c.change_around_normal();
+            if (a.button === 0) {
+                if (rightClick === true) {
+                    that.change_around_normal();
                     double_count++;
-                    if (right_invalid == true) {
+                    if (right_invalid === true) {
                         right_count--;
                         right_invalid = false;
                     }
-                } else if (left_invalid == false) {
+                } else if (left_invalid === false) {
                     left_count++;
                 }
-                if (c.isOpen == false && c.getStyle() == "opening" && rightClick == false && c.getStyle() == "opening") {
-                    if (firstclick == true) {
+                if (that.isOpen === false && that.getStyle() === "opening" && rightClick === false && that.getStyle() === "opening") {
+                    if (firstclick === true) {
                         firstclick = false;
-                        container.set_mine(c.id);
+                        container.set_mine(that.id);
                         start();
                     } else {
-                        c.open();
+                        that.open();
                     }
-                } else if (rightClick == true && c.isOpen == true && c.bombNumAround > 0) {
-                    c.openaround();
+                } else if (rightClick === true && that.isOpen === true && that.bombNumAround > 0) {
+                    that.openaround();
                 }
                 left_invalid = false;
-            } else if (a.button == 2) {
-                if (leftClick == true) {
+            } else if (a.button === 2) {
+                if (leftClick === true) {
                     double_count++;
-                    if (right_invalid == true) {
+                    if (right_invalid === true) {
                         right_count--;
                     }
-                    c.change_around_normal();
-                    if (c.isOpen == true && c.bombNumAround > 0) {
-                        c.openaround();
+                    that.change_around_normal();
+                    if (that.isOpen === true && that.bombNumAround > 0) {
+                        that.openaround();
                     }
                 }
                 right_invalid = false;
-            } else if (a.button == 1) {
+            } else if (a.button === 1) {
                 middle_invalid = false;
-                c.change_around_normal();
-                c.openaround();
+                that.change_around_normal();
+                that.openaround();
             }
         }
     );
-    this.html.setAttribute("class", "block");
-    this.html.setAttribute("id", c.id);
+    this.root.setAttribute("class", "block");
+    this.root.setAttribute("id", that.id);
+    this.changeStyle(this.className);
 };
 
 Block.prototype.changeStyle = function (className) {
-    this.html.setAttribute("class", className);
-    const imgElement = document.getElementById(this.id).getElementsByTagName("img")[0];
+    this.root.setAttribute("class", className);
+    const imgElement = this.root.getElementsByTagName("img")[0];
     switch (className) {
         case "openedBlockBomb":
             imgElement.src = "image/flag.bmp";
@@ -497,10 +516,6 @@ Block.prototype.changeStyle = function (className) {
             imgElement.src = "image/question.bmp";
             break;
     }
-};
-
-Block.prototype.change = function (a) {
-    this.html.setAttribute("style", a);
 };
 
 Block.prototype.change_around_opening = function () {
@@ -546,9 +561,9 @@ Block.prototype.change_around_normal = function () {
 };
 
 Block.prototype.getStyle = function () {
-    var a = this.html.getAttribute("class");
+    var a = this.root.getAttribute("class");
     if (a == null || typeof (a) == "undefined") {
-        a = this.html.getAttribute("className")
+        a = this.root.getAttribute("className")
     }
     return a;
 };
@@ -675,7 +690,7 @@ function lose() {
     gameover = true;
     const parent = document.getElementById("container");
     for (let i = 0; i < container.childObject.length; i++) {
-        const className = container.childObject[i].html.className;
+        const className = container.childObject[i].root.className;
         if (className === "block" && container.childObject[i].isBomb === true) {
             parent.childNodes[i].className = "bomb";
             document.getElementById(i).getElementsByTagName("img")[0].src = "image/bomb.bmp";
@@ -706,7 +721,7 @@ Block.prototype.win = function () {
         log("You Win!");
         const parent = document.getElementById("container");
         for (let i = 0; i < container.childObject.length; i++) {
-            const className = container.childObject[i].html.className;
+            const className = container.childObject[i].root.className;
             if (className === "block" || className === "question") {
                 parent.childNodes[i].className = "openedBlockBomb";
                 document.getElementById(i).getElementsByTagName("img")[0].src = "image/flag.bmp";
@@ -716,48 +731,22 @@ Block.prototype.win = function () {
     }
 }
 
-var EventUtil = {};
-// addEventListener() 方法
-// http://www.runoob.com/js/js-htmldom-eventlistener.html
-EventUtil.addEvent = function (a, b, c) {
-    if (a.addEventListener) {
-        a.addEventListener(b, c, false);
-    } else if (a.attachEvent) {
-        a.attachEvent("on" + b, c);
-    } else {
-        a["on" + b] = c;
-    }
-};
-EventUtil.removeEvent = function (a, b, c) {
-    if (a.removeEventListener) {
-        a.removeEventListener(b, c, false);
-    } else if (a.detachEvent) {
-        a.detachEvent("on" + b, c);
-    } else {
-        a["on" + b] = null;
-    }
-};
-
 document.onmousedown = function () {
-    if (gameover == false) {
-        if (event.button == 0) {
-            // log("leftdown");
+    if (gameover === false) {
+        if (event.button === 0) {
             leftClick = true;
         }
-        if (event.button == 2) {
-            // log("rightdown");
+        if (event.button === 2) {
             rightClick = true;
         }
     }
 }
 document.onmouseup = function () {
-    if (gameover == false) {
-        if (event.button == 0) {
-            // log("leftup");
+    if (gameover === false) {
+        if (event.button === 0) {
             leftClick = false;
         }
-        if (event.button == 2) {
-            // log("rightup");
+        if (event.button === 2) {
             rightClick = false;
         }
     }
