@@ -254,11 +254,24 @@
 <script type="text/javascript" src="js/jquery/jquery-3.6.0.min.js"></script>
 
 <script type="text/javascript">
-    let is_log = false;
-
-    function log(msg) {
-        if (window.console && is_log) {
-            console.warn(msg);
+    const EMPTY_FUNCTION = function () {
+    };
+    let log = EMPTY_FUNCTION;
+    let time = EMPTY_FUNCTION;
+    let timeEnd = EMPTY_FUNCTION;
+    let clear = EMPTY_FUNCTION;
+    if (location.hostname === "localhost") {
+        log = function (...data) {
+            console.log(...data);
+        }
+        time = function (label) {
+            console.time(label ? label + "耗时" : label);
+        }
+        timeEnd = function (label) {
+            console.timeEnd(label ? label + "耗时" : label);
+        }
+        clear = function () {
+            console.clear();
         }
     }
 </script>

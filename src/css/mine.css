@@ -221,9 +221,8 @@ button {
     border: 3px solid rgb(160, 160, 160);
     border-right-color: rgb(255, 255, 255);
     border-bottom-color: rgb(255, 255, 255);
-    /*背景线条*/
-    background: rgb(192, 192, 192) linear-gradient(0deg, rgb(128, 128, 128) 1px, transparent 0),
-    linear-gradient(90deg, rgb(128, 128, 128) 1px, transparent 0);
+    /*背景*/
+    background: rgb(192, 192, 192);
     background-size: 16px 16px;
     /*外轮廓*/
     outline: rgb(192, 192, 192) solid 6px;

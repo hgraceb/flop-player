@@ -124,8 +124,9 @@ function adjustLayout() {
 
 function start_avf(video)//开始函数
 {
+    timeEnd("播放准备总");
     log(video)
-    if (video == 0) {
+    if (video === 0) {
         return false;
     }
     $('#mark_span').html(video[0].player);
@@ -186,11 +187,15 @@ function pause_avf() {//暂停
     }
 }
 
-function restart_avf() {//回访
-    if (video == 0) {
+/**
+ * 回放录像
+ */
+function restart_avf() {
+    clear();
+    if (video === 0) {
         return false;
     }
-    if (gameover == true && begintime == 0 && plan < video[0].size) {
+    if (gameover === true && begintime === 0 && plan < video[0].size) {
         video_play = true;
         window.clearInterval(int);
         int = setInterval(timer_avf, 0);

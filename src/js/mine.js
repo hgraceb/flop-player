@@ -210,7 +210,8 @@ Container.prototype.set_mine = function (bomb_id) {
     this.childObject[bomb_id].open();
 };
 
-Container.prototype.set_viedo_mine = function (board) {
+Container.prototype.setVideoMines = function (board) {
+    time("录像布雷");
     reset();//重置时间
     gameover = true;
     firstclick = false;
@@ -223,7 +224,6 @@ Container.prototype.set_viedo_mine = function (board) {
     right_count = 0;
     double_count = 0;
     ces_count = 0;
-    log("录像布雷");
     for (let i in board) {
         if (board[i] === 1 || board[i] === "*") {
             this.childObject[i].isBomb = true;
@@ -259,12 +259,13 @@ Container.prototype.set_viedo_mine = function (board) {
         }
         f.calcBombAround();
     }
+    timeEnd("录像布雷");
 };
 
 Container.prototype.replay_video = function () {
     if (video_invalid === false) {
         container.init(video[0].level, this.columns, this.rows, this.bombNumber);
-        container.set_viedo_mine(video[0].board);
+        container.setVideoMines(video[0].board);
         start_avf(video);
     } else {
         log("录像重放错误");
