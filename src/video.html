@@ -258,6 +258,7 @@
     };
     let log = EMPTY_FUNCTION;
     let time = EMPTY_FUNCTION;
+    let timeLog = EMPTY_FUNCTION;
     let timeEnd = EMPTY_FUNCTION;
     let clear = EMPTY_FUNCTION;
     if (location.hostname === "localhost") {
@@ -265,10 +266,13 @@
             console.log(...data);
         }
         time = function (label) {
-            console.time(label ? label + "耗时" : label);
+            console.time(label);
+        }
+        timeLog = function (label, ...data) {
+            console.timeLog(label, ...data);
         }
         timeEnd = function (label) {
-            console.timeEnd(label ? label + "耗时" : label);
+            console.timeEnd(label);
         }
         clear = function () {
             console.clear();

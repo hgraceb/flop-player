@@ -211,7 +211,6 @@ Container.prototype.set_mine = function (bomb_id) {
 };
 
 Container.prototype.setVideoMines = function (board) {
-    time("录像布雷");
     reset();//重置时间
     gameover = true;
     firstclick = false;
@@ -259,7 +258,6 @@ Container.prototype.setVideoMines = function (board) {
         }
         f.calcBombAround();
     }
-    timeEnd("录像布雷");
 };
 
 Container.prototype.replay_video = function () {

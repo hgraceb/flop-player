@@ -124,7 +124,7 @@ function adjustLayout() {
 
 function start_avf(video)//开始函数
 {
-    timeEnd("播放准备总");
+    timeEnd("录像准备");
     log(video)
     if (video === 0) {
         return false;
@@ -192,6 +192,7 @@ function pause_avf() {//暂停
  */
 function restart_avf() {
     clear();
+    time("录像准备");
     if (video === 0) {
         return false;
     }

@@ -11,8 +11,7 @@ function loadVideo(url) {
     }
     clear(); // 清空控制台日志
     log(`录像路径: '${url}'`);
-    time("播放准备总");
-    time("请求录像资源");
+    time("录像准备");
     results = null;
     const request = new XMLHttpRequest();
     const type = url.substring(url.lastIndexOf('.'), url.length);
@@ -23,7 +22,7 @@ function loadVideo(url) {
     request.onreadystatechange = function () {
         if (request.readyState === 4) {
             if (request.status === 200) {
-                timeEnd("请求录像资源");
+                timeLog("录像准备", "请求录像文件资源");
                 const uint8Array = new Uint8Array(request.response);
                 try {
                     switch (type) {
@@ -33,15 +32,12 @@ function loadVideo(url) {
                             playRawVideo(new TextDecoder('windows-1251').decode(uint8Array));
                             break;
                         case ".avf":
-                            time("解析非 RAW 格式录像");
                             Module.ccall('parser_avf', 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
                             break;
                         case ".mvf":
-                            time("解析非 RAW 格式录像");
                             Module.ccall('parser_mvf', 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
                             break;
                         case ".rmv":
-                            time("解析非 RAW 格式录像");
                             Module.ccall('parser_rmv', 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
                             break;
                         default:
@@ -68,7 +64,7 @@ function onprogress(result) {
 }
 
 function onsuccess() {
-    timeEnd("解析非 RAW 格式录像");
+    timeLog("录像准备", "解析录像文件");
     ready();
     playRawVideo(results);
 }
@@ -111,7 +107,7 @@ function exitVideo() {
 function playRawVideo(result) {
     reset();
     video = [];
-    time("解析 RAW 格式数据");
+    timeLog("录像准备", "重置数据");
     const rawArray = result.split("\n");
     const data = {};
     const eventReg = /^-?\d+\.\d+[ ]+(mv|([lrm][cr]))[ |\d]+[(][ ]*\d+[ ]*\d+[ ]*[)]$/; // 点击和移动事件数据，中间可能没有当前所在行和列的数据
@@ -148,7 +144,6 @@ function playRawVideo(result) {
             data["Board"] = data["Board"] ? data["Board"] + row : row;
         }
     }
-    timeEnd("解析 RAW 格式数据");
 
     if ("beginner" === data["Level"].toLowerCase()) {
         video[0].level = 1;
@@ -176,8 +171,10 @@ function playRawVideo(result) {
         document.getElementById("question").innerHTML = '标记问号';
         question = false;
     }
+    timeLog("录像准备", "解析 RAW 数据");
 
     container.init(video[0].level, parseInt(data["Width"]), parseInt(data["Height"]), parseInt(data["Mines"]));
+    timeLog("录像准备", "录像初始化");
     container.setVideoMines(video[0].board); // 按录像布雷
     start_avf(video);
 }
