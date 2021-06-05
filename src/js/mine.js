@@ -97,8 +97,17 @@ Container.prototype.init = function (level, columns, rows, bombNumber) {
             $("#menu").css("width", 18 + slideLength * this.columns);
             $("#mark").css("width", 6 + slideLength * this.columns);
             $("#mark_span").css("width", 6 + slideLength * this.columns);
-            // TODO 根据宽度设置左外边距
-            $("#video_control").css({"margin-top": $("#border").outerHeight() - 2, "margin-left": 0, "left": 4});
+            const $border = $("#border");
+            const $videoControl = $("#video_control");
+            const borderWidth = $border.outerWidth();
+            const controlWidth = $videoControl.outerWidth() + parseInt($border.css("padding-left")) + parseInt($border.css("padding-right"));
+            let marginLeft = 0;
+            if ($("#containers").outerWidth() > $videoControl.outerWidth()) {
+                marginLeft = $("#counters").outerWidth() + 6;
+            } else if (borderWidth > controlWidth) {
+                marginLeft = (borderWidth - controlWidth) / 2;
+            }
+            $videoControl.css({"margin-top": $border.outerHeight() - 2, "margin-left": marginLeft, "left": 4});
         }
 
         this.childObject.splice(0, this.childObject.length);
