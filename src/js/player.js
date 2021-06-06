@@ -40,7 +40,6 @@ function loadVideo(url) {
                                 callback = (function () {
                                     Module.ccall('parser_' + type.replace(".", ""), 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
                                 });
-                                Module.onRuntimeInitialized();
                             }
                             break;
                         default:
