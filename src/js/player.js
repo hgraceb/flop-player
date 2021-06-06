@@ -34,7 +34,7 @@ function loadVideo(url) {
                         case ".avf":
                         case ".mvf":
                         case ".rmv":
-                            if (Module.ccall) {
+                            if (Module.asm) {
                                 Module.ccall('parser_' + type.replace(".", ""), 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
                             } else {
                                 callback = (function () {

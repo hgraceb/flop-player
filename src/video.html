@@ -285,8 +285,10 @@
     }
 
     let callback = EMPTY_FUNCTION;
+    time("onRuntimeInitialized");
     Module = {};
     Module.onRuntimeInitialized = function () {
+        timeEnd("onRuntimeInitialized");
         callback();
     }
 </script>
