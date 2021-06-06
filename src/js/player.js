@@ -32,13 +32,16 @@ function loadVideo(url) {
                             playRawVideo(new TextDecoder('windows-1251').decode(uint8Array));
                             break;
                         case ".avf":
-                            Module.ccall('parser_avf', 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
-                            break;
                         case ".mvf":
-                            Module.ccall('parser_mvf', 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
-                            break;
                         case ".rmv":
-                            Module.ccall('parser_rmv', 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
+                            if (Module.ccall) {
+                                Module.ccall('parser_' + type.replace(".", ""), 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
+                            } else {
+                                callback = (function () {
+                                    Module.ccall('parser_' + type.replace(".", ""), 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
+                                });
+                                Module.onRuntimeInitialized();
+                            }
                             break;
                         default:
                             videoError("录像格式错误，请重新选择！");

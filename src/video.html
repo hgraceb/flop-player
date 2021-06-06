@@ -256,6 +256,7 @@
 <script type="text/javascript">
     const EMPTY_FUNCTION = function () {
     };
+
     let log = EMPTY_FUNCTION;
     let error = EMPTY_FUNCTION;
     let time = EMPTY_FUNCTION;
@@ -282,12 +283,18 @@
             console.clear();
         }
     }
+
+    let callback = EMPTY_FUNCTION;
+    Module = {};
+    Module.onRuntimeInitialized = function () {
+        callback();
+    }
 </script>
 
+<script type="text/javascript" src="js/parser/parser.js?v=20210603"></script>
 <script type="text/javascript" src="js/public.js?v=20210603"></script>
 <script type="text/javascript" src="js/mine.js?v=20210603"></script>
 <script type="text/javascript" src="js/player.js?v=20210603"></script>
-<script type="text/javascript" src="js/parser/parser.js?v=20210603"></script>
 
 </body>
 
