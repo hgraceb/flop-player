@@ -37,7 +37,8 @@ function loadVideo(url) {
                             if (runtimeInitialized) {
                                 Module.ccall('parser_' + type.replace(".", ""), 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
                             } else {
-                                callback = (function () {
+                                // 等待 Emscripten 的 Runtime 准备完成
+                                emscriptenCallback = (function () {
                                     Module.ccall('parser_' + type.replace(".", ""), 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
                                 });
                             }
@@ -102,8 +103,6 @@ function exitVideo() {
  * @param result 文件内容
  * @todo 优化录像解析逻辑，用三次正则先将数据进行分类
  * @todo 判断参数合法性，如：player、宽高和雷的数量
- * @todo 支持 Custom 级别的录像
- * @todo 支持问号标记的录像
  * @todo 支持鼠标事件最后面是 (1)、(0) 这种格式的 RAW 录像
  */
 function playRawVideo(result) {
@@ -161,7 +160,7 @@ function playRawVideo(result) {
 
     video[0].board = [...data["Board"]];
     video[0].player = data["Player"];
-    video[0].realtime = data["Time"]; // 可能没有真实时间的数据
+    video[0].realtime = (video[video.length - 1].sec * 100 + video[video.length - 1].hun) / 100; // 可能没有 Time 字段数据
     video[0].size = count;
     video_invalid = false;
 

@@ -284,12 +284,10 @@
         }
     }
 
-    let callback = EMPTY_FUNCTION;
-    time("onRuntimeInitialized");
+    let emscriptenCallback = EMPTY_FUNCTION;
     Module = {};
     Module.onRuntimeInitialized = function () {
-        timeEnd("onRuntimeInitialized");
-        callback();
+        emscriptenCallback();
     }
 </script>
 
