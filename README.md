@@ -10,11 +10,15 @@
 2. Modify your website entry html file as follows:
 
    ```html
+   <!-- Chinese is displayed by default (some unhandled errors will display the original error data). -->
+   <!-- If you need to display English you can set the lang attribute to start with 'en' (it only takes effect once). -->
+   <html lang="en">
+   
    ...
    
    <!-- First: add a container for playing the video -->
    <div id="video-stage" style="display: none;position: absolute;z-index: 999;background-color: rgba(0 ,0 ,0 ,0.33)">
-       <iframe id="video-iframe" src="./src/video.html?v=20210603" style="border: 0;width: 0;height: 0;" scrolling="no"></iframe>
+       <iframe id="video-iframe" src="./src/video.html?v=20210612" style="border: 0;width: 0;height: 0;" scrolling="no"></iframe>
    </div>
    
    ...
