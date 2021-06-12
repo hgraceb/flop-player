@@ -7,7 +7,7 @@ const fade = 500;//淡入淡出时间
 
 function loadVideo(url) {
     if (isIE()) {
-        videoError('暂不支持 IE 内核 ,请更换浏览器或内核！');
+        videoError(i18n.errIE);
     }
     clear(); // 清空控制台日志
     log(`录像路径: '${url}'`);
@@ -38,13 +38,13 @@ function loadVideo(url) {
                                 Module.ccall('parser_' + type.replace(".", ""), 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
                             } else {
                                 // 等待 Emscripten 的 Runtime 准备完成
-                                emscriptenCallback = (function () {
+                                Module.onRuntimeInitialized = function () {
                                     Module.ccall('parser_' + type.replace(".", ""), 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
-                                });
+                                };
                             }
                             break;
                         default:
-                            videoError("录像格式错误，请重新选择！");
+                            videoError(i18n.errFormatPre + type + i18n.errFormatPost);
                     }
                 } catch (e) {
                     // 正常解析代码退出程序不额外进行处理
@@ -55,7 +55,7 @@ function loadVideo(url) {
                 }
             } else {
                 // 录像读取错误，弹出提示信息
-                videoError("录像获取：" + request.status + " 错误");
+                videoError(i18n.errRequest + request.status);
             }
         }
     };
@@ -72,8 +72,36 @@ function onsuccess() {
     playRawVideo(results);
 }
 
-function onerror(errCode, errMsg) {
-    videoError(errMsg);
+function onerror(errCode, _errMsg) {
+    switch (errCode) {
+        case 1:
+            videoError(i18n.errParserTooLarge)
+            break
+        case 2:
+            videoError(i18n.errParserUnexpectedEnd)
+            break
+        case 3:
+            videoError(i18n.errParserInvalidFile)
+            break
+        case 4:
+            videoError(i18n.errParserInvalidEvent)
+            break
+        case 5:
+            videoError(i18n.errParserInvalidVideoType)
+            break
+        case 6:
+            videoError(i18n.errParserInvalidBoardSize)
+            break
+        case 7:
+            videoError(i18n.errParserInvalidVideoHeader)
+            break
+        case 8:
+            videoError(i18n.errParserInvalidMinePosition)
+            break
+        default:
+            videoError(i18n.errParserUnknown)
+            break
+    }
 }
 
 function ready() {

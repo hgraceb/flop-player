@@ -1,0 +1,25 @@
+{
+  "name": "web-minesweeper-player",
+  "version": "1.0.0",
+  "description": "Web minesweeper player",
+  "private": true,
+  "scripts": {
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hgraceb/web-minesweeper-player.git"
+  },
+  "keywords": [],
+  "author": "Flop",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hgraceb/web-minesweeper-player/issues"
+  },
+  "homepage": "https://github.com/hgraceb/web-minesweeper-player",
+  "devDependencies": {
+    "copy-webpack-plugin": "^9.0.0",
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.0"
+  }
+}
