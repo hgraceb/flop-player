@@ -35,10 +35,11 @@ function loadVideo(url) {
                         case ".mvf":
                         case ".rmv":
                             if (runtimeInitialized) {
-                                log('等待 Emscripten 的 Runtime 准备完成')
+                                log('Emscripten 的 Runtime 已准备完成')
                                 Module.ccall('parser_' + type.replace(".", ""), 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
                             } else {
                                 // 等待 Emscripten 的 Runtime 准备完成
+                                log('等待 Emscripten 的 Runtime 准备完成')
                                 Module.onRuntimeInitialized = function () {
                                     log('Emscripten 的 Runtime 已准备完成')
                                     Module.ccall('parser_' + type.replace(".", ""), 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
