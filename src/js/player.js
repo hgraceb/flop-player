@@ -142,7 +142,7 @@ function playRawVideo(result) {
     timeLog("录像准备", "重置数据");
     const rawArray = result.split("\n");
     const data = {};
-    const eventReg = /^-?\d+\.\d+[ ]+(mv|([lrm][cr]))[ |\d]+[(][ ]*\d+[ ]*\d+[ ]*[)]$/; // 点击和移动事件数据，中间可能没有当前所在行和列的数据
+    const eventReg = /^-?\d+\.\d+[ ]+(mv|([lrm][cr]))[ |\d]+\([ ]*\d+[ ]*\d+[ ]*\)([ ]*\(([lrm])?\))?$/; // 点击和移动事件数据，中间可能没有当前所在行和列的数据
     const normalReg = /^[a-zA-Z_]+?[:][ ]*.*\S$/; // 普通键值对数据
     const boardReg = /^[*0]+$/; // 雷的分布数据
     let count = 0; // 当前事件数
@@ -151,7 +151,7 @@ function playRawVideo(result) {
         let row = rawArray[i].trim(); // 去除前后空格的单行数据
         // 事件数据一般是最多的，优先进行判断
         if (eventReg.test(row)) {
-            const strings = row.replaceAll(/[()]/g, "").replaceAll(/[ ]{2,}|\./g, " ").split(" ");
+            const strings = row.replaceAll(/\([lrm]\)|[()]/g, "").replaceAll(/[ ]{2,}|\./g, " ").trim().split(" ")
             const previous = video[count - 1]; // 前一个录像事件
             const x = parseInt(strings[strings.length - 2]); // 倒数第二个数据是 x 坐标
             const y = parseInt(strings[strings.length - 1]); // 倒数第一个数据是 y 坐标
