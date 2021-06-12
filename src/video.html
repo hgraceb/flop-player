@@ -153,8 +153,7 @@
                     </div>
 
                     <!-- 关闭按钮 -->
-                    <div title="退出播放" class="close" onclick="exitVideo();"></div>
-
+                    <div id="videoClose" class="close" onclick="exitVideo();"></div>
                 </div>
 
                 <!-- 顶部功能栏 -->
@@ -186,28 +185,28 @@
             <!-- 录像控制 -->
             <div id="video_control">
 
-                <img title="重新播放" src="image/restart.bmp" onmousedown="change_control_image(0,'restart_press')"
+                <img id="videoReplay" src="image/restart.bmp" onmousedown="change_control_image(0,'restart_press')"
                      onmouseup="change_control_image(0,'restart')" onmouseout="change_control_image(0,'restart')"
                      onclick="restart_avf();"/>
-                <img title="暂停播放" src="image/pause.bmp" onmousedown="change_control_image(1,'pause_press')"
+                <img id="videoPause" src="image/pause.bmp" onmousedown="change_control_image(1,'pause_press')"
                      onmouseup="change_control_image(1,'pause')" onmouseout="change_control_image(1,'pause')"
                      onclick="pause_avf();"/>
-                <img title="退出录像查看" src="image/stop.bmp" onmousedown="change_control_image(2,'stop_press')"
+                <img id="videoExit" src="image/stop.bmp" onmousedown="change_control_image(2,'stop_press')"
                      onmouseup="change_control_image(2,'stop')" onmouseout="change_control_image(2,'stop')"
                      onclick="exitVideo();"/>
 
                 <div id="speed_control">
-                    <input title="速度调节" type="range" id="range_speed" value="50" oninput="change_speed()" min="1"
+                    <input type="range" id="range_speed" value="50" oninput="change_speed()" min="1"
                            max="100" step="1" ontouchmove="stopPropagation();"/>
                 </div>
-                <span title="点击复原" id="speed_value" onclick="reset_speed()">1.00x</span>
+                <span id="speed_value" onclick="reset_speed()">1.00x</span>
 
                 <div id="rate_control">
-                    <input title="进度调节" type="range" id="range_rate" value="0" oninput="change_rate_value()" min="0"
+                    <input type="range" id="range_rate" value="0" oninput="change_rate_value()" min="0"
                            max="1000" step="1" ontouchmove="event.stopPropagation();" onmouseup="change_rate()"
                            ontouchend="change_rate()"/>
                 </div>
-                <span title="时间" id="rate_value">0.00</span>
+                <span id="rate_value">0.00</span>
 
             </div>
 
@@ -292,6 +291,7 @@
 </script>
 
 <script type="text/javascript" src="js/parser/parser.js?v=20210603"></script>
+<script type="text/javascript" src="js/i18n.js?v=20210603"></script>
 <script type="text/javascript" src="js/public.js?v=20210603"></script>
 <script type="text/javascript" src="js/mine.js?v=20210603"></script>
 <script type="text/javascript" src="js/player.js?v=20210603"></script>
