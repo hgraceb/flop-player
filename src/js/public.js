@@ -19,6 +19,7 @@ var front = 0;//前一个block
 var size = 0;//录像事件总长度
 var video_play = false;//change_speed函数中防止多次重置定时器
 var game_level = 0;//判断弹窗位置，只用了一次，可以考虑化简
+let fault_tolerant = true; // 是否可以进行特殊情况的容错处理
 
 function reset()//时间重置函数
 {
@@ -171,6 +172,7 @@ function start_avf(video)//开始函数
     current = 0;//当前block
     front = 0;//前一个block
     video_play = true;
+    fault_tolerant = true;
 }
 
 function pause_avf() {//暂停
@@ -283,9 +285,15 @@ function timer_avf() {
     second = speed * ((stop_minutes - begintime.getMinutes()) * 60 + (stop_seconds - begintime.getSeconds())) + last_second;
     millisecond = speed * (parseInt((stop_milliseconds - begintime.getMilliseconds()) / 10)) + last_millisecond;
     if ((second * 1000 + millisecond * 10) > video[0].realtime * 1000) {//高倍速时间有延迟，自欺欺人解决法
-        second = video[size - 1].sec;
-        millisecond = video[size - 1].hun;
-        log('录像实际时间:' + second + '.' + millisecond);
+        if (fault_tolerant) {
+            second = video[size - 1].sec;
+            millisecond = video[size - 1].hun;
+            fault_tolerant = false; // 只进行一次容错处理
+            log('录像实际时间: ' + second + '.' + millisecond);
+        } else {
+            // 录像播放意外退出
+            videoError(i18n.errQuitUnexpectedly)
+        }
     }
 
     while (plan < size && (second * 1000 + millisecond * 10) >= (video[plan].sec * 1000 + video[plan].hun * 10)) {

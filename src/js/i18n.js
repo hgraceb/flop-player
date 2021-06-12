@@ -13,6 +13,7 @@ function initI18n() {
             this.rateModify = 'Modify progress'
             this.videoTime = 'Time'
             // 错误提示
+            this.errQuitUnexpectedly = 'Video playback quit unexpectedly.'
             this.errIE = 'IE kernel is not supported at the moment, please change your browser or kernel!'
             this.errFormatPre = 'Temporarily does not support \''
             this.errFormatPost = '\' format video, please select again!'
@@ -40,6 +41,7 @@ function initI18n() {
             this.rateModify = '进度调节'
             this.videoTime = '时间'
             // 错误提示
+            this.errQuitUnexpectedly = '录像播放意外退出'
             this.errIE = '暂不支持 IE 内核 ,请更换浏览器或内核！'
             this.errFormatPre = '暂不支持 \''
             this.errFormatPost = '\' 格式录像，请重新选择！'
