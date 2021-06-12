@@ -13,7 +13,7 @@ function initI18n() {
             this.rateModify = 'Modify progress'
             this.videoTime = 'Time'
             // 错误提示
-            this.errQuitUnexpectedly = 'Video playback quit unexpectedly.'
+            this.errQuitUnexpectedly = 'Unexpected video playback exit.'
             this.errIE = 'IE kernel is not supported at the moment, please change your browser or kernel!'
             this.errFormatPre = 'Temporarily does not support \''
             this.errFormatPost = '\' format video, please select again!'
