@@ -38,9 +38,9 @@ function loadVideo(url) {
                                 Module.ccall('parser_' + type.replace(".", ""), 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
                             } else {
                                 // 等待 Emscripten 的 Runtime 准备完成
-                                emscriptenCallback = (function () {
+                                Module.onRuntimeInitialized = function () {
                                     Module.ccall('parser_' + type.replace(".", ""), 'null', ['number', 'array'], [uint8Array.length, uint8Array]);
-                                });
+                                };
                             }
                             break;
                         default:
