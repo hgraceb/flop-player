@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -36,12 +36,28 @@
     <button type="button" onclick="playVideo('../videos/vsweep30_raw.txt')">vsweep30_raw.txt</button>
     <button type="button" onclick="playVideo('../videos/freesweeper_bombed.rawvf')">freesweeper_bombed.rawvf</button>
     <br/><br/>
+    <button type="button" onclick="i18n()" id="i18n" title="Click on any video to see the language of the error message or 'title'">Current lang: en (Start with 'en')</button>
+    <button type="button" onclick="playVideo('404')">404 error test</button>
+    <button type="button" onclick="playVideo('../videos/empty.txt')">Data error test</button>
+    <button type="button" onclick="playVideo('../videos/empty.mvf')">Parser error test</button>
+    <br/><br/>
 </div>
 
 <script>
     function playVideo(filePath) {
         /* Second: call the "loadVideo" function when you need to play the video */
         document.getElementById('video-iframe').contentWindow.loadVideo(filePath);
+    }
+
+    function i18n() {
+        if (document.documentElement.lang.startsWith('en')) {
+            document.documentElement.lang = 'zh'
+            document.getElementById('i18n').innerText = 'Current lang: zh (Does not start with \'en\')'
+        } else {
+            document.documentElement.lang = 'en'
+            document.getElementById('i18n').innerText = 'Current lang: en (Start with \'en\')'
+        }
+        document.getElementById('video-iframe').contentWindow.initI18n();
     }
 
     window.onload = function () {
