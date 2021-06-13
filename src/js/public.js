@@ -1,24 +1,23 @@
 "use strict";
 
-//时间
 //初始化变量
-var second = 0;//秒
-var millisecond = 0;//毫秒
-var int;//定时器
-var begintime = new Date();//开始时间
-var speed = 1.00;//录像播放速度
-var last_second = 0;//暂停前的second
-var last_millisecond;//暂停前的milllisecond
-var plan = 0;//模拟事件进度
-var stoptime = 0;//当前时间
-var stop_minutes = 0;
-var stop_seconds = 0;
-var stop_milliseconds = 0;
-var current = 0;//当前block
-var front = 0;//前一个block
-var size = 0;//录像事件总长度
-var video_play = false;//change_speed函数中防止多次重置定时器
-var game_level = 0;//判断弹窗位置，只用了一次，可以考虑化简
+let second = 0;//秒
+let millisecond = 0;//毫秒
+let int;//定时器
+let beginTime = new Date();//开始时间
+let speed = 1.00;//录像播放速度
+let last_second = 0;//暂停前的second
+let last_millisecond;//暂停前的milllisecond
+let plan = 0;//模拟事件进度
+let stopTime = 0;//当前时间
+let stop_minutes = 0;
+let stop_seconds = 0;
+let stop_milliseconds = 0;
+let current = 0;//当前block
+let front = 0;//前一个block
+let size = 0;//录像事件总长度
+let video_play = false;//change_speed函数中防止多次重置定时器
+let game_level = 0;//判断弹窗位置，只用了一次，可以考虑化简
 let fault_tolerant = true; // 是否可以进行特殊情况的容错处理
 
 function reset()//时间重置函数
@@ -49,32 +48,31 @@ function reset()//时间重置函数
 
 function start()//开始函数
 {
-    begintime = new Date();
+    beginTime = new Date();
     window.clearInterval(int);
     int = setInterval(timer, 10);
-    log("start:" + begintime.getMinutes() + '.' + begintime.getSeconds() + '.' + begintime.getMilliseconds());
-
+    log("start:" + beginTime.getMinutes() + '.' + beginTime.getSeconds() + '.' + beginTime.getMilliseconds());
 }
 
 function timer()//计时函数
 {
-    var stoptime = new Date();
-    var stop_minutes = stoptime.getMinutes();
-    var stop_seconds = stoptime.getSeconds();
-    var stop_milliseconds = stoptime.getMilliseconds();
-    if (stop_milliseconds < begintime.getMilliseconds()) {
+    const date = new Date();
+    let stopMinutes = date.getMinutes();
+    let stopSeconds = date.getSeconds();
+    let stop_milliseconds = date.getMilliseconds();
+    if (stop_milliseconds < beginTime.getMilliseconds()) {
         stop_milliseconds += 1000;
-        stop_seconds--;
+        stopSeconds--;
     }
-    if (stop_seconds < begintime.getSeconds()) {
-        stop_seconds += 60;
-        stop_minutes--;
+    if (stopSeconds < beginTime.getSeconds()) {
+        stopSeconds += 60;
+        stopMinutes--;
     }
-    if (stop_minutes < begintime.getMinutes()) {
-        stop_minutes += 60;
+    if (stopMinutes < beginTime.getMinutes()) {
+        stopMinutes += 60;
     }
-    second = (stop_minutes - begintime.getMinutes()) * 60 + (stop_seconds - begintime.getSeconds());
-    millisecond = parseInt((stop_milliseconds - begintime.getMilliseconds()) / 10);
+    second = (stopMinutes - beginTime.getMinutes()) * 60 + (stopSeconds - beginTime.getSeconds());
+    millisecond = parseInt((stop_milliseconds - beginTime.getMilliseconds()) / 10);
     if (second < 999) {
         change_top_count("time_count", second + 1);
 
@@ -89,7 +87,7 @@ function timer()//计时函数
         stop();
         lose();
         change_top_count("time_count", 999);
-        document.getElementById('RTime').innerText = 999.99;
+        document.getElementById('RTime').innerText = '999.99';
     }
 }
 
@@ -130,24 +128,21 @@ function start_avf(video)//开始函数
     if (video === 0) {
         return false;
     }
-    $('#mark_span').html(video[0].player);
-    $('#mark_span').attr('title', $('#mark_span').html());
+    const $markSpan = $('#mark_span');
+    $markSpan.html(video[0].player);
+    $markSpan.attr('title', $markSpan.html());
     gameover = true;
     size = video[0].size;
-    // for(i=0;i<1;i++){
-    // 	log(video[i]);
-    // }
-
 
     if (!document.getElementById("mouse_point")) {
         //别再手贱删了，mouse_point放这才能正常初始化container的block
-        var div = document.createElement("div");
+        const div = document.createElement("div");
         div.id = "mouse_point";
-        var grandparent = document.getElementById("container");
+        const grandparent = document.getElementById("container");
         grandparent.appendChild(div);
-        var img = document.createElement("img");
+        const img = document.createElement("img");
         img.src = "image/mouse.png";
-        var parent = document.getElementById("mouse_point");
+        const parent = document.getElementById("mouse_point");
         parent.appendChild(img);
         parent.style.display = 'block';
         parent.style.marginLeft = video[0].x + 'px';
@@ -161,11 +156,11 @@ function start_avf(video)//开始函数
     log("start:" + new Date().getMinutes() + '.' + new Date().getSeconds() + '.' + new Date().getMilliseconds());
     window.clearInterval(int);
     int = setInterval(timer_avf, 0);
-    begintime = 0;//开始时间
+    beginTime = 0;//开始时间
     last_second = 0;
     last_millisecond = 0;
     plan = 0;//模拟点击进度
-    stoptime = 0;//当前时间
+    stopTime = 0;//当前时间
     stop_minutes = 0;
     stop_seconds = 0;
     stop_milliseconds = 0;
@@ -176,10 +171,10 @@ function start_avf(video)//开始函数
 }
 
 function pause_avf() {//暂停
-    if (begintime != 0) {
+    if (beginTime !== 0) {
         video_play = false;
         window.clearInterval(int);
-        begintime = 0;
+        beginTime = 0;
         last_millisecond = millisecond;
         last_second = second;
     } else if (document.getElementById("mouse_point") && plan < size) {
@@ -198,7 +193,7 @@ function restart_avf() {
     if (video === 0) {
         return false;
     }
-    if (gameover === true && begintime === 0 && plan < video[0].size) {
+    if (gameover === true && beginTime === 0 && plan < video[0].size) {
         video_play = true;
         window.clearInterval(int);
         int = setInterval(timer_avf, 0);
@@ -209,43 +204,44 @@ function restart_avf() {
 }
 
 function change_speed() {//改变速度
-    var value = $('#range_speed').val();
-    var valStr = value + "% 100%";
-    if (video_play == true) pause_avf();
+    const $rangeSpeed = $('#range_speed');
+    const value = $rangeSpeed.val();
+    const valStr = value + "% 100%";
+    if (video_play === true) pause_avf();
     speed = (value <= 50 ? value / 50 : (value <= 75 ? (value - 50) * 0.16 + 1 : (value - 75) * 0.2 + 5)).toFixed(2);
-    // restart_avf();
-    // $('#speed_value').html(value+'-'+speed+'x');  
     $('#speed_value').html(speed + 'x');
-    $('#range_speed').css({
+    $rangeSpeed.css({
         "background-size": valStr
     })
-    if (video_play == false) pause_avf();
+    if (video_play === false) pause_avf();
 }
 
 function reset_speed() {//复位速度为1
-    var valStr = 50 + "% 100%";
-    if (video_play == true) pause_avf();
+    const valStr = 50 + "% 100%";
+    if (video_play === true) pause_avf();
     speed = 1;
     $('#speed_value').html('1.00x');
-    $('#range_speed').val(50);
-    $('#range_speed').css({
+    const $rangeSpeed = $('#range_speed');
+    $rangeSpeed.val(50);
+    $rangeSpeed.css({
         "background-size": valStr
     })
-    if (video_play == false) pause_avf();
+    if (video_play === false) pause_avf();
 }
 
 function change_rate_value() {//改变进度条的value
-    var value = $('#range_rate').val();
-    var valStr = value / 10 + "% 100%";
-    if (video_play == true) pause_avf();
-    if (video != 0) $('#rate_value').html((value / 1000 * video[0].realtime).toFixed(2));
-    $('#range_rate').css({
+    const $rangeRate = $('#range_rate');
+    const value = $rangeRate.val();
+    const valStr = value / 10 + "% 100%";
+    if (video_play === true) pause_avf();
+    if (video !== 0) $('#rate_value').html((value / 1000 * video[0].realtime).toFixed(2));
+    $rangeRate.css({
         "background-size": valStr
     })
 }
 
 function change_rate() {//改变播放进度
-    var value = $('#rate_value').text();
+    const value = $('#rate_value').text();
     if (last_second * 1000 + last_millisecond * 10 < value * 1000) {
         last_second = parseInt(value);
         last_millisecond = value * 100 % 100;
@@ -264,26 +260,26 @@ function timer_avf() {
         // 当前还在淡出淡入动画时暂停播放
         window.clearInterval(int);
     }
-    if (begintime == 0) {
-        begintime = new Date();
+    if (beginTime === 0) {
+        beginTime = new Date();
     }
-    stoptime = new Date();
-    stop_minutes = stoptime.getMinutes();
-    stop_seconds = stoptime.getSeconds();
-    stop_milliseconds = stoptime.getMilliseconds();
-    if (stop_milliseconds < begintime.getMilliseconds()) {
+    stopTime = new Date();
+    stop_minutes = stopTime.getMinutes();
+    stop_seconds = stopTime.getSeconds();
+    stop_milliseconds = stopTime.getMilliseconds();
+    if (stop_milliseconds < beginTime.getMilliseconds()) {
         stop_milliseconds += 1000;
         stop_seconds--;
     }
-    if (stop_seconds < begintime.getSeconds()) {
+    if (stop_seconds < beginTime.getSeconds()) {
         stop_seconds += 60;
         stop_minutes--;
     }
-    if (stop_minutes < begintime.getMinutes()) {
+    if (stop_minutes < beginTime.getMinutes()) {
         stop_minutes += 60;
     }
-    second = speed * ((stop_minutes - begintime.getMinutes()) * 60 + (stop_seconds - begintime.getSeconds())) + last_second;
-    millisecond = speed * (parseInt((stop_milliseconds - begintime.getMilliseconds()) / 10)) + last_millisecond;
+    second = speed * ((stop_minutes - beginTime.getMinutes()) * 60 + (stop_seconds - beginTime.getSeconds())) + last_second;
+    millisecond = speed * (parseInt((stop_milliseconds - beginTime.getMilliseconds()) / 10)) + last_millisecond;
     if ((second * 1000 + millisecond * 10) > video[0].realtime * 1000) {//高倍速时间有延迟，自欺欺人解决法
         if (fault_tolerant) {
             second = video[size - 1].sec;
@@ -303,23 +299,23 @@ function timer_avf() {
         if (video[plan].rows > container.columns || video[plan].columns > container.rows) {
             //mvf录像x和y可能会超出界面范围
             //若超出则只进行鼠标指针操作并退出此次循环
-            if (current != 0) current.change_around_normal();//越界时先判断current是否初始化
+            if (current !== 0) current.change_around_normal();//越界时先判断current是否初始化
             if (video[plan].mouse === "lc") {//lc
                 leftClick = true;
-                if (rightClick == true) {
+                if (rightClick === true) {
                     left_invalid = true;
                 }
             } else if (video[plan].mouse === "rc") {//rc
                 rightClick = true;
-                if (leftClick == true) {
+                if (leftClick === true) {
                     left_invalid = true;
                 } else {
                     right_invalid = true;
                 }
             } else if (video[plan].mouse === "lr") {//lr
                 leftClick = false;
-                if (rightClick == true) {
-                    if (right_invalid == true) {
+                if (rightClick === true) {
+                    if (right_invalid === true) {
                         right_invalid = false;
                     }
                 }
@@ -341,30 +337,30 @@ function timer_avf() {
 
         // 不需要判断 video[plan].mouse==1，只要前后两个方块位置不同即认为有进行移动
         // 如 0.00 时间内的移动事件（mv）没有被记录在录像信息当中，但是可能进行过移动
-        if (front != current) {//mv
+        if (front !== current) {//mv
 
             //此判断要在下句判断之前
             //避免执行中键操作时current.change_around_opening()操作之后
             //又执行了front.change_around_normal()导致block样式错误
-            if (front != 0) {
-                if (front.isOpen == false && leftClick == true && rightClick == false) {
-                    if (front.getStyle() == "opening") {
+            if (front !== 0) {
+                if (front.isOpen === false && leftClick === true && rightClick === false) {
+                    if (front.getStyle() === "opening") {
                         front.changeStyle("block");
                     }
-                } else if (rightClick == true && leftClick == true) {
+                } else if (rightClick === true && leftClick === true) {
                     front.change_around_normal();
-                } else if (middle_invalid == true) {
+                } else if (middle_invalid === true) {
                     front.change_around_normal();
                 }
             }
 
-            if (current.isOpen == false && rightClick == false && leftClick == true) {
-                if (current.getStyle() == "block" && left_invalid == false) {
+            if (current.isOpen === false && rightClick === false && leftClick === true) {
+                if (current.getStyle() === "block" && left_invalid === false) {
                     current.changeStyle("opening");
                 }
-            } else if (rightClick == true && leftClick == true) {
+            } else if (rightClick === true && leftClick === true) {
                 current.change_around_opening();
-            } else if (middle_invalid == true) {
+            } else if (middle_invalid === true) {
                 current.change_around_opening();
             }
         }
@@ -375,23 +371,23 @@ function timer_avf() {
             leftClick = true;
             current.change_around_normal();//复原因为中键改变的block样式
             change_top_image("face", "face_click");
-            if (rightClick == true) {
+            if (rightClick === true) {
                 left_invalid = true;
                 current.change_around_opening();
-            } else if (current.getStyle() == "block" && plan != 0) {//很迷的判定，下面对应的还要有k==1
+            } else if (current.getStyle() === "block" && plan !== 0) {//很迷的判定，下面对应的还要有k==1
                 current.changeStyle("opening");
             }
         } else if (video[plan].mouse === "rc") {//rc
             rightClick = true;
             current.change_around_normal();//复原因为中键改变的block样式
             change_top_image("face", "face_click");
-            if (leftClick == true) {
+            if (leftClick === true) {
                 left_invalid = true;
                 current.change_around_opening();
             } else {
                 right_count++;
-                if (current.getStyle() == "openedBlockBomb") {
-                    if (question == false) {
+                if (current.getStyle() === "openedBlockBomb") {
+                    if (question === false) {
                         ces_count++;
                         current.changeStyle("block");
                         change_top_count("mine_count", container.minenumber = container.minenumber + 1);
@@ -400,11 +396,11 @@ function timer_avf() {
                         current.changeStyle("question");
                         change_top_count("mine_count", container.minenumber = container.minenumber + 1);
                     }
-                } else if (current.getStyle() == "block") {
+                } else if (current.getStyle() === "block") {
                     ces_count++;
                     current.changeStyle("openedBlockBomb");
                     change_top_count("mine_count", container.minenumber = container.minenumber - 1);
-                } else if (current.getStyle() == "question") {
+                } else if (current.getStyle() === "question") {
                     ces_count++;
                     current.changeStyle("block");
                 } else {
@@ -414,38 +410,38 @@ function timer_avf() {
         } else if (video[plan].mouse === "lr") {//lr
             leftClick = false;
             change_top_image("face", "face_normal");
-            if (rightClick == true) {
+            if (rightClick === true) {
                 current.change_around_normal();
                 double_count++;
-                if (right_invalid == true) {
+                if (right_invalid === true) {
                     right_count--;
                     right_invalid = false;
                 }
-            } else if (left_invalid == false) {
+            } else if (left_invalid === false) {
                 left_count++;
             }
-            if (current.isOpen == false && rightClick == false) {
+            if (current.isOpen === false && rightClick === false) {
                 //当lr事件直接出现在方块上时，方块没有经过mv事件变为"opening"样式，此时若left_invalid为false也需要打开方块
-                if (current.getStyle() == "opening" || (current.getStyle() == "block" && !left_invalid) || plan == 1 || plan == 2) {
+                if (current.getStyle() === "opening" || (current.getStyle() === "block" && !left_invalid) || plan === 1 || plan === 2) {
                     //同样是很迷的判定
                     //avf可能第二个操作时lr（plan==1）
                     //mvf可能第三个操作是lr（plan==2）
                     current.open();
                 }
-            } else if (rightClick == true && current.isOpen == true && current.bombNumAround > 0) {
+            } else if (rightClick === true && current.isOpen === true && current.bombNumAround > 0) {
                 current.openaround();
             }
             left_invalid = false;
         } else if (video[plan].mouse === "rr") {//rr
             rightClick = false;
             change_top_image("face", "face_normal");
-            if (leftClick == true) {
+            if (leftClick === true) {
                 double_count++;
-                if (right_invalid == true) {
+                if (right_invalid === true) {
                     right_count--;
                 }
                 current.change_around_normal();
-                if (current.isOpen == true && current.bombNumAround > 0) {
+                if (current.isOpen === true && current.bombNumAround > 0) {
                     current.openaround();
                 }
             }
@@ -457,7 +453,7 @@ function timer_avf() {
             middle_invalid = false;
             double_count++;
             current.change_around_normal();
-            if (current.isOpen == true && current.bombNumAround > 0) {
+            if (current.isOpen === true && current.bombNumAround > 0) {
                 current.openaround();
             }
         } else if (video[plan].mouse === "mt") {
@@ -493,27 +489,24 @@ function timer_avf() {
 function stop()//暂停函数
 {
     window.clearInterval(int);
-    var stoptime = new Date();
-    log("stop:" + stoptime.getMinutes() + '.' + stoptime.getSeconds() + '.' + stoptime.getMilliseconds());
-    var stop_minutes = stoptime.getMinutes();
-    var stop_seconds = stoptime.getSeconds();
-    var stop_milliseconds = stoptime.getMilliseconds();
-    if (stop_milliseconds < begintime.getMilliseconds()) {
-        stop_milliseconds += 1000;
-        stop_seconds--;
+    const date = new Date();
+    log("stop:" + date.getMinutes() + '.' + date.getSeconds() + '.' + date.getMilliseconds());
+    let stopMinutes = date.getMinutes();
+    let stopSeconds = date.getSeconds();
+    let stopMilliseconds = date.getMilliseconds();
+    if (stopMilliseconds < beginTime.getMilliseconds()) {
+        stopMilliseconds += 1000;
+        stopSeconds--;
     }
-    if (stop_seconds < begintime.getSeconds()) {
-        stop_seconds += 60;
-        stop_minutes--;
+    if (stopSeconds < beginTime.getSeconds()) {
+        stopSeconds += 60;
+        stopMinutes--;
     }
-    if (stop_minutes < begintime.getMinutes()) {
-        stop_minutes += 60;
+    if (stopMinutes < beginTime.getMinutes()) {
+        stopMinutes += 60;
     }
-    log('运行时间:' + ((stop_minutes - begintime.getMinutes()) * 60 + (stop_seconds - begintime.getSeconds()) + (stop_milliseconds - begintime.getMilliseconds()) / 1000).toFixed(2));
-    // second=(stop_minutes-begintime.getMinutes())*60+(stop_seconds-begintime.getSeconds());
-    // millisecond=parseInt((stop_milliseconds-begintime.getMilliseconds())/10);
+    log('运行时间:' + ((stopMinutes - beginTime.getMinutes()) * 60 + (stopSeconds - beginTime.getSeconds()) + (stopMilliseconds - beginTime.getMilliseconds()) / 1000).toFixed(2));
 }
-
 
 function change_top_image(id, name)//修改顶部笑脸背景
 {
@@ -526,20 +519,18 @@ function change_control_image(count, name)//修改顶部笑脸背景
 }
 
 function change_top_sunglasses() {//阻止face_sunglasses被强行改成face_normal
-    var face = new Array();
-    face = document.getElementById("face").getElementsByTagName("img")[0].src.split("/");
-    if (face[face.length - 1] != "face_sunglasses.bmp") {
+    const face = document.getElementById("face").getElementsByTagName("img")[0].src.split("/");
+    if (face[face.length - 1] !== "face_sunglasses.bmp") {
         document.getElementById("face").getElementsByTagName("img")[0].src = "image/face_normal.bmp";
     }
 }
 
 function change_top_count(id, count)//修改顶部计时器背景
 {
-    var a = parseInt(Math.abs(count) / 100) % 10;
-    var b = parseInt((Math.abs(count) / 10)) % 10;
-    var c = Math.abs(count) % 10;
-    // log("count"+count+" a:"+a+" b:"+b+" c:"+c);
-    var image = document.getElementById(id).getElementsByTagName("img");
+    const a = parseInt(Math.abs(count) / 100) % 10;
+    const b = parseInt((Math.abs(count) / 10)) % 10;
+    const c = Math.abs(count) % 10;
+    const image = document.getElementById(id).getElementsByTagName("img");
     if (count < -10) {
         image[0].src = "image/number_minus.bmp";
         image[1].src = "image/number_" + b + ".bmp";
@@ -564,12 +555,12 @@ function change_top_count(id, count)//修改顶部计时器背景
 }
 
 function counters_3BV() {//计算3BV
-    var opening = 0;
-    var bbbv = 0;
-    var bbbv_done = 0;
-    var opening_done = 0;
-    var island = 0;
-    var a = new Array();
+    let opening = 0;
+    let bbbv = 0;
+    let bbbv_done = 0;
+    let opening_done = 0;
+    let island = 0;
+    const a = [];
     a.push("up");
     a.push("right");
     a.push("down");
@@ -578,43 +569,43 @@ function counters_3BV() {//计算3BV
     a.push("rightUp");
     a.push("leftDown");
     a.push("rightDown");
-    for (var i = 0; i < container.columns * container.rows; i++) {
-        if (container.childObject[i].bombNumAround == 0 && container.childObject[i].is_bv) {
+    for (let i = 0; i < container.columns * container.rows; i++) {
+        if (container.childObject[i].bombNumAround === 0 && container.childObject[i].is_bv) {
             opening++;
             counters_Ops(container.childObject[i], a);
             container.childObject[i].is_bv = true;
         }
     }
-    for (var i = 0; i < container.columns * container.rows; i++) {
+    for (let i = 0; i < container.columns * container.rows; i++) {
         if (!container.childObject[i].isBomb && container.childObject[i].is_bv) {
             bbbv++;
             if (container.childObject[i].isOpen) {
                 bbbv_done++;
-                if (container.childObject[i].bombNumAround == 0) {
+                if (container.childObject[i].bombNumAround === 0) {
                     opening_done++;
                 }
             }
         }
     }
-    for (var i = 0; i < container.columns * container.rows; i++) {
+    for (let i = 0; i < container.columns * container.rows; i++) {
         if (container.childObject[i].bombNumAround > 0 && container.childObject[i].is_bv) {
             island++;
-            counters_Isls(container.childObject[i], a);
+            countersIslands(container.childObject[i], a);
         }
     }
     document.getElementById('3BV').innerText = bbbv_done + '/' + bbbv;
     document.getElementById('Ops').innerText = opening_done + '/' + opening;
     document.getElementById('Isls').innerText = island;
-    if (bbbv_done != 0) {
+    if (bbbv_done !== 0) {
         document.getElementById('EstTime').innerText = (bbbv / (bbbv_done * 100 / (second * 100 + millisecond))).toFixed(2);
         document.getElementById('3BV/s').innerText = (bbbv_done * 100 / (second * 100 + millisecond)).toFixed(2);
-        document.getElementById('RQP').innerText = ((second + millisecond / 100) * (second + millisecond / 100 + 1) / bbbv_done).toFixed(2);
-        if (container.bombNumber == 10) {
-            document.getElementById('STNB').innerText = (47.299 / (Math.pow(second + millisecond / 100, 1.7) / bbbv_done)).toFixed(2);
-        } else if (container.bombNumber == 40) {
-            document.getElementById('STNB').innerText = (153.73 / (Math.pow(second + millisecond / 100, 1.7) / bbbv_done)).toFixed(2);
-        } else if (container.bombNumber == 99) {
-            document.getElementById('STNB').innerText = (435.001 / (Math.pow(second + millisecond / 100, 1.7) / bbbv_done)).toFixed(2);
+        document.getElementById('RQP').innerText = ((second + millisecond / 100) * (second + millisecond / 100 + 1) / bbbv_done).toFixed(3);
+        if (container.bombNumber === 10) {
+            document.getElementById('STNB').innerText = (47.299 / (Math.pow(second + millisecond / 100, 1.7) / bbbv_done)).toFixed(3);
+        } else if (container.bombNumber === 40) {
+            document.getElementById('STNB').innerText = (153.73 / (Math.pow(second + millisecond / 100, 1.7) / bbbv_done)).toFixed(3);
+        } else if (container.bombNumber === 99) {
+            document.getElementById('STNB').innerText = (435.001 / (Math.pow(second + millisecond / 100, 1.7) / bbbv_done)).toFixed(3);
         }
         if (plan > 0) document.getElementById('Path').innerText = Math.round(video[plan - 1].path);
         document.getElementById('QG').innerText = (Math.pow(second + millisecond / 100, 1.7) / bbbv_done).toFixed(3);
@@ -622,17 +613,17 @@ function counters_3BV() {//计算3BV
         document.getElementById('Corr').innerText = (ces_count / (left_count + right_count + double_count)).toFixed(3);
         document.getElementById('IOE').innerText = (bbbv_done / (left_count + right_count + double_count)).toFixed(3);
     }
-    for (var i = 0; i < container.columns * container.rows; i++) {
+    for (let i = 0; i < container.columns * container.rows; i++) {
         container.childObject[i].is_bv = true;
     }
 }
 
 function counters_Ops(block, a) {//计算openings
     block.is_bv = false;
-    for (var i = 0; i < a.length; i++) {
-        var b = block.neighbors[a[i]];
+    for (let i = 0; i < a.length; i++) {
+        const b = block.neighbors[a[i]];
         if (null != b && typeof (b) != "undefined" && !b.isBomb && b.is_bv) {
-            if (b.bombNumAround == 0) {
+            if (b.bombNumAround === 0) {
                 counters_Ops(b, a);
             } else if (b.bombNumAround > 0) {
                 b.is_bv = false;
@@ -641,12 +632,12 @@ function counters_Ops(block, a) {//计算openings
     }
 }
 
-function counters_Isls(block, a) {//计算islands
+function countersIslands(block, a) {//计算islands
     block.is_bv = false;
-    for (var i = 0; i < a.length; i++) {
-        var b = block.neighbors[a[i]];
+    for (let i = 0; i < a.length; i++) {
+        const b = block.neighbors[a[i]];
         if (null != b && typeof (b) != "undefined" && b.bombNumAround > 0 && b.is_bv) {
-            counters_Isls(b, a);
+            countersIslands(b, a);
         }
     }
 }
@@ -664,29 +655,11 @@ function write_counters() {//重写counter
     document.getElementById('Path').innerText = path;
 }
 
-function Mouse_event() {//记录鼠标事件
-    this.sec = null;
-    this.hun = null;
-    this.mouse = null;
-    this.rows = null;
-    this.columns = null;
-    this.x = null;
-    this.y = null;
-    this.path = null;
-}
-
-/**
- * 格式化两位数字
- */
-function two_char(n) {//
-    return n >= 10 ? n : "0" + n;
-}
-
 function question_marks() {//更改问号标记
-    if (document.getElementById("question").innerHTML == '标记问号') {
+    if (document.getElementById("question").innerHTML === '标记问号') {
         document.getElementById("question").innerHTML = '取消问号';
         question = true;
-    } else if (document.getElementById("question").innerHTML == '取消问号') {
+    } else if (document.getElementById("question").innerHTML === '取消问号') {
         document.getElementById("question").innerHTML = '标记问号';
         question = false;
     }
