@@ -143,68 +143,68 @@ Container.prototype.init = function (level, columns, rows, bombNumber) {
 };
 
 Container.prototype.add_mark = function () {//添加标识
-    var mark = document.createElement("div");
+    const mark = document.createElement("div");
     mark.id = "mark";
     document.getElementById("containers").appendChild(mark);
-    var span = document.createElement("span");
+    const span = document.createElement("span");
     span.id = "mark_span";
     span.innerHTML = "Anonymous!";
     document.getElementById("mark").appendChild(span);//添加子元素
 
-    for (var i = 0; i < container.rows * container.columns; i++) {//给每个block增加img节点
-        var img = document.createElement("img");
+    for (let i = 0; i < container.rows * container.columns; i++) {//给每个block增加img节点
+        const img = document.createElement("img");
         document.getElementById(i).appendChild(img);
     }
 };
 
-Container.prototype.set_mine = function (bomb_id) {
+Container.prototype.setMine = function (bombId) {
     reset();//重置时间
-    log("新游戏布雷1111");
+    log("新游戏布雷，bombId = " + bombId);
     gameover = false;
     leftClick = false;
     rightClick = false;
-    var d = 0;
+    let bombs = 0;
     while (true) {
-        if (d >= this.bombNumber) {
+        if (bombs >= this.bombNumber) {
             break;
         }
-        var e = Math.floor(Math.random() * this.rows * this.columns);
-        if (e != bomb_id && this.childObject[e].isBomb != true) {
-            this.childObject[e].isBomb = true;
-            d++;
+        const position = Math.floor(Math.random() * this.rows * this.columns);
+        if (position !== bombId && this.childObject[position].isBomb !== true) {
+            this.childObject[position].isBomb = true;
+            bombs++;
         }
     }
-    for (var j = 0; j < this.rows * this.columns; j++) {
-        var f = this.childObject[j];
-        f.neighbors.up = this.childObject[j - this.columns];
-        f.neighbors.right = this.childObject[j + 1];
-        f.neighbors.down = this.childObject[j + this.columns];
-        f.neighbors.left = this.childObject[j - 1];
-        f.neighbors.leftUp = this.childObject[j - this.columns - 1];
-        f.neighbors.rightUp = this.childObject[j - this.columns + 1];
-        f.neighbors.leftDown = this.childObject[j + this.columns - 1];
-        f.neighbors.rightDown = this.childObject[j + this.columns + 1];
-        if (j / this.columns == 0) {
-            f.neighbors.up = null;
-            f.neighbors.leftUp = null;
-            f.neighbors.rightUp = null;
-        } else if (j / this.columns == this.rows - 1) {
-            f.neighbors.down = null;
-            f.neighbors.leftDown = null;
-            f.neighbors.rightDown = null;
+    for (let i = 0; i < this.rows * this.columns; i++) {
+        const element = this.childObject[i];
+        element.neighbors.up = this.childObject[i - this.columns];
+        element.neighbors.right = this.childObject[i + 1];
+        element.neighbors.down = this.childObject[i + this.columns];
+        element.neighbors.left = this.childObject[i - 1];
+        element.neighbors.leftUp = this.childObject[i - this.columns - 1];
+        element.neighbors.rightUp = this.childObject[i - this.columns + 1];
+        element.neighbors.leftDown = this.childObject[i + this.columns - 1];
+        element.neighbors.rightDown = this.childObject[i + this.columns + 1];
+        if (i / this.columns === 0) {
+            element.neighbors.up = null;
+            element.neighbors.leftUp = null;
+            element.neighbors.rightUp = null;
+        } else if (i / this.columns === this.rows - 1) {
+            element.neighbors.down = null;
+            element.neighbors.leftDown = null;
+            element.neighbors.rightDown = null;
         }
-        if (j % this.columns == 0) {
-            f.neighbors.left = null;
-            f.neighbors.leftUp = null;
-            f.neighbors.leftDown = null;
-        } else if (j % this.columns == this.columns - 1) {
-            f.neighbors.right = null;
-            f.neighbors.rightUp = null;
-            f.neighbors.rightDown = null;
+        if (i % this.columns === 0) {
+            element.neighbors.left = null;
+            element.neighbors.leftUp = null;
+            element.neighbors.leftDown = null;
+        } else if (i % this.columns === this.columns - 1) {
+            element.neighbors.right = null;
+            element.neighbors.rightUp = null;
+            element.neighbors.rightDown = null;
         }
-        f.calcBombAround();
+        element.calcBombAround();
     }
-    this.childObject[bomb_id].open();
+    this.childObject[bombId].open();
 };
 
 Container.prototype.setVideoMines = function (board) {
@@ -226,35 +226,35 @@ Container.prototype.setVideoMines = function (board) {
             this.childObject[i].isBomb = true;
         }
     }
-    for (var j = 0; j < this.rows * this.columns; j++) {
-        var f = this.childObject[j];
-        f.neighbors.up = this.childObject[j - this.columns];
-        f.neighbors.right = this.childObject[j + 1];
-        f.neighbors.down = this.childObject[j + this.columns];
-        f.neighbors.left = this.childObject[j - 1];
-        f.neighbors.leftUp = this.childObject[j - this.columns - 1];
-        f.neighbors.rightUp = this.childObject[j - this.columns + 1];
-        f.neighbors.leftDown = this.childObject[j + this.columns - 1];
-        f.neighbors.rightDown = this.childObject[j + this.columns + 1];
-        if (j / this.columns == 0) {
-            f.neighbors.up = null;
-            f.neighbors.leftUp = null;
-            f.neighbors.rightUp = null;
-        } else if (j / this.columns == this.rows - 1) {
-            f.neighbors.down = null;
-            f.neighbors.leftDown = null;
-            f.neighbors.rightDown = null;
+    for (let i = 0; i < this.rows * this.columns; i++) {
+        const element = this.childObject[i];
+        element.neighbors.up = this.childObject[i - this.columns];
+        element.neighbors.right = this.childObject[i + 1];
+        element.neighbors.down = this.childObject[i + this.columns];
+        element.neighbors.left = this.childObject[i - 1];
+        element.neighbors.leftUp = this.childObject[i - this.columns - 1];
+        element.neighbors.rightUp = this.childObject[i - this.columns + 1];
+        element.neighbors.leftDown = this.childObject[i + this.columns - 1];
+        element.neighbors.rightDown = this.childObject[i + this.columns + 1];
+        if (i / this.columns === 0) {
+            element.neighbors.up = null;
+            element.neighbors.leftUp = null;
+            element.neighbors.rightUp = null;
+        } else if (i / this.columns === this.rows - 1) {
+            element.neighbors.down = null;
+            element.neighbors.leftDown = null;
+            element.neighbors.rightDown = null;
         }
-        if (j % this.columns == 0) {
-            f.neighbors.left = null;
-            f.neighbors.leftUp = null;
-            f.neighbors.leftDown = null;
-        } else if (j % this.columns == this.columns - 1) {
-            f.neighbors.right = null;
-            f.neighbors.rightUp = null;
-            f.neighbors.rightDown = null;
+        if (i % this.columns === 0) {
+            element.neighbors.left = null;
+            element.neighbors.leftUp = null;
+            element.neighbors.leftDown = null;
+        } else if (i % this.columns === this.columns - 1) {
+            element.neighbors.right = null;
+            element.neighbors.rightUp = null;
+            element.neighbors.rightDown = null;
         }
-        f.calcBombAround();
+        element.calcBombAround();
     }
 };
 
@@ -269,9 +269,10 @@ Container.prototype.replay_video = function () {
 }
 
 Container.prototype.reset_mine = function () {
-    $('#mark_span').html('UPK mode');
-    $('#mark_span').attr('title', $('#mark_span').html());
-    if (left_count != 0 || gameover == true) {
+    const $markSpan = $('#mark_span');
+    $markSpan.html('UPK mode');
+    $markSpan.attr('title', $markSpan.html());
+    if (left_count !== 0 || gameover === true) {
         if (document.getElementById("mouse_point")) {
             $("div#mouse_point").remove();
         }
@@ -292,7 +293,7 @@ Container.prototype.reset_mine = function () {
         reset_begin = true;
         path = 0;
         log("重开布雷");
-        for (var i in this.childObject) {
+        for (const i in this.childObject) {
             this.childObject[i].changeStyle("block");
             this.childObject[i].isOpen = false;
             this.childObject[i].is_bv = true;
@@ -470,7 +471,7 @@ Block.prototype.init = function () {
                 if (that.isOpen === false && rightClick === false && (that.getStyle() === "opening" || that.getStyle() === "question")) {
                     if (firstclick === true) {
                         firstclick = false;
-                        container.set_mine(that.id);
+                        container.setMine(that.id);
                         start();
                     } else {
                         that.open();
@@ -523,10 +524,10 @@ Block.prototype.changeStyle = function (className) {
 };
 
 Block.prototype.change_around_opening = function () {
-    if (null != this && typeof (this) != "undefined" && !this.isOpen && this.getStyle() == "block") {
+    if (null != this && typeof (this) != "undefined" && !this.isOpen && this.getStyle() === "block") {
         this.changeStyle("opening");
     }
-    var a = new Array();
+    const a = [];
     a.push("up");
     a.push("right");
     a.push("down");
@@ -535,19 +536,19 @@ Block.prototype.change_around_opening = function () {
     a.push("rightUp");
     a.push("leftDown");
     a.push("rightDown");
-    for (var i = 0; i < a.length; i++) {
-        var b = this.neighbors[a[i]];
-        if (null != b && typeof (b) != "undefined" && !b.isOpen && b.getStyle() == "block") {
-            b.changeStyle("opening");
+    for (let i = 0; i < a.length; i++) {
+        const neighbor = this.neighbors[a[i]];
+        if (null != neighbor && typeof (neighbor) != "undefined" && !neighbor.isOpen && neighbor.getStyle() === "block") {
+            neighbor.changeStyle("opening");
         }
     }
 };
 
 Block.prototype.change_around_normal = function () {
-    if (null != this && typeof (this) != "undefined" && !this.isOpen && this.getStyle() == "opening") {
+    if (null != this && typeof (this) != "undefined" && !this.isOpen && this.getStyle() === "opening") {
         this.changeStyle("block");
     }
-    var a = new Array();
+    const a = [];
     a.push("up");
     a.push("right");
     a.push("down");
@@ -556,16 +557,16 @@ Block.prototype.change_around_normal = function () {
     a.push("rightUp");
     a.push("leftDown");
     a.push("rightDown");
-    for (var i = 0; i < a.length; i++) {
-        var b = this.neighbors[a[i]];
-        if (null != b && typeof (b) != "undefined" && !b.isOpen && b.getStyle() == "opening") {
-            b.changeStyle("block");
+    for (let i = 0; i < a.length; i++) {
+        const neighbor = this.neighbors[a[i]];
+        if (null != neighbor && typeof (neighbor) != "undefined" && !neighbor.isOpen && neighbor.getStyle() === "opening") {
+            neighbor.changeStyle("block");
         }
     }
 };
 
 Block.prototype.getStyle = function () {
-    var a = this.root.getAttribute("class");
+    let a = this.root.getAttribute("class");
     if (a == null || typeof (a) == "undefined") {
         a = this.root.getAttribute("className")
     }
@@ -574,7 +575,7 @@ Block.prototype.getStyle = function () {
 
 Block.prototype.open = function () {
     ces_count++;
-    if (this.bombNumAround == 0) {
+    if (this.bombNumAround === 0) {
         this.changeStyle("opening");
     } else if (this.bombNumAround > 0) {
         this.changeStyle("number");
@@ -589,10 +590,8 @@ Block.prototype.open = function () {
         change_top_image("face", "face_cry");
     }
     this.isOpen = true;
-    if (this.bombNumAround == 0) {
-        var a = new Array();
-        // JavaScript push() 方法
-        // http://www.runoob.com/jsref/jsref-push.html
+    if (this.bombNumAround === 0) {
+        const a = [];
         a.push("up");
         a.push("right");
         a.push("down");
@@ -601,10 +600,10 @@ Block.prototype.open = function () {
         a.push("rightUp");
         a.push("leftDown");
         a.push("rightDown");
-        for (var i = 0; i < a.length; i++) {
-            var b = this.neighbors[a[i]];
-            if (null != b && typeof (b) != "undefined" && !b.isBomb && !b.isOpen && b.getStyle() != "openedBlockBomb" && b.getStyle() != "question") {
-                b.open();
+        for (let i = 0; i < a.length; i++) {
+            const neighbor = this.neighbors[a[i]];
+            if (null != neighbor && typeof (neighbor) != "undefined" && !neighbor.isBomb && !neighbor.isOpen && neighbor.getStyle() !== "openedBlockBomb" && neighbor.getStyle() !== "question") {
+                neighbor.open();
                 ces_count--;
             }
         }
@@ -613,9 +612,9 @@ Block.prototype.open = function () {
 };
 
 Block.prototype.openaround = function () {
-    var count = 0;
-    var flag = false;
-    var a = new Array();
+    let count = 0;
+    let flag = false;
+    const a = [];
     a.push("up");
     a.push("right");
     a.push("down");
@@ -624,35 +623,35 @@ Block.prototype.openaround = function () {
     a.push("rightUp");
     a.push("leftDown");
     a.push("rightDown");
-    for (var i = 0; i < a.length; i++) {
-        var b = this.neighbors[a[i]];
-        if (null != b && typeof (b) != "undefined" && !b.isOpen && b.getStyle() == "openedBlockBomb")
+    for (let i = 0; i < a.length; i++) {
+        const neighbor = this.neighbors[a[i]];
+        if (null != neighbor && typeof (neighbor) != "undefined" && !neighbor.isOpen && neighbor.getStyle() === "openedBlockBomb")
             count++;
     }
-    if (count == this.bombNumAround) {
-        for (var i = 0; i < a.length; i++) {
-            var b = this.neighbors[a[i]];
-            if (null != b && typeof (b) != "undefined" && !b.isOpen && b.getStyle() != "openedBlockBomb" && b.getStyle() != "bomb") {
-                b.around_open();
+    if (count === this.bombNumAround) {
+        for (let i = 0; i < a.length; i++) {
+            const neighbor = this.neighbors[a[i]];
+            if (null != neighbor && typeof (neighbor) != "undefined" && !neighbor.isOpen && neighbor.getStyle() !== "openedBlockBomb" && neighbor.getStyle() !== "bomb") {
+                neighbor.around_open();
                 ces_count--;
                 flag = true;
             }
         }
-        if (flag == true) {
+        if (flag === true) {
             ces_count++;
         }
     }
     this.win();
 };
 
-Block.prototype.around_open = function ()
 //跟open()的区别在于没有进行是否胜利的判断
 //在openaround()的操作时win()应该在所有格子遍历完成后进行
 //否则ces_count可能在stop()之后才完成计数，导致计数错误
 //没加标识变量判断那是因为只有此处特殊处理，没必要在别的地方多次初始化
+Block.prototype.around_open = function ()
 {
     ces_count++;
-    if (this.bombNumAround == 0) {
+    if (this.bombNumAround === 0) {
         this.changeStyle("opening");
     } else if (this.bombNumAround > 0) {
         this.changeStyle("number");
@@ -667,8 +666,8 @@ Block.prototype.around_open = function ()
         change_top_image("face", "face_cry");
     }
     this.isOpen = true;
-    if (this.bombNumAround == 0) {
-        var a = new Array();
+    if (this.bombNumAround === 0) {
+        const a = [];
         a.push("up");
         a.push("right");
         a.push("down");
@@ -677,10 +676,10 @@ Block.prototype.around_open = function ()
         a.push("rightUp");
         a.push("leftDown");
         a.push("rightDown");
-        for (var i = 0; i < a.length; i++) {
-            var b = this.neighbors[a[i]];
-            if (null != b && typeof (b) != "undefined" && !b.isBomb && !b.isOpen && b.getStyle() != "openedBlockBomb") {
-                b.open();
+        for (let i = 0; i < a.length; i++) {
+            const neighbor = this.neighbors[a[i]];
+            if (null != neighbor && typeof (neighbor) != "undefined" && !neighbor.isBomb && !neighbor.isOpen && neighbor.getStyle() !== "openedBlockBomb") {
+                neighbor.open();
                 ces_count--;
             }
         }
