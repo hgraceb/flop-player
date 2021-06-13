@@ -20,6 +20,36 @@ let video_play = false;//change_speed函数中防止多次重置定时器
 let game_level = 0;//判断弹窗位置，只用了一次，可以考虑化简
 let fault_tolerant = true; // 是否可以进行特殊情况的容错处理
 
+const EMPTY_FUNCTION = function () {
+};
+
+let log = EMPTY_FUNCTION;
+let error = EMPTY_FUNCTION;
+let time = EMPTY_FUNCTION;
+let timeLog = EMPTY_FUNCTION;
+let timeEnd = EMPTY_FUNCTION;
+let clear = EMPTY_FUNCTION;
+if (location.hostname === "localhost" || location.hostname === "hgraceb.github.io") {
+    log = function (...data) {
+        console.log(...data);
+    }
+    error = function (...data) {
+        console.error(...data);
+    }
+    time = function (label) {
+        console.time(label);
+    }
+    timeLog = function (label, ...data) {
+        console.timeLog(label, ...data);
+    }
+    timeEnd = function (label) {
+        console.timeEnd(label);
+    }
+    clear = function () {
+        console.clear();
+    }
+}
+
 function reset()//时间重置函数
 {
     window.clearInterval(int);

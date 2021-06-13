@@ -253,33 +253,13 @@
 <script type="text/javascript" src="js/jquery/jquery-3.6.0.min.js"></script>
 
 <script type="text/javascript">
-    const EMPTY_FUNCTION = function () {
-    };
-
-    let log = EMPTY_FUNCTION;
-    let error = EMPTY_FUNCTION;
-    let time = EMPTY_FUNCTION;
-    let timeLog = EMPTY_FUNCTION;
-    let timeEnd = EMPTY_FUNCTION;
-    let clear = EMPTY_FUNCTION;
-    if (location.hostname === "localhost" || location.hostname === "hgraceb.github.io") {
-        log = function (...data) {
-            console.log(...data);
-        }
-        error = function (...data) {
-            console.error(...data);
-        }
-        time = function (label) {
-            console.time(label);
-        }
-        timeLog = function (label, ...data) {
-            console.timeLog(label, ...data);
-        }
-        timeEnd = function (label) {
-            console.timeEnd(label);
-        }
-        clear = function () {
-            console.clear();
+    if (window.ActiveXObject || 'ActiveXObject' in window) {
+        function loadVideo() {
+            if (parent.document.documentElement.lang && new RegExp('^en').test(parent.document.documentElement.lang)) {
+                alert('IE kernel is not supported at the moment, please change your browser or kernel!');
+            } else {
+                alert('暂不支持 IE 内核 ,请更换浏览器或内核！');
+            }
         }
     }
 </script>

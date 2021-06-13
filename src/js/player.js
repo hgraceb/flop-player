@@ -6,9 +6,6 @@ let number = 0;//字符读取进度
 const fade = 500;//淡入淡出时间
 
 function loadVideo(url) {
-    if (isIE()) {
-        videoError(i18n.errIE);
-    }
     clear(); // 清空控制台日志
     log(`录像路径: '${url}'`);
     time("录像准备");
