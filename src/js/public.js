@@ -304,19 +304,19 @@ function timer_avf() {
             //mvf录像x和y可能会超出界面范围
             //若超出则只进行鼠标指针操作并退出此次循环
             if (current != 0) current.change_around_normal();//越界时先判断current是否初始化
-            if (video[plan].mouse === "lc" || video[plan].mouse === 3) {//lc
+            if (video[plan].mouse === "lc") {//lc
                 leftClick = true;
                 if (rightClick == true) {
                     left_invalid = true;
                 }
-            } else if (video[plan].mouse === "rc" || video[plan].mouse === 9) {//rc
+            } else if (video[plan].mouse === "rc") {//rc
                 rightClick = true;
                 if (leftClick == true) {
                     left_invalid = true;
                 } else {
                     right_invalid = true;
                 }
-            } else if (video[plan].mouse === "lr" || video[plan].mouse === 5 || video[plan].mouse === 21) {//lr
+            } else if (video[plan].mouse === "lr") {//lr
                 leftClick = false;
                 if (rightClick == true) {
                     if (right_invalid == true) {
@@ -324,12 +324,12 @@ function timer_avf() {
                     }
                 }
                 left_invalid = false;
-            } else if (video[plan].mouse === "rr" || video[plan].mouse === 17 || video[plan].mouse === 145) {//rr
+            } else if (video[plan].mouse === "rr") {//rr
                 rightClick = false;
                 right_invalid = false;
-            } else if (video[plan].mouse === "mc" || video[plan].mouse === 33) {//mc
+            } else if (video[plan].mouse === "mc") {//mc
                 middle_invalid = true;
-            } else if (video[plan].mouse === "mr" || video[plan].mouse === 65 || video[plan].mouse === 193) {//mr
+            } else if (video[plan].mouse === "mr") {//mr
                 middle_invalid = false;
             }
             // log(111);
@@ -369,9 +369,9 @@ function timer_avf() {
             }
         }
 
-        if (video[plan].mouse === "mv" || video[plan].mouse === 1) {//mv
+        if (video[plan].mouse === "mv") {//mv
             // 空语句，移动事件在前面已经处理过，如果是移动事件则无需进行后面的判断
-        } else if (video[plan].mouse === "lc" || video[plan].mouse === 3) {//lc
+        } else if (video[plan].mouse === "lc") {//lc
             leftClick = true;
             current.change_around_normal();//复原因为中键改变的block样式
             change_top_image("face", "face_click");
@@ -381,7 +381,7 @@ function timer_avf() {
             } else if (current.getStyle() == "block" && plan != 0) {//很迷的判定，下面对应的还要有k==1
                 current.changeStyle("opening");
             }
-        } else if (video[plan].mouse === "rc" || video[plan].mouse === 9) {//rc
+        } else if (video[plan].mouse === "rc") {//rc
             rightClick = true;
             current.change_around_normal();//复原因为中键改变的block样式
             change_top_image("face", "face_click");
@@ -411,7 +411,7 @@ function timer_avf() {
                     right_invalid = true;
                 }
             }
-        } else if (video[plan].mouse === "lr" || video[plan].mouse === 5 || video[plan].mouse === 21) {//lr
+        } else if (video[plan].mouse === "lr") {//lr
             leftClick = false;
             change_top_image("face", "face_normal");
             if (rightClick == true) {
@@ -436,7 +436,7 @@ function timer_avf() {
                 current.openaround();
             }
             left_invalid = false;
-        } else if (video[plan].mouse === "rr" || video[plan].mouse === 17 || video[plan].mouse === 145) {//rr
+        } else if (video[plan].mouse === "rr") {//rr
             rightClick = false;
             change_top_image("face", "face_normal");
             if (leftClick == true) {
@@ -450,16 +450,19 @@ function timer_avf() {
                 }
             }
             right_invalid = false;
-        } else if (video[plan].mouse === "mc" || video[plan].mouse === 33) {//mc
+        } else if (video[plan].mouse === "mc") {//mc
             middle_invalid = true;
             current.change_around_opening();
-        } else if (video[plan].mouse === "mr" || video[plan].mouse === 65 || video[plan].mouse === 193) {//mr
+        } else if (video[plan].mouse === "mr") {//mr
             middle_invalid = false;
             double_count++;
             current.change_around_normal();
             if (current.isOpen == true && current.bombNumAround > 0) {
                 current.openaround();
             }
+        } else if (video[plan].mouse === "mt") {
+            // toggle_question_mark_setting
+            toggleQuestionMode()
         }
         plan++;
     }

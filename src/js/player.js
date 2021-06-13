@@ -195,14 +195,8 @@ function playRawVideo(result) {
     video[0].size = count;
     video_invalid = false;
 
-    // 是否为问号标记模式
-    if (data["Marks"] && data["Marks"].toLowerCase() === "on") {
-        document.getElementById("question").innerHTML = '取消问号';
-        question = true;
-    } else {
-        document.getElementById("question").innerHTML = '标记问号';
-        question = false;
-    }
+    // 设置是否启用问号模式
+    setQuestionMode(data["Marks"] && data["Marks"].toLowerCase() === "on")
     timeLog("录像准备", "解析 RAW 数据");
 
     container.init(video[0].level, parseInt(data["Width"]), parseInt(data["Height"]), parseInt(data["Mines"]));

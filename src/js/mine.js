@@ -731,6 +731,23 @@ Block.prototype.win = function () {
     }
 }
 
+/**
+ * 设置是否启用问号模式
+ *
+ * @param {boolean} questionMode 是否启用问号模式
+ * @todo 设置菜单栏文本显示（如果需要显示菜单栏问号模式选项的话）
+ */
+function setQuestionMode(questionMode) {
+    question = questionMode;
+}
+
+/**
+ * 切换问号模式启用状态
+ */
+function toggleQuestionMode() {
+    setQuestionMode(!question);
+}
+
 document.onmousedown = function () {
     if (gameover === false) {
         if (event.button === 0) {
