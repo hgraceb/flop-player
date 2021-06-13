@@ -5,7 +5,7 @@
 
 ## Usage
 
-1. Copy the "src" directory to your project.
+1. Copy the "dist" directory to your project.
 
 2. Modify your website entry html file as follows:
 
@@ -18,7 +18,7 @@
    
    <!-- First: add a container for playing the video -->
    <div id="video-stage" style="display: none;position: absolute;z-index: 999;background-color: rgba(0 ,0 ,0 ,0.33)">
-       <iframe id="video-iframe" src="./src/video.html?v=20210612" style="border: 0;width: 0;height: 0;" scrolling="no"></iframe>
+       <iframe id="video-iframe" src="./dist/video.html?v=20210613" style="border: 0;width: 0;height: 0;" scrolling="no"></iframe>
    </div>
    
    ...
