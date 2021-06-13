@@ -12,6 +12,7 @@ var ces_count = 0;//有效点击次数
 var right_invalid = false;//消除双击带右键
 var left_invalid = false;//消除双击带左键
 var middle_invalid = false;//判断中键是否点击
+var leftClickWithShift = false;//判断是否按住shift的情况下点击左键，此时放开shift没有影响，在任一按键释放后重置，其中放开左键后相当于双击
 var video_invalid = true;//判断是否读取过录像文件并已经记录数据
 var reset_begin = false;//判断重开开始计时的时间
 var path = 0;//移动距离
@@ -36,6 +37,7 @@ Container.prototype.init = function (level, columns, rows, bombNumber) {
     left_invalid = false;
     right_invalid = false;
     middle_invalid = false;
+    leftClickWithShift = false;
     left_count = 0;
     right_count = 0;
     double_count = 0;
@@ -214,6 +216,7 @@ Container.prototype.setVideoMines = function (board) {
     left_invalid = false;
     right_invalid = false;
     middle_invalid = false;
+    leftClickWithShift = false;
     left_count = 0;
     right_count = 0;
     double_count = 0;
@@ -281,6 +284,7 @@ Container.prototype.reset_mine = function () {
         left_invalid = false;
         right_invalid = false;
         middle_invalid = false;
+        leftClickWithShift = false;
         left_count = 0;
         right_count = 0;
         double_count = 0;
@@ -463,7 +467,7 @@ Block.prototype.init = function () {
                 } else if (left_invalid === false) {
                     left_count++;
                 }
-                if (that.isOpen === false && that.getStyle() === "opening" && rightClick === false && that.getStyle() === "opening") {
+                if (that.isOpen === false && rightClick === false && (that.getStyle() === "opening" || that.getStyle() === "question")) {
                     if (firstclick === true) {
                         firstclick = false;
                         container.set_mine(that.id);
@@ -746,6 +750,7 @@ function setQuestionMode(questionMode) {
  */
 function toggleQuestionMode() {
     setQuestionMode(!question);
+    log('切换问号模式为：' + question)
 }
 
 document.onmousedown = function () {

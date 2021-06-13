@@ -320,15 +320,21 @@ function timer_avf() {
                     }
                 }
                 left_invalid = false;
+                leftClickWithShift = false
             } else if (video[plan].mouse === "rr") {//rr
                 rightClick = false;
                 right_invalid = false;
+                leftClickWithShift = false
             } else if (video[plan].mouse === "mc") {//mc
                 middle_invalid = true;
             } else if (video[plan].mouse === "mr") {//mr
                 middle_invalid = false;
+                leftClickWithShift = false
+            } else if (video[plan].mouse === "sc") {
+                leftClickWithShift = true
+            } else if (video[plan].mouse === "mt") {
+                toggleQuestionMode()
             }
-            // log(111);
             plan++;
             continue;
         }
@@ -343,25 +349,21 @@ function timer_avf() {
             //避免执行中键操作时current.change_around_opening()操作之后
             //又执行了front.change_around_normal()导致block样式错误
             if (front !== 0) {
-                if (front.isOpen === false && leftClick === true && rightClick === false) {
-                    if (front.getStyle() === "opening") {
+                if ((rightClick === true && leftClick === true) || middle_invalid === true || leftClickWithShift === true) {
+                    front.change_around_normal();
+                } else if (front.isOpen === false && rightClick === false && leftClick === true) {
+                    if (front.getStyle() === "opening" && left_invalid === false) {
                         front.changeStyle("block");
                     }
-                } else if (rightClick === true && leftClick === true) {
-                    front.change_around_normal();
-                } else if (middle_invalid === true) {
-                    front.change_around_normal();
                 }
             }
 
-            if (current.isOpen === false && rightClick === false && leftClick === true) {
+            if ((rightClick === true && leftClick === true) || middle_invalid === true || leftClickWithShift === true) {
+                current.change_around_opening();
+            } else if (current.isOpen === false && rightClick === false && leftClick === true) {
                 if (current.getStyle() === "block" && left_invalid === false) {
                     current.changeStyle("opening");
                 }
-            } else if (rightClick === true && leftClick === true) {
-                current.change_around_opening();
-            } else if (middle_invalid === true) {
-                current.change_around_opening();
             }
         }
 
@@ -420,18 +422,19 @@ function timer_avf() {
             } else if (left_invalid === false) {
                 left_count++;
             }
-            if (current.isOpen === false && rightClick === false) {
+            if (current.isOpen === false && rightClick === false && leftClickWithShift === false) {
                 //当lr事件直接出现在方块上时，方块没有经过mv事件变为"opening"样式，此时若left_invalid为false也需要打开方块
-                if (current.getStyle() === "opening" || (current.getStyle() === "block" && !left_invalid) || plan === 1 || plan === 2) {
+                if (current.getStyle() === "opening" || current.getStyle() === "question" || (current.getStyle() === "block" && !left_invalid) || plan === 1 || plan === 2) {
                     //同样是很迷的判定
                     //avf可能第二个操作时lr（plan==1）
                     //mvf可能第三个操作是lr（plan==2）
                     current.open();
                 }
-            } else if (rightClick === true && current.isOpen === true && current.bombNumAround > 0) {
+            } else if ((rightClick === true || leftClickWithShift === true) && current.isOpen === true && current.bombNumAround > 0) {
                 current.openaround();
             }
             left_invalid = false;
+            leftClickWithShift = false
         } else if (video[plan].mouse === "rr") {//rr
             rightClick = false;
             change_top_image("face", "face_normal");
@@ -446,6 +449,7 @@ function timer_avf() {
                 }
             }
             right_invalid = false;
+            leftClickWithShift = false
         } else if (video[plan].mouse === "mc") {//mc
             middle_invalid = true;
             current.change_around_opening();
@@ -456,6 +460,10 @@ function timer_avf() {
             if (current.isOpen === true && current.bombNumAround > 0) {
                 current.openaround();
             }
+            leftClickWithShift = false
+        } else if (video[plan].mouse === "sc") {
+            // left_click_with_shift
+            leftClickWithShift = true
         } else if (video[plan].mouse === "mt") {
             // toggle_question_mark_setting
             toggleQuestionMode()

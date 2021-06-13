@@ -142,7 +142,7 @@ function playRawVideo(result) {
     timeLog("录像准备", "重置数据");
     const rawArray = result.split("\n");
     const data = {};
-    const eventReg = /^-?\d+\.\d+[ ]+(mv|([lrm][cr]))[ |\d]+\([ ]*\d+[ ]*\d+[ ]*\)([ ]*\(([lrm])?\))?$/; // 点击和移动事件数据，中间可能没有当前所在行和列的数据
+    const eventReg = /^-?\d+\.\d+[ ]+(mv|sc|mt|[lrm][cr])[ |\d]+\([ ]*\d+[ ]*\d+[ ]*\)([ ]*\(([lrm])?\))?$/; // 点击和移动事件数据，中间可能没有当前所在行和列的数据
     const normalReg = /^[a-zA-Z_]+?[:][ ]*.*\S$/; // 普通键值对数据
     const boardReg = /^[*0]+$/; // 雷的分布数据
     let count = 0; // 当前事件数
