@@ -20,6 +20,9 @@
  - Changed function order so now functions are logically grouped.
  - Added detailed comments throughout file.
 
+ Program was modified by Enbin Hu (Flop) 2021-06-13. Fix the bug of not handling the
+ question mark setting toggle.
+
  This is being released as Rawparser version 6. 
  
  Program works for Minesweeper Clone, Minesweeper Arbiter, Minesweeper X and Viennasweeper 
@@ -934,6 +937,12 @@ void left_press_with_shift(int x,int y,int prec_x,int prec_y)
 	cur_x=x;cur_y=y;
 }
 
+//Toggle question mark setting
+void toggle_question_mark_setting(int x,int y,int prec_x,int prec_y)
+{
+	qm=!qm;
+}
+
 //Right button down
 void right_press(int x,int y,int prec_x,int prec_y)
 {
@@ -1363,6 +1372,9 @@ int main(int argc,char** argv)
 					func=middle_click;
 				else if(event[i+1]=='c')
 					func=middle_press;
+				//Toggle question mark setting (implemented in MinesweeperX)
+                else if(event[i+1]=='t')
+					func=toggle_question_mark_setting;
 				else
 					error("Unknown event");
 
