@@ -412,7 +412,10 @@ function timer_avf() {
         } else if (video[plan].mouse === "lr") {//lr
             leftClick = false;
             change_top_image("face", "face_normal");
-            if (rightClick === true) {
+            if (leftClickWithShift) {
+                current.change_around_normal();
+                double_count++;
+            } else if (rightClick === true) {
                 current.change_around_normal();
                 double_count++;
                 if (right_invalid === true) {
