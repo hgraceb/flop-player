@@ -150,11 +150,6 @@ Container.prototype.add_mark = function () {//添加标识
     span.id = "mark_span";
     span.innerHTML = "Anonymous!";
     document.getElementById("mark").appendChild(span);//添加子元素
-
-    for (let i = 0; i < container.rows * container.columns; i++) {//给每个block增加img节点
-        const img = document.createElement("img");
-        document.getElementById(i).appendChild(img);
-    }
 };
 
 Container.prototype.setMine = function (bombId) {
@@ -363,10 +358,7 @@ EventUtil.removeEvent = function (a, b, c) {
 
 Block.prototype.init = function () {
     const that = this;
-    const divElement = document.createElement("div");
-    const imageElement = document.createElement("img");
-    divElement.appendChild(imageElement);
-    this.root = divElement;
+    this.root = document.createElement("div");
 
     EventUtil.addEvent(this.root, "mouseover", function (a) {
             if (gameover === true) {
@@ -506,21 +498,6 @@ Block.prototype.init = function () {
 
 Block.prototype.changeStyle = function (className) {
     this.root.setAttribute("class", className);
-    const imgElement = this.root.getElementsByTagName("img")[0];
-    switch (className) {
-        case "openedBlockBomb":
-            imgElement.src = "image/flag.bmp";
-            break;
-        case "block":
-            imgElement.src = "image/blank.bmp";
-            break;
-        case "opening":
-            imgElement.src = "image/opening.bmp";
-            break;
-        case "question":
-            imgElement.src = "image/question.bmp";
-            break;
-    }
 };
 
 Block.prototype.change_around_opening = function () {
@@ -578,12 +555,10 @@ Block.prototype.open = function () {
     if (this.bombNumAround === 0) {
         this.changeStyle("opening");
     } else if (this.bombNumAround > 0) {
-        this.changeStyle("number");
-        document.getElementById(this.id).getElementsByTagName("img")[0].src = "image/" + this.bombNumAround + ".bmp";
+        this.changeStyle("number_" + this.bombNumAround);
     } else {
         stop();
         this.changeStyle("firstbomb");
-        document.getElementById(this.id).getElementsByTagName("img")[0].src = "image/firstbomb.bmp";
 
         //You Lose!
         lose();
@@ -648,18 +623,15 @@ Block.prototype.openaround = function () {
 //在openaround()的操作时win()应该在所有格子遍历完成后进行
 //否则ces_count可能在stop()之后才完成计数，导致计数错误
 //没加标识变量判断那是因为只有此处特殊处理，没必要在别的地方多次初始化
-Block.prototype.around_open = function ()
-{
+Block.prototype.around_open = function () {
     ces_count++;
     if (this.bombNumAround === 0) {
         this.changeStyle("opening");
     } else if (this.bombNumAround > 0) {
-        this.changeStyle("number");
-        document.getElementById(this.id).getElementsByTagName("img")[0].src = "image/" + this.bombNumAround + ".bmp";
+        this.changeStyle("number_" + this.bombNumAround);
     } else {
         stop();
         this.changeStyle("firstbomb");
-        document.getElementById(this.id).getElementsByTagName("img")[0].src = "image/firstbomb.bmp";
 
         //You Lose!
         lose();
@@ -696,10 +668,8 @@ function lose() {
         const className = container.childObject[i].root.className;
         if (className === "block" && container.childObject[i].isBomb === true) {
             parent.childNodes[i].className = "bomb";
-            document.getElementById(i).getElementsByTagName("img")[0].src = "image/bomb.bmp";
         } else if (className === "openedBlockBomb" && container.childObject[i].isBomb === false) {
-            parent.childNodes[i].className = "bomb";
-            document.getElementById(i).getElementsByTagName("img")[0].src = "image/wrongflag.bmp";
+            parent.childNodes[i].className = "wrongflag";
         }
     }
     write_counters();
@@ -710,7 +680,7 @@ Block.prototype.win = function () {
     let count = 0;
     for (let i = 0; i < type.length; i++) {
         const a = type[i].className;
-        if (a === "opening" || a === "number") {
+        if (a === "opening" || a.startsWith("number_")) {
             count++;
         }
     }
@@ -727,7 +697,6 @@ Block.prototype.win = function () {
             const className = container.childObject[i].root.className;
             if (className === "block" || className === "question") {
                 parent.childNodes[i].className = "openedBlockBomb";
-                document.getElementById(i).getElementsByTagName("img")[0].src = "image/flag.bmp";
             }
         }
         write_counters();

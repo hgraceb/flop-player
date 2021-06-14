@@ -345,16 +345,73 @@ button {
     height: 100%;
 }
 
-.block, .openedBlockBomb, .question, .opening, .bomb, .firstbomb, .number {
+[class^="number_"], .block, .openedBlockBomb, .question, .opening, .bomb, .firstbomb, .wrongflag {
     width: 16px;
     height: 16px;
     float: left;
     margin: 0;
+    /* 缩放背景图片以完全覆盖背景区，可能背景图片部分看不见，使用 contain 可能导致部分缩放比例下显示白边*/
+    background-size: cover;
 }
 
-.number img, .firstbomb img, .bomb img, .openedBlockBomb img, .block img, .opening img, .question img {
-    width: 100%;
-    height: 100%;
+.number_1 {
+    background-image: url("../image/1.bmp");
+}
+
+.number_2 {
+    background-image: url("../image/2.bmp");
+}
+
+.number_3 {
+    background-image: url("../image/3.bmp");
+}
+
+.number_4 {
+    background-image: url("../image/4.bmp");
+}
+
+.number_5 {
+    background-image: url("../image/5.bmp");
+}
+
+.number_6 {
+    background-image: url("../image/6.bmp");
+}
+
+.number_7 {
+    background-image: url("../image/7.bmp");
+}
+
+.number_8 {
+    background-image: url("../image/8.bmp");
+}
+
+.block {
+    background-image: url("../image/blank.bmp");
+}
+
+.openedBlockBomb {
+    background-image: url("../image/flag.bmp");
+}
+
+.question {
+    background-image: url("../image/question.bmp");
+}
+
+.opening {
+    background-image: url("../image/opening.bmp");
+}
+
+.bomb {
+    background-image: url("../image/bomb.bmp");
+}
+
+.firstbomb {
+    background-image: url("../image/firstbomb.bmp");
+}
+
+.wrongflag {
+    background-image: url("../image/wrongflag.bmp");
 }
 
 .preload_image {
