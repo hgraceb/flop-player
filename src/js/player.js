@@ -131,7 +131,6 @@ function exitVideo() {
  * @param result 文件内容
  * @todo 优化录像解析逻辑，用三次正则先将数据进行分类
  * @todo 判断参数合法性，如：player、宽高和雷的数量
- * @todo 支持鼠标事件最后面是 (1)、(0) 这种格式的 RAW 录像
  */
 function playRawVideo(result) {
     reset();
