@@ -201,6 +201,10 @@ function start_avf(video)//开始函数
 }
 
 function pause_avf() {//暂停
+    if (gameover === false) {
+        // UPK模式下禁用暂停按钮
+        return
+    }
     if (beginTime !== 0) {
         video_play = false;
         window.clearInterval(int);
