@@ -18,7 +18,6 @@ let front = 0;//前一个block
 let size = 0;//录像事件总长度
 let video_play = false;//change_speed函数中防止多次重置定时器
 let game_level = 0;//判断弹窗位置，只用了一次，可以考虑化简
-let fault_tolerant = true; // 是否可以进行特殊情况的容错处理
 
 const EMPTY_FUNCTION = function () {
 };
@@ -197,7 +196,6 @@ function start_avf(video)//开始函数
     current = 0;//当前block
     front = 0;//前一个block
     video_play = true;
-    fault_tolerant = true;
 }
 
 function pause_avf() {//暂停
@@ -315,12 +313,12 @@ function timer_avf() {
     second = speed * ((stop_minutes - beginTime.getMinutes()) * 60 + (stop_seconds - beginTime.getSeconds())) + last_second;
     millisecond = speed * (parseInt((stop_milliseconds - beginTime.getMilliseconds()) / 10)) + last_millisecond;
     if ((second * 1000 + millisecond * 10) > video[0].realtime * 1000) {//高倍速时间有延迟，自欺欺人解决法
-        if (fault_tolerant) {
+        if (plan < size) {
             second = video[size - 1].sec;
             millisecond = video[size - 1].hun;
-            fault_tolerant = false; // 只进行一次容错处理
-            log('录像实际时间: ' + second + '.' + millisecond);
+            log('高倍速时间误差: ', 'plan =', plan, ', size =', size);
         } else {
+            log('录像播放意外退出: ', 'plan =', plan, ', size =', size);
             // 录像播放意外退出
             videoError(i18n.errQuitUnexpectedly)
         }
@@ -522,13 +520,6 @@ function timer_avf() {
     document.getElementById('Flags').innerText = container.bombNumber - container.minenumber;
     document.getElementById('Double').innerText = double_count + '@' + (double_count / (second + millisecond / 100)).toFixed(2);
     document.getElementById('Cl').innerText = (left_count + right_count + double_count) + '@' + ((left_count + right_count + double_count) / (second + millisecond / 100)).toFixed(2);
-
-
-    if (second > video[size - 1].sec + 2) {//简单的出错处理,可能出现错误判断导致录像中断的bug，2秒为容错值
-        log(second + '.' + speed + '.' + second / speed);
-        log("录像播放错误");
-        stop();
-    }
 }
 
 function stop()//暂停函数
