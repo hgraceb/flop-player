@@ -62,17 +62,17 @@ function loadVideo(url) {
     request.send();
 }
 
-function onprogress(result) {
+Module.onProgress = function (result) {
     results += result;
 }
 
-function onsuccess() {
+Module.onSuccess = function () {
     timeLog("录像准备", "解析录像文件");
     ready();
     playRawVideo(results);
 }
 
-function onerror(errCode, _errMsg) {
+Module.onError = function (errCode, _errMsg) {
     switch (errCode) {
         case 1:
             videoError(i18n.errParserTooLarge)

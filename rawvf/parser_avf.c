@@ -18,7 +18,9 @@
  
  Updated 2021-05-26 by Damien to remove legacy Freesweeper code and remove Arbiter cheat
  code as Arbiter does not allow cheat mode videos.
- 
+
+ Updated 2021-06-14 by Enbin Hu (Flop) to migrate to WebAssembly.
+
  Note Arbiter internals operate to 2 decimal places. You cannot get 3 decimal places
  by subtracting timestamp_a from timestamp_b because these timestamps do not perfectly
  match start and finish of the game timer. This versions adds a fake 0 as the third
@@ -100,24 +102,6 @@ static long position;              //Current processed byte index
 
 
 //==============================================================================================
-//Function is used to return formatted results, imp by C, call by JavaScript
-//==============================================================================================
-EM_PORT_API(void) onprogress(const char *result);
-
-
-//==============================================================================================
-//Function is used to callback success message, imp by C, call by JavaScript
-//==============================================================================================
-EM_PORT_API(void) onsuccess();
-
-
-//==============================================================================================
-//Function is used to callback error message, imp by C, call by JavaScript
-//==============================================================================================
-EM_PORT_API(void) onerror(const int error_code, const char *error_msg);
-
-
-//==============================================================================================
 //Function is used to reset global variables
 //==============================================================================================
 static void init()
@@ -172,7 +156,7 @@ static void writef(char *format, ...)
 	va_list args;
 	va_start(args, format);
 	vsprintf(str, format, args);
-	onprogress(str);
+	EM_ASM(Module.onProgress(UTF8ToString($0)), str);
 	va_end(args);
 }
 
@@ -183,7 +167,7 @@ static void writef(char *format, ...)
 static void error(const int code, const char* msg)
 {
 	freememory();
-    onerror(code, msg);
+    EM_ASM(Module.onError($0, UTF8ToString($1)), code, msg);
     exit(1);
 }
 
@@ -604,5 +588,5 @@ EM_PORT_API(void) parser_avf(const long len, unsigned char *byte_array)
 	//Callback results and free memory
 	writetxt();
 	freememory();
-	onsuccess();
+	EM_ASM(Module.onSuccess());
 }

@@ -15,7 +15,9 @@
  is being released as Viennasweeper (RMV) RAW version 6.
  
  Additional update 2021-05-24 per Tommy to add 3 new fields (nick, country, token) for 
- Viennasweeper 3.1. 
+ Viennasweeper 3.1.
+
+ Updated 2021-06-14 by Enbin Hu (Flop) to migrate to WebAssembly.
  
  Works on all known RMV versions but not earlier UMF files.
 *****************************************************************/
@@ -95,24 +97,6 @@ static long position;              //Current processed byte index
 
 
 //==============================================================================================
-//Function to return formatted results, imp by C, call by JavaScript
-//==============================================================================================
-EM_PORT_API(void) onprogress(const char *result);
-
-
-//==============================================================================================
-//Function to callback success message, imp by C, call by JavaScript
-//==============================================================================================
-EM_PORT_API(void) onsuccess();
-
-
-//==============================================================================================
-//Function to callback error message, imp by C, call by JavaScript
-//==============================================================================================
-EM_PORT_API(void) onerror(const int error_code, const char *error_msg);
-
-
-//==============================================================================================
 //Function is used to reset global variables
 //==============================================================================================
 static void init()
@@ -164,7 +148,7 @@ static void writef(char *format, ...)
 	va_list args;
 	va_start(args, format);
 	vsprintf(str, format, args);
-	onprogress(str);
+	EM_ASM(Module.onProgress(UTF8ToString($0)), str);
 	va_end(args);
 }
 
@@ -175,7 +159,7 @@ static void writef(char *format, ...)
 static void error(const int code, const char* msg)
 {
 	freememory();
-    onerror(code, msg);
+    EM_ASM(Module.onError($0, UTF8ToString($1)), code, msg);
     exit(1);
 }
 
@@ -717,6 +701,6 @@ EM_PORT_API(void) parser_rmv(const long len, unsigned char *byte_array)
 	//Callback results and free memory
 	writetxt();
 	freememory();
-	onsuccess();
+	EM_ASM(Module.onSuccess());
 }
 

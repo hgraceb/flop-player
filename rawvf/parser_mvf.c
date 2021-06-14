@@ -10,7 +10,9 @@
  correctly parse earlier versions. Program can now parse 8 different video
  formats: 2007, 2006, 0.97, 0.97 Funny Mode, 0.97 Unknown Hack, 0.8 to 0.96, 
  0.76, and 0.75 or earlier. Tidied up code and wrote comments. This is being 
- released as Clone (MVF) RAW version 6.   
+ released as Clone (MVF) RAW version 6.
+
+ Updated 2021-06-14 by Enbin Hu (Flop) to migrate to WebAssembly.
  
  Note Clone 2007 (not this program) has a bug where the day sometimes does not
  save correctly resulting in a value of 00. Also, Clone 0.97 beta sometimes 
@@ -90,24 +92,6 @@ static long position;                              //Current processed byte inde
 
 
 //==============================================================================================
-//Function to return formatted results, imp by C, call by JavaScript
-//==============================================================================================
-EM_PORT_API(void) onprogress(const char *result);
-
-
-//==============================================================================================
-//Function to callback success message, imp by C, call by JavaScript
-//==============================================================================================
-EM_PORT_API(void) onsuccess();
-
-
-//==============================================================================================
-//Function to callback error message, imp by C, call by JavaScript
-//==============================================================================================
-EM_PORT_API(void) onerror(const int error_code, const char *error_msg);
-
-
-//==============================================================================================
 //Function is used to reset global variables
 //==============================================================================================
 static void init()
@@ -157,7 +141,7 @@ static void writef(char *format, ...)
 	va_list args;
 	va_start(args, format);
 	vsprintf(str, format, args);
-	onprogress(str);
+	EM_ASM(Module.onProgress(UTF8ToString($0)), str);
 	va_end(args);
 }
 
@@ -197,7 +181,7 @@ static long _ftell(unsigned char *stream)
 static void error(const int code, const char* msg)
 {
 	freememory();
-    onerror(code, msg);
+    EM_ASM(Module.onError($0, UTF8ToString($1)), code, msg);
     exit(1);
 }
 
@@ -849,6 +833,6 @@ EM_PORT_API(void) parser_mvf(const long len, unsigned char *byte_array)
 	//Callback results and free memory
 	writetxt();
 	freememory();
-	onsuccess();
+	EM_ASM(Module.onSuccess());
 }
 
