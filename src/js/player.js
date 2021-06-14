@@ -189,14 +189,14 @@ function playRawVideo(result) {
     video[0].player = data["Player"];
     video[0].realtime = (video[video.length - 1].sec * 100 + video[video.length - 1].hun) / 100; // 可能没有 Time 字段数据
     video[0].size = count;
+    video[0].question = data["Marks"] && data["Marks"].toLowerCase() === "on";
     video_invalid = false;
 
-    // 设置是否启用问号模式
-    setQuestionMode(data["Marks"] && data["Marks"].toLowerCase() === "on")
     timeLog("录像准备", "解析 RAW 数据");
 
     container.init(video[0].level, parseInt(data["Width"]), parseInt(data["Height"]), parseInt(data["Mines"]));
     timeLog("录像准备", "录像初始化");
+
     container.setVideoMines(video[0].board); // 按录像布雷
     start_avf(video);
 }

@@ -162,6 +162,7 @@ function start_avf(video)//开始函数
     $markSpan.attr('title', $markSpan.html());
     gameover = true;
     size = video[0].size;
+    setQuestionMode(video[0].question) // 设置是否启用问号模式
 
     if (!document.getElementById("mouse_point")) {
         //别再手贱删了，mouse_point放这才能正常初始化container的block
