@@ -339,10 +339,55 @@ button {
     border-bottom-color: rgb(255, 255, 255);
 }
 
-#mine_count img, #time_count img {
+#mine_count div, #time_count div {
     float: left;
     width: 33.3%;
     height: 100%;
+    background-size: cover;
+}
+
+.count_number_0 {
+    background-image: url("../image/number_0.bmp");
+}
+
+.count_number_1 {
+    background-image: url("../image/number_1.bmp");
+}
+
+.count_number_2 {
+    background-image: url("../image/number_2.bmp");
+}
+
+.count_number_3 {
+    background-image: url("../image/number_3.bmp");
+}
+
+.count_number_4 {
+    background-image: url("../image/number_4.bmp");
+}
+
+.count_number_5 {
+    background-image: url("../image/number_5.bmp");
+}
+
+.count_number_6 {
+    background-image: url("../image/number_6.bmp");
+}
+
+.count_number_7 {
+    background-image: url("../image/number_7.bmp");
+}
+
+.count_number_8 {
+    background-image: url("../image/number_8.bmp");
+}
+
+.count_number_9 {
+    background-image: url("../image/number_9.bmp");
+}
+
+.count_number_minus {
+    background-image: url("../image/number_minus.bmp");
 }
 
 [class^="number_"], .block, .openedBlockBomb, .question, .opening, .bomb, .firstbomb, .wrongflag {

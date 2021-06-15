@@ -137,8 +137,8 @@ Container.prototype.init = function (level, columns, rows, bombNumber) {
         }
     }
     change_top_image("face", "face_normal");
-    change_top_count("mine_count", this.bombNumber);
-    change_top_count("time_count", 0);
+    changeTopCount("mine_count", this.bombNumber);
+    changeTopCount("time_count", 0);
     this.minenumber = this.bombNumber;
 };
 
@@ -271,7 +271,7 @@ Container.prototype.reset_mine = function () {
         if (document.getElementById("mouse_point")) {
             $("div#mouse_point").remove();
         }
-        change_top_count("mine_count", container.minenumber = container.bombNumber);
+        changeTopCount("mine_count", container.minenumber = container.bombNumber);
         reset();//重置时间
         gameover = false;
         firstclick = false;
@@ -415,16 +415,16 @@ Block.prototype.init = function () {
                         if (question === false) {
                             ces_count++;
                             that.changeStyle("block");
-                            change_top_count("mine_count", container.minenumber = container.minenumber + 1);
+                            changeTopCount("mine_count", container.minenumber = container.minenumber + 1);
                         } else {
                             ces_count++;
                             that.changeStyle("question");
-                            change_top_count("mine_count", container.minenumber = container.minenumber + 1);
+                            changeTopCount("mine_count", container.minenumber = container.minenumber + 1);
                         }
                     } else if (that.getStyle() === "block") {
                         ces_count++;
                         that.changeStyle("openedBlockBomb");
-                        change_top_count("mine_count", container.minenumber = container.minenumber - 1);
+                        changeTopCount("mine_count", container.minenumber = container.minenumber - 1);
                     } else if (that.getStyle() === "question") {
                         ces_count++;
                         that.changeStyle("block");

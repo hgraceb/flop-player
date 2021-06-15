@@ -103,7 +103,7 @@ function timer()//计时函数
     second = (stopMinutes - beginTime.getMinutes()) * 60 + (stopSeconds - beginTime.getSeconds());
     millisecond = parseInt((stop_milliseconds - beginTime.getMilliseconds()) / 10);
     if (second < 999) {
-        change_top_count("time_count", second + 1);
+        changeTopCount("time_count", second + 1);
 
         document.getElementById('RTime').innerText = (second + millisecond / 100).toFixed(2);
         document.getElementById('Ces').innerText = ces_count + '@' + (ces_count / (second + millisecond / 100)).toFixed(2);
@@ -115,7 +115,7 @@ function timer()//计时函数
     } else if (second > 999) {
         stop();
         lose();
-        change_top_count("time_count", 999);
+        changeTopCount("time_count", 999);
         document.getElementById('RTime').innerText = '999.99';
     }
 }
@@ -425,16 +425,16 @@ function timer_avf() {
                     if (question === false) {
                         ces_count++;
                         current.changeStyle("block");
-                        change_top_count("mine_count", container.minenumber = container.minenumber + 1);
+                        changeTopCount("mine_count", container.minenumber = container.minenumber + 1);
                     } else {
                         ces_count++;
                         current.changeStyle("question");
-                        change_top_count("mine_count", container.minenumber = container.minenumber + 1);
+                        changeTopCount("mine_count", container.minenumber = container.minenumber + 1);
                     }
                 } else if (current.getStyle() === "block") {
                     ces_count++;
                     current.changeStyle("openedBlockBomb");
-                    change_top_count("mine_count", container.minenumber = container.minenumber - 1);
+                    changeTopCount("mine_count", container.minenumber = container.minenumber - 1);
                 } else if (current.getStyle() === "question") {
                     ces_count++;
                     current.changeStyle("block");
@@ -511,7 +511,7 @@ function timer_avf() {
     document.getElementById('range_rate').value = (((second + millisecond / 100) / video[0].realtime).toFixed(2)) * 1000;
     document.getElementById('range_rate').style = "background-size: " + (((second + millisecond / 100) / video[0].realtime).toFixed(2)) * 100 + "% 100%;";
 
-    change_top_count("time_count", parseInt(second) + 1);
+    changeTopCount("time_count", parseInt(second) + 1);
     document.getElementById('RTime').innerText = (second + millisecond / 100).toFixed(2);
 
     counters_3BV();
@@ -562,32 +562,37 @@ function change_top_sunglasses() {//阻止face_sunglasses被强行改成face_nor
     }
 }
 
-function change_top_count(id, count)//修改顶部计时器背景
-{
-    const a = parseInt(Math.abs(count) / 100) % 10;
-    const b = parseInt((Math.abs(count) / 10)) % 10;
-    const c = Math.abs(count) % 10;
-    const image = document.getElementById(id).getElementsByTagName("img");
+/**
+ * 修改顶部计时器显示数字（图片）
+ *
+ * @param id {string} 需要修改的对应控件的 ID
+ * @param count 需要显示的数字，小于 -99 只显示后两位数字，大于 999 则不改变当前显示的数字
+ */
+function changeTopCount(id, count) {
+    const hun = parseInt(Math.abs(count) / 100) % 10; // 百位
+    const ten = parseInt((Math.abs(count) / 10)) % 10; // 十位
+    const unit = Math.abs(count) % 10; // 个位
+    const elements = document.getElementById(id).getElementsByTagName("div");
     if (count < -10) {
-        image[0].src = "image/number_minus.bmp";
-        image[1].src = "image/number_" + b + ".bmp";
-        image[2].src = "image/number_" + c + ".bmp";
+        elements[0].className = "count_number_minus";
+        elements[1].className = "count_number_" + ten;
+        elements[2].className = "count_number_" + unit;
     } else if (count < 0) {
-        image[0].src = "image/number_minus.bmp";
-        image[1].src = "image/number_0.bmp";
-        image[2].src = "image/number_" + c + ".bmp";
+        elements[0].className = "count_number_minus";
+        elements[1].className = "count_number_0";
+        elements[2].className = "count_number_" + unit;
     } else if (count < 10) {
-        image[0].src = "image/number_0.bmp";
-        image[1].src = "image/number_0.bmp";
-        image[2].src = "image/number_" + c + ".bmp";
+        elements[0].className = "count_number_0";
+        elements[1].className = "count_number_0";
+        elements[2].className = "count_number_" + unit;
     } else if (count < 100) {
-        image[0].src = "image/number_0.bmp";
-        image[1].src = "image/number_" + b + ".bmp";
-        image[2].src = "image/number_" + c + ".bmp";
+        elements[0].className = "count_number_0";
+        elements[1].className = "count_number_" + ten;
+        elements[2].className = "count_number_" + unit;
     } else if (count < 1000) {
-        image[0].src = "image/number_" + a + ".bmp";
-        image[1].src = "image/number_" + b + ".bmp";
-        image[2].src = "image/number_" + c + ".bmp";
+        elements[0].className = "count_number_" + hun;
+        elements[1].className = "count_number_" + ten;
+        elements[2].className = "count_number_" + unit;
     }
 }
 
@@ -681,7 +686,7 @@ function countersIslands(block, a) {//计算islands
 
 function write_counters() {//重写counter
     counters_3BV();
-    change_top_count("time_count", parseInt(second) + 1);
+    changeTopCount("time_count", parseInt(second) + 1);
     document.getElementById('RTime').innerText = (second + millisecond / 100).toFixed(2);
     document.getElementById('Flags').innerText = container.bombNumber - container.minenumber;
     document.getElementById('Ces').innerText = ces_count + '@' + (ces_count / (second + millisecond / 100)).toFixed(2);
