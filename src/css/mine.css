@@ -322,6 +322,11 @@ button {
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
 }
 
+[class^="face_"], [class^="number_"], .block, .openedBlockBomb, .question, .opening, .bomb, .firstbomb, .wrongflag {
+    /* 缩放背景图片以完全覆盖背景区，可能背景图片部分看不见，使用 contain 可能导致部分缩放比例下显示白边*/
+    background-size: cover;
+}
+
 #mine {
     margin-left: auto;
     margin-right: auto;
@@ -390,13 +395,31 @@ button {
     background-image: url("../image/number_minus.bmp");
 }
 
+.face_click {
+    background-image: url("../image/face_click.bmp");
+}
+
+.face_cry {
+    background-image: url("../image/face_cry.bmp");
+}
+
+.face_normal {
+    background-image: url("../image/face_normal.bmp");
+}
+
+.face_press {
+    background-image: url("../image/face_press.bmp");
+}
+
+.face_sunglasses {
+    background-image: url("../image/face_sunglasses.bmp");
+}
+
 [class^="number_"], .block, .openedBlockBomb, .question, .opening, .bomb, .firstbomb, .wrongflag {
     width: 16px;
     height: 16px;
     float: left;
     margin: 0;
-    /* 缩放背景图片以完全覆盖背景区，可能背景图片部分看不见，使用 contain 可能导致部分缩放比例下显示白边*/
-    background-size: cover;
 }
 
 .number_1 {

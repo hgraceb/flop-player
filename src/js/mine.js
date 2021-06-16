@@ -136,7 +136,7 @@ Container.prototype.init = function (level, columns, rows, bombNumber) {
             this.html.appendChild(block.root);
         }
     }
-    change_top_image("face", "face_normal");
+    changeFaceClass("face_normal");
     changeTopCount("mine_count", this.bombNumber);
     changeTopCount("time_count", 0);
     this.minenumber = this.bombNumber;
@@ -396,7 +396,7 @@ Block.prototype.init = function () {
                 return false;
             }
             that.change_around_normal();//复原因为中键改变的block样式
-            change_top_image("face", "face_click");
+            changeFaceClass("face_click");
             if (a.button === 0) {
                 if (rightClick === true) {
                     left_invalid = true;
@@ -448,7 +448,7 @@ Block.prototype.init = function () {
                 reset_begin = false;
                 start();
             }
-            change_top_image("face", "face_normal");
+            changeFaceClass("face_normal");
             if (a.button === 0) {
                 if (rightClick === true) {
                     that.change_around_normal();
@@ -562,7 +562,7 @@ Block.prototype.open = function () {
 
         //You Lose!
         lose();
-        change_top_image("face", "face_cry");
+        changeFaceClass("face_cry");
     }
     this.isOpen = true;
     if (this.bombNumAround === 0) {
@@ -635,7 +635,7 @@ Block.prototype.around_open = function () {
 
         //You Lose!
         lose();
-        change_top_image("face", "face_cry");
+        changeFaceClass("face_cry");
     }
     this.isOpen = true;
     if (this.bombNumAround === 0) {
@@ -686,7 +686,7 @@ Block.prototype.win = function () {
     }
     if (count === container.rows * container.columns - container.bombNumber) {
         stop();
-        change_top_image("face", "face_sunglasses");
+        changeFaceClass("face_sunglasses");
         if (gameover === true && video !== 0) {
             path = parseInt(video[size - 1].path);
         }

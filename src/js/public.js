@@ -405,7 +405,7 @@ function timer_avf() {
         } else if (video[plan].mouse === "lc") {//lc
             leftClick = true;
             current.change_around_normal();//复原因为中键改变的block样式
-            change_top_image("face", "face_click");
+            changeFaceClass("face_click");
             if (rightClick === true) {
                 left_invalid = true;
                 current.change_around_opening();
@@ -415,7 +415,7 @@ function timer_avf() {
         } else if (video[plan].mouse === "rc") {//rc
             rightClick = true;
             current.change_around_normal();//复原因为中键改变的block样式
-            change_top_image("face", "face_click");
+            changeFaceClass("face_click");
             if (leftClick === true) {
                 left_invalid = true;
                 current.change_around_opening();
@@ -444,7 +444,7 @@ function timer_avf() {
             }
         } else if (video[plan].mouse === "lr") {//lr
             leftClick = false;
-            change_top_image("face", "face_normal");
+            changeFaceClass("face_normal");
             if (leftClickWithShift) {
                 current.change_around_normal();
                 double_count++;
@@ -473,7 +473,7 @@ function timer_avf() {
             leftClickWithShift = false
         } else if (video[plan].mouse === "rr") {//rr
             rightClick = false;
-            change_top_image("face", "face_normal");
+            changeFaceClass("face_normal");
             if (leftClick === true) {
                 double_count++;
                 if (right_invalid === true) {
@@ -545,20 +545,29 @@ function stop()//暂停函数
     log('运行时间:' + ((stopMinutes - beginTime.getMinutes()) * 60 + (stopSeconds - beginTime.getSeconds()) + (stopMilliseconds - beginTime.getMilliseconds()) / 1000).toFixed(2));
 }
 
-function change_top_image(id, name)//修改顶部笑脸背景
-{
-    document.getElementById(id).getElementsByTagName("img")[0].src = "image/" + name + ".bmp";
-}
-
 function change_control_image(count, name)//修改顶部笑脸背景
 {
     document.getElementById("video_control").getElementsByTagName("img")[count].src = "image/" + name + ".bmp";
 }
 
-function change_top_sunglasses() {//阻止face_sunglasses被强行改成face_normal
-    const face = document.getElementById("face").getElementsByTagName("img")[0].src.split("/");
-    if (face[face.length - 1] !== "face_sunglasses.bmp") {
-        document.getElementById("face").getElementsByTagName("img")[0].src = "image/face_normal.bmp";
+/**
+ * 修改顶部笑脸为指定样式
+ *
+ * @param className {string} 目标样式
+ */
+function changeFaceClass(className) {
+    document.getElementById("face").className = className;
+}
+
+/**
+ * 处理鼠标移出笑脸后的事件
+ */
+function handleFaceMouseOut() {
+    const faceElement = document.getElementById("face")
+    // 如果当前笑脸处于点击状态
+    if (faceElement.className === 'face_press') {
+        // 鼠标移出后将笑脸重置为正常状态
+        faceElement.className = "face_normal"
     }
 }
 

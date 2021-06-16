@@ -157,9 +157,9 @@
                 </div>
 
                 <!-- 顶部功能栏 -->
-                <div id="top" onclick="container.reset_mine();" onmousedown="change_top_image('face','face_press');"
-                     onmouseup="change_top_image('face','face_normal');"
-                     onmouseout="change_top_sunglasses();event.stopPropagation();">
+                <div id="top" onclick="container.reset_mine();" onmousedown="changeFaceClass('face_press');"
+                     onmouseup="changeFaceClass('face_normal');"
+                     onmouseout="handleFaceMouseOut()">
 
                     <div id="mine_count">
                         <div class="count_number_0"></div>
@@ -167,9 +167,7 @@
                         <div class="count_number_0"></div>
                     </div>
 
-                    <div id="face" title="UPK">
-                        <img src="image/face_normal.bmp"/>
-                    </div>
+                    <div id="face" class="face_normal" title="UPK"></div>
 
                     <div id="time_count">
                         <div class="count_number_0"></div>
