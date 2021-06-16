@@ -1,27 +1,35 @@
 const path = require('path');
 const CopyPlugin = require("copy-webpack-plugin");
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const HtmlMinimizerPlugin = require("html-minimizer-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    entry: {},
+    entry: './src/js/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
         clean: true,
     },
+    module: {
+        rules: [
+            {
+                test: /\.css$/i,
+                use: ['style-loader', 'css-loader'],
+            },
+            {
+                test: /\.(png|bmp)$/i,
+                type: 'asset',
+            },
+        ]
+    },
     plugins: [
         new CopyPlugin({
             patterns: [
-                {from: "src", to: ""},
+                {from: "src/js/parser", to: "js/parser"},
             ],
         }),
+        new HtmlWebpackPlugin({
+            template: "./src/video.html",
+            // 测试用
+            minify: false
+        }),
     ],
-    optimization: {
-        minimizer: [
-            // Use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`)
-            `...`,
-            new CssMinimizerPlugin(),
-            new HtmlMinimizerPlugin(),
-        ],
-    },
 };
