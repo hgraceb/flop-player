@@ -545,13 +545,19 @@ function stop()//暂停函数
     log('运行时间:' + ((stopMinutes - beginTime.getMinutes()) * 60 + (stopSeconds - beginTime.getSeconds()) + (stopMilliseconds - beginTime.getMilliseconds()) / 1000).toFixed(2));
 }
 
-function change_control_image(count, name)//修改顶部笑脸背景
+/**
+ * 修改录像控制中对应控件的样式
+ *
+ * @param id {string}        要修改控件对应的ID
+ * @param className {string} 目标样式
+ */
+function changeControlClass(id, className)//修改顶部笑脸背景
 {
-    document.getElementById("video_control").getElementsByTagName("img")[count].src = "image/" + name + ".bmp";
+    document.getElementById(id).className = className;
 }
 
 /**
- * 修改顶部笑脸为指定样式
+ * 修改顶部笑脸的样式
  *
  * @param className {string} 目标样式
  */

@@ -86,7 +86,7 @@ button {
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
 }
 
-#video_control img {
+#videoReplay, #videoPause, #videoExit {
     margin-top: 3px;
     margin-left: 4px;
     width: 24px;
@@ -322,7 +322,7 @@ button {
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
 }
 
-[class^="face_"], [class^="number_"], .block, .openedBlockBomb, .question, .opening, .bomb, .firstbomb, .wrongflag {
+[class^="face_"], [class^="number_"], [class^="video_"], .block, .openedBlockBomb, .question, .opening, .bomb, .firstbomb, .wrongflag {
     /* 缩放背景图片以完全覆盖背景区，可能背景图片部分看不见，使用 contain 可能导致部分缩放比例下显示白边*/
     background-size: cover;
 }
@@ -413,6 +413,30 @@ button {
 
 .face_sunglasses {
     background-image: url("../image/face_sunglasses.bmp");
+}
+
+.video_restart {
+    background-image: url("../image/restart.bmp");
+}
+
+.video_restart_press {
+    background-image: url("../image/restart_press.bmp");
+}
+
+.video_pause {
+    background-image: url("../image/pause.bmp");
+}
+
+.video_pause_press {
+    background-image: url("../image/pause_press.bmp");
+}
+
+.video_stop {
+    background-image: url("../image/stop.bmp");
+}
+
+.video_stop_press {
+    background-image: url("../image/stop_press.bmp");
 }
 
 [class^="number_"], .block, .openedBlockBomb, .question, .opening, .bomb, .firstbomb, .wrongflag {

@@ -186,7 +186,7 @@ function playRawVideo(result) {
     }
 
     video[0].board = [...data["Board"]];
-    video[0].player = data["Player"];
+    video[0].player = data["Player"] || 'Anonymous';
     video[0].realtime = (video[video.length - 1].sec * 100 + video[video.length - 1].hun) / 100; // 可能没有 Time 字段数据
     video[0].size = count;
     video[0].question = data["Marks"] && data["Marks"].toLowerCase() === "on";

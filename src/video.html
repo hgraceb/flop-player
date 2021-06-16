@@ -183,15 +183,15 @@
             <!-- 录像控制 -->
             <div id="video_control">
 
-                <img id="videoReplay" src="image/restart.bmp" onmousedown="change_control_image(0,'restart_press')"
-                     onmouseup="change_control_image(0,'restart')" onmouseout="change_control_image(0,'restart')"
-                     onclick="restart_avf();"/>
-                <img id="videoPause" src="image/pause.bmp" onmousedown="change_control_image(1,'pause_press')"
-                     onmouseup="change_control_image(1,'pause')" onmouseout="change_control_image(1,'pause')"
-                     onclick="pause_avf();"/>
-                <img id="videoExit" src="image/stop.bmp" onmousedown="change_control_image(2,'stop_press')"
-                     onmouseup="change_control_image(2,'stop')" onmouseout="change_control_image(2,'stop')"
-                     onclick="exitVideo();"/>
+                <div id="videoReplay" class="video_restart" onmousedown="changeControlClass('videoReplay','video_restart_press')"
+                     onmouseup="changeControlClass('videoReplay','video_restart')" onmouseout="changeControlClass('videoReplay','video_restart')"
+                     onclick="restart_avf();"></div>
+                <div id="videoPause" class="video_pause" onmousedown="changeControlClass('videoPause','video_pause_press')"
+                     onmouseup="changeControlClass('videoPause','video_pause')" onmouseout="changeControlClass('videoPause','video_pause')"
+                     onclick="pause_avf();"></div>
+                <div id="videoExit" class="video_stop" onmousedown="changeControlClass('videoExit','video_stop_press')"
+                     onmouseup="changeControlClass('videoExit','video_stop')" onmouseout="changeControlClass('videoExit','video_stop')"
+                     onclick="exitVideo();"></div>
 
                 <div id="speed_control">
                     <input type="range" id="range_speed" value="50" oninput="change_speed()" min="1"
