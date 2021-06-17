@@ -15,7 +15,7 @@ module.exports = {
                 use: ['style-loader', 'css-loader'],
             },
             {
-                test: /\.(png|bmp)$/i,
+                test: /\.(svg)$/i,
                 type: 'asset',
             },
         ]
@@ -28,8 +28,6 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             template: "./src/video.html",
-            // 测试用
-            minify: false
         }),
     ],
 };
