@@ -91,7 +91,7 @@ let stop_milliseconds = 0;
 let current = 0;//当前block
 let front = 0;//前一个block
 let size = 0;//录像事件总长度
-let video_play = false;//change_speed函数中防止多次重置定时器
+let video_play = false;//changeSpeed函数中防止多次重置定时器
 let game_level = 0;//判断弹窗位置，只用了一次，可以考虑化简
 
 const EMPTY_FUNCTION = function () {
@@ -270,7 +270,7 @@ function start_avf(video)//开始函数
     video_play = true;
 }
 
-function pause_avf() {//暂停
+function pauseVideo() {//暂停
     if (gameover === false) {
         // UPK模式下禁用暂停按钮
         return
@@ -291,7 +291,7 @@ function pause_avf() {//暂停
 /**
  * 回放录像
  */
-function restart_avf() {
+function replayVideo() {
     clear();
     time("录像准备");
     if (video === 0) {
@@ -307,22 +307,22 @@ function restart_avf() {
     }
 }
 
-function change_speed() {//改变速度
+function changeSpeed() {//改变速度
     const $rangeSpeed = $('#range_speed');
     const value = $rangeSpeed.val();
     const valStr = value + "% 100%";
-    if (video_play === true) pause_avf();
+    if (video_play === true) pauseVideo();
     speed = (value <= 50 ? value / 50 : (value <= 75 ? (value - 50) * 0.16 + 1 : (value - 75) * 0.2 + 5)).toFixed(2);
     $('#speed_value').html(speed + 'x');
     $rangeSpeed.css({
         "background-size": valStr
     })
-    if (video_play === false) pause_avf();
+    if (video_play === false) pauseVideo();
 }
 
-function reset_speed() {//复位速度为1
+function resetSpeed() {//复位速度为1
     const valStr = 50 + "% 100%";
-    if (video_play === true) pause_avf();
+    if (video_play === true) pauseVideo();
     speed = 1;
     $('#speed_value').html('1.00x');
     const $rangeSpeed = $('#range_speed');
@@ -330,32 +330,32 @@ function reset_speed() {//复位速度为1
     $rangeSpeed.css({
         "background-size": valStr
     })
-    if (video_play === false) pause_avf();
+    if (video_play === false) pauseVideo();
 }
 
-function change_rate_value() {//改变进度条的value
+function changeRateValue() {//改变进度条的value
     const $rangeRate = $('#range_rate');
     const value = $rangeRate.val();
     const valStr = value / 10 + "% 100%";
-    if (video_play === true) pause_avf();
+    if (video_play === true) pauseVideo();
     if (video !== 0) $('#rate_value').html((value / 1000 * video[0].realtime).toFixed(2));
     $rangeRate.css({
         "background-size": valStr
     })
 }
 
-function change_rate() {//改变播放进度
+function changeRate() {//改变播放进度
     const value = $('#rate_value').text();
     if (last_second * 1000 + last_millisecond * 10 < value * 1000) {
         last_second = parseInt(value);
         last_millisecond = value * 100 % 100;
-        pause_avf();
+        pauseVideo();
     } else {
         container.replay_video();
-        pause_avf();
+        pauseVideo();
         last_second = parseInt(value);
         last_millisecond = value * 100 % 100;
-        pause_avf();
+        pauseVideo();
     }
 }
 
@@ -1601,15 +1601,11 @@ parent.window.addEventListener("parentResize", function () {
     adjustLayout();
 });
 
-
-"use strict";
-
 let results = ""; // 录像解析后的 RAW 格式结果
 let video = [];//全部鼠标事件
-let number = 0;//字符读取进度
 const fade = 500;//淡入淡出时间
 
-Module.loadVideo = function (url) {
+function loadVideo(url) {
     clear(); // 清空控制台日志
     log(`录像路径: '${url}'`);
     time("录像准备");
@@ -1711,8 +1707,8 @@ Module.onError = function (errCode, _errMsg) {
 function ready() {
     $('#video-stage', parent.document).fadeIn(fade);
     $('#video-iframe', parent.document).fadeIn(fade, function () {
-        pause_avf();
-        pause_avf();//走遍两个分支
+        pauseVideo();
+        pauseVideo();//走遍两个分支
     });
 }
 
@@ -1722,7 +1718,9 @@ function videoError(message) {
     exitVideo();
 }
 
-//结束录像播放并退出录像查看
+/**
+ * 退出录像播放
+ */
 function exitVideo() {
     container.init(0);
     $('#video-stage', parent.document).fadeOut(0);
@@ -1821,3 +1819,17 @@ window.addEventListener("orientationchange", function () {
         document.getElementsByTagName("meta")[1]["content"] = ('width=device-width, initial-scale=1, user-scalable=no, minimum-scale=' + window.screen.width / 640 + ', maximum-scale=' + window.screen.width / 640 + '');
     }
 }, false);
+
+// 暴露全局变量和方法
+Module.container = container
+Module.loadVideo = loadVideo
+Module.pauseVideo = pauseVideo
+Module.exitVideo = exitVideo
+Module.replayVideo = replayVideo
+Module.changeSpeed = changeSpeed
+Module.resetSpeed = resetSpeed
+Module.changeRate = changeRate
+Module.changeRateValue = changeRateValue
+Module.changeFaceClass = changeFaceClass
+Module.handleFaceMouseOut = handleFaceMouseOut
+Module.changeControlClass = changeControlClass
