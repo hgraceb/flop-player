@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="64" height="64">
+    <path style="fill:#808080; stroke:none;" d="M0 0L0 64L64 64L64 60L4 60L4 0L0 0z"/>
+    <path style="fill:#c0c0c0; stroke:none;" d="M4 0L4 60L64 60L64 0L4 0z"/>
+    <path style="fill:#000080; stroke:none;" d="M20 8L20 16L16 16L16 24L12 24L12 32L36 32L36 48L48 48L48 32L52 32L52 24L48 24L48 8L36 8L36 24L28 24L28 16L32 16L32 8L20 8z"/>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="64" height="64">
+    <path style="fill:#808080; stroke:none;" d="M0 0L0 64L64 64L64 60L4 60L4 0L0 0z"/>
+    <path style="fill:#c0c0c0; stroke:none;" d="M4 0L4 60L64 60L64 0L4 0z"/>
+    <path style="fill:#008080; stroke:none;" d="M16 8L16 12L12 12L12 44L16 44L16 48L48 48L48 44L52 44L52 28L48 28L48 24L24 24L24 16L52 16L52 8L16 8z"/>
+    <path style="fill:#c0c0c0; stroke:none;" d="M24 32L24 40L40 40L40 32L24 32z"/>
+</svg>

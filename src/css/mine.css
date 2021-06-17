@@ -189,11 +189,7 @@ button {
     position: absolute;
     width: 19px;
     height: 19px;
-}
-
-#mouse_point img {
-    width: 100%;
-    height: 100%;
+    background-image: url("../image/svg/mouse.svg");
 }
 
 #outborder {
@@ -322,7 +318,7 @@ button {
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
 }
 
-[class^="face_"], [class^="number_"], [class^="video_"], .block, .openedBlockBomb, .question, .opening, .bomb, .firstbomb, .wrongflag {
+[class^="face_"], [class^="number_"], [class^="video_"], .block, .openedBlockBomb, .question, .opening, .bomb, .firstbomb, .wrongflag, #mouse_point {
     /* 缩放背景图片以完全覆盖背景区，可能背景图片部分看不见，使用 contain 可能导致部分缩放比例下显示白边*/
     background-size: cover;
 }
@@ -352,91 +348,91 @@ button {
 }
 
 .count_number_0 {
-    background-image: url("../image/number_0.bmp");
+    background-image: url("../image/svg/number_0.svg");
 }
 
 .count_number_1 {
-    background-image: url("../image/number_1.bmp");
+    background-image: url("../image/svg/number_1.svg");
 }
 
 .count_number_2 {
-    background-image: url("../image/number_2.bmp");
+    background-image: url("../image/svg/number_2.svg");
 }
 
 .count_number_3 {
-    background-image: url("../image/number_3.bmp");
+    background-image: url("../image/svg/number_3.svg");
 }
 
 .count_number_4 {
-    background-image: url("../image/number_4.bmp");
+    background-image: url("../image/svg/number_4.svg");
 }
 
 .count_number_5 {
-    background-image: url("../image/number_5.bmp");
+    background-image: url("../image/svg/number_5.svg");
 }
 
 .count_number_6 {
-    background-image: url("../image/number_6.bmp");
+    background-image: url("../image/svg/number_6.svg");
 }
 
 .count_number_7 {
-    background-image: url("../image/number_7.bmp");
+    background-image: url("../image/svg/number_7.svg");
 }
 
 .count_number_8 {
-    background-image: url("../image/number_8.bmp");
+    background-image: url("../image/svg/number_8.svg");
 }
 
 .count_number_9 {
-    background-image: url("../image/number_9.bmp");
+    background-image: url("../image/svg/number_9.svg");
 }
 
 .count_number_minus {
-    background-image: url("../image/number_minus.bmp");
+    background-image: url("../image/svg/number_minus.svg");
 }
 
 .face_click {
-    background-image: url("../image/face_click.bmp");
+    background-image: url("../image/svg/face_click.svg");
 }
 
 .face_cry {
-    background-image: url("../image/face_cry.bmp");
+    background-image: url("../image/svg/face_cry.svg");
 }
 
 .face_normal {
-    background-image: url("../image/face_normal.bmp");
+    background-image: url("../image/svg/face_normal.svg");
 }
 
 .face_press {
-    background-image: url("../image/face_press.bmp");
+    background-image: url("../image/svg/face_press.svg");
 }
 
 .face_sunglasses {
-    background-image: url("../image/face_sunglasses.bmp");
+    background-image: url("../image/svg/face_sunglasses.svg");
 }
 
 .video_restart {
-    background-image: url("../image/restart.bmp");
+    background-image: url("../image/svg/restart.svg");
 }
 
 .video_restart_press {
-    background-image: url("../image/restart_press.bmp");
+    background-image: url("../image/svg/restart_press.svg");
 }
 
 .video_pause {
-    background-image: url("../image/pause.bmp");
+    background-image: url("../image/svg/pause.svg");
 }
 
 .video_pause_press {
-    background-image: url("../image/pause_press.bmp");
+    background-image: url("../image/svg/pause_press.svg");
 }
 
 .video_stop {
-    background-image: url("../image/stop.bmp");
+    background-image: url("../image/svg/stop.svg");
 }
 
 .video_stop_press {
-    background-image: url("../image/stop_press.bmp");
+    background-image: url("../image/svg/stop_press.svg");
 }
 
 [class^="number_"], .block, .openedBlockBomb, .question, .opening, .bomb, .firstbomb, .wrongflag {
@@ -447,63 +443,63 @@ button {
 }
 
 .number_1 {
-    background-image: url("../image/1.bmp");
+    background-image: url("../image/svg/1.svg");
 }
 
 .number_2 {
-    background-image: url("../image/2.bmp");
+    background-image: url("../image/svg/2.svg");
 }
 
 .number_3 {
-    background-image: url("../image/3.bmp");
+    background-image: url("../image/svg/3.svg");
 }
 
 .number_4 {
-    background-image: url("../image/4.bmp");
+    background-image: url("../image/svg/4.svg");
 }
 
 .number_5 {
-    background-image: url("../image/5.bmp");
+    background-image: url("../image/svg/5.svg");
 }
 
 .number_6 {
-    background-image: url("../image/6.bmp");
+    background-image: url("../image/svg/6.svg");
 }
 
 .number_7 {
-    background-image: url("../image/7.bmp");
+    background-image: url("../image/svg/7.svg");
 }
 
 .number_8 {
-    background-image: url("../image/8.bmp");
+    background-image: url("../image/svg/8.svg");
 }
 
 .block {
-    background-image: url("../image/blank.bmp");
+    background-image: url("../image/svg/blank.svg");
 }
 
 .openedBlockBomb {
-    background-image: url("../image/flag.bmp");
+    background-image: url("../image/svg/flag.svg");
 }
 
 .question {
-    background-image: url("../image/question.bmp");
+    background-image: url("../image/svg/question.svg");
 }
 
 .opening {
-    background-image: url("../image/opening.bmp");
+    background-image: url("../image/svg/opening.svg");
 }
 
 .bomb {
-    background-image: url("../image/bomb.bmp");
+    background-image: url("../image/svg/bomb.svg");
 }
 
 .firstbomb {
-    background-image: url("../image/firstbomb.bmp");
+    background-image: url("../image/svg/firstbomb.svg");
 }
 
 .wrongflag {
-    background-image: url("../image/wrongflag.bmp");
+    background-image: url("../image/svg/wrongflag.svg");
 }
 
 .preload_image {
