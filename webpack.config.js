@@ -17,6 +17,8 @@ module.exports = {
             {
                 test: /\.(svg)$/i,
                 type: 'asset',
+                // 优化 SVG 文件
+                use: 'svgo-loader',
             },
         ]
     },
