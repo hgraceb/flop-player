@@ -1292,10 +1292,6 @@ Block.prototype.init = function () {
             if (gameover === true) {
                 return false;
             }
-            if (reset_begin === true) {
-                reset_begin = false;
-                start();
-            }
             changeFaceClass("face_normal");
             if (a.button === 0) {
                 if (rightClick === true) {
@@ -1310,8 +1306,17 @@ Block.prototype.init = function () {
                 }
                 if (that.isOpen === false && rightClick === false && (that.getStyle() === "opening" || that.getStyle() === "question")) {
                     if (firstclick === true) {
+                        // 如果需要重新布雷，则重新开始计时
                         firstclick = false;
+                        // 只计时一次
+                        reset_begin = false;
+                        // 根据当前点击位置重新布雷，当前位置不为雷，布雷完成后打开当前位置
                         container.setMine(that.id);
+                        // 只有左键才能进行开局
+                        start();
+                    } else if (reset_begin === true) {
+                        // 如果不需要重新布雷，则直接开始
+                        reset_begin = false;
                         start();
                     } else {
                         that.open();
