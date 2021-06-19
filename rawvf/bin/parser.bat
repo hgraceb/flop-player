@@ -37,7 +37,7 @@ for %%a in (*.umf) do (
 )
 
 for %%a in (*.rawvf.rawvf) do (
-   del /f /q %%a
+   del /f /q "%%a"
 )
 
 for %%a in (*.rawvf) do (
