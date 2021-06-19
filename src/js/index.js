@@ -1,3 +1,4 @@
+// 使用Zepto替换jQuery会有很多问题，如：没有outerWidth和outerHeight方法，没有找到如何判断动画进行中的方法
 import $ from './jquery/jquery-3.6.0.min'
 import '../css/mine.css'
 
@@ -1821,15 +1822,15 @@ window.addEventListener("orientationchange", function () {
 }, false);
 
 // 暴露全局变量和方法
-Module.container = container
-Module.loadVideo = loadVideo
-Module.pauseVideo = pauseVideo
-Module.exitVideo = exitVideo
-Module.replayVideo = replayVideo
-Module.changeSpeed = changeSpeed
-Module.resetSpeed = resetSpeed
-Module.changeRate = changeRate
-Module.changeRateValue = changeRateValue
-Module.changeFaceClass = changeFaceClass
-Module.handleFaceMouseOut = handleFaceMouseOut
-Module.changeControlClass = changeControlClass
+window.container = container
+window.loadVideo = loadVideo
+window.pauseVideo = pauseVideo
+window.exitVideo = exitVideo
+window.replayVideo = replayVideo
+window.changeSpeed = changeSpeed
+window.resetSpeed = resetSpeed
+window.changeRate = changeRate
+window.changeRateValue = changeRateValue
+window.changeFaceClass = changeFaceClass
+window.handleFaceMouseOut = handleFaceMouseOut
+window.changeControlClass = changeControlClass

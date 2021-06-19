@@ -26,8 +26,8 @@
    
    <script>
        function playVideo(filePath) {
-           /* Second: call the "Module.loadVideo" function when you need to play the video */
-           document.getElementById('video-iframe').contentWindow.Module.loadVideo(filePath);
+           /* Second: call the "loadVideo" function when you need to play the video */
+           document.getElementById('video-iframe').contentWindow.loadVideo(filePath);
        }
    </script>
    
