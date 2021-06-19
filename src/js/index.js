@@ -1832,6 +1832,7 @@ window.addEventListener("orientationchange", function () {
 
 // 暴露全局变量和方法
 window.container = container
+window.initI18n = initI18n
 window.loadVideo = loadVideo
 window.pauseVideo = pauseVideo
 window.exitVideo = exitVideo
