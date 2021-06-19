@@ -1303,8 +1303,6 @@ Block.prototype.init = function () {
                     }
                 } else if (left_invalid === false) {
                     left_count++;
-                }
-                if (that.isOpen === false && rightClick === false && (that.getStyle() === "opening" || that.getStyle() === "question")) {
                     if (firstclick === true) {
                         // 如果需要重新布雷，则重新开始计时
                         firstclick = false;
@@ -1318,9 +1316,12 @@ Block.prototype.init = function () {
                         // 如果不需要重新布雷，则直接开始
                         reset_begin = false;
                         start();
-                    } else {
+                        // 开始计时后才打开方快，因为没有重新布雷的情况下可能第一下就是雷
                         that.open();
                     }
+                }
+                if (that.isOpen === false && rightClick === false && (that.getStyle() === "opening" || that.getStyle() === "question")) {
+                    that.open();
                 } else if (rightClick === true && that.isOpen === true && that.bombNumAround > 0) {
                     that.openaround();
                 }
@@ -1339,8 +1340,11 @@ Block.prototype.init = function () {
                 right_invalid = false;
             } else if (a.button === 1) {
                 middle_invalid = false;
+                double_count++;
                 that.change_around_normal();
-                that.openaround();
+                if (that.isOpen === true && that.bombNumAround > 0) {
+                    that.openaround();
+                }
             }
         }
     );
