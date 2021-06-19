@@ -1749,7 +1749,7 @@ function playRawVideo(result) {
         let row = rawArray[i].trim(); // 去除前后空格的单行数据
         // 事件数据一般是最多的，优先进行判断
         if (eventReg.test(row)) {
-            const strings = row.replaceAll(/\(l?r?m?\)|[()]/g, "").replaceAll(/[ ]{2,}|\./g, " ").trim().split(" ")
+            const strings = row.replace(/\(l?r?m?\)|[()]/g, "").replace(/[ ]{2,}|\./g, " ").trim().split(" ")
             const previous = video[count - 1]; // 前一个录像事件
             const x = parseInt(strings[strings.length - 2]); // 倒数第二个数据是 x 坐标
             const y = parseInt(strings[strings.length - 1]); // 倒数第一个数据是 y 坐标
