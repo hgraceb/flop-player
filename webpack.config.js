@@ -1,6 +1,7 @@
 const path = require('path');
 const CopyPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlMinimizerPlugin = require("html-minimizer-webpack-plugin");
 
 module.exports = {
     entry: './src/js/index.js',
@@ -32,4 +33,13 @@ module.exports = {
             template: "./src/video.html",
         }),
     ],
+    optimization: {
+        minimize: true,
+        minimizer: [
+            // 使用 `...` 语法扩展已有的插件 (如：`terser-webpack-plugin`)
+            `...`,
+            // 压缩 HTML 文件，比 HtmlWebpackPlugin 自带的压缩效果更好
+            new HtmlMinimizerPlugin(),
+        ],
+    },
 };
