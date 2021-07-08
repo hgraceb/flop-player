@@ -1,0 +1,13 @@
+.flex {
+    display: flex;
+}
+
+.space-between {
+    /* 均匀排列每个元素，首个元素放置于起点，末尾元素放置于终点 */
+    justify-content: space-between;
+}
+
+.border-box {
+    /* 设置边框和内边距的值包含在width内 */
+    box-sizing: border-box;
+}
