@@ -1,5 +1,5 @@
 <template>
-  <div class="flex container border-box">
+  <div class="flex border-box top-counter">
     <div :class="'count-' + hun"></div>
     <div :class="'count-' + ten"></div>
     <div :class="'count-' + one"></div>
@@ -12,52 +12,62 @@ import {defineComponent} from 'vue'
 export default defineComponent({
   name: 'TopCounter',
   props: {
+    // 需要显示的值
     count: {
       type: Number,
-      required: true
+      required: true,
+    },
+    // 最小值
+    min: {
+      type: Number,
+      default: Number.MIN_SAFE_INTEGER
     }
   },
   computed: {
+    // 实际显示的值
+    value: function (): number {
+      return Math.max(this.count, this.min)
+    },
     // 百位数的值
-    hun: function () {
-      if (this.count >= 999) {
+    hun: function (): number | string {
+      if (this.value >= 999) {
         return 9
       }
-      if (this.count < 0) {
+      if (this.value < 0) {
         return 'minus'
       }
-      return parseInt(Math.abs(this.count) / 100) % 10
+      return Math.floor(Math.abs(this.value) / 100) % 10
     },
     // 十位数的值
-    ten: function () {
-      if (this.count >= 999) {
+    ten: function (): number {
+      if (this.value >= 999) {
         return 9
       }
-      return parseInt((Math.abs(this.count) / 10)) % 10
+      return Math.floor(Math.abs(this.value) / 10) % 10
     },
     // 个位数的值
-    one: function () {
-      if (this.count >= 999) {
+    one: function (): number {
+      if (this.value >= 999) {
         return 9
       }
-      return Math.abs(this.count) % 10
+      return Math.abs(this.value) % 10
     }
   }
 })
 </script>
 
 <style scoped>
-.container {
+.top-counter {
   min-width: 41px;
   height: 25px;
-  padding-top: 2px;
+  padding: 1px;
   background-image: url("../assets/top-counters.bmp");
 }
 
 div[class*='count-'] {
   width: 11px;
   height: 21px;
-  margin-left: 2px;
+  margin: 1px;
 }
 
 .count-minus {

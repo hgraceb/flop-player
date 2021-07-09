@@ -8,9 +8,9 @@
     <div class="flex">
       <div class="border-vertical-left-upper"></div>
       <div class="flex top space-between">
-        <TopCounter :count=mines></TopCounter>
+        <TopCounter :count="mines"></TopCounter>
         <div class="face-normal"></div>
-        <TopCounter :count=time></TopCounter>
+        <TopCounter :count="time" :min="0"></TopCounter>
       </div>
       <div class="border-vertical-right-upper"></div>
     </div>
