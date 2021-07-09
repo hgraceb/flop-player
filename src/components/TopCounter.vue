@@ -1,8 +1,8 @@
 <template>
   <div class="flex border-box top-counter">
-    <div :class="'count-' + hun"></div>
-    <div :class="'count-' + ten"></div>
-    <div :class="'count-' + one"></div>
+    <div :class="'count-' + hun"/>
+    <div :class="'count-' + ten"/>
+    <div :class="'count-' + one"/>
   </div>
 </template>
 
@@ -24,15 +24,13 @@ export default defineComponent({
     }
   },
   computed: {
-    // 实际显示的值
+    // 实际显示的值，最大只显示999
     value: function (): number {
-      return Math.max(this.count, this.min)
+      return Math.min(Math.max(this.count, this.min), 999)
     },
     // 百位数的值
     hun: function (): number | string {
-      if (this.value >= 999) {
-        return 9
-      }
+      // 显示的值为负数时，最多只显示两位数字，百位数显示负号
       if (this.value < 0) {
         return 'minus'
       }
@@ -40,16 +38,10 @@ export default defineComponent({
     },
     // 十位数的值
     ten: function (): number {
-      if (this.value >= 999) {
-        return 9
-      }
       return Math.floor(Math.abs(this.value) / 10) % 10
     },
     // 个位数的值
     one: function (): number {
-      if (this.value >= 999) {
-        return 9
-      }
       return Math.abs(this.value) % 10
     }
   }
