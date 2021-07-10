@@ -1,3 +1,7 @@
+.background {
+    background-image: url("../assets/top-fill.bmp");
+}
+
 .flex {
     display: flex;
 }

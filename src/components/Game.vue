@@ -33,10 +33,11 @@
     <div></div>
     <div></div>
   </div>
-  <button type="button" @click="mines = mines < 1200 ? mines + 111 : -1000">mines is: {{ mines }}</button>
-  <button type="button" @click="time = time < 1200 ? time + 111 : -1000">time is: {{ time }}</button>
-  <button type="button" @click="width++">width is: {{ width }}</button>
-  <button type="button" @click="height++">height is: {{ height }}</button>
+  <button type="button" @click="mines = mines < 1111 ? mines + 111 : -999">mines is: {{ mines }}</button>
+  <button type="button" @click="time = time < 1111 ? time + 111 : -111">time is: {{ time }}</button>
+  <br>
+  <button type="button" @click="width += 16">width is: {{ width }}</button>
+  <button type="button" @click="height += 16">height is: {{ height }}</button>
 </template>
 
 <script lang="ts">
@@ -46,8 +47,8 @@ import TopCounter from './TopCounter.vue'
 export default defineComponent({
   name: 'Game',
   setup: () => {
-    const mines = ref(-1000)
-    const time = ref(-1000)
+    const mines = ref(-999)
+    const time = ref(-222)
     const width = ref(128 + 24)
     const height = ref(128)
     return {mines, time, width, height}
@@ -62,6 +63,11 @@ export default defineComponent({
 <style scoped>
 [class*='border'] {
   /*margin: 1px 0 0 1px;*/
+}
+
+button {
+  width: 108px;
+  text-align: left;
 }
 </style>
 
@@ -157,9 +163,5 @@ export default defineComponent({
 
 .block-container {
   width: 100%;
-}
-
-.background {
-  background-image: url("../assets/top-fill.bmp");
 }
 </style>

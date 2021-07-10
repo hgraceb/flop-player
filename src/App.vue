@@ -25,9 +25,4 @@ body {
 body {
   background-color: #eeeeee;
 }
-
-/*:root {*/
-/*  --width: 128px;*/
-/*  --height: 128px;*/
-/*}*/
 </style>
