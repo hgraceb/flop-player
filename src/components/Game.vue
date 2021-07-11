@@ -1,38 +1,37 @@
 <template>
-  <top-face></top-face>
   <div class="background" :style="{'width': width + 'px'}">
     <div class="flex">
-      <div class="border-top-left"></div>
-      <div class="border-horizontal-top"></div>
-      <div class="border-top-right"></div>
+      <div class="border-top-left" />
+      <div class="border-horizontal-top" />
+      <div class="border-top-right" />
     </div>
     <div class="flex">
-      <div class="border-vertical-left-upper"></div>
+      <div class="border-vertical-left-upper" />
       <div class="flex top space-between">
-        <TopCounter :count="mines"></TopCounter>
-        <div class="face-normal"></div>
-        <TopCounter :count="time" :min="0"></TopCounter>
+        <TopCounter :count="mines" />
+        <top-face></top-face>
+        <TopCounter :count="time" :min="0" />
       </div>
-      <div class="border-vertical-right-upper"></div>
+      <div class="border-vertical-right-upper" />
     </div>
     <div class="flex">
-      <div class="border-middle-left"></div>
-      <div class="border-horizontal-middle"></div>
-      <div class="border-middle-right"></div>
+      <div class="border-middle-left" />
+      <div class="border-horizontal-middle" />
+      <div class="border-middle-right" />
     </div>
     <div class="flex" :style="{'height': height + 'px'}">
-      <div class="border-vertical-left-lower"></div>
-      <div class="block-container"></div>
-      <div class="border-vertical-right-lower"></div>
+      <div class="border-vertical-left-lower" />
+      <div class="block-container" />
+      <div class="border-vertical-right-lower" />
     </div>
     <div class="flex">
-      <div class="border-bottom-left"></div>
-      <div class="border-horizontal-bottom"></div>
-      <div class="border-bottom-right"></div>
+      <div class="border-bottom-left" />
+      <div class="border-horizontal-bottom" />
+      <div class="border-bottom-right" />
     </div>
-    <div></div>
-    <div></div>
-    <div></div>
+    <div />
+    <div />
+    <div />
   </div>
   <button type="button" @click="mines = mines < 1111 ? mines + 111 : -999">mines is: {{ mines }}</button>
   <button type="button" @click="time = time < 1111 ? time + 111 : -111">time is: {{ time }}</button>

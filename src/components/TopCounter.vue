@@ -1,8 +1,8 @@
 <template>
   <div class="flex border-box top-counter">
-    <div :class="'count-' + hun"/>
-    <div :class="'count-' + ten"/>
-    <div :class="'count-' + one"/>
+    <div :class="'count-' + hun" />
+    <div :class="'count-' + ten" />
+    <div :class="'count-' + one" />
   </div>
 </template>
 
