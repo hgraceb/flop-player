@@ -1,1 +1,0 @@
-emcc -O3 parser_avf.c parser_mvf.c parser_rmv.c -s EXPORTED_RUNTIME_METHODS=ccall -o ..\src\js\parser\parser.js
