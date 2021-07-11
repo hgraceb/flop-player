@@ -1,5 +1,5 @@
 <template>
-  <div class="background" :style="{'width': width + 'px'}">
+  <div :style="{'width': width + 'px'}" class="background" @dragstart.stop.prevent>
     <div class="flex">
       <div class="border-top-left" />
       <div class="border-horizontal-top" />
@@ -7,9 +7,14 @@
     </div>
     <div class="flex">
       <div class="border-vertical-left-upper" />
-      <div class="flex top space-between">
-        <TopCounter :count="mines" />
-        <top-face></top-face>
+      <div
+        class="flex top space-between"
+        @mousedown="handleMouseEvent(MouseStatus.DOWN)"
+        @mouseleave="handleMouseEvent(MouseStatus.LEAVE)"
+        @mouseup="handleMouseEvent(MouseStatus.UP)"
+      >
+        <TopCounter :count="mines" LpropF="" />
+        <top-face :game-status="gameStatus" :mouse-status="mouseStatus" />
         <TopCounter :count="time" :min="0" />
       </div>
       <div class="border-vertical-right-upper" />
@@ -19,7 +24,7 @@
       <div class="border-horizontal-middle" />
       <div class="border-middle-right" />
     </div>
-    <div class="flex" :style="{'height': height + 'px'}">
+    <div :style="{'height': height + 'px'}" class="flex">
       <div class="border-vertical-left-lower" />
       <div class="block-container" />
       <div class="border-vertical-right-lower" />
@@ -41,7 +46,8 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue'
+import { GameStatus, MouseStatus } from '@/status'
+import { defineComponent, ref } from 'vue'
 import TopCounter from './TopCounter.vue'
 import TopFace from './TopFace.vue'
 
@@ -52,11 +58,18 @@ export default defineComponent({
     const time = ref(-222)
     const width = ref(128 + 24)
     const height = ref(128)
-    return { mines, time, width, height }
+    const gameStatus = ref(GameStatus.PLAY)
+    const mouseStatus = ref(MouseStatus.LEAVE)
+    return { mines, time, width, height, gameStatus, mouseStatus, MouseStatus }
   },
   components: {
     TopCounter,
     TopFace
+  },
+  methods: {
+    handleMouseEvent (mouseStatus: MouseStatus) {
+      this.mouseStatus = mouseStatus
+    }
   }
 })
 </script>

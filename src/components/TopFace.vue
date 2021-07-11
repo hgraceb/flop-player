@@ -1,15 +1,33 @@
 <template>
-  <div class="face-normal" :style="{ backgroundImage: `url(${backgroundUrl})` }" />
+  <div :style="{ backgroundImage: `url(${faceUrl})` }" class="face-normal" />
 </template>
 
-<script setup lang="ts">
-import { computed } from 'vue'
-import faceWin from '../assets/face-win.bmp'
+<script lang="ts" setup>
+import { GameStatus, MouseStatus } from '@/status'
+import { defineProps, ref, watch } from 'vue'
+// import faceWin from '../assets/face-win.bmp'
+// import faceLose from '../assets/face-lose.bmp'
 import faceNormal from '../assets/face-normal.bmp'
+import facePressNormal from '../assets/face-press-normal.bmp'
 
-const backgroundUrl = computed(() => {
-  return faceWin || faceNormal
-})
+const props = defineProps<{
+  mouseStatus: MouseStatus
+  gameStatus: GameStatus
+}>()
+
+// 背景图片
+const faceUrl = ref(faceNormal)
+
+watch(
+  () => props.mouseStatus,
+  (value) => {
+    if (value === MouseStatus.DOWN) {
+      faceUrl.value = facePressNormal
+    } else if (value === MouseStatus.UP || value === MouseStatus.LEAVE) {
+      faceUrl.value = faceNormal
+    }
+  }
+)
 </script>
 
 <style scoped>
