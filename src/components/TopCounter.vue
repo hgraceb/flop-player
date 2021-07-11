@@ -6,27 +6,19 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { computed, toRefs, defineProps } from 'vue'
+<script lang="ts" setup>
+import { computed, defineProps } from 'vue'
 
-const props = defineProps({
+const props = defineProps<{
   // 需要显示的值
-  count: {
-    type: Number,
-    required: true
-  },
+  count: number,
   // 最小值
-  min: {
-    type: Number,
-    default: Number.MIN_SAFE_INTEGER
-  }
-})
-
-const { count, min } = toRefs(props)
+  min?: number
+}>()
 
 // 实际显示的值，最大只显示999
 const value = computed((): number => {
-  return Math.min(Math.max(count.value, min?.value), 999)
+  return Math.min(Math.max(props.count, props.min ?? Number.MIN_SAFE_INTEGER), 999)
 })
 
 // 百位数的值
