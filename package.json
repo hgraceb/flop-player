@@ -1,27 +1,18 @@
 {
   "name": "web-minesweeper-player",
   "version": "1.0.0",
-  "description": "Web minesweeper player",
   "private": true,
+  "description": "Web minesweeper player",
+  "author": "Flop",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/hgraceb/web-minesweeper-player.git"
-  },
-  "keywords": [],
-  "author": "Flop",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/hgraceb/web-minesweeper-player/issues"
-  },
-  "homepage": "https://github.com/hgraceb/web-minesweeper-player",
   "dependencies": {
     "core-js": "^3.6.5",
-    "vue": "^3.0.0"
+    "vue": "^3.0.0",
+    "vuex": "^4.0.0-0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.18.0",
@@ -29,6 +20,7 @@
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-plugin-typescript": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
     "@vue/eslint-config-standard": "^5.1.2",
@@ -40,5 +32,15 @@
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^7.0.0",
     "typescript": "~4.1.5"
+  },
+  "bugs": {
+    "url": "https://github.com/hgraceb/web-minesweeper-player/issues"
+  },
+  "homepage": "https://github.com/hgraceb/web-minesweeper-player",
+  "keywords": [],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hgraceb/web-minesweeper-player.git"
   }
 }
