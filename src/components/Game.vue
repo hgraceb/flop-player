@@ -13,7 +13,7 @@
         @mouseleave="handleMouseEvent(MouseStatus.LEAVE)"
         @mouseup="handleMouseEvent(MouseStatus.UP)"
       >
-        <TopCounter :count="mines" LpropF="" />
+        <TopCounter :count="mines" />
         <top-face :game-status="gameStatus" :mouse-status="mouseStatus" />
         <TopCounter :count="time" :min="0" />
       </div>
