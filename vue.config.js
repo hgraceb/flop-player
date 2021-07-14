@@ -1,9 +1,19 @@
 module.exports = {
-  chainWebpack: config => {
-    config.module
-      .rule('file-loader')
-      .test(/\.(bmp)$/i)
-      .use('file-loader')
-      .loader('file-loader')
-  }
+  configureWebpack: {
+    module: {
+      rules: [
+        {
+          test: /\.(bmp)$/i,
+          use: [
+            {
+              loader: 'url-loader',
+              options: {
+                limit: 8192,
+              },
+            },
+          ],
+        },
+      ],
+    },
+  },
 }
