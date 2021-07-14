@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ComputedRef, defineProps, Ref, ref, watch } from 'vue'
+import { computed, defineProps, ref, watch } from 'vue'
 import { FaceStatus } from '@/status'
 import faceWin from '../assets/face-win.bmp'
 import faceLose from '../assets/face-lose.bmp'
@@ -17,14 +17,12 @@ const props = defineProps<{
 }>()
 
 // 背景图片
-const faceUrl: Ref<string> = ref(faceNormal)
+const faceUrl = ref<string>(faceNormal)
 
-const isGameOver: ComputedRef<boolean> = computed(
-  () => store.getters.isGameOver
-)
+const isGameOver = computed<boolean>(() => store.getters.isGameOver)
 
-const setFaceUrl = (value: FaceStatus) => {
-  switch (value) {
+const setFaceUrl = (faceStatus: FaceStatus) => {
+  switch (faceStatus) {
     case FaceStatus.Normal:
       faceUrl.value = !isGameOver.value ? faceNormal : faceUrl.value
       break

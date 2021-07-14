@@ -22,8 +22,6 @@ export const store = createStore<State>({
   actions: {},
   modules: {},
   getters: {
-    isGameOver: state => {
-      return state.gameOver
-    }
+    isGameOver: (state): boolean => state.gameOver
   }
 })
