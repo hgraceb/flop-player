@@ -13,3 +13,11 @@ export enum MouseStatus {
   OVER,
   UP,
 }
+
+export enum FaceStatus {
+  Normal,
+  PressBlock,
+  PressNormal,
+  Win,
+  Lose,
+}
