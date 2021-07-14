@@ -27,7 +27,6 @@ const setFaceUrl = (faceStatus: FaceStatus) => {
       faceUrl.value = !isGameOver.value ? faceNormal : faceUrl.value
       break
     case FaceStatus.PressBlock:
-      console.log(isGameOver.value)
       faceUrl.value = !isGameOver.value ? facePressBlock : faceUrl.value
       break
     case FaceStatus.PressNormal:
