@@ -1,27 +1,14 @@
-import { createStore } from 'vuex'
-import { GameStatus } from '@/status'
+import { createStore, Store } from 'vuex'
+import { State, state } from '@/store/state'
+import { Getters, getters } from '@/store/getters'
 
-export interface State {
-  gameOver: boolean,
-  gameStatus: GameStatus,
+type VuexStore = Omit<Store<State>, 'getters'> & {
+  getters: {
+    [K in keyof Getters]: ReturnType<Getters[K]>
+  }
 }
 
-export const store = createStore<State>({
-  state: {
-    gameOver: false,
-    gameStatus: GameStatus.PLAY
-  },
-  mutations: {
-    gameWin (state) {
-      state.gameOver = true
-    },
-    gameLose (state) {
-      state.gameOver = true
-    }
-  },
-  actions: {},
-  modules: {},
-  getters: {
-    isGameOver: (state): boolean => state.gameOver
-  }
+export const store: VuexStore = createStore({
+  state,
+  getters
 })

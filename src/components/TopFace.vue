@@ -19,7 +19,7 @@ const props = defineProps<{
 // 背景图片
 const faceUrl = ref<string>(faceNormal)
 
-const isGameOver = computed<boolean>(() => store.getters.isGameOver)
+const isGameOver = computed(() => store.getters.isGameOver)
 
 const setFaceUrl = (faceStatus: FaceStatus) => {
   switch (faceStatus) {
