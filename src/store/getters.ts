@@ -1,11 +1,10 @@
 import { GetterTree } from 'vuex'
 import { State } from './state'
 
-const _getters = {
+export const getters = {
   isGameOver: (state: State) => {
     return state.gameOver
   }
 }
 
-export const getters = _getters as GetterTree<State, State> & typeof _getters
-export type Getters = typeof getters
+export type Getters = GetterTree<State, State> & typeof getters
