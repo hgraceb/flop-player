@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, defineProps, ref, watch } from 'vue'
+import { defineProps, ref, watch } from 'vue'
 import { FaceStatus } from '@/status'
 import faceWin from '../assets/face-win.bmp'
 import faceLose from '../assets/face-lose.bmp'
@@ -57,5 +57,6 @@ watch(
 .face-normal {
   width: 26px;
   height: 26px;
+  background-size: contain;
 }
 </style>

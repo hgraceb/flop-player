@@ -47,12 +47,14 @@ const one = computed((): number => {
   height: 25px;
   padding: 1px;
   background-image: url("../assets/top-counters.bmp");
+  background-size: contain;
 }
 
 div[class*='count-'] {
   width: 11px;
   height: 21px;
   margin: 1px;
+  background-size: contain;
 }
 
 .count-minus {
