@@ -2,7 +2,7 @@ import { GameStatus } from '@/status'
 
 export const state = {
   gameOver: false,
-  gameStatus: GameStatus.PLAY
+  gameStatus: GameStatus.Play
 }
 
 export type State = typeof state

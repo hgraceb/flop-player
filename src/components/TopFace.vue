@@ -19,15 +19,17 @@ const props = defineProps<{
 // 背景图片
 const faceUrl = ref<string>(faceNormal)
 
-const isGameOver = computed(() => store.getters.isGameOver)
-
 const setFaceUrl = (faceStatus: FaceStatus) => {
   switch (faceStatus) {
     case FaceStatus.Normal:
-      faceUrl.value = !isGameOver.value ? faceNormal : faceUrl.value
+      faceUrl.value = faceNormal
       break
     case FaceStatus.PressBlock:
-      faceUrl.value = !isGameOver.value ? facePressBlock : faceUrl.value
+      if (store.getters.isGameOver) {
+        // 游戏结束后不处理方块的鼠标事件
+        return
+      }
+      faceUrl.value = facePressBlock
       break
     case FaceStatus.PressNormal:
       faceUrl.value = facePressNormal

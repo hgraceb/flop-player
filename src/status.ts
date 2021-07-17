@@ -1,23 +1,23 @@
 export enum GameStatus {
-  WIN,
-  LOSE,
-  PLAY,
+  Win = 'Win',
+  Lose = 'Lose',
+  Play = 'Play',
 }
 
 export enum MouseStatus {
-  DOWN,
-  ENTER,
-  LEAVE,
-  MOVE,
-  OUT,
-  OVER,
-  UP,
+  Down = 'Down',
+  Enter = 'Enter',
+  Leave = 'Leave',
+  Move = 'Move',
+  Out = 'Out',
+  Over = 'Over',
+  Up = 'Up',
 }
 
 export enum FaceStatus {
-  Normal,
-  PressBlock,
-  PressNormal,
-  Win,
-  Lose,
+  Normal = 'Normal',
+  PressBlock = 'PressBlock',
+  PressNormal = 'PressNormal',
+  Win = 'Win',
+  Lose = 'Lose',
 }
