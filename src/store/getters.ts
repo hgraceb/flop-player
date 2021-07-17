@@ -1,4 +1,3 @@
-import { GetterTree } from 'vuex'
 import { State } from './state'
 
 export const getters = {
@@ -7,4 +6,4 @@ export const getters = {
   }
 }
 
-export type Getters = GetterTree<State, State> & typeof getters
+export type Getters = typeof getters
