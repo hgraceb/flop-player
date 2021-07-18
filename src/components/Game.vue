@@ -31,7 +31,9 @@
         @mousedown="faceStatus = FaceStatus.PressBlock"
         @mouseleave="faceStatus = FaceStatus.Normal"
         @mouseup="faceStatus = FaceStatus.Normal"
-      />
+      >
+        <Block :img="BlockImg.Flag"></Block>
+      </div>
       <div class="border-vertical-right-lower" />
     </div>
     <div class="flex">
@@ -55,6 +57,8 @@ import { FaceStatus } from '@/status'
 import { defineComponent, ref } from 'vue'
 import TopCounter from './TopCounter.vue'
 import TopFace from './TopFace.vue'
+import Block from '@/components/Block.vue'
+import { BlockImg } from '@/util/image'
 
 export default defineComponent({
   name: 'Game',
@@ -64,9 +68,10 @@ export default defineComponent({
     const width = ref(128 + 24)
     const height = ref(128)
     const faceStatus = ref(FaceStatus.Normal)
-    return { mines, time, width, height, faceStatus, FaceStatus }
+    return { mines, time, width, height, faceStatus, FaceStatus, BlockImg }
   },
   components: {
+    Block,
     TopCounter,
     TopFace
   }
