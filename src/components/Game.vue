@@ -32,7 +32,7 @@
         @mouseleave="faceStatus = FaceStatus.Normal"
         @mouseup="faceStatus = FaceStatus.Normal"
       >
-        <Block :img="BlockImg.Flag"></Block>
+        <Block :img="'Normal'"></Block>
       </div>
       <div class="border-vertical-right-lower" />
     </div>

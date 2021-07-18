@@ -24,7 +24,7 @@ export default defineComponent({
     // 外部设置的背景图片
     const { faceStatus } = toRefs(props)
     // 实际展示的背景图片
-    const faceUrl = ref<string>(faceNormal)
+    const faceUrl = ref(faceNormal)
     // 监听外部设置的背景图片的变化
     watch(faceStatus, () => {
       switch (faceStatus.value) {

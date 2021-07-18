@@ -6,4 +6,7 @@ declare module '*.vue' {
 }
 
 /* 图片 */
-declare module '*.bmp'
+declare module '*.bmp' {
+  const src: string
+  export default src
+}
