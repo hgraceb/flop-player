@@ -4,16 +4,17 @@
 
 <script lang="ts">
 import { BlockImg } from '@/util/image'
+import { defineComponent } from 'vue'
 
-export default {
+export default defineComponent({
   props: {
     img: {
       type: String,
       required: true,
-      validator: value => BlockImg[value]
+      validator: (value: BlockImg) => Object.values(BlockImg).includes(value)
     }
   }
-}
+})
 </script>
 
 <style scoped>

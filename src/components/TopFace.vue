@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { ref, toRefs, watch } from 'vue'
+import { defineComponent, ref, toRefs, watch } from 'vue'
 import { FaceStatus } from '@/status'
 import faceNormal from '@/assets/face-normal.bmp'
 import { store } from '@/store'
@@ -12,12 +12,12 @@ import facePressNormal from '@/assets/face-press-normal.bmp'
 import faceWin from '@/assets/face-win.bmp'
 import faceLose from '@/assets/face-lose.bmp'
 
-export default {
+export default defineComponent({
   props: {
     faceStatus: {
       type: String,
       required: true,
-      validator: value => FaceStatus[value]
+      validator: (value: FaceStatus) => Object.values(FaceStatus).includes(value)
     }
   },
   setup (props) {
@@ -52,7 +52,7 @@ export default {
 
     return { faceUrl }
   }
-}
+})
 </script>
 
 <style scoped>

@@ -7,9 +7,9 @@
 </template>
 
 <script lang="ts">
-import { computed } from 'vue'
+import { computed, defineComponent } from 'vue'
 
-export default {
+export default defineComponent({
   props: {
     // 需要显示的值
     count: {
@@ -50,7 +50,7 @@ export default {
 
     return { hun, ten, one }
   }
-}
+})
 </script>
 
 <style scoped>
