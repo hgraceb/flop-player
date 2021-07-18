@@ -2,13 +2,18 @@
   <div :style="{ backgroundImage: `url(${img})` }" class="block" />
 </template>
 
-<script lang="ts" setup>
-import { defineProps } from 'vue'
+<script lang="ts">
 import { BlockImg } from '@/util/image'
 
-const props = defineProps<{
-  img: BlockImg
-}>()
+export default {
+  props: {
+    img: {
+      type: String,
+      required: true,
+      validator: value => BlockImg[value]
+    }
+  }
+}
 </script>
 
 <style scoped>

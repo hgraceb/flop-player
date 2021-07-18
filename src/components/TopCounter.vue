@@ -6,39 +6,51 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { computed, defineProps } from 'vue'
+<script lang="ts">
+import { computed } from 'vue'
 
-const props = defineProps<{
-  // 需要显示的值
-  count: number,
-  // 最小值
-  min?: number
-}>()
+export default {
+  props: {
+    // 需要显示的值
+    count: {
+      type: Number,
+      required: true
+    },
+    // 最小值
+    min: {
+      type: Number,
+      required: false,
+      default: Number.MIN_SAFE_INTEGER
+    }
+  },
+  setup (props) {
+    // 实际显示的值，最大只显示999
+    const value = computed((): number => {
+      return Math.min(Math.max(props.count, props.min), 999)
+    })
 
-// 实际显示的值，最大只显示999
-const value = computed((): number => {
-  return Math.min(Math.max(props.count, props.min ?? Number.MIN_SAFE_INTEGER), 999)
-})
+    // 百位数的值
+    const hun = computed((): number | string => {
+      // 显示的值为负数时，最多只显示两位数字，百位数显示负号
+      if (value.value < 0) {
+        return 'minus'
+      }
+      return Math.floor(Math.abs(value.value) / 100) % 10
+    })
 
-// 百位数的值
-const hun = computed((): number | string => {
-  // 显示的值为负数时，最多只显示两位数字，百位数显示负号
-  if (value.value < 0) {
-    return 'minus'
+    // 十位数的值
+    const ten = computed((): number => {
+      return Math.floor(Math.abs(value.value) / 10) % 10
+    })
+
+    // 个位数的值
+    const one = computed((): number => {
+      return Math.abs(value.value) % 10
+    })
+
+    return { hun, ten, one }
   }
-  return Math.floor(Math.abs(value.value) / 100) % 10
-})
-
-// 十位数的值
-const ten = computed((): number => {
-  return Math.floor(Math.abs(value.value) / 10) % 10
-})
-
-// 个位数的值
-const one = computed((): number => {
-  return Math.abs(value.value) % 10
-})
+}
 </script>
 
 <style scoped>

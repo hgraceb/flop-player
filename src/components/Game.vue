@@ -54,28 +54,23 @@
 
 <script lang="ts">
 import { FaceStatus } from '@/status'
-import { defineComponent, ref } from 'vue'
+import { ref } from 'vue'
 import TopCounter from './TopCounter.vue'
 import TopFace from './TopFace.vue'
 import Block from '@/components/Block.vue'
 import { BlockImg } from '@/util/image'
 
-export default defineComponent({
-  name: 'Game',
-  setup: () => {
+export default {
+  components: { Block, TopCounter, TopFace },
+  setup () {
     const mines = ref(-999)
     const time = ref(-222)
     const width = ref(128 + 24)
     const height = ref(128)
     const faceStatus = ref(FaceStatus.Normal)
     return { mines, time, width, height, faceStatus, FaceStatus, BlockImg }
-  },
-  components: {
-    Block,
-    TopCounter,
-    TopFace
   }
-})
+}
 </script>
 
 <!--测试用-->
