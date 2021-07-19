@@ -7,7 +7,7 @@ import { defineComponent, ref, toRefs, watch } from 'vue'
 import { FaceStatus } from '@/status'
 import faceNormal from '@/assets/face-normal.bmp'
 import { store } from '@/store'
-import facePressBlock from '@/assets/face-press-block.bmp'
+import facePressCell from '@/assets/face-press-cell.bmp'
 import facePressNormal from '@/assets/face-press-normal.bmp'
 import faceWin from '@/assets/face-win.bmp'
 import faceLose from '@/assets/face-lose.bmp'
@@ -31,12 +31,12 @@ export default defineComponent({
         case FaceStatus.Normal:
           faceUrl.value = faceNormal
           break
-        case FaceStatus.PressBlock:
+        case FaceStatus.PressCell:
           if (store.getters.isGameOver) {
             // 游戏结束后不处理方块的鼠标事件
             return
           }
-          faceUrl.value = facePressBlock
+          faceUrl.value = facePressCell
           break
         case FaceStatus.PressNormal:
           faceUrl.value = facePressNormal

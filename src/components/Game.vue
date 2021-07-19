@@ -27,12 +27,12 @@
     <div :style="{'height': height + 'px'}" class="flex">
       <div class="border-vertical-left-lower" />
       <div
-        class="block-container"
-        @mousedown="faceStatus = FaceStatus.PressBlock"
+        class="cell-container"
+        @mousedown="faceStatus = FaceStatus.PressCell"
         @mouseleave="faceStatus = FaceStatus.Normal"
         @mouseup="faceStatus = FaceStatus.Normal"
       >
-        <Block :img="'Normal'"></Block>
+        <Cell :img="'Normal'"></Cell>
       </div>
       <div class="border-vertical-right-lower" />
     </div>
@@ -59,12 +59,12 @@ import { FaceStatus } from '@/status'
 import { ref } from 'vue'
 import TopCounter from './TopCounter.vue'
 import TopFace from './TopFace.vue'
-import Block from '@/components/Block.vue'
-import { BlockImg } from '@/util/image'
+import Cell from '@/components/Cell.vue'
+import { CellImg } from '@/util/image'
 import { store } from '@/store'
 
 export default {
-  components: { Block, TopCounter, TopFace },
+  components: { Cell, TopCounter, TopFace },
   setup () {
     const mines = ref(-999)
     const time = ref(-222)
@@ -74,7 +74,7 @@ export default {
     const playVideo = () => {
       store.dispatch('fetchVideo', '')
     }
-    return { mines, time, width, height, faceStatus, FaceStatus, BlockImg, playVideo }
+    return { mines, time, width, height, faceStatus, FaceStatus, CellImg, playVideo }
   }
 }
 </script>
@@ -180,7 +180,7 @@ button {
   padding: 4px 6px 0 4px;
 }
 
-.block-container {
+.cell-container {
   width: 100%;
 }
 </style>

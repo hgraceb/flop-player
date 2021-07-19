@@ -16,7 +16,7 @@ export enum MouseStatus {
 
 export enum FaceStatus {
   Normal = 'Normal',
-  PressBlock = 'PressBlock',
+  PressCell = 'PressCell',
   PressNormal = 'PressNormal',
   Win = 'Win',
   Lose = 'Lose',

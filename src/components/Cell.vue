@@ -1,7 +1,7 @@
 <template>
   <div
-    :style="{ backgroundImage: `url(${BlockImg[type]})` }"
-    class="block"
+    :style="{ backgroundImage: `url(${CellImg[type]})` }"
+    class="cell"
     @mousedown="handleMouse"
     @mouseleave="handleMouse"
     @mouseup="handleMouse"
@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { BlockImg } from '@/util/image'
+import { CellImg } from '@/util/image'
 import { defineComponent, PropType, ref } from 'vue'
 import { store } from '@/store'
 
@@ -17,9 +17,9 @@ export default defineComponent({
   props: {
     // 背景图片
     img: {
-      type: String as PropType<keyof typeof BlockImg>,
+      type: String as PropType<keyof typeof CellImg>,
       required: true,
-      validator: (value: string) => Object.keys(BlockImg).includes(value)
+      validator: (value: string) => Object.keys(CellImg).includes(value)
     }
   },
   setup (props) {
@@ -67,13 +67,13 @@ export default defineComponent({
           break
       }
     }
-    return { type, BlockImg, handleMouse }
+    return { type, CellImg, handleMouse }
   }
 })
 </script>
 
 <style scoped>
-.block {
+.cell {
   width: 16px;
   height: 16px;
   background-size: contain;
