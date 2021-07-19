@@ -7,7 +7,14 @@ export const mutations = {
   },
   setGameStatus: (state: State, payload: GameStatus): void => {
     state.gameStatus = payload
+  },
+  receiveVideo: (state: State, payload: string): void => {
+    parseVideo(state, payload)
   }
 }
 
 export type Mutations = typeof mutations
+
+function parseVideo (state: State, payload: string) {
+  console.log(payload)
+}

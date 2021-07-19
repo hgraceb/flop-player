@@ -45,6 +45,8 @@
     <div />
     <div />
   </div>
+  <button type="button" @click="playVideo">播放录像</button>
+  <br>
   <button type="button" @click="mines = mines < 1111 ? mines + 111 : -999">mines is: {{ mines }}</button>
   <button type="button" @click="time = time < 1111 ? time + 111 : -111">time is: {{ time }}</button>
   <br>
@@ -59,6 +61,7 @@ import TopCounter from './TopCounter.vue'
 import TopFace from './TopFace.vue'
 import Block from '@/components/Block.vue'
 import { BlockImg } from '@/util/image'
+import { store } from '@/store'
 
 export default {
   components: { Block, TopCounter, TopFace },
@@ -68,7 +71,10 @@ export default {
     const width = ref(128 + 24)
     const height = ref(128)
     const faceStatus = ref(FaceStatus.Normal)
-    return { mines, time, width, height, faceStatus, FaceStatus, BlockImg }
+    const playVideo = () => {
+      store.dispatch('fetchVideo', '')
+    }
+    return { mines, time, width, height, faceStatus, FaceStatus, BlockImg, playVideo }
   }
 }
 </script>
