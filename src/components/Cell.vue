@@ -1,17 +1,10 @@
 <template>
-  <div
-    :style="{ backgroundImage: `url(${CellImg[type]})` }"
-    class="cell"
-    @mousedown="handleMouse"
-    @mouseleave="handleMouse"
-    @mouseup="handleMouse"
-  />
+  <div :style="{ backgroundImage: `url(${url})` }" class="cell"></div>
 </template>
 
 <script lang="ts">
 import { CellImg } from '@/util/image'
-import { defineComponent, PropType, ref } from 'vue'
-import { store } from '@/store'
+import { computed, defineComponent, PropType } from 'vue'
 
 export default defineComponent({
   props: {
@@ -23,51 +16,9 @@ export default defineComponent({
     }
   },
   setup (props) {
-    // 图片类型
-    const type = ref(props.img)
-
-    const handleMouse = () => {
-      if (store.getters.isGameOver) return
-      switch (type.value) {
-        case 'Normal':
-          type.value = 'Press'
-          break
-        // case 'Flag':
-        //   break
-        // case 'Number4':
-        //   break
-        // case 'Number3':
-        //   break
-        // case 'Number2':
-        //   break
-        // case 'Number1':
-        //   break
-        // case 'Number8':
-        //   break
-        // case 'FlagWrong':
-        //   break
-        // case 'Number7':
-        //   break
-        // case 'Number6':
-        //   break
-        // case 'Mine':
-        //   break
-        // case 'Number5':
-        //   break
-        // case 'MineBomb':
-        //   break
-        // case 'Question':
-        //   break
-        // case 'Number0':
-        //   break
-        // case 'QuestionPress':
-        //   break
-        case 'Press':
-          type.value = 'Normal'
-          break
-      }
-    }
-    return { type, CellImg, handleMouse }
+    // 背景图片Url
+    const url = computed(() => CellImg[props.img])
+    return { url }
   }
 })
 </script>
