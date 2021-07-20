@@ -26,14 +26,7 @@
     </div>
     <div :style="{'height': height + 'px'}" class="flex">
       <div class="border-vertical-left-lower" />
-      <div
-        class="cell-container"
-        @mousedown="faceStatus = FaceStatus.PressCell"
-        @mouseleave="faceStatus = FaceStatus.Normal"
-        @mouseup="faceStatus = FaceStatus.Normal"
-      >
-        <Cell :img="'Normal'"></Cell>
-      </div>
+      <CellBoard class="cell-board"></CellBoard>
       <div class="border-vertical-right-lower" />
     </div>
     <div class="flex">
@@ -59,12 +52,12 @@ import { FaceStatus } from '@/status'
 import { ref } from 'vue'
 import TopCounter from './TopCounter.vue'
 import TopFace from './TopFace.vue'
-import Cell from '@/components/Cell.vue'
 import { CellImg } from '@/util/image'
 import { store } from '@/store'
+import CellBoard from '@/components/CellBoard.vue'
 
 export default {
-  components: { Cell, TopCounter, TopFace },
+  components: { TopCounter, TopFace, CellBoard },
   setup () {
     const mines = ref(-999)
     const time = ref(-222)
@@ -180,7 +173,7 @@ button {
   padding: 4px 6px 0 4px;
 }
 
-.cell-container {
+.cell-board {
   width: 100%;
 }
 </style>
