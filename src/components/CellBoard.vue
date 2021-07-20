@@ -1,27 +1,21 @@
 <template>
   <div class="flex">
-    <template v-if="gameBoard">
-      <Cell v-for="index in [1, 2, 3]" :key="index" :img="'Normal'"></Cell>
-      <Cell v-for="index in [1, 2, 3]" :key="index" :img="'Flag'"></Cell>
+    <template v-if="state.gameBoard">
+      <Cell v-for="index in state.width * state.height" :key="index" :img="'Normal'"></Cell>
     </template>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import { GameBoard } from '@/game'
+import { computed, defineComponent } from 'vue'
 import Cell from '@/components/Cell.vue'
+import { store } from '@/store'
 
 export default defineComponent({
   components: { Cell },
-  props: {
-    gameBoard: {
-      type: Object as PropType<GameBoard>,
-      required: false
-    }
-  },
-  setup (props) {
-    return { props }
+  setup () {
+    const state = computed(() => store.state)
+    return { state }
   }
 })
 </script>
