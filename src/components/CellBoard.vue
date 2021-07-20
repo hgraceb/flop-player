@@ -1,5 +1,5 @@
 <template>
-  <div class="flex">
+  <div class="flex cell-board">
     <template v-if="state.gameBoard">
       <Cell v-for="index in state.width * state.height" :key="index" :img="'Normal'"></Cell>
     </template>
@@ -19,3 +19,9 @@ export default defineComponent({
   }
 })
 </script>
+
+<style scoped>
+.cell-board {
+  flex-wrap: wrap;
+}
+</style>

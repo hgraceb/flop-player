@@ -24,9 +24,9 @@
       <div class="border-horizontal-middle" />
       <div class="border-middle-right" />
     </div>
-    <div :style="{'height': height + 'px'}" class="flex">
+    <div :style="{'height': height + 'px'}" class="flex space-between">
       <div class="border-vertical-left-lower" />
-      <CellBoard class="cell-board"></CellBoard>
+      <CellBoard></CellBoard>
       <div class="border-vertical-right-lower" />
     </div>
     <div class="flex">
@@ -171,9 +171,5 @@ button {
 .top {
   width: 100%;
   padding: 4px 6px 0 4px;
-}
-
-.cell-board {
-  width: 100%;
 }
 </style>
