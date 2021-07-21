@@ -1,8 +1,6 @@
 <template>
   <div class="flex cell-board">
-    <template v-if="state.gameBoard">
-      <Cell v-for="index in state.width * state.height" :key="index" :img="'Normal'"></Cell>
-    </template>
+    <Cell v-for="(item, index) in state.gameBoard.getCells()" :key="index" :img="item.mine ? 'Flag' : 'Normal'"></Cell>
   </div>
 </template>
 

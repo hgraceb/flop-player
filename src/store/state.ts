@@ -11,7 +11,7 @@ export interface State {
   // 游戏级别，1-初级，2-中级，3-高级，4-自定义
   gameLevel: 1 | 2 | 3 | 4
   // 游戏棋盘
-  gameBoard?: GameBoard
+  gameBoard: GameBoard
 }
 
 export const state: State = {
@@ -20,5 +20,5 @@ export const state: State = {
   gameOver: false,
   gameStatus: GameStatus.Play,
   gameLevel: 1,
-  gameBoard: undefined
+  gameBoard: new GameBoard(0, 0, '')
 }

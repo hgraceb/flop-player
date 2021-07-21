@@ -38,8 +38,6 @@
     <div />
     <div />
   </div>
-  <button type="button" @click="playVideo">播放录像</button>
-  <br>
   <button type="button" @click="mines = mines < 1111 ? mines + 111 : -999">mines is: {{ mines }}</button>
   <button type="button" @click="time = time < 1111 ? time + 111 : -111">time is: {{ time }}</button>
   <br>
@@ -49,7 +47,7 @@
 
 <script lang="ts">
 import { FaceStatus } from '@/status'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import TopCounter from './TopCounter.vue'
 import TopFace from './TopFace.vue'
 import { CellImg } from '@/util/image'
@@ -64,10 +62,12 @@ export default {
     const width = ref(128 + 24)
     const height = ref(128)
     const faceStatus = ref(FaceStatus.Normal)
-    const playVideo = () => {
+
+    onMounted(() => {
+      // 测试数据
       store.dispatch('fetchVideo', '')
-    }
-    return { mines, time, width, height, faceStatus, FaceStatus, CellImg, playVideo }
+    })
+    return { mines, time, width, height, faceStatus, FaceStatus, CellImg }
   }
 }
 </script>
