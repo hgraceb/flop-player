@@ -67,11 +67,26 @@
 
 // Read key (ie, 'Level')
 function opteq (opt: string, str: string): boolean {
-  let i = 0
-  while (opt[i] !== ':' && opt[i] !== ' ' && opt[i] && str[i] && opt[i].toLowerCase() === str[i].toLowerCase()) ++i
-  return opt[i] === ':' && str.length === i
+  // let i = 0
+  // while (opt[i] !== ':' && opt[i] !== ' ' && opt[i] && str[i] && opt[i].toLowerCase() === str[i].toLowerCase()) {
+  //   ++i
+  // }
+  // return opt[i] === '' && i === str.length
+  return opt !== undefined && str !== undefined
 }
 
-export function parse () {
+// // Read value (ie, 'Intermediate')
+// function valeq (val: string, str: string): boolean {
+//   let i = 0
+//   let j = 0
+//   while (val[i] === ' ') i++
+//   while (str[j] && val[i] != '\n' && val[i] != ' ' && val[i] && str[j].toLowerCase() == val[i].toLowerCase()) {
+//     ++i
+//     ++j
+//   }
+//   return (val[i] == '\n' || val[i] == ' ') && j === str.length
+// }
+
+export function parse (): void {
   console.log(opteq('Width: 8\n', 'width'))
 }

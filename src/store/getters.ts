@@ -1,7 +1,7 @@
 import { State } from './state'
 
 export const getters = {
-  isGameOver: (state: State) => {
+  isGameOver: (state: State): boolean => {
     return state.gameOver
   }
 }
