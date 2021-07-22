@@ -53,7 +53,6 @@ import TopFace from './TopFace.vue'
 import { CellImg } from '@/util/image'
 import { store } from '@/store'
 import CellBoard from '@/components/CellBoard.vue'
-import { parse } from '@/game/parser'
 
 export default {
   components: { TopCounter, TopFace, CellBoard },
@@ -67,7 +66,6 @@ export default {
     onMounted(() => {
       // 测试数据
       store.dispatch('fetchVideo', '')
-      parse()
     })
     return { mines, time, width, height, faceStatus, FaceStatus, CellImg }
   }

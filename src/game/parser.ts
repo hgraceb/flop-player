@@ -60,6 +60,7 @@
  these variables in their output.
 
  *****************************************************************/
+import { State } from '@/store/state'
 
 // ==============================================================================================
 // Functions to read key:value pairs from the input file header
@@ -86,7 +87,9 @@ function valeq (val: string, str: string): boolean {
   return (val[i] === '\n' || val[i] === ' ') && j === str.length
 }
 
-export function parse (): void {
+export function parse (state: State, data: string): void {
+  console.log(state)
+  console.log(data)
   console.log(opteq('Width: 8\n', 'width'))
   console.log(valeq(' beginner\n', 'Beginner'))
 }
