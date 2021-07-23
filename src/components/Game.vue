@@ -47,14 +47,14 @@
 
 <script lang="ts">
 import { FaceStatus } from '@/status'
-import { onMounted, ref } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import TopCounter from './TopCounter.vue'
 import TopFace from './TopFace.vue'
 import { CellImg } from '@/util/image'
 import { store } from '@/store'
 import CellBoard from '@/components/CellBoard.vue'
 
-export default {
+export default defineComponent({
   components: { TopCounter, TopFace, CellBoard },
   setup () {
     const mines = ref(-999)
@@ -69,7 +69,7 @@ export default {
     })
     return { mines, time, width, height, faceStatus, FaceStatus, CellImg }
   }
-}
+})
 </script>
 
 <!--测试用-->

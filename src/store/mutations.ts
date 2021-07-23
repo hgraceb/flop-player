@@ -19,11 +19,3 @@ export const mutations = {
 }
 
 export type Mutations = typeof mutations
-
-interface Result {
-  [key: string]: string
-
-  Width: string
-  Height: string
-  Board: string
-}
