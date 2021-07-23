@@ -60,25 +60,50 @@
  these variables in their output.
 
  *****************************************************************/
+
 import { State } from '@/store/state'
 import { Cell } from '@/game/index'
 
 const MAXOPS = 1000
+const MAXISLS = 1000
 
 let board: Cell[]
 
+let w: number
 let h: number
 let size: number
 
+let bbbv: number
+let openings: number
+let islands: number
+let zini: number
+
 let closedCells: number
 let sizeOps: number[]
+let sizeIsls: number[]
 
 function init () {
   board = []
+
+  w = 0
   h = 0
   size = 0
+
+  bbbv = 0
+  openings = 0
+  islands = 0
+  zini = 0
+
   closedCells = 0
   sizeOps = new Array(MAXOPS)
+  sizeIsls = new Array(MAXISLS)
+}
+
+// ==============================================================================================
+// Function to print error messages
+// ==============================================================================================
+function error (msg: string): void {
+  throw new Error(msg)
 }
 
 // ==============================================================================================
@@ -175,15 +200,221 @@ function processOpening (opId: number, index: number): void {
   }
 }
 
+// Determine the size (number of cells) in the Island
+function processIsland (isId: number, index: number): void {
+  board[index].island = isId
+  ++sizeIsls[isId]
+  // Check neighbourhood
+  for (let rr = board[index].rb; rr <= board[index].re; ++rr) {
+    for (let cc = board[index].cb; cc <= board[index].ce; ++cc) {
+      const i = cc * h + rr
+      if (!board[i].island && !board[i].mine && !board[i].opening) {
+        processIsland(isId, i)
+      }
+    }
+  }
+}
+
+// ==============================================================================================
+// Function to read board layout and count number of Openings and Islands
+// ==============================================================================================
+function initBoard (): void {
+  openings = 0
+
+  // Determine the neighbourhood for each cell
+  for (let r = 0; r < h; ++r) {
+    for (let c = 0; c < w; ++c) {
+      const index = c * h + r
+      board[index].rb = r ? r - 1 : r
+      board[index].re = r === h - 1 ? r : r + 1
+      board[index].cb = c ? c - 1 : c
+      board[index].ce = c === w - 1 ? c : c + 1
+    }
+  }
+
+  // Set initial premium for each cell (for ZiNi calculations)
+  for (let i = 0; i < size; ++i) {
+    // Premium is used in ZiNi calculations
+    // ZiNi attempts to determine the optimal flagging strategy
+    // Premium tries to determine potential contribution of cell to optimal solve of game
+    // The fewer clicks needed to perform a useful action (like a chord) the higher the premium
+    // Mines have no premium
+    // An opened cell is more useful than a closed cell
+    // Each correct flag makes a number more useful
+    // A higher number is less useful because more flags are required
+    board[i].premium = -(board[i].number = getNumber(i)) - 2
+  }
+
+  for (let i = 0; i < size; ++i) {
+    if (!board[i].number && !board[i].opening) {
+      if (++openings > MAXOPS) error('Too many openings')
+      sizeOps[openings] = 0
+      // Send to function to determine size of Opening
+      processOpening(openings, i)
+    }
+  }
+
+  for (let i = 0; i < size; ++i) {
+    if (!board[i].opening && !board[i].island && !board[i].mine) {
+      if (++islands > MAXISLS) error('Too many islands')
+      sizeIsls[islands] = 0
+      // Send to function to determine size of Island
+      processIsland(islands, i)
+    }
+  }
+}
+
+// ==============================================================================================
+// Function used by both the calc_bbbv() and calc_zini() functions
+// ==============================================================================================
+function getAdj3bv (index: number): number {
+  let res = 0
+  if (!board[index].number) return 1
+  // Check neighbourhood
+  for (let rr = board[index].rb; rr <= board[index].re; ++rr) {
+    for (let cc = board[index].cb; cc <= board[index].ce; ++cc) {
+      const i = cc * h + rr
+      res += (!board[i].mine && !board[i].opening) ? 1 : 0
+    }
+  }
+  // Number belongs to the edge of an opening
+  if (board[index].opening) ++res
+  // Number belongs to the edge of a second opening
+  if (board[index].opening2) ++res
+  // Return number (0-9)
+  return res
+}
+
+// ==============================================================================================
+// Function to calculate 3bv
+// ==============================================================================================
+function calcBbbv (): void {
+  // Start by setting 3bv equal to the number of openings
+  bbbv = openings
+  for (let i = 0; i < size; ++i) {
+    // Increase 3bv count if it is a non-edge number
+    if (!board[i].opening && !board[i].mine) ++bbbv
+    board[i].premium += getAdj3bv(i)
+  }
+}
+
+// ==============================================================================================
+// Functions used only by the calc_zini() function
+// ==============================================================================================
+
+// Open cell
+function open (index: number): void {
+  board[index].opened = 1
+  ++board[index].premium
+
+  // Check cell is a number and not on the edge of an opening
+  if (!board[index].opening) {
+    for (let rr = board[index].rb; rr <= board[index].re; ++rr) {
+      for (let cc = board[index].cb; cc <= board[index].ce; ++cc) {
+        --board[cc * h + rr].premium
+      }
+    }
+  }
+  // Decrease count of unopened cells
+  --closedCells
+}
+
+// Perform checks before opening cells
+function reveal (index: number): void {
+  // Do not open flagged or already open cells
+  if (board[index].opened) return
+  if (board[index].flagged) return
+
+  if (board[index].number) {
+    // Open if cell is a non-zero number
+    open(index)
+  } else {
+    // Cell is inside an opening (not a number on the edge)
+    const op = board[index].opening
+    for (let i = 0; i < size; ++i) {
+      if (board[i].opening2 === op || board[i].opening === op) {
+        // Open all numbers on the edge of the opening
+        if (!board[i].opened) open(i)
+        // Reduce premium of neighbouring cells
+        // Chording on neighbouring cells will no longer open this opening
+        --board[i].premium
+      }
+    }
+  }
+}
+
+// Flag
+function flag (index: number): void {
+  if (board[index].flagged) return
+  ++zini
+  board[index].flagged = 1
+  // Check neighbourhood
+  for (let rr = board[index].rb; rr <= board[index].re; ++rr) {
+    for (let cc = board[index].cb; cc <= board[index].ce; ++cc) {
+      // Increase premium of neighbouring cells
+      // Placing a flag makes it 1 click more likely a chord can occur
+      ++board[cc * h + rr].premium
+    }
+  }
+}
+
+// Chord
+function chord (index: number): void {
+  ++zini
+  for (let rr = board[index].rb; rr <= board[index].re; ++rr) {
+    for (let cc = board[index].cb; cc <= board[index].ce; ++cc) {
+      reveal(cc * h + rr)
+    }
+  }
+}
+
+// Click
+function click (index: number): void {
+  reveal(index)
+  ++zini
+}
+
+// Click inside an opening (not on the edge)
+function hitOpenings (): void {
+  for (let j = 0; j < size; ++j) {
+    if (!board[j].number && !board[j].opened) {
+      click(j)
+    }
+  }
+}
+
+// Flags neighbouring mines
+function flagAround (index: number): void {
+  // Check neighbourhood
+  for (let rr = board[index].rb; rr <= board[index].re; ++rr) {
+    for (let cc = board[index].cb; cc <= board[index].ce; ++cc) {
+      const i = cc * h + rr
+      if (board[i].mine) flag(i)
+    }
+  }
+}
+
 export function parse (state: State, data: string): void {
   console.log(state)
   console.log(data)
+  console.log(closedCells)
+  console.log(bbbv)
+  console.log(zini)
+  console.log(init.name)
+  console.log(error.name)
   console.log(opteq('Width: 8\n', 'width'))
   console.log(valeq(' beginner\n', 'Beginner'))
-  clearBoard()
-  restartBoard()
-  console.log(getNumber)
-  console.log(setOpeningBorder)
-  console.log(processOpening)
-  init()
+  console.log(clearBoard.name)
+  console.log(restartBoard.name)
+  console.log(getNumber.name)
+  console.log(setOpeningBorder.name)
+  console.log(processOpening.name)
+  console.log(initBoard.name)
+  console.log(getAdj3bv.name)
+  console.log(calcBbbv.name)
+  console.log(open.name)
+  console.log(reveal.name)
+  console.log(chord.name)
+  console.log(hitOpenings.name)
+  console.log(flagAround.name)
 }
