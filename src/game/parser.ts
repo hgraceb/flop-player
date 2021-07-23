@@ -61,6 +61,25 @@
 
  *****************************************************************/
 import { State } from '@/store/state'
+import { Cell } from '@/game/index'
+
+const MAXOPS = 1000
+
+let board: Cell[]
+
+let h: number
+let size: number
+
+let closedCells: number
+let sizeOps: number[]
+
+function init () {
+  board = []
+  h = 0
+  size = 0
+  closedCells = 0
+  sizeOps = new Array(MAXOPS)
+}
 
 // ==============================================================================================
 // Functions to read key:value pairs from the input file header
@@ -87,9 +106,84 @@ function valeq (val: string, str: string): boolean {
   return (val[i] === '\n' || val[i] === ' ') && j === str.length
 }
 
+// ==============================================================================================
+// Functions to erase board information
+// ==============================================================================================
+
+// Erase all information about cells
+function clearBoard (): void {
+  closedCells = size
+  for (let i = 0; i < size; ++i) {
+    board[i].mine = board[i].opened = board[i].flagged = board[i].questioned = board[i].wastedFlag =
+      board[i].opening = board[i].opening2 = board[i].island = 0
+  }
+}
+
+// Erase all information about cell states
+function restartBoard (): void {
+  closedCells = size
+  for (let i = 0; i < size; ++i) {
+    board[i].opened = board[i].flagged = board[i].wastedFlag = board[i].questioned = 0
+  }
+}
+
+// ==============================================================================================
+// Function to count mines touching a cell
+// ==============================================================================================
+function getNumber (index: number): number {
+  let res = 0
+  // Check neighbourhood
+  for (let rr = board[index].rb; rr <= board[index].re; ++rr) {
+    for (let cc = board[index].cb; cc <= board[index].ce; ++cc) {
+      // Increase count if cell is a mine
+      res += board[cc * h + rr].mine ? 1 : 0
+    }
+  }
+  return res
+}
+
+// ==============================================================================================
+// Functions used by init_board() to determine size of Openings and Islands
+// ==============================================================================================
+
+// Determine if cell belongs to 1 or 2 Openings and assign it to an Opening ID
+function setOpeningBorder (opId: number, index: number): void {
+  if (!board[index].opening) {
+    board[index].opening = opId
+  } else if (board[index].opening !== opId) {
+    board[index].opening2 = opId
+  }
+}
+
+// Determine the size (number of cells) in the Opening
+function processOpening (opId: number, index: number): void {
+  ++sizeOps[opId]
+  board[index].opening = opId
+  // Check neighbourhood
+  for (let rr = board[index].rb; rr <= board[index].re; ++rr) {
+    for (let cc = board[index].cb; cc <= board[index].ce; ++cc) {
+      const i = cc * h + rr
+      if (board[i].number && !board[i].mine) {
+        if (board[i].opening !== opId && board[i].opening2 !== opId) {
+          ++sizeOps[opId]
+        }
+        setOpeningBorder(opId, i)
+      } else if (!board[i].opening && !board[i].mine) {
+        processOpening(opId, i)
+      }
+    }
+  }
+}
+
 export function parse (state: State, data: string): void {
   console.log(state)
   console.log(data)
   console.log(opteq('Width: 8\n', 'width'))
   console.log(valeq(' beginner\n', 'Beginner'))
+  clearBoard()
+  restartBoard()
+  console.log(getNumber)
+  console.log(setOpeningBorder)
+  console.log(processOpening)
+  init()
 }

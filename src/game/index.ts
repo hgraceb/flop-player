@@ -2,22 +2,22 @@
  * 游戏区域最小单元
  */
 export class Cell {
-  mine = false
-  opening = false
-  opening2 = false
-  island = false
-  number = false
-  rb = false
-  re = false
-  cb = false
-  ce = false
-  opened = false
-  flagged = false
-  wastedFlag = false
-  questioned = false
-  premium = false
+  mine = 0
+  opening = 0
+  opening2 = 0
+  island = 0
+  number = 0
+  rb = 0
+  re = 0
+  cb = 0
+  ce = 0
+  opened = 0
+  flagged = 0
+  wastedFlag = 0
+  questioned = 0
+  premium = 0
 
-  constructor (mine: boolean) {
+  constructor (mine: number) {
     this.mine = mine
   }
 }
@@ -36,9 +36,9 @@ export class GameBoard {
     this.cells = Array(this.width * this.height)
     board.trim().split('').forEach((item, index) => {
       if (item === '0') {
-        this.cells[index] = new Cell(false)
+        this.cells[index] = new Cell(0)
       } else if (item === '*') {
-        this.cells[index] = new Cell(true)
+        this.cells[index] = new Cell(1)
       }
     })
   }
