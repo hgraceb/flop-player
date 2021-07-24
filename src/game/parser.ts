@@ -74,6 +74,8 @@ let h: number
 let m: number
 let size: number
 
+let won: number
+
 let noBoardEvents: number
 
 let bbbv: number
@@ -83,9 +85,20 @@ let zini: number
 let gzini: number
 let hzini: number
 
+let wastedDoubleClicks: number
+let wastedClicks15: number
+
+let wastedFlags: number
+
+let solvedBbbv: number
 let closedCells: number
 let sizeOps: number[]
 let sizeIsls: number[]
+let solvedOps: number
+let solvedIsls: number
+
+let curTime: number
+let endTime: number
 
 function init () {
   board = []
@@ -94,6 +107,8 @@ function init () {
   h = 0
   m = 0
   size = 0
+
+  won = 0
 
   noBoardEvents = 0
 
@@ -104,9 +119,20 @@ function init () {
   gzini = 0
   hzini = 0
 
+  wastedFlags = 0
+  wastedClicks15 = 0
+
+  wastedFlags = 0
+
+  solvedBbbv = 0
   closedCells = 0
   sizeOps = new Array(MAXOPS)
   sizeIsls = new Array(MAXISLS)
+  solvedOps = 0
+  solvedIsls = 0
+
+  curTime = 0
+  endTime = 0
 }
 
 // TODO 将输出转换为具体的事件
@@ -518,10 +544,488 @@ function push (x: number, y: number): void {
 function pushAround (x: number, y: number) {
   for (let i = board[x * h + y].rb; i <= board[x * h + y].re; ++i) {
     for (let j = board[x * h + y].cb; j <= board[x * h + y].ce; ++j) {
-      push(j, i);
+      push(j, i)
     }
   }
 }
+
+// ==============================================================================================
+// Functions to unpress cells (this does not open them)
+// ==============================================================================================
+
+// Unpress cell
+function pop (x: number, y: number) {
+  if (!board[x * h + y].opened && !board[x * h + y].flagged) {
+    if (board[x * h + y].questioned) {
+      fprintf('Cell released (it is a Questionmark) %d %d\n', x + 1, y + 1)
+    } else {
+      fprintf('Cell released %d %d\n', x + 1, y + 1)
+    }
+  }
+}
+
+// Check which cells to unpress
+function popAround (x: number, y: number) {
+  for (let i = board[x * h + y].rb; i <= board[x * h + y].re; ++i) {
+    for (let j = board[x * h + y].cb; j <= board[x * h + y].ce; ++j) {
+      pop(j, i)
+    }
+  }
+}
+
+// ==============================================================================================
+// Functions to check Win or Lose status
+// ==============================================================================================
+function win (): void {
+  endTime = curTime
+  won = 1
+}
+
+// Print Solved 3bv
+function checkWin (): void {
+  // This fixes a rounding error. The 3f rounds to 3 decimal places.
+  // Using 10,000 rounds the 4th decimal place first before 3f is calculated.
+  // This has the desired effect of truncating to 3 decimals instead of rounding.
+  const fix = (curTime) * 10
+  // TODO 处理为三位小数
+  const fixFloated = fix / 10000
+
+  fprintf('%.3f Solved 3BV: %d of %d\n', fixFloated, solvedBbbv, bbbv)
+  if (bbbv === solvedBbbv) win()
+}
+
+function fail (): void {
+  endTime = curTime
+  won = 0
+}
+
+// ==============================================================================================
+// Functions for opening cells
+// ==============================================================================================
+
+// Change cell status to open
+function show (x: number, y: number): void {
+  const index = x * h + y
+  fprintf('Cell opened (Number %d) %d %d\n', board[index].number, x + 1, y + 1)
+  board[index].opened = 1
+  // Increment counters if cell belongs to an opening and if this iteration opens the last cell in that opening
+  if (board[index].opening) {
+    if (!(--sizeOps[board[index].opening])) {
+      ++solvedOps
+      ++solvedBbbv
+    }
+  }
+  // Increment counters if cell belongs to another opening and this iteration opens last cell in that opening
+  if (board[index].opening2) {
+    if (!(--sizeOps[board[index].opening2])) {
+      ++solvedOps
+      ++solvedBbbv
+    }
+  }
+}
+
+// Check how many cells to change
+function showOpening (op: number): void {
+  let k = 0
+  for (let i = 0; i < w; ++i) {
+    for (let j = 0; j < h; ++j, ++k) {
+      if (board[k].opening === op || board[k].opening2 === op) {
+        if (!board[k].opened && !board[k].flagged) {
+          show(i, j)
+        }
+      }
+    }
+  }
+}
+
+// Perform checks before changing cell status
+function doOpen (x: number, y: number): void {
+  // Lose if cell is a mine
+  if (board[x * h + y].mine) {
+    board[x * h + y].opened = 1
+    fprintf('Cell opened (it is a Mine) %d %d\n', x + 1, y + 1)
+    fail()
+  } else {
+    // Check cell is inside an opening (number zero)
+    if (!board[x * h + y].number) {
+      // Open correct number of cells
+      showOpening(board[x * h + y].opening)
+      checkWin()
+    } else {
+      // Open single cell because it is a non-zero number
+      show(x, y)
+      if (!board[x * h + y].opening) {
+        ++solvedBbbv
+        // Increment count of solved islands if this is last cell of the island to be opened
+        if (!(--sizeIsls[board[x * h + y].island])) ++solvedIsls
+        checkWin()
+      }
+    }
+  }
+}
+
+// ==============================================================================================
+// Functions to Flag, Mark and Chord
+// ==============================================================================================
+
+// Count number of adjacent flags
+function flagsAround (x: number, y: number) {
+  let res = 0
+  for (let i = board[x * h + y].rb; i <= board[x * h + y].re; ++i) {
+    for (let j = board[x * h + y].cb; j <= board[x * h + y].ce; ++j) {
+      if (board[j * h + i].flagged) ++res
+    }
+  }
+  return res
+}
+
+// Chord
+function doChord (x: number, y: number, onedotfive: number): void {
+  let wasted = 1
+  let i, j
+  // Check cell is already open and number equals count of surrounding flags
+  if (board[x * h + y].number === flagsAround(x, y) && board[x * h + y].opened) {
+    // Check neighbourhood
+    for (i = board[x * h + y].rb; i <= board[x * h + y].re; ++i) {
+      for (j = board[x * h + y].cb; j <= board[x * h + y].ce; ++j) {
+        // Lose game if cell is not flagged and is a mine
+        if (board[j * h + i].mine && !board[j * h + i].flagged) {
+          fail()
+        }
+      }
+    }
+    // Check neighbourhood
+    for (i = board[x * h + y].rb; i <= board[x * h + y].re; ++i) {
+      for (j = board[x * h + y].cb; j <= board[x * h + y].ce; ++j) {
+        if (!board[j * h + i].opened && !board[j * h + i].flagged) {
+          // Open cell if not flagged and not already open
+          doOpen(j, i)
+          wasted = 0
+        } else if (board[j * h + i].flagged && board[j * h + i].wastedFlag) {
+          // Chord was successful so flag was not wasted
+          board[j * h + i].wastedFlag = 0
+          --wastedFlags
+        }
+      }
+    }
+    // Chord has been wasted
+    if (wasted) {
+      ++wastedDoubleClicks
+      if (onedotfive) ++wastedClicks15
+    }
+  } else {
+    // Unpress chorded cells without opening them
+    popAround(x, y)
+    ++wastedDoubleClicks
+    if (onedotfive) ++wastedClicks15
+  }
+}
+
+// // Flag
+// function do_set_flag(x : number,y : number) : void
+// {
+//   // Note that the wastedFlag value becomes 0 after successful chord() function
+//   board[x*h+y].flagged=board[x*h+y].wastedFlag=1
+//   fprintf('Flag %d %d\n',x+1,y+1)
+//   ++flags;++wastedFlags
+//   // Increase misflag count because cell is not a mine
+//   if(!board[x*h+y].mine) ++misflags
+// }
+//
+// // Questionmark
+// function do_question(x : number,y : number) : void
+// {
+//   board[x*h+y].questioned=1
+//   fprintf('Questionmark %d %d\n',x+1,y+1)
+// }
+//
+// // Remove Flag or Questionmark
+// function do_unset_flag(x : number,y : number) : void
+// {
+//   board[x*h+y].flagged=board[x*h+y].questioned=0
+//   fprintf('Flag removed %d %d\n',x+1,y+1)
+//   // Decrease flag count, increase unflag count
+//   --flags;++unflags
+//   // Increase misunflag count because cell is not a mine
+//   if(!board[x*h+y].mine) ++misunflags
+// }
+//
+//
+// // Part of 'superflag' cheat function (flags neighbouring mines)
+// function do_flag_around(x : number,y : number) : void
+// {
+//   int i,j
+//   // Check neighbourhood
+//   for(i=board[x*h+y].rb;i<=board[x*h+y].re;++i)
+//     for(j=board[x*h+y].cb;j<=board[x*h+y].ce;++j)
+//       if(!board[j*h+i].flagged && !board[j*h+i].opened)
+//         do_set_flag(j,i)
+// }
+//
+// // Part of 'superflag' cheat function (counts unopened neighbours)
+// int closed_sq_around(x : number,y : number)
+// {
+//   int i,j,res=0
+//   // Check neighbourhood
+//   for(i=board[x*h+y].rb;i<=board[x*h+y].re;++i)
+//     for(j=board[x*h+y].cb;j<=board[x*h+y].ce;++j)
+//       if(!board[j*h+i].opened) ++res
+//   return res
+// }
+//
+//
+// // ==============================================================================================
+// // Functions for clicking and moving the mouse
+// // ==============================================================================================
+//
+// // Function definition needed here because mouse_move() and left_click() reference each other
+// function mouse_move(x : number,y : number,int prec_x,int prec_y); : void
+//
+// // Left click
+// function left_click(x : number,y : number,int prec_x,int prec_y) : void
+// {
+//   if(!left) return
+//   if(x!=cur_x || y!=cur_y) mouse_move(x,y,prec_x,prec_y)
+//   left=0
+//   if(!is_inside_board(x,y))
+//   {
+//     chorded=0
+//     return
+//   }
+//   // Chord
+//   if(right || shift_left || (superclick && board[x*h+y].opened))
+//   {
+//     ++d_clicks
+//     if(onedotfive) ++clicks_15
+//     doChord(x,y,onedotfive)
+//     chorded=right
+//     shift_left=0
+//   }
+//   // Left click
+//   else
+//   {
+//     // Rilian click
+//     if(chorded)
+//     {
+//       chorded=0
+//       ++rilian_clicks
+//       if(no_rilian_clicks) return
+//     }
+//     ++l_clicks
+//     if(!board[x*h+y].opened && !board[x*h+y].flagged) doOpen(x,y); else ++wasted_l_clicks
+//     chorded=0
+//   }
+//   cur_x=x;cur_y=y
+// }
+//
+// // Mouse movement
+// function mouse_move(x : number,y : number,int prec_x,int prec_y) : void
+// {
+//   if(is_inside_board(x,y))
+//   {
+//     if((left && right) || middle || shift_left)
+//     {
+//       if(cur_x!=x || cur_y!=y)
+//       {
+//         popAround(cur_x,cur_y)
+//         push_around(x,y)
+//       }
+//     }
+//     else if(superclick && left && board[cur_x*h+cur_y].opened)
+//     {
+//       popAround(cur_x,cur_y)
+//       if(board[x*h+y].opened)
+//         push_around(x,y)
+//       else
+//         push(x,y)
+//     }
+//     else if(left && !chorded)
+//     {
+//       if(cur_x!=x || cur_y!=y)
+//       {
+//         pop(cur_x,cur_y)
+//         push(x,y)
+//       }
+//       if(nono && (cur_x!=x || cur_y!=y))
+//       {
+//         int sl=shift_left
+//         left_click(x,y,cur_x,cur_y)
+//         left=1
+//         shift_left=sl
+//       }
+//     }
+//   }
+//   // Distance is measured using Manhattan metric instead of Euclidean
+//   // Rationale is that pixels form a grid thus are not points
+//   distance+=abs(cur_prec_x-prec_x)+abs(cur_prec_y-prec_y)
+//   cur_prec_x=prec_x;cur_prec_y=prec_y
+//
+//   if(is_inside_board(x,y))
+//   {
+//     cur_x=x;cur_y=y
+//   }
+// }
+//
+// // Left button down
+// function left_press(x : number,y : number,int prec_x,int prec_y) : void
+// {
+//   if(middle) return
+//   left=1;shift_left=0
+//   if(!is_inside_board(x,y)) return
+//   if(!right && !(superclick && board[x*h+y].opened))
+//     push(x,y)
+//   else
+//     push_around(x,y)
+//   if(elmar || nono)
+//   {
+//     left_click(x,y,prec_x,prec_y)
+//     left=1
+//   }
+//   cur_x=x;cur_y=y
+// }
+//
+// // Chord using Shift during LC-LR
+// function left_press_with_shift(x : number,y : number,int prec_x,int prec_y) : void
+// {
+//   if(middle) return
+//   left=shift_left=1
+//   if(!is_inside_board(x,y)) return
+//   push_around(x,y)
+//   if(elmar || nono)
+//   {
+//     left_click(x,y,prec_x,prec_y)
+//     left=shift_left=1
+//   }
+//   cur_x=x;cur_y=y
+// }
+//
+// // Toggle question mark setting
+// function toggle_question_mark_setting(x : number,y : number,int prec_x,int prec_y) : void
+// {
+//   qm=!qm
+// }
+//
+// // Right button down
+// function right_press(x : number,y : number,int prec_x,int prec_y) : void
+// {
+//   if(middle) return
+//   right=1;shift_left=0
+//   if(!is_inside_board(x,y)) return
+//   if(left)
+//     push_around(x,y)
+//   else
+//   {
+//     if(!board[x*h+y].opened)
+//     {
+//       onedotfive=1;chorded=0
+//       if(board[x*h+y].flagged)
+//       {
+//         do_unset_flag(x,y)
+//         if(!qm) do_question(x,y)
+//       }
+//       else
+//       {
+//         if(!qm || !board[x*h+y].questioned)
+//           do_set_flag(x,y)
+//         else
+//         {
+//           board[x*h+y].flagged=board[x*h+y].questioned=0
+//           fprintf('Questionmark removed %d %d\n',x+1,y+1)
+//         }
+//       }
+//       ++r_clicks
+//     }
+//     else if(superflag && board[x*h+y].opened)
+//     {
+//       if(board[x*h+y].number && board[x*h+y].number>=closed_sq_around(x,y))
+//         do_flag_around(x,y)
+//     }
+//   }
+//   cur_x=x;cur_y=y
+// }
+//
+// // Right button up
+// function right_click(x : number,y : number,int prec_x,int prec_y) : void
+// {
+//   if(!right) return
+//   right=shift_left=0
+//   if(!is_inside_board(x,y))
+//   {
+//     chorded=left
+//     onedotfive=0
+//     return
+//   }
+//   // Chord
+//   if(left)
+//   {
+//     popAround(cur_x,cur_y)
+//     doChord(x,y,0)
+//     ++d_clicks
+//     chorded=1
+//   }
+//   // Click did not produce a Flag or Chord
+//   else
+//   {
+//     // It was a RC not the beginning of a Chord
+//     if(!onedotfive && !chorded)
+//     {
+//       ++r_clicks
+//       ++wasted_r_clicks
+//     }
+//     chorded=0
+//   }
+//   onedotfive=0
+//   cur_x=x;cur_y=y
+// }
+//
+// // Middle button down
+// function middle_press(x : number,y : number,int prec_x,int prec_y) : void
+// {
+//   // Middle button resets these boolean values
+//   shift_left=left=right=onedotfive=chorded=0
+//   middle=1
+//   if(!is_inside_board(x,y)) return
+//   push_around(x,y)
+// }
+//
+// // Middle button up
+// function middle_click(x : number,y : number,int prec_x,int prec_y) : void
+// {
+//   if(!middle) return
+//   middle=0
+//   if(!is_inside_board(x,y)) return
+//   doChord(x,y,0)
+//   ++d_clicks
+// }
+//
+//
+//
+// // ==============================================================================================
+// // Function to convert string to double (decimal number with high precision)
+// // ==============================================================================================
+//
+// // This is a custom function to mimic atoi but for decimals
+// double strtodouble(const char* str)
+// {
+//   double res=0.0
+//   int cur=-1,neg=0,len=strlen(str),hop=1
+//   while(str[++cur]==' ')
+//   if(!str[cur]) return 0.0
+//   if(str[cur]=='-')
+//   {
+//     neg=1
+//     ++cur
+//   }
+//   while(cur<len && isdigit(str[cur])) {res=res*10+str[cur++]-'0';}
+//   if(str[cur++]!='.') return res
+//   while(cur<len && isdigit(str[cur]))
+//   {
+//     res=res*10+str[cur++]-'0'
+//     hop*=10
+//   }
+//   if(neg) res=-res
+//   return res/hop
+// }
 
 export function parse (state: State, data: string): void {
   console.log(state)
@@ -531,6 +1035,14 @@ export function parse (state: State, data: string): void {
   console.log(zini)
   console.log(gzini)
   console.log(hzini)
+  console.log(endTime)
+  console.log(curTime)
+  console.log(solvedOps)
+  console.log(solvedIsls)
+  console.log(won)
+  console.log(wastedFlags)
+  console.log(wastedDoubleClicks)
+  console.log(wastedClicks15)
   console.log(init.name)
   console.log(error.name)
   console.log(opteq('Width: 8\n', 'width'))
@@ -552,4 +1064,13 @@ export function parse (state: State, data: string): void {
   console.log(isInsideBoard.name)
   console.log(push.name)
   console.log(pushAround.name)
+  console.log(pop.name)
+  console.log(popAround.name)
+  console.log(win.name)
+  console.log(checkWin.name)
+  console.log(show.name)
+  console.log(fail.name)
+  console.log(showOpening.name)
+  console.log(doOpen.name)
+  console.log(doChord.name)
 }
