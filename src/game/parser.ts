@@ -90,6 +90,11 @@ let wastedClicks15: number
 
 let wastedFlags: number
 
+let flags: number
+let unFlags: number
+let misFlags: number
+let misUnFlags: number
+
 let solvedBbbv: number
 let closedCells: number
 let sizeOps: number[]
@@ -123,6 +128,11 @@ function init () {
   wastedClicks15 = 0
 
   wastedFlags = 0
+
+  flags = 0
+  unFlags = 0
+  misFlags = 0
+  misUnFlags = 0
 
   solvedBbbv = 0
   closedCells = 0
@@ -721,59 +731,58 @@ function doChord (x: number, y: number, onedotfive: number): void {
   }
 }
 
-// // Flag
-// function do_set_flag(x : number,y : number) : void
-// {
-//   // Note that the wastedFlag value becomes 0 after successful chord() function
-//   board[x*h+y].flagged=board[x*h+y].wastedFlag=1
-//   fprintf('Flag %d %d\n',x+1,y+1)
-//   ++flags;++wastedFlags
-//   // Increase misflag count because cell is not a mine
-//   if(!board[x*h+y].mine) ++misflags
-// }
-//
-// // Questionmark
-// function do_question(x : number,y : number) : void
-// {
-//   board[x*h+y].questioned=1
-//   fprintf('Questionmark %d %d\n',x+1,y+1)
-// }
-//
-// // Remove Flag or Questionmark
-// function do_unset_flag(x : number,y : number) : void
-// {
-//   board[x*h+y].flagged=board[x*h+y].questioned=0
-//   fprintf('Flag removed %d %d\n',x+1,y+1)
-//   // Decrease flag count, increase unflag count
-//   --flags;++unflags
-//   // Increase misunflag count because cell is not a mine
-//   if(!board[x*h+y].mine) ++misunflags
-// }
-//
-//
-// // Part of 'superflag' cheat function (flags neighbouring mines)
-// function do_flag_around(x : number,y : number) : void
-// {
-//   int i,j
-//   // Check neighbourhood
-//   for(i=board[x*h+y].rb;i<=board[x*h+y].re;++i)
-//     for(j=board[x*h+y].cb;j<=board[x*h+y].ce;++j)
-//       if(!board[j*h+i].flagged && !board[j*h+i].opened)
-//         do_set_flag(j,i)
-// }
-//
-// // Part of 'superflag' cheat function (counts unopened neighbours)
-// int closed_sq_around(x : number,y : number)
-// {
-//   int i,j,res=0
-//   // Check neighbourhood
-//   for(i=board[x*h+y].rb;i<=board[x*h+y].re;++i)
-//     for(j=board[x*h+y].cb;j<=board[x*h+y].ce;++j)
-//       if(!board[j*h+i].opened) ++res
-//   return res
-// }
-//
-//
+// Flag
+function doSetFlag (x: number, y: number): void {
+  // Note that the wastedFlag value becomes 0 after successful chord() function
+  board[x * h + y].flagged = board[x * h + y].wastedFlag = 1
+  fprintf('Flag %d %d\n', x + 1, y + 1)
+  ++flags
+  ++wastedFlags
+  // Increase misflag count because cell is not a mine
+  if (!board[x * h + y].mine) ++misFlags
+}
+
+// Questionmark
+function doQuestion (x: number, y: number): void {
+  board[x * h + y].questioned = 1
+  fprintf('Questionmark %d %d\n', x + 1, y + 1)
+}
+
+// Remove Flag or Questionmark
+function doUnsetFlag (x: number, y: number): void {
+  board[x * h + y].flagged = board[x * h + y].questioned = 0
+  fprintf('Flag removed %d %d\n', x + 1, y + 1)
+  // Decrease flag count, increase unflag count
+  --flags
+  ++unFlags
+  // Increase misunflag count because cell is not a mine
+  if (!board[x * h + y].mine) ++misUnFlags
+}
+
+// Part of 'superflag' cheat function (flags neighbouring mines)
+function doFlagAround (x: number, y: number): void {
+  // Check neighbourhood
+  for (let i = board[x * h + y].rb; i <= board[x * h + y].re; ++i) {
+    for (let j = board[x * h + y].cb; j <= board[x * h + y].ce; ++j) {
+      if (!board[j * h + i].flagged && !board[j * h + i].opened) {
+        doSetFlag(j, i)
+      }
+    }
+  }
+}
+
+// Part of 'superflag' cheat function (counts unopened neighbours)
+function closedSqAround (x: number, y: number) {
+  let res = 0
+  // Check neighbourhood
+  for (let i = board[x * h + y].rb; i <= board[x * h + y].re; ++i) {
+    for (let j = board[x * h + y].cb; j <= board[x * h + y].ce; ++j) {
+      if (!board[j * h + i].opened) ++res
+    }
+  }
+  return res
+}
+
 // // ==============================================================================================
 // // Functions for clicking and moving the mouse
 // // ==============================================================================================
@@ -920,13 +929,13 @@ function doChord (x: number, y: number, onedotfive: number): void {
 //       onedotfive=1;chorded=0
 //       if(board[x*h+y].flagged)
 //       {
-//         do_unset_flag(x,y)
-//         if(!qm) do_question(x,y)
+//         doUnsetFlag(x,y)
+//         if(!qm) doQuestion(x,y)
 //       }
 //       else
 //       {
 //         if(!qm || !board[x*h+y].questioned)
-//           do_set_flag(x,y)
+//           doSetFlag(x,y)
 //         else
 //         {
 //           board[x*h+y].flagged=board[x*h+y].questioned=0
@@ -937,8 +946,8 @@ function doChord (x: number, y: number, onedotfive: number): void {
 //     }
 //     else if(superflag && board[x*h+y].opened)
 //     {
-//       if(board[x*h+y].number && board[x*h+y].number>=closed_sq_around(x,y))
-//         do_flag_around(x,y)
+//       if(board[x*h+y].number && board[x*h+y].number>=closedSqAround(x,y))
+//         doFlagAround(x,y)
 //     }
 //   }
 //   cur_x=x;cur_y=y
@@ -1043,6 +1052,10 @@ export function parse (state: State, data: string): void {
   console.log(wastedFlags)
   console.log(wastedDoubleClicks)
   console.log(wastedClicks15)
+  console.log(flags)
+  console.log(unFlags)
+  console.log(misFlags)
+  console.log(misUnFlags)
   console.log(init.name)
   console.log(error.name)
   console.log(opteq('Width: 8\n', 'width'))
@@ -1073,4 +1086,9 @@ export function parse (state: State, data: string): void {
   console.log(showOpening.name)
   console.log(doOpen.name)
   console.log(doChord.name)
+  console.log(doSetFlag.name)
+  console.log(doQuestion.name)
+  console.log(doUnsetFlag.name)
+  console.log(doFlagAround.name)
+  console.log(closedSqAround.name)
 }
