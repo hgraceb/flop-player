@@ -71,12 +71,17 @@ let board: Cell[]
 
 let w: number
 let h: number
+let m: number
 let size: number
+
+let noBoardEvents: number
 
 let bbbv: number
 let openings: number
 let islands: number
 let zini: number
+let gzini: number
+let hzini: number
 
 let closedCells: number
 let sizeOps: number[]
@@ -87,16 +92,27 @@ function init () {
 
   w = 0
   h = 0
+  m = 0
   size = 0
+
+  noBoardEvents = 0
 
   bbbv = 0
   openings = 0
   islands = 0
   zini = 0
+  gzini = 0
+  hzini = 0
 
   closedCells = 0
   sizeOps = new Array(MAXOPS)
   sizeIsls = new Array(MAXISLS)
+}
+
+// TODO 将输出转换为具体的事件
+// eslint-disable-next-line
+function fprintf (...data: any[]): void {
+  console.log(...data)
 }
 
 // ==============================================================================================
@@ -394,12 +410,127 @@ function flagAround (index: number): void {
   }
 }
 
+// ==============================================================================================
+// Function to calculate ZiNi and HZiNi
+// ==============================================================================================
+function calcZini (): void {
+  let i
+  zini = 0
+  restartBoard()
+
+  // While non-mine cells remain unopened
+  // TODO 优化循环语句，处理 ESLint 报错
+  // eslint-disable-next-line no-unmodified-loop-condition
+  while (closedCells > m) {
+    let maxp = -1
+    let curi = -1
+    for (i = 0; i < size; ++i) {
+      if (board[i].premium > maxp && !board[i].mine) {
+        maxp = board[i].premium
+        curi = i
+      }
+    }
+
+    // Premium has climbed into positive territory
+    if (curi !== -1) {
+      if (!board[curi].opened) click(curi)
+      flagAround(curi)
+      chord(curi)
+    } else {
+      for (i = 0; i < size; ++i) {
+        if (!board[i].opened && !board[i].mine &&
+          (!board[i].number || !board[i].opening)) {
+          curi = i
+          break
+        }
+      }
+      click(curi)
+    }
+  }
+
+  gzini = zini
+
+  // Start calculating HZiNi
+  for (i = 0; i < size; ++i) {
+    board[i].premium = -(board[i].number) - 2 + getAdj3bv(i)
+  }
+  zini = 0
+  restartBoard()
+  hitOpenings()
+
+  // While non-mine cells remain unopened
+  // TODO 优化循环语句，处理 ESLint 报错
+  // eslint-disable-next-line no-unmodified-loop-condition
+  while (closedCells > m) {
+    let maxp = -1
+    let curi = -1
+    for (i = 0; i < size; ++i) {
+      if (board[i].premium > maxp && !board[i].mine && board[i].opened) {
+        maxp = board[i].premium
+        curi = i
+      }
+    }
+
+    // Premium has climbed into positive territory
+    if (curi !== -1) {
+      if (!board[curi].opened) click(curi)
+      flagAround(curi)
+      chord(curi)
+    } else {
+      for (i = 0; i < size; ++i) {
+        if (!board[i].opened && !board[i].mine &&
+          (!board[i].number || !board[i].opening)) {
+          curi = i
+          break
+        }
+      }
+      click(curi)
+    }
+  }
+  hzini = zini
+  restartBoard()
+}
+
+// ==============================================================================================
+// Function to check if mouse location is over the board
+// ==============================================================================================
+function isInsideBoard (x: number, y: number): boolean {
+  return x >= 0 && x < w && y >= 0 && y < h
+}
+
+// ==============================================================================================
+// Functions to press cells
+// ==============================================================================================
+
+// Press cell
+function push (x: number, y: number): void {
+  if (noBoardEvents) return
+  if (!board[x * h + y].opened && !board[x * h + y].flagged) {
+    if (board[x * h + y].questioned) {
+      fprintf('Cell pressed (it is a Questionmark) %d %d\n', x + 1, y + 1)
+    } else {
+      fprintf('Cell pressed %d %d\n', x + 1, y + 1)
+    }
+  }
+}
+
+// Check which cells to press
+function pushAround (x: number, y: number) {
+  for (let i = board[x * h + y].rb; i <= board[x * h + y].re; ++i) {
+    for (let j = board[x * h + y].cb; j <= board[x * h + y].ce; ++j) {
+      push(j, i);
+    }
+  }
+}
+
 export function parse (state: State, data: string): void {
   console.log(state)
   console.log(data)
   console.log(closedCells)
   console.log(bbbv)
   console.log(zini)
+  console.log(gzini)
+  console.log(hzini)
   console.log(init.name)
   console.log(error.name)
   console.log(opteq('Width: 8\n', 'width'))
@@ -417,4 +548,8 @@ export function parse (state: State, data: string): void {
   console.log(chord.name)
   console.log(hitOpenings.name)
   console.log(flagAround.name)
+  console.log(calcZini.name)
+  console.log(isInsideBoard.name)
+  console.log(push.name)
+  console.log(pushAround.name)
 }
