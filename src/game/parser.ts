@@ -207,7 +207,8 @@ function valeq (val: string, str: string): boolean {
 function clearBoard (): void {
   closedCells = size
   for (let i = 0; i < size; ++i) {
-    board[i].mine = board[i].opened = board[i].flagged = board[i].questioned = board[i].wastedFlag =
+    board[i].mine = false
+    board[i].opened = board[i].flagged = board[i].questioned = board[i].wastedFlag =
       board[i].opening = board[i].opening2 = board[i].island = 0
   }
 }
@@ -236,7 +237,7 @@ function getNumber (index: number): number {
 }
 
 // ==============================================================================================
-// Functions used by init_board() to determine size of Openings and Islands
+// Functions used by initBoard() to determine size of Openings and Islands
 // ==============================================================================================
 
 // Determine if cell belongs to 1 or 2 Openings and assign it to an Opening ID
@@ -333,7 +334,7 @@ function initBoard (): void {
 }
 
 // ==============================================================================================
-// Function used by both the calc_bbbv() and calc_zini() functions
+// Function used by both the calcBbbv() and calcZini() functions
 // ==============================================================================================
 function getAdj3bv (index: number): number {
   let res = 0
@@ -367,7 +368,7 @@ function calcBbbv (): void {
 }
 
 // ==============================================================================================
-// Functions used only by the calc_zini() function
+// Functions used only by the calcZini() function
 // ==============================================================================================
 
 // Open cell
@@ -1014,8 +1015,8 @@ export function parse (state: State, data: string): void {
 
   // Initialise local variables
   let i = 0
-  const r = 0
-  const c = 0
+  let r = 0
+  let c = 0
   const opts = 0
   const std = 0
 
@@ -1126,39 +1127,41 @@ export function parse (state: State, data: string): void {
     // Write event to the output file (or screen)
     fputs(event)
   }
-  //
-  // // Get number of cells in the board
-  // board=(cell*)malloc(sizeof(cell)*(size=w*h))
-  //
-  // // Writes stats and if no value prints blank value
-  // for(i=0;i<numInfo;++i)
-  //   if(!hasInfo[i])
-  //   {
-  //     fputs(info[i],output)
-  //     ptrInfo[i]=ftell(output)+2L
-  //     fputs(':           \n',output)
-  //   }
-  //
-  // // Reset any knowledge of cells
-  // clearboard()
-  //
-  // // Check which cells are mines and note them with the '*' symbol
-  // for(r=0;r<h;++r)
-  // {
-  //   fgets()
-  //   for(c=0;c<w;++c) board[c*h+r].mine=event[c]=='*'
-  //   // Write board with mines to the output file (or screen)
-  //   fputs(event,output)
-  // }
-  //
-  // // Call function to get number of Openings and Islands
-  // init_board()
-  //
-  // // Call function to calculate 3bv
-  // calc_bbbv()
-  //
+
+  // Get number of cells in the board
+  board = new Array(w * h)
+
+  // Writes stats and if no value prints blank value
+  for (i = 0; i < numInfo; ++i) {
+    if (!hasInfo[i]) {
+      ptrInfo[i] = ftell() + 2
+      fputs(info[i] + ':           \n')
+    }
+  }
+
+  // Reset any knowledge of cells
+  clearBoard()
+
+  // Check which cells are mines and note them with the '*' symbol
+  for (r = 0; r < h; ++r) {
+    fgets()
+    for (c = 0; c < w; ++c) {
+      // 初始化对象
+      board[c * h + r] = new Cell()
+      board[c * h + r].mine = event[c] === '*'
+    }
+    // Write board with mines to the output file (or screen)
+    fputs(event)
+  }
+
+  // Call function to get number of Openings and Islands
+  initBoard()
+
+  // Call function to calculate 3bv
+  calcBbbv()
+
   // // Call function to calculate ZiNi
-  // if(!noZini) calc_zini()
+  // if(!noZini) calcZini()
   //
   // // Initialise variables with default values
   // solved_bbbv=distance=l_clicks=r_clicks=d_clicks=wasted_l_clicks=wasted_r_clicks=wasted_d_clicks=
