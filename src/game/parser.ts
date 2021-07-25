@@ -1129,7 +1129,7 @@ export function parse (state: State, data: string): void {
   }
 
   // Get number of cells in the board
-  board = new Array(w * h)
+  board = Array.from(Array(size = w * h), () => new Cell())
 
   // Writes stats and if no value prints blank value
   for (i = 0; i < numInfo; ++i) {
@@ -1146,8 +1146,6 @@ export function parse (state: State, data: string): void {
   for (r = 0; r < h; ++r) {
     fgets()
     for (c = 0; c < w; ++c) {
-      // 初始化对象
-      board[c * h + r] = new Cell()
       board[c * h + r].mine = event[c] === '*'
     }
     // Write board with mines to the output file (or screen)
