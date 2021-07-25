@@ -151,9 +151,12 @@ function feof (str: string): boolean {
   return !str || position >= str.length
 }
 
-// This is a custom function to mimic atoi but for decimals
 function atoi (str: string): number {
   return parseInt(str) || 0
+}
+
+function isdigit (c: string): boolean {
+  return c >= '0' && c <= '9'
 }
 
 // TODO 将输出转换为具体的事件
@@ -1065,7 +1068,7 @@ export function parse (state: State, data: string): void {
   let mCl = true
   let noMode = 1
   const squareSize = 16
-  const claimsWin = 0
+  let claimsWin = 0
 
   // Clear some arrays related to info[]
   for (i = 0; i < numInfo; ++i) hasInfo[i] = 0
@@ -1166,140 +1169,162 @@ export function parse (state: State, data: string): void {
     clicks15 = wastedClicks15 = flags = wastedFlags = unFlags = misFlags = misUnFlags = rilianClicks = 0
   left = right = middle = shiftLeft = chorded = oneDotFive = 0
 
-  // // Write the game events
-  // while(1)
-  // {
-  //   int board_event,len
-  //   fgets()
-  //   if(feof(input)) break
-  //
-  //   len=strlen(event)
-  //   // Closed, Flag, Questionmark, Pressed & Pressed Questionmark, Nonstandard
-  //   board_event=len<=2 || event[0]=='c' || event[0]=='f' || event[0]=='q' || event[0]=='p' || event[0]=='n'
-  //   if(!no_board_events && board_event) continue
-  //
-  //   // Write event to output file (or screen)
-  //   fputs(event,output)
-  //
-  //   // Ignore certain board events
-  //   if(board_event)
-  //     continue
-  //   // Start (implemented in Viennasweeper)
-  //   else if(event[0]=='s')
-  //     continue
-  //   // Won (implemented in Viennasweeper)
-  //   else if(event[0]=='w')
-  //     claimsWin=1
-  //   // Blast (implemented in Viennasweeper)
-  //   else if(event[0]=='b' && event[1]=='l')
-  //     continue
-  //   // Boom (implemented in Freesweeper)
-  //   else if(event[0]=='b' && event[1]=='o')
-  //     continue
-  //   // Nonstandard (proposed in RAW standard)
-  //   else if(event[0]=='n' && event[1]=='o')
-  //     continue
-  //
-  //   // Mouse events and the function to call in each case
-  //   else if(isdigit(event[0]) || event[0]=='-')
-  //   {
-  //     int i=(event[0]=='-'?1:0)
-  //     void (*func)(int,int,int,int)=0
-  //     int x,y,neg_x,neg_y
-  //
-  //     // Get the time of the event
-  //     cur_time=0
-  //     while(event[i]!='.' && i<len) cur_time=cur_time*10+event[i++]-'0'
-  //
-  //     // Deal with seconds, tenths and hundredths
-  //     cur_time=cur_time*1000+(event[i+1]-'0')*100+(event[i+2]-'0')*10
-  //     // Include thousandths if available
-  //     if(isdigit(event[i+3])) cur_time+=(event[i+3]-'0')
-  //
-  //     while(event[++i]!=' ' && i<len)
-  //     while(event[++i]==' ' && i<len)
-  //     if(event[0]=='-') cur_time=0
-  //
-  //     // Get the type of event
-  //     if(i+1>=len) continue
-  //
-  //     // Left button
-  //     if(event[i]=='l')
-  //       if(event[i+1]=='r')
-  //         func=left_click
-  //       else if(event[i+1]=='c')
-  //         func=left_press
-  //       else
-  //         error('Unknown event')
-  //
-  //     // Right button
-  //     else if(event[i]=='r')
-  //       if(event[i+1]=='r')
-  //         func=right_click
-  //       else if(event[i+1]=='c')
-  //         func=right_press
-  //       else
-  //         error('Unknown event')
-  //
-  //     // Mouse movement and Middle button
-  //     else if(event[i]=='m')
-  //       if(event[i+1]=='v')
-  //         func=mouse_move
-  //       else if(event[i+1]=='r')
-  //         func=middle_click
-  //       else if(event[i+1]=='c')
-  //         func=middle_press
-  //       // Toggle question mark setting (implemented in MinesweeperX)
-  //       else if(event[i+1]=='t')
-  //         func=toggle_question_mark_setting
-  //       else
-  //         error('Unknown event')
-  //
-  //     // Start (implemented in Viennasweeper)
-  //     else if(event[i]=='s')
-  //       if(event[i+1]=='t')
-  //         continue
-  //       // Scrolling (proposed in RAW standard)
-  //       else if(event[i+1]=='x' || event[i+1]=='y')
-  //         continue
-  //       // Shift chord (implemented in Arbiter & Freesweeper)
-  //       else if(event[i+1]=='c')
-  //         func=left_press_with_shift
-  //       else
-  //         error('Unknown event')
-  //     // Won (implemented in Viennasweeper)
-  //     else if(event[i]=='w')
-  //       claimsWin=1
-  //     // Blast (implemented in Viennasweeper)
-  //     else if(event[i]=='b' && event[i+1]=='l')
-  //       continue
-  //     // Boom (implemented in Freesweeper)
-  //     else if(event[i]=='b' && event[i+1]=='o')
-  //       continue
-  //     // Nonstandard (proposed in RAW standard)
-  //     else if(event[i]=='n' && event[i+1]=='o')
-  //       continue
-  //     else
-  //       error('Unknown event')
-  //
-  //     while(event[++i]!='(' && i<len)
-  //     while(!isdigit(event[++i]) && i<len)
-  //     neg_x=event[i-1]=='-'
-  //     x=0
-  //     while(isdigit(event[i]) && i<len) x=x*10+event[i++]-'0'
-  //     while(!isdigit(event[++i]))
-  //     if(neg_x) x=-x
-  //     neg_y=event[i-1]=='-'
-  //     y=0
-  //     while(isdigit(event[i]) && i<len) y=y*10+event[i++]-'0'
-  //     if(neg_y) y=-y
-  //
-  //     func(x/squareSize,y/squareSize,x,y)
-  //   }
-  // }
-  //
+  // Write the game events
+  while (1) {
+    fgets()
+    if (feof(input)) break
+
+    const len = event.length
+    // Closed, Flag, Questionmark, Pressed & Pressed Questionmark, Nonstandard
+    const boardEvent = len <= 2 || event[0] === 'c' || event[0] === 'f' || event[0] === 'q' || event[0] === 'p' || event[0] === 'n'
+    if (!noBoardEvents && boardEvent) continue
+
+    // Write event to output file (or screen)
+    fputs(event)
+
+    // Ignore certain board events
+    if (boardEvent) {
+      // continue
+
+      // Start (implemented in Viennasweeper)
+    } else if (event[0] === 's') {
+      // continue
+
+      // Won (implemented in Viennasweeper)
+    } else if (event[0] === 'w') {
+      claimsWin = 1
+
+      // Blast (implemented in Viennasweeper)
+    } else if (event[0] === 'b' && event[1] === 'l') {
+      // continue
+
+      // Boom (implemented in Freesweeper)
+    } else if (event[0] === 'b' && event[1] === 'o') {
+      // continue
+
+      // Nonstandard (proposed in RAW standard)
+    } else if (event[0] === 'n' && event[1] === 'o') {
+      // continue
+
+      // Mouse events and the function to call in each case
+    } else if (isdigit(event[0]) || event[0] === '-') {
+      let i = (event[0] === '-' ? 1 : 0)
+      let func = (x: number, y: number, precX: number, precY: number) => {
+        // Variable function
+      }
+      let x, y
+
+      // Get the time of the event
+      curTime = 0
+      while (event[i] !== '.' && i < len) curTime = curTime * 10 + event[i++].charCodeAt(0) - '0'.charCodeAt(0)
+
+      // Deal with seconds, tenths and hundredths
+      curTime = curTime * 1000 + (event[i + 1].charCodeAt(0) - '0'.charCodeAt(0)) * 100 + (event[i + 2].charCodeAt(0) - '0'.charCodeAt(0)) * 10
+      // Include thousandths if available
+      if (isdigit(event[i + 3])) curTime += (event[i + 3].charCodeAt(0) - '0'.charCodeAt(0))
+
+      while (event[++i] !== ' ' && i < len) {
+      }
+      while (event[++i] === ' ' && i < len) {
+      }
+      if (event[0] === '-') curTime = 0
+
+      // Get the type of event
+      if (i + 1 >= len) continue
+
+      // Left button
+      if (event[i] === 'l') {
+        if (event[i + 1] === 'r') {
+          func = leftClick
+        } else if (event[i + 1] === 'c') {
+          func = leftPress
+        } else {
+          error('Unknown event')
+        }
+
+        // Right button
+      } else if (event[i] === 'r') {
+        if (event[i + 1] === 'r') {
+          func = rightClick
+        } else if (event[i + 1] === 'c') {
+          func = rightPress
+        } else {
+          error('Unknown event')
+        }
+
+        // Mouse movement and Middle button
+      } else if (event[i] === 'm') {
+        if (event[i + 1] === 'v') {
+          func = mouseMove
+        } else if (event[i + 1] === 'r') {
+          func = middleClick
+        } else if (event[i + 1] === 'c') {
+          func = middlePress
+
+          // Toggle question mark setting (implemented in MinesweeperX)
+        } else if (event[i + 1] === 't') {
+          func = toggleQuestionMarkSetting
+        } else {
+          error('Unknown event')
+        }
+
+        // Start (implemented in Viennasweeper)
+      } else if (event[i] === 's') {
+        if (event[i + 1] === 't') {
+          continue
+
+          // Scrolling (proposed in RAW standard)
+        } else if (event[i + 1] === 'x' || event[i + 1] === 'y') {
+          continue
+
+          // Shift chord (implemented in Arbiter & Freesweeper)
+        } else if (event[i + 1] === 'c') {
+          func = leftPressWithShift
+        } else {
+          error('Unknown event')
+        }
+
+        // Won (implemented in Viennasweeper)
+      } else if (event[i] === 'w') {
+        claimsWin = 1
+
+        // Blast (implemented in Viennasweeper)
+      } else if (event[i] === 'b' && event[i + 1] === 'l') {
+        continue
+
+        // Boom (implemented in Freesweeper)
+      } else if (event[i] === 'b' && event[i + 1] === 'o') {
+        continue
+
+        // Nonstandard (proposed in RAW standard)
+      } else if (event[i] === 'n' && event[i + 1] === 'o') {
+        continue
+      } else {
+        // console.log('i =  ', i, ', event[i] =  ', event[i])
+        error('Unknown event: ' + event)
+      }
+
+      while (event[++i] !== '(' && i < len) {
+      }
+      while (!isdigit(event[++i]) && i < len) {
+      }
+      const negX = event[i - 1] === '-'
+      x = 0
+      while (isdigit(event[i]) && i < len) x = x * 10 + event[i++].charCodeAt(0) - '0'.charCodeAt(0)
+      while (!isdigit(event[++i])) {
+      }
+      if (negX) x = -x
+      const negY = event[i - 1] === '-'
+      y = 0
+      while (isdigit(event[i]) && i < len) y = y * 10 + event[i++].charCodeAt(0) - '0'.charCodeAt(0)
+      if (negY) y = -y
+
+      func(Math.floor(x / squareSize), Math.floor(y / squareSize), Math.floor(x), Math.floor(y))
+    }
+  }
+
   // // Set some local variables
-  // if(!end_time) end_time=cur_time
+  // if(!end_time) end_time=curTime
   // i=0
   // int clicks=leftClicks+rightClicks+doubleClicks
   // int w_clicks=wastedLeftClicks+wastedRightClicks+wastedDoubleClicks
