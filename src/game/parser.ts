@@ -96,7 +96,7 @@ let qm: boolean
 let elmar: number, nono: number, superClick: number, superFlag: number
 
 // 自定义参数
-let input: string
+let input: string | null
 
 function init (data: string) {
   board = []
@@ -132,6 +132,10 @@ function ftell (): number {
 
 // TODO 测试函数是否可用
 function fgets (): void {
+  if (input === '' || input === null) {
+    input = null
+    return
+  }
   const indexOf = input.indexOf('\n')
   let len
   // 如果没有换行符
@@ -145,8 +149,8 @@ function fgets (): void {
   input = input.substring(len)
 }
 
-function feof (str: string): boolean {
-  return !str
+function feof (): boolean {
+  return input === null
 }
 
 function atoi (str: string): number {
@@ -1084,7 +1088,7 @@ export function parse (state: State, data: string): void {
     // Read a line from input file and store in char event
     fgets()
 
-    if (feof(input)) {
+    if (feof()) {
       error('No board\n')
     }
 
@@ -1170,7 +1174,7 @@ export function parse (state: State, data: string): void {
   // Write the game events
   while (1) {
     fgets()
-    if (feof(input)) break
+    if (feof()) break
 
     const len = event.length
     // Closed, Flag, Questionmark, Pressed & Pressed Questionmark, Nonstandard
