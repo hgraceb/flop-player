@@ -1218,12 +1218,13 @@ export function parse (state: State, data: string): void {
 
       // Get the time of the event
       curTime = 0
-      while (event[i] !== '.' && i < len) curTime = curTime * 10 + event[i++].charCodeAt(0) - '0'.charCodeAt(0)
+      const codeAtZero = '0'.charCodeAt(0)
+      while (event[i] !== '.' && i < len) curTime = curTime * 10 + event.charCodeAt(i++) - codeAtZero
 
       // Deal with seconds, tenths and hundredths
-      curTime = curTime * 1000 + (event[i + 1].charCodeAt(0) - '0'.charCodeAt(0)) * 100 + (event[i + 2].charCodeAt(0) - '0'.charCodeAt(0)) * 10
+      curTime = curTime * 1000 + (event.charCodeAt(i + 1) - codeAtZero) * 100 + (event.charCodeAt(i + 2) - codeAtZero) * 10
       // Include thousandths if available
-      if (isdigit(event[i + 3])) curTime += (event[i + 3].charCodeAt(0) - '0'.charCodeAt(0))
+      if (isdigit(event[i + 3])) curTime += (event.charCodeAt(i + 3) - codeAtZero)
 
       while (event[++i] !== ' ' && i < len) {
       }
@@ -1312,13 +1313,13 @@ export function parse (state: State, data: string): void {
       }
       const negX = event[i - 1] === '-'
       x = 0
-      while (isdigit(event[i]) && i < len) x = x * 10 + event[i++].charCodeAt(0) - '0'.charCodeAt(0)
+      while (isdigit(event[i]) && i < len) x = x * 10 + event.charCodeAt(i++) - codeAtZero
       while (!isdigit(event[++i])) {
       }
       if (negX) x = -x
       const negY = event[i - 1] === '-'
       y = 0
-      while (isdigit(event[i]) && i < len) y = y * 10 + event[i++].charCodeAt(0) - '0'.charCodeAt(0)
+      while (isdigit(event[i]) && i < len) y = y * 10 + event.charCodeAt(i++) - codeAtZero
       if (negY) y = -y
 
       func(Math.floor(x / squareSize), Math.floor(y / squareSize), Math.floor(x), Math.floor(y))
