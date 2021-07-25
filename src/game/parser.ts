@@ -1036,7 +1036,7 @@ export function parse (state: State, data: string): void {
   // // Read the input file header and extract existing stats to output file (or screen)
   // while(1)
   // {
-  //   int info_str=0
+  //   let infoStr = 0
   //   long ptr=ftell(input)
   //
   //   // Read a line from input file and store in char event
@@ -1044,39 +1044,39 @@ export function parse (state: State, data: string): void {
   //
   //   if(feof(input))
   //   {
-  //     error("No board\n")
+  //     error('No board\n')
   //   }
   //
   //   // Stop extracting lines once input file header reaches the board layout
-  //   if(opteq(event,"board")) break
+  //   if(opteq(event,'board')) break
   //   // Otherwise extract the game information
-  //   else if(opteq(event,"width")) w=atoi(event+6)
-  //   else if(opteq(event,"height")) h=atoi(event+7)
-  //   else if(opteq(event,"mines")) m=atoi(event+6)
-  //   else if(opteq(event,"marks")) qm=valeq(event+6,"on\n")
-  //   else if(opteq(event,"level"))
+  //   else if(opteq(event,'width')) w=atoi(event+6)
+  //   else if(opteq(event,'height')) h=atoi(event+7)
+  //   else if(opteq(event,'mines')) m=atoi(event+6)
+  //   else if(opteq(event,'marks')) qm=valeq(event+6,'on\n')
+  //   else if(opteq(event,'level'))
   //   {
   //     const char* e=event+6
   //     // Marathon is a Viennasweeper mode used in some tournaments
-  //     if(valeq(e,"Marathon"))
-  //       error("This program doesn't support marathon RawVF")
-  //     else if(valeq(e,"Beginner"))
+  //     if(valeq(e,'Marathon'))
+  //       error('This program doesn't support marathon RawVF')
+  //     else if(valeq(e,'Beginner'))
   //     {
   //       ww=hh=8;mm=10
   //     }
-  //     else if(valeq(e,"Intermediate"))
+  //     else if(valeq(e,'Intermediate'))
   //     {
   //       ww=hh=16;mm=40
   //     }
-  //     else if(valeq(e,"Expert"))
+  //     else if(valeq(e,'Expert'))
   //     {
   //       ww=30;hh=16;mm=99
   //     }
   //   }
-  //   else if(opteq(event,"Mode"))
+  //   else if(opteq(event,'Mode'))
   //   {
   //     noMode=0
-  //     mCl=valeq(event+5,"Classic")
+  //     mCl=valeq(event+5,'Classic')
   //   }
   //   else
   //     // Print any other lines in the input file header
@@ -1086,7 +1086,7 @@ export function parse (state: State, data: string): void {
   //       {
   //         hasInfo[i]=1
   //         ptrInfo[i]=ptr+strlen(info[i])+1L
-  //         info_str=1
+  //         infoStr=1
   //         break
   //       }
   //     }
@@ -1103,7 +1103,7 @@ export function parse (state: State, data: string): void {
   //   {
   //     fputs(info[i],output)
   //     ptrInfo[i]=ftell(output)+2L
-  //     fputs(":           \n",output)
+  //     fputs(':           \n',output)
   //   }
   //
   // // Reset any knowledge of cells
@@ -1196,7 +1196,7 @@ export function parse (state: State, data: string): void {
   //       else if(event[i+1]=='c')
   //         func=left_press
   //       else
-  //         error("Unknown event")
+  //         error('Unknown event')
   //
   //     // Right button
   //     else if(event[i]=='r')
@@ -1205,7 +1205,7 @@ export function parse (state: State, data: string): void {
   //       else if(event[i+1]=='c')
   //         func=right_press
   //       else
-  //         error("Unknown event")
+  //         error('Unknown event')
   //
   //     // Mouse movement and Middle button
   //     else if(event[i]=='m')
@@ -1219,7 +1219,7 @@ export function parse (state: State, data: string): void {
   //       else if(event[i+1]=='t')
   //         func=toggle_question_mark_setting
   //       else
-  //         error("Unknown event")
+  //         error('Unknown event')
   //
   //     // Start (implemented in Viennasweeper)
   //     else if(event[i]=='s')
@@ -1232,7 +1232,7 @@ export function parse (state: State, data: string): void {
   //       else if(event[i+1]=='c')
   //         func=left_press_with_shift
   //       else
-  //         error("Unknown event")
+  //         error('Unknown event')
   //     // Won (implemented in Viennasweeper)
   //     else if(event[i]=='w')
   //       claimsWin=1
@@ -1246,7 +1246,7 @@ export function parse (state: State, data: string): void {
   //     else if(event[i]=='n' && event[i+1]=='o')
   //       continue
   //     else
-  //       error("Unknown event")
+  //       error('Unknown event')
   //
   //     while(event[++i]!='(' && i<len)
   //     while(!isdigit(event[++i]) && i<len)
@@ -1318,7 +1318,7 @@ export function parse (state: State, data: string): void {
   //
   // // If input file header is read and contains game Status perform the following check
   // if(!no_checkInfo && claimsWin && !won)
-  //   fprintf(stderr,"File contains wrong info: it says the game was won while it was not\n")
+  //   fprintf(stderr,'File contains wrong info: it says the game was won while it was not\n')
   //
   // // Write generated stats
   // for(i=0;i<numInfo;++i)
@@ -1333,7 +1333,7 @@ export function parse (state: State, data: string): void {
   //     // Print key and value pair if integer
   //     if(intInfo[i])
   //     {
-  //       fprintf(output,"%d",infoI[i])
+  //       fprintf(output,'%d',infoI[i])
   //     }
   //     // Print key and value pair if decimal
   //     else
@@ -1345,7 +1345,7 @@ export function parse (state: State, data: string): void {
   //       float fixfloated
   //       fix=(int)(infoD[i]*10000)
   //       fixfloated=(float)fix/10000
-  //       fprintf(output,"%.3f",fixfloated)
+  //       fprintf(output,'%.3f',fixfloated)
   //     }
   //   }
   //   // If input file header did not exist or was intentionally not read perform error checks
@@ -1355,10 +1355,10 @@ export function parse (state: State, data: string): void {
   //     fseek(input,ptrInfo[i],SEEK_SET)
   //     fgets(event,MAXLEN,input)
   //     if(intInfo[i] && (j=atoi(event))!=infoI[i])
-  //       fprintf(stderr,"File contains wrong info:\n %s = %d while the file claims it's %d\n",
+  //       fprintf(stderr,'File contains wrong info:\n %s = %d while the file claims it's %d\n',
   //         info[i],infoI[i],j)
   //     else if(!intInfo[i] && (((dd=(d=strtodouble(event))-infoD[i]))>=0.001 || dd<=-0.001))
-  //       fprintf(stderr,"File contains wrong info:\n %s = %.3f while the file claims it's %.3f\n",
+  //       fprintf(stderr,'File contains wrong info:\n %s = %.3f while the file claims it's %.3f\n',
   //         info[i],infoD[i],d)
   //   }
 }
