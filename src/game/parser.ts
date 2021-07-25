@@ -970,4 +970,395 @@ function strToDouble (str: string): number {
 export function parse (state: State, data: string): void {
   console.log(state)
   console.log(data)
+
+  // Initialise local variables
+  let i = 0
+  const r = 0
+  const c = 0
+  const opts = 0
+  const std = 0
+
+  // TODO 处理不同的选项和开关
+
+  // Create an array containing stats we wish to calculate
+  const info = ['RAW_Time', 'RAW_3BV', 'RAW_Solved3BV', 'RAW_3BV/s', 'RAW_ZiNi', 'RAW_ZiNi/s', 'RAW_HZiNi', 'RAW_HZiNi/s',
+    'RAW_Clicks', 'RAW_Clicks/s',
+    'RAW_LeftClicks', 'RAW_LeftClicks/s', 'RAW_RightClicks', 'RAW_RightClicks/s',
+    'RAW_DoubleClicks', 'RAW_DoubleClicks/s', 'RAW_WastedClicks', 'RAW_WastedClicks/s',
+    'RAW_WastedLeftClicks', 'RAW_WastedLeftClicks/s',
+    'RAW_WastedRightClicks', 'RAW_WastedRightClicks/s', 'RAW_WastedDoubleClicks',
+    'RAW_WastedDoubleClicks/s', 'RAW_1.5Clicks', 'RAW_1.5Clicks/s',
+    'RAW_IOE', 'RAW_Correctness', 'RAW_Throughput', 'RAW_ZNE', 'RAW_ZNT', 'RAW_HZNE', 'RAW_HZNT',
+    'RAW_Openings', 'RAW_Islands',
+    'RAW_Flags', 'RAW_WastedFlags', 'RAW_Unflags', 'RAW_Misflags', 'RAW_Misunflags',
+    'RAW_RilianClicks', 'RAW_RilianClicks/s']
+
+  // Initialise local variables
+  // The size of char is 4 (32 bit) or 8 (64 bit) on Linux but is 4 in both cases for Windows
+  // Either way this should return the count of items in the info[] array
+  const numInfo = info.length
+  const hasInfo: number[] = new Array(numInfo)
+  const ptrInfo: number[] = new Array(numInfo)
+  const infoI: number[] = new Array(numInfo)
+  const infoD: number[] = new Array(numInfo)
+
+  // Create array with default values for each stat in the info[] array
+  const intInfo = [0, 1, 1, 0, 1, 0, 1, 0,
+    1, 0,
+    1, 0, 1, 0,
+    1, 0, 1, 0,
+    1, 0,
+    1, 0, 1,
+    0, 1, 0,
+    0, 0, 0, 0, 0, 0, 0,
+    1, 1,
+    1, 1, 1, 1, 1,
+    1, 0]
+
+  // Set some local variables to default values
+  const checkInfo: boolean[] = new Array(numInfo)
+  const ww = 8
+  const hh = 8
+  const mm = 10
+  const mCl = 1
+  const noMode = 1
+  const squareSize = 16
+  const claimsWin = 0
+
+  // Clear some arrays related to info[]
+  for (i = 0; i < numInfo; ++i) hasInfo[i] = 0
+  for (i = 0; i < numInfo; ++i) checkInfo[i] = 1 && !noZini
+
+  // Clear some arrays related to board[]
+  for (i = 0; i < MAXOPS; ++i) sizeOps[i] = 0
+  for (i = 0; i < MAXISLS; ++i) sizeIsls[i] = 0
+
+  // // Read the input file header and extract existing stats to output file (or screen)
+  // while(1)
+  // {
+  //   int info_str=0
+  //   long ptr=ftell(input)
+  //
+  //   // Read a line from input file and store in char event
+  //   fgets(event,MAXLEN,input)
+  //
+  //   if(feof(input))
+  //   {
+  //     error("No board\n")
+  //   }
+  //
+  //   // Stop extracting lines once input file header reaches the board layout
+  //   if(opteq(event,"board")) break
+  //   // Otherwise extract the game information
+  //   else if(opteq(event,"width")) w=atoi(event+6)
+  //   else if(opteq(event,"height")) h=atoi(event+7)
+  //   else if(opteq(event,"mines")) m=atoi(event+6)
+  //   else if(opteq(event,"marks")) qm=valeq(event+6,"on\n")
+  //   else if(opteq(event,"level"))
+  //   {
+  //     const char* e=event+6
+  //     // Marathon is a Viennasweeper mode used in some tournaments
+  //     if(valeq(e,"Marathon"))
+  //       error("This program doesn't support marathon RawVF")
+  //     else if(valeq(e,"Beginner"))
+  //     {
+  //       ww=hh=8;mm=10
+  //     }
+  //     else if(valeq(e,"Intermediate"))
+  //     {
+  //       ww=hh=16;mm=40
+  //     }
+  //     else if(valeq(e,"Expert"))
+  //     {
+  //       ww=30;hh=16;mm=99
+  //     }
+  //   }
+  //   else if(opteq(event,"Mode"))
+  //   {
+  //     noMode=0
+  //     mCl=valeq(event+5,"Classic")
+  //   }
+  //   else
+  //     // Print any other lines in the input file header
+  //     for(i=0;i<numInfo;++i)
+  //     {
+  //       if(opteq(event,info[i]))
+  //       {
+  //         hasInfo[i]=1
+  //         ptrInfo[i]=ptr+strlen(info[i])+1L
+  //         info_str=1
+  //         break
+  //       }
+  //     }
+  //   // Write event to the output file (or screen)
+  //   fputs(event,output)
+  // }
+  //
+  // // Get number of cells in the board
+  // board=(cell*)malloc(sizeof(cell)*(size=w*h))
+  //
+  // // Writes stats and if no value prints blank value
+  // for(i=0;i<numInfo;++i)
+  //   if(!hasInfo[i])
+  //   {
+  //     fputs(info[i],output)
+  //     ptrInfo[i]=ftell(output)+2L
+  //     fputs(":           \n",output)
+  //   }
+  //
+  // // Reset any knowledge of cells
+  // clearboard()
+  //
+  // // Check which cells are mines and note them with the '*' symbol
+  // for(r=0;r<h;++r)
+  // {
+  //   fgets(event,MAXLEN,input)
+  //   for(c=0;c<w;++c) board[c*h+r].mine=event[c]=='*'
+  //   // Write board with mines to the output file (or screen)
+  //   fputs(event,output)
+  // }
+  //
+  // // Call function to get number of Openings and Islands
+  // init_board()
+  //
+  // // Call function to calculate 3bv
+  // calc_bbbv()
+  //
+  // // Call function to calculate ZiNi
+  // if(!noZini) calc_zini()
+  //
+  // // Initialise variables with default values
+  // solved_bbbv=distance=l_clicks=r_clicks=d_clicks=wasted_l_clicks=wasted_r_clicks=wasted_d_clicks=
+  //   clicks_15=wasted_clicks_15=flags=wasted_flags=unflags=misflags=misunflags=rilian_clicks=0
+  // left=right=middle=shift_left=chorded=onedotfive=0
+  //
+  // // Write the game events
+  // while(1)
+  // {
+  //   int board_event,len
+  //   fgets(event,MAXLEN,input)
+  //   if(feof(input)) break
+  //
+  //   len=strlen(event)
+  //   // Closed, Flag, Questionmark, Pressed & Pressed Questionmark, Nonstandard
+  //   board_event=len<=2 || event[0]=='c' || event[0]=='f' || event[0]=='q' || event[0]=='p' || event[0]=='n'
+  //   if(!no_board_events && board_event) continue
+  //
+  //   // Write event to output file (or screen)
+  //   fputs(event,output)
+  //
+  //   // Ignore certain board events
+  //   if(board_event)
+  //     continue
+  //   // Start (implemented in Viennasweeper)
+  //   else if(event[0]=='s')
+  //     continue
+  //   // Won (implemented in Viennasweeper)
+  //   else if(event[0]=='w')
+  //     claimsWin=1
+  //   // Blast (implemented in Viennasweeper)
+  //   else if(event[0]=='b' && event[1]=='l')
+  //     continue
+  //   // Boom (implemented in Freesweeper)
+  //   else if(event[0]=='b' && event[1]=='o')
+  //     continue
+  //   // Nonstandard (proposed in RAW standard)
+  //   else if(event[0]=='n' && event[1]=='o')
+  //     continue
+  //
+  //   // Mouse events and the function to call in each case
+  //   else if(isdigit(event[0]) || event[0]=='-')
+  //   {
+  //     int i=(event[0]=='-'?1:0)
+  //     void (*func)(int,int,int,int)=0
+  //     int x,y,neg_x,neg_y
+  //
+  //     // Get the time of the event
+  //     cur_time=0
+  //     while(event[i]!='.' && i<len) cur_time=cur_time*10+event[i++]-'0'
+  //
+  //     // Deal with seconds, tenths and hundredths
+  //     cur_time=cur_time*1000+(event[i+1]-'0')*100+(event[i+2]-'0')*10
+  //     // Include thousandths if available
+  //     if(isdigit(event[i+3])) cur_time+=(event[i+3]-'0')
+  //
+  //     while(event[++i]!=' ' && i<len)
+  //     while(event[++i]==' ' && i<len)
+  //     if(event[0]=='-') cur_time=0
+  //
+  //     // Get the type of event
+  //     if(i+1>=len) continue
+  //
+  //     // Left button
+  //     if(event[i]=='l')
+  //       if(event[i+1]=='r')
+  //         func=left_click
+  //       else if(event[i+1]=='c')
+  //         func=left_press
+  //       else
+  //         error("Unknown event")
+  //
+  //     // Right button
+  //     else if(event[i]=='r')
+  //       if(event[i+1]=='r')
+  //         func=right_click
+  //       else if(event[i+1]=='c')
+  //         func=right_press
+  //       else
+  //         error("Unknown event")
+  //
+  //     // Mouse movement and Middle button
+  //     else if(event[i]=='m')
+  //       if(event[i+1]=='v')
+  //         func=mouse_move
+  //       else if(event[i+1]=='r')
+  //         func=middle_click
+  //       else if(event[i+1]=='c')
+  //         func=middle_press
+  //       // Toggle question mark setting (implemented in MinesweeperX)
+  //       else if(event[i+1]=='t')
+  //         func=toggle_question_mark_setting
+  //       else
+  //         error("Unknown event")
+  //
+  //     // Start (implemented in Viennasweeper)
+  //     else if(event[i]=='s')
+  //       if(event[i+1]=='t')
+  //         continue
+  //       // Scrolling (proposed in RAW standard)
+  //       else if(event[i+1]=='x' || event[i+1]=='y')
+  //         continue
+  //       // Shift chord (implemented in Arbiter & Freesweeper)
+  //       else if(event[i+1]=='c')
+  //         func=left_press_with_shift
+  //       else
+  //         error("Unknown event")
+  //     // Won (implemented in Viennasweeper)
+  //     else if(event[i]=='w')
+  //       claimsWin=1
+  //     // Blast (implemented in Viennasweeper)
+  //     else if(event[i]=='b' && event[i+1]=='l')
+  //       continue
+  //     // Boom (implemented in Freesweeper)
+  //     else if(event[i]=='b' && event[i+1]=='o')
+  //       continue
+  //     // Nonstandard (proposed in RAW standard)
+  //     else if(event[i]=='n' && event[i+1]=='o')
+  //       continue
+  //     else
+  //       error("Unknown event")
+  //
+  //     while(event[++i]!='(' && i<len)
+  //     while(!isdigit(event[++i]) && i<len)
+  //     neg_x=event[i-1]=='-'
+  //     x=0
+  //     while(isdigit(event[i]) && i<len) x=x*10+event[i++]-'0'
+  //     while(!isdigit(event[++i]))
+  //     if(neg_x) x=-x
+  //     neg_y=event[i-1]=='-'
+  //     y=0
+  //     while(isdigit(event[i]) && i<len) y=y*10+event[i++]-'0'
+  //     if(neg_y) y=-y
+  //
+  //     func(x/squareSize,y/squareSize,x,y)
+  //   }
+  // }
+  //
+  // // Set some local variables
+  // if(!end_time) end_time=cur_time
+  // i=0
+  // int clicks=l_clicks+r_clicks+d_clicks
+  // int w_clicks=wasted_l_clicks+wasted_r_clicks+wasted_d_clicks
+  // int e_clicks=clicks-w_clicks
+  // double coeff=(double)solved_bbbv/bbbv
+  //
+  // // Calculate all remaining stats
+  // infoD[i++]=end_time/1000.0
+  // infoI[i++]=bbbv
+  // infoI[i++]=solved_bbbv
+  // infoD[i++]=solved_bbbv/infoD[0]
+  // infoI[i++]=gzini
+  // infoD[i++]=gzini*solved_bbbv/(bbbv*infoD[0])
+  // infoI[i++]=hzini
+  // infoD[i++]=hzini*solved_bbbv/(bbbv*infoD[0])
+  // infoI[i++]=clicks
+  // infoD[i]=infoI[i-1]/infoD[0];++i
+  // infoI[i++]=l_clicks
+  // infoD[i]=infoI[i-1]/infoD[0];++i
+  // infoI[i++]=r_clicks
+  // infoD[i]=infoI[i-1]/infoD[0];++i
+  // infoI[i++]=d_clicks
+  // infoD[i]=infoI[i-1]/infoD[0];++i
+  // infoI[i++]=w_clicks
+  // infoD[i]=infoI[i-1]/infoD[0];++i
+  // infoI[i++]=wasted_l_clicks
+  // infoD[i]=infoI[i-1]/infoD[0];++i
+  // infoI[i++]=wasted_r_clicks
+  // infoD[i]=infoI[i-1]/infoD[0];++i
+  // infoI[i++]=wasted_d_clicks
+  // infoD[i]=infoI[i-1]/infoD[0];++i
+  // infoI[i++]=clicks_15
+  // infoD[i]=infoI[i-1]/infoD[0];++i
+  // infoD[i++]=(double)solved_bbbv/clicks
+  // infoD[i++]=(e_clicks)/(double)clicks
+  // infoD[i++]=(double)solved_bbbv/e_clicks
+  // infoD[i++]=(double)gzini*coeff/clicks
+  // infoD[i++]=(double)gzini*coeff/e_clicks
+  // infoD[i++]=(double)hzini*coeff/clicks
+  // infoD[i++]=(double)hzini*coeff/e_clicks
+  // infoI[i++]=openings
+  // infoI[i++]=islands
+  // infoI[i++]=flags
+  // infoI[i++]=wasted_flags
+  // infoI[i++]=unflags
+  // infoI[i++]=misflags
+  // infoI[i++]=misunflags
+  // infoI[i++]=rilian_clicks
+  // infoD[i]=infoI[i-1]/infoD[0];++i
+  //
+  // // If input file header is read and contains game Status perform the following check
+  // if(!no_checkInfo && claimsWin && !won)
+  //   fprintf(stderr,"File contains wrong info: it says the game was won while it was not\n")
+  //
+  // // Write generated stats
+  // for(i=0;i<numInfo;++i)
+  //   // Continue until an empty info[i] value is reached
+  //   if(!checkInfo[i]) continue
+  //   // If there is no input file header information
+  //   else if(!hasInfo[i])
+  //   {
+  //     // This reads the output file starting from the first row of generated stats
+  //     fseek(output,ptrInfo[i],SEEK_SET)
+  //
+  //     // Print key and value pair if integer
+  //     if(intInfo[i])
+  //     {
+  //       fprintf(output,"%d",infoI[i])
+  //     }
+  //     // Print key and value pair if decimal
+  //     else
+  //     {
+  //       // This fixes a rounding error. The 3f rounds to 3 decimal places.
+  //       // Using 10,000 rounds the 4th decimal place first before 3f is calculated.
+  //       // This has the desired effect of truncating to 3 decimals instead of rounding.
+  //       int fix
+  //       float fixfloated
+  //       fix=(int)(infoD[i]*10000)
+  //       fixfloated=(float)fix/10000
+  //       fprintf(output,"%.3f",fixfloated)
+  //     }
+  //   }
+  //   // If input file header did not exist or was intentionally not read perform error checks
+  //   else if(!no_checkInfo)
+  //   {
+  //     int j;double d,dd
+  //     fseek(input,ptrInfo[i],SEEK_SET)
+  //     fgets(event,MAXLEN,input)
+  //     if(intInfo[i] && (j=atoi(event))!=infoI[i])
+  //       fprintf(stderr,"File contains wrong info:\n %s = %d while the file claims it's %d\n",
+  //         info[i],infoI[i],j)
+  //     else if(!intInfo[i] && (((dd=(d=strtodouble(event))-infoD[i]))>=0.001 || dd<=-0.001))
+  //       fprintf(stderr,"File contains wrong info:\n %s = %.3f while the file claims it's %.3f\n",
+  //         info[i],infoD[i],d)
+  //   }
 }
