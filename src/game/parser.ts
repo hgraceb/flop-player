@@ -78,7 +78,7 @@ let won: number
 let noBoardEvents: number, noZini: number, noRilianClicks: number, noCheckInfo: number
 let bbbv: number, openings: number, islands: number, zini: number, gzini: number, hzini: number
 let leftClicks: number, rightClicks: number, doubleClicks: number, clicks15: number
-let wastedLeftClicks: number, wastedRightClicks: number, wastedDoubleClicks: number, wastedoubleClicks15: number
+let wastedLeftClicks: number, wastedRightClicks: number, wastedDoubleClicks: number, wastedClicks15: number
 let rilianClicks: number
 let flags: number, wastedFlags: number, unFlags: number, misFlags: number, misUnFlags: number
 let distance: number
@@ -107,7 +107,7 @@ function init (data: string) {
   noBoardEvents = noZini = noRilianClicks = noCheckInfo = 0
   bbbv = openings = islands = zini = gzini = hzini = 0
   leftClicks = rightClicks = doubleClicks = clicks15 = 0
-  wastedLeftClicks = wastedRightClicks = wastedDoubleClicks = wastedoubleClicks15 = 0
+  wastedLeftClicks = wastedRightClicks = wastedDoubleClicks = wastedClicks15 = 0
   rilianClicks = 0
   flags = wastedFlags = unFlags = misFlags = misUnFlags = 0
   distance = 0
@@ -740,13 +740,13 @@ function doChord (x: number, y: number, oneDotFive: number): void {
     // Chord has been wasted
     if (wasted) {
       ++wastedDoubleClicks
-      if (oneDotFive) ++wastedoubleClicks15
+      if (oneDotFive) ++wastedClicks15
     }
   } else {
     // Unpress chorded cells without opening them
     popAround(x, y)
     ++wastedDoubleClicks
-    if (oneDotFive) ++wastedoubleClicks15
+    if (oneDotFive) ++wastedClicks15
   }
 }
 
@@ -1158,14 +1158,14 @@ export function parse (state: State, data: string): void {
   // Call function to calculate 3bv
   calcBbbv()
 
-  // // Call function to calculate ZiNi
-  // if(!noZini) calcZini()
-  //
-  // // Initialise variables with default values
-  // solved_bbbv=distance=l_clicks=r_clicks=d_clicks=wasted_l_clicks=wasted_r_clicks=wasted_d_clicks=
-  //   clicks_15=wasted_clicks_15=flags=wasted_flags=unflags=misflags=misunflags=rilian_clicks=0
-  // left=right=middle=shift_left=chorded=onedotfive=0
-  //
+  // Call function to calculate ZiNi
+  if (!noZini) calcZini()
+
+  // Initialise variables with default values
+  solvedBbbv = distance = leftClicks = rightClicks = doubleClicks = wastedLeftClicks = wastedRightClicks = wastedDoubleClicks =
+    clicks15 = wastedClicks15 = flags = wastedFlags = unFlags = misFlags = misUnFlags = rilianClicks = 0
+  left = right = middle = shiftLeft = chorded = oneDotFive = 0
+
   // // Write the game events
   // while(1)
   // {
@@ -1301,41 +1301,41 @@ export function parse (state: State, data: string): void {
   // // Set some local variables
   // if(!end_time) end_time=cur_time
   // i=0
-  // int clicks=l_clicks+r_clicks+d_clicks
-  // int w_clicks=wasted_l_clicks+wasted_r_clicks+wasted_d_clicks
+  // int clicks=leftClicks+rightClicks+doubleClicks
+  // int w_clicks=wastedLeftClicks+wastedRightClicks+wastedDoubleClicks
   // int e_clicks=clicks-w_clicks
-  // double coeff=(double)solved_bbbv/bbbv
+  // double coeff=(double)solvedBbbv/bbbv
   //
   // // Calculate all remaining stats
   // infoD[i++]=end_time/1000.0
   // infoI[i++]=bbbv
-  // infoI[i++]=solved_bbbv
-  // infoD[i++]=solved_bbbv/infoD[0]
+  // infoI[i++]=solvedBbbv
+  // infoD[i++]=solvedBbbv/infoD[0]
   // infoI[i++]=gzini
-  // infoD[i++]=gzini*solved_bbbv/(bbbv*infoD[0])
+  // infoD[i++]=gzini*solvedBbbv/(bbbv*infoD[0])
   // infoI[i++]=hzini
-  // infoD[i++]=hzini*solved_bbbv/(bbbv*infoD[0])
+  // infoD[i++]=hzini*solvedBbbv/(bbbv*infoD[0])
   // infoI[i++]=clicks
   // infoD[i]=infoI[i-1]/infoD[0];++i
-  // infoI[i++]=l_clicks
+  // infoI[i++]=leftClicks
   // infoD[i]=infoI[i-1]/infoD[0];++i
-  // infoI[i++]=r_clicks
+  // infoI[i++]=rightClicks
   // infoD[i]=infoI[i-1]/infoD[0];++i
-  // infoI[i++]=d_clicks
+  // infoI[i++]=doubleClicks
   // infoD[i]=infoI[i-1]/infoD[0];++i
   // infoI[i++]=w_clicks
   // infoD[i]=infoI[i-1]/infoD[0];++i
-  // infoI[i++]=wasted_l_clicks
+  // infoI[i++]=wastedLeftClicks
   // infoD[i]=infoI[i-1]/infoD[0];++i
-  // infoI[i++]=wasted_r_clicks
+  // infoI[i++]=wastedRightClicks
   // infoD[i]=infoI[i-1]/infoD[0];++i
-  // infoI[i++]=wasted_d_clicks
+  // infoI[i++]=wastedDoubleClicks
   // infoD[i]=infoI[i-1]/infoD[0];++i
-  // infoI[i++]=clicks_15
+  // infoI[i++]=clicks15
   // infoD[i]=infoI[i-1]/infoD[0];++i
-  // infoD[i++]=(double)solved_bbbv/clicks
+  // infoD[i++]=(double)solvedBbbv/clicks
   // infoD[i++]=(e_clicks)/(double)clicks
-  // infoD[i++]=(double)solved_bbbv/e_clicks
+  // infoD[i++]=(double)solvedBbbv/e_clicks
   // infoD[i++]=(double)gzini*coeff/clicks
   // infoD[i++]=(double)gzini*coeff/e_clicks
   // infoD[i++]=(double)hzini*coeff/clicks
@@ -1343,11 +1343,11 @@ export function parse (state: State, data: string): void {
   // infoI[i++]=openings
   // infoI[i++]=islands
   // infoI[i++]=flags
-  // infoI[i++]=wasted_flags
-  // infoI[i++]=unflags
-  // infoI[i++]=misflags
-  // infoI[i++]=misunflags
-  // infoI[i++]=rilian_clicks
+  // infoI[i++]=wastedFlags
+  // infoI[i++]=unFlags
+  // infoI[i++]=misFlags
+  // infoI[i++]=misUnFlags
+  // infoI[i++]=rilianClicks
   // infoD[i]=infoI[i-1]/infoD[0];++i
   //
   // // If input file header is read and contains game Status perform the following check
