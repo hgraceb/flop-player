@@ -91,11 +91,15 @@ let left: number, right: number, middle: number, shiftLeft: number
 let chorded: number, oneDotFive: number
 let curX: number, curY: number, curPrecX: number, curPrecY: number
 let curTime: number, endTime: number
-// char event[MAXLEN]
-let qm: number
+let event: string
+let qm: boolean
 let elmar: number, nono: number, superClick: number, superFlag: number
 
-function init () {
+// 自定义参数
+let position: number
+let input: string
+
+function init (data: string) {
   board = []
 
   w = h = m = size = 0
@@ -116,9 +120,45 @@ function init () {
   chorded = oneDotFive = 0
   curX = curY = curPrecX = curPrecY = 0
   curTime = endTime = 0
-  // char event[MAXLEN]
-  qm = 0
+  event = ''
+  qm = false
   elmar = nono = superClick = superFlag = 0
+
+  position = 0
+  input = data
+}
+
+function ftell (): number {
+  return position
+}
+
+// TODO 测试函数是否可用
+function fgets (): void {
+  const indexOf = input.indexOf('\n')
+  let len
+  // 如果没有换行符
+  if (indexOf === -1) {
+    len = input.length < MAXLEN ? input.length : MAXLEN
+  } else {
+    // indexOf 的返回结果是从 0 开始的
+    len = indexOf < MAXLEN ? indexOf + 1 : MAXLEN
+  }
+  event = input.substring(0, len)
+  input = input.substring(len)
+}
+
+function feof (str: string): boolean {
+  return !str || position >= str.length
+}
+
+// This is a custom function to mimic atoi but for decimals
+function atoi (str: string): number {
+  return parseInt(str) || 0
+}
+
+// TODO 将输出转换为具体的事件
+function fputs (str: string): void {
+  console.log(str)
 }
 
 // TODO 将输出转换为具体的事件
@@ -873,7 +913,7 @@ function leftPressWithShift (x: number, y: number, precX: number, precY: number)
 
 // Toggle question mark setting
 function toggleQuestionMarkSetting (x: number, y: number, precX: number, precY: number): void {
-  qm = qm === 0 ? 1 : 0
+  qm = !qm
 }
 
 // Right button down
@@ -969,7 +1009,8 @@ function strToDouble (str: string): number {
 
 export function parse (state: State, data: string): void {
   console.log(state)
-  console.log(data)
+  init(data)
+  console.log(input)
 
   // Initialise local variables
   let i = 0
@@ -1017,11 +1058,11 @@ export function parse (state: State, data: string): void {
 
   // Set some local variables to default values
   const checkInfo: boolean[] = new Array(numInfo)
-  const ww = 8
-  const hh = 8
-  const mm = 10
-  const mCl = 1
-  const noMode = 1
+  let ww = 8
+  let hh = 8
+  let mm = 10
+  let mCl = true
+  let noMode = 1
   const squareSize = 16
   const claimsWin = 0
 
@@ -1033,66 +1074,58 @@ export function parse (state: State, data: string): void {
   for (i = 0; i < MAXOPS; ++i) sizeOps[i] = 0
   for (i = 0; i < MAXISLS; ++i) sizeIsls[i] = 0
 
-  // // Read the input file header and extract existing stats to output file (or screen)
-  // while(1)
-  // {
-  //   let infoStr = 0
-  //   long ptr=ftell(input)
-  //
-  //   // Read a line from input file and store in char event
-  //   fgets(event,MAXLEN,input)
-  //
-  //   if(feof(input))
-  //   {
-  //     error('No board\n')
-  //   }
-  //
-  //   // Stop extracting lines once input file header reaches the board layout
-  //   if(opteq(event,'board')) break
-  //   // Otherwise extract the game information
-  //   else if(opteq(event,'width')) w=atoi(event+6)
-  //   else if(opteq(event,'height')) h=atoi(event+7)
-  //   else if(opteq(event,'mines')) m=atoi(event+6)
-  //   else if(opteq(event,'marks')) qm=valeq(event+6,'on\n')
-  //   else if(opteq(event,'level'))
-  //   {
-  //     const char* e=event+6
-  //     // Marathon is a Viennasweeper mode used in some tournaments
-  //     if(valeq(e,'Marathon'))
-  //       error('This program doesn't support marathon RawVF')
-  //     else if(valeq(e,'Beginner'))
-  //     {
-  //       ww=hh=8;mm=10
-  //     }
-  //     else if(valeq(e,'Intermediate'))
-  //     {
-  //       ww=hh=16;mm=40
-  //     }
-  //     else if(valeq(e,'Expert'))
-  //     {
-  //       ww=30;hh=16;mm=99
-  //     }
-  //   }
-  //   else if(opteq(event,'Mode'))
-  //   {
-  //     noMode=0
-  //     mCl=valeq(event+5,'Classic')
-  //   }
-  //   else
-  //     // Print any other lines in the input file header
-  //     for(i=0;i<numInfo;++i)
-  //     {
-  //       if(opteq(event,info[i]))
-  //       {
-  //         hasInfo[i]=1
-  //         ptrInfo[i]=ptr+strlen(info[i])+1L
-  //         infoStr=1
-  //         break
-  //       }
-  //     }
-  //   // Write event to the output file (or screen)
-  //   fputs(event,output)
-  // }
+  // Read the input file header and extract existing stats to output file (or screen)
+  while (1) {
+    let infoStr = 0
+    const ptr = ftell()
+
+    // Read a line from input file and store in char event
+    fgets()
+
+    if (feof(input)) {
+      error('No board\n')
+    }
+
+    // Stop extracting lines once input file header reaches the board layout
+    if (opteq(event, 'board')) break
+    // Otherwise extract the game information
+    else if (opteq(event, 'width')) w = atoi(event + 6)
+    else if (opteq(event, 'height')) h = atoi(event + 7)
+    else if (opteq(event, 'mines')) m = atoi(event + 6)
+    else if (opteq(event, 'marks')) qm = valeq(event + 6, 'on\n')
+    else if (opteq(event, 'level')) {
+      const e = event.substring(6)
+      // Marathon is a Viennasweeper mode used in some tournaments
+      if (valeq(e, 'Marathon')) {
+        error('This program doesn\'t support marathon RawVF')
+      } else if (valeq(e, 'Beginner')) {
+        ww = hh = 8
+        mm = 10
+      } else if (valeq(e, 'Intermediate')) {
+        ww = hh = 16
+        mm = 40
+      } else if (valeq(e, 'Expert')) {
+        ww = 30
+        hh = 16
+        mm = 99
+      }
+    } else if (opteq(event, 'Mode')) {
+      noMode = 0
+      mCl = valeq(event + 5, 'Classic')
+    } else {
+      // Print any other lines in the input file header
+      for (i = 0; i < numInfo; ++i) {
+        if (opteq(event, info[i])) {
+          hasInfo[i] = 1
+          ptrInfo[i] = ptr + info[i].length
+          infoStr = 1
+          break
+        }
+      }
+    }
+    // Write event to the output file (or screen)
+    fputs(event)
+  }
   //
   // // Get number of cells in the board
   // board=(cell*)malloc(sizeof(cell)*(size=w*h))
@@ -1112,7 +1145,7 @@ export function parse (state: State, data: string): void {
   // // Check which cells are mines and note them with the '*' symbol
   // for(r=0;r<h;++r)
   // {
-  //   fgets(event,MAXLEN,input)
+  //   fgets()
   //   for(c=0;c<w;++c) board[c*h+r].mine=event[c]=='*'
   //   // Write board with mines to the output file (or screen)
   //   fputs(event,output)
@@ -1136,7 +1169,7 @@ export function parse (state: State, data: string): void {
   // while(1)
   // {
   //   int board_event,len
-  //   fgets(event,MAXLEN,input)
+  //   fgets()
   //   if(feof(input)) break
   //
   //   len=strlen(event)
@@ -1353,7 +1386,7 @@ export function parse (state: State, data: string): void {
   //   {
   //     int j;double d,dd
   //     fseek(input,ptrInfo[i],SEEK_SET)
-  //     fgets(event,MAXLEN,input)
+  //     fgets()
   //     if(intInfo[i] && (j=atoi(event))!=infoI[i])
   //       fprintf(stderr,'File contains wrong info:\n %s = %d while the file claims it's %d\n',
   //         info[i],infoI[i],j)
