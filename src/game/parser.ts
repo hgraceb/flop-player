@@ -1089,10 +1089,10 @@ export function parse (state: State, data: string): void {
     // Stop extracting lines once input file header reaches the board layout
     if (opteq(event, 'board')) break
     // Otherwise extract the game information
-    else if (opteq(event, 'width')) w = atoi(event + 6)
-    else if (opteq(event, 'height')) h = atoi(event + 7)
-    else if (opteq(event, 'mines')) m = atoi(event + 6)
-    else if (opteq(event, 'marks')) qm = valeq(event + 6, 'on\n')
+    else if (opteq(event, 'width')) w = atoi(event.substring(6))
+    else if (opteq(event, 'height')) h = atoi(event.substring(7))
+    else if (opteq(event, 'mines')) m = atoi(event.substring(6))
+    else if (opteq(event, 'marks')) qm = valeq(event.substring(6), 'on\n')
     else if (opteq(event, 'level')) {
       const e = event.substring(6)
       // Marathon is a Viennasweeper mode used in some tournaments
@@ -1111,7 +1111,7 @@ export function parse (state: State, data: string): void {
       }
     } else if (opteq(event, 'Mode')) {
       noMode = 0
-      mCl = valeq(event + 5, 'Classic')
+      mCl = valeq(event.substring(5), 'Classic')
     } else {
       // Print any other lines in the input file header
       for (i = 0; i < numInfo; ++i) {
