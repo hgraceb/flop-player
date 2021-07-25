@@ -96,7 +96,6 @@ let qm: boolean
 let elmar: number, nono: number, superClick: number, superFlag: number
 
 // 自定义参数
-let position: number
 let input: string
 
 function init (data: string) {
@@ -124,12 +123,11 @@ function init (data: string) {
   qm = false
   elmar = nono = superClick = superFlag = 0
 
-  position = 0
   input = data
 }
 
 function ftell (): number {
-  return position
+  return 0
 }
 
 // TODO 测试函数是否可用
@@ -148,7 +146,7 @@ function fgets (): void {
 }
 
 function feof (str: string): boolean {
-  return !str || position >= str.length
+  return !str
 }
 
 function atoi (str: string): number {
@@ -1323,101 +1321,65 @@ export function parse (state: State, data: string): void {
     }
   }
 
-  // // Set some local variables
-  // if(!end_time) end_time=curTime
-  // i=0
-  // int clicks=leftClicks+rightClicks+doubleClicks
-  // int w_clicks=wastedLeftClicks+wastedRightClicks+wastedDoubleClicks
-  // int e_clicks=clicks-w_clicks
-  // double coeff=(double)solvedBbbv/bbbv
-  //
-  // // Calculate all remaining stats
-  // infoD[i++]=end_time/1000.0
-  // infoI[i++]=bbbv
-  // infoI[i++]=solvedBbbv
-  // infoD[i++]=solvedBbbv/infoD[0]
-  // infoI[i++]=gzini
-  // infoD[i++]=gzini*solvedBbbv/(bbbv*infoD[0])
-  // infoI[i++]=hzini
-  // infoD[i++]=hzini*solvedBbbv/(bbbv*infoD[0])
-  // infoI[i++]=clicks
-  // infoD[i]=infoI[i-1]/infoD[0];++i
-  // infoI[i++]=leftClicks
-  // infoD[i]=infoI[i-1]/infoD[0];++i
-  // infoI[i++]=rightClicks
-  // infoD[i]=infoI[i-1]/infoD[0];++i
-  // infoI[i++]=doubleClicks
-  // infoD[i]=infoI[i-1]/infoD[0];++i
-  // infoI[i++]=w_clicks
-  // infoD[i]=infoI[i-1]/infoD[0];++i
-  // infoI[i++]=wastedLeftClicks
-  // infoD[i]=infoI[i-1]/infoD[0];++i
-  // infoI[i++]=wastedRightClicks
-  // infoD[i]=infoI[i-1]/infoD[0];++i
-  // infoI[i++]=wastedDoubleClicks
-  // infoD[i]=infoI[i-1]/infoD[0];++i
-  // infoI[i++]=clicks15
-  // infoD[i]=infoI[i-1]/infoD[0];++i
-  // infoD[i++]=(double)solvedBbbv/clicks
-  // infoD[i++]=(e_clicks)/(double)clicks
-  // infoD[i++]=(double)solvedBbbv/e_clicks
-  // infoD[i++]=(double)gzini*coeff/clicks
-  // infoD[i++]=(double)gzini*coeff/e_clicks
-  // infoD[i++]=(double)hzini*coeff/clicks
-  // infoD[i++]=(double)hzini*coeff/e_clicks
-  // infoI[i++]=openings
-  // infoI[i++]=islands
-  // infoI[i++]=flags
-  // infoI[i++]=wastedFlags
-  // infoI[i++]=unFlags
-  // infoI[i++]=misFlags
-  // infoI[i++]=misUnFlags
-  // infoI[i++]=rilianClicks
-  // infoD[i]=infoI[i-1]/infoD[0];++i
-  //
-  // // If input file header is read and contains game Status perform the following check
-  // if(!no_checkInfo && claimsWin && !won)
-  //   fprintf(stderr,'File contains wrong info: it says the game was won while it was not\n')
-  //
-  // // Write generated stats
-  // for(i=0;i<numInfo;++i)
-  //   // Continue until an empty info[i] value is reached
-  //   if(!checkInfo[i]) continue
-  //   // If there is no input file header information
-  //   else if(!hasInfo[i])
-  //   {
-  //     // This reads the output file starting from the first row of generated stats
-  //     fseek(output,ptrInfo[i],SEEK_SET)
-  //
-  //     // Print key and value pair if integer
-  //     if(intInfo[i])
-  //     {
-  //       fprintf(output,'%d',infoI[i])
-  //     }
-  //     // Print key and value pair if decimal
-  //     else
-  //     {
-  //       // This fixes a rounding error. The 3f rounds to 3 decimal places.
-  //       // Using 10,000 rounds the 4th decimal place first before 3f is calculated.
-  //       // This has the desired effect of truncating to 3 decimals instead of rounding.
-  //       int fix
-  //       float fixfloated
-  //       fix=(int)(infoD[i]*10000)
-  //       fixfloated=(float)fix/10000
-  //       fprintf(output,'%.3f',fixfloated)
-  //     }
-  //   }
-  //   // If input file header did not exist or was intentionally not read perform error checks
-  //   else if(!no_checkInfo)
-  //   {
-  //     int j;double d,dd
-  //     fseek(input,ptrInfo[i],SEEK_SET)
-  //     fgets()
-  //     if(intInfo[i] && (j=atoi(event))!=infoI[i])
-  //       fprintf(stderr,'File contains wrong info:\n %s = %d while the file claims it's %d\n',
-  //         info[i],infoI[i],j)
-  //     else if(!intInfo[i] && (((dd=(d=strtodouble(event))-infoD[i]))>=0.001 || dd<=-0.001))
-  //       fprintf(stderr,'File contains wrong info:\n %s = %.3f while the file claims it's %.3f\n',
-  //         info[i],infoD[i],d)
-  //   }
+  // Set some local variables
+  if (!endTime) endTime = curTime
+  i = 0
+  const clicks = leftClicks + rightClicks + doubleClicks
+  const wastedClicks = wastedLeftClicks + wastedRightClicks + wastedDoubleClicks
+  const eClicks = clicks - wastedClicks
+  const coeff = solvedBbbv / bbbv // (double)
+
+  // Calculate all remaining stats
+  infoD[i++] = endTime / 1000.0
+  infoI[i++] = bbbv
+  infoI[i++] = solvedBbbv
+  infoD[i++] = solvedBbbv / infoD[0]
+  infoI[i++] = gzini
+  infoD[i++] = gzini * solvedBbbv / (bbbv * infoD[0])
+  infoI[i++] = hzini
+  infoD[i++] = hzini * solvedBbbv / (bbbv * infoD[0])
+  infoI[i++] = clicks
+  infoD[i] = infoI[i - 1] / infoD[0]
+  ++i
+  infoI[i++] = leftClicks
+  infoD[i] = infoI[i - 1] / infoD[0]
+  ++i
+  infoI[i++] = rightClicks
+  infoD[i] = infoI[i - 1] / infoD[0]
+  ++i
+  infoI[i++] = doubleClicks
+  infoD[i] = infoI[i - 1] / infoD[0]
+  ++i
+  infoI[i++] = wastedClicks
+  infoD[i] = infoI[i - 1] / infoD[0]
+  ++i
+  infoI[i++] = wastedLeftClicks
+  infoD[i] = infoI[i - 1] / infoD[0]
+  ++i
+  infoI[i++] = wastedRightClicks
+  infoD[i] = infoI[i - 1] / infoD[0]
+  ++i
+  infoI[i++] = wastedDoubleClicks
+  infoD[i] = infoI[i - 1] / infoD[0]
+  ++i
+  infoI[i++] = clicks15
+  infoD[i] = infoI[i - 1] / infoD[0]
+  ++i
+  infoD[i++] = solvedBbbv / clicks // (double)
+  infoD[i++] = (eClicks) / clicks // (double)
+  infoD[i++] = solvedBbbv / eClicks // (double)
+  infoD[i++] = gzini * coeff / clicks // (double)
+  infoD[i++] = gzini * coeff / eClicks // (double)
+  infoD[i++] = hzini * coeff / clicks // (double)
+  infoD[i++] = hzini * coeff / eClicks // (double)
+  infoI[i++] = openings
+  infoI[i++] = islands
+  infoI[i++] = flags
+  infoI[i++] = wastedFlags
+  infoI[i++] = unFlags
+  infoI[i++] = misFlags
+  infoI[i++] = misUnFlags
+  infoI[i++] = rilianClicks
+  infoD[i] = infoI[i - 1] / infoD[0]
+  ++i
 }
