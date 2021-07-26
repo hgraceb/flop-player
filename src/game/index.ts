@@ -2,7 +2,7 @@
  * 游戏区域最小单元
  */
 export class Cell {
-  mine = false
+  mine = 0
   opening = 0
   opening2 = 0
   island = 0

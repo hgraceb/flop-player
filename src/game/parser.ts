@@ -209,8 +209,7 @@ function valeq (val: string, str: string): boolean {
 function clearBoard (): void {
   closedCells = size
   for (let i = 0; i < size; ++i) {
-    board[i].mine = false
-    board[i].opened = board[i].flagged = board[i].questioned = board[i].wastedFlag =
+    board[i].mine = board[i].opened = board[i].flagged = board[i].questioned = board[i].wastedFlag =
       board[i].opening = board[i].opening2 = board[i].island = 0
   }
 }
@@ -1076,7 +1075,7 @@ export function parse (state: State, data: string): void {
   for (r = 0; r < h; ++r) {
     fgets()
     for (c = 0; c < w; ++c) {
-      board[c * h + r].mine = event[c] === '*'
+      board[c * h + r].mine = event[c] === '*' ? 1 : 0
     }
     // Write board with mines to the output file (or screen)
     fputs(event)
