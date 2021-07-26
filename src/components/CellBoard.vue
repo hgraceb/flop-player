@@ -1,6 +1,8 @@
 <template>
-  <div class="flex cell-board">
-    <Cell v-for="(item, index) in state.gameBoard.getCells()" :key="index" :img="item.mine ? 'Flag' : 'Normal'"></Cell>
+  <div v-for="item in state.width" :key="item" class="flex cell-board">
+    <div v-for="item in state.height" :key="item" class="flex cell-board">
+      <Cell :img="'Normal'"></Cell>
+    </div>
   </div>
 </template>
 
@@ -12,8 +14,7 @@ import { store } from '@/store'
 export default defineComponent({
   components: { Cell },
   setup () {
-    const state = computed(() => store.state)
-    return { state }
+    return { state: computed(() => store.state) }
   }
 })
 </script>

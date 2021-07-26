@@ -40,14 +40,11 @@
   </div>
   <button type="button" @click="mines = mines < 1111 ? mines + 111 : -999">mines is: {{ mines }}</button>
   <button type="button" @click="time = time < 1111 ? time + 111 : -111">time is: {{ time }}</button>
-  <br>
-  <button type="button" @click="width += 16">width is: {{ width }}</button>
-  <button type="button" @click="height += 16">height is: {{ height }}</button>
 </template>
 
 <script lang="ts">
 import { FaceStatus } from '@/status'
-import { defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import TopCounter from './TopCounter.vue'
 import TopFace from './TopFace.vue'
 import { CellImg } from '@/util/image'
@@ -59,8 +56,8 @@ export default defineComponent({
   setup () {
     const mines = ref(-999)
     const time = ref(-222)
-    const width = ref(128 + 24)
-    const height = ref(128)
+    const width = computed(() => store.state.width * 16 + 24)
+    const height = computed(() => store.state.height * 16)
     const faceStatus = ref(FaceStatus.Normal)
 
     onMounted(() => {
