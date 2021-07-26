@@ -126,10 +126,6 @@ function init (data: string) {
   input = data
 }
 
-function ftell (): number {
-  return 0
-}
-
 // TODO 测试函数是否可用
 function fgets (): void {
   if (input === '' || input === null) {
@@ -918,12 +914,12 @@ function leftPressWithShift (x: number, y: number, precX: number, precY: number)
 }
 
 // Toggle question mark setting
-function toggleQuestionMarkSetting (x: number, y: number, precX: number, precY: number): void {
+function toggleQuestionMarkSetting (_x: number, _y: number, _precX: number, _precY: number): void {
   qm = !qm
 }
 
 // Right button down
-function rightPress (x: number, y: number, precX: number, precY: number): void {
+function rightPress (x: number, y: number, _precX: number, _precY: number): void {
   if (middle) return
   right = 1
   shiftLeft = 0
@@ -957,7 +953,7 @@ function rightPress (x: number, y: number, precX: number, precY: number): void {
 }
 
 // Right button up
-function rightClick (x: number, y: number, precX: number, precY: number): void {
+function rightClick (x: number, y: number, _precX: number, _precY: number): void {
   if (!right) return
   right = shiftLeft = 0
   if (!isInsideBoard(x, y)) {
@@ -987,7 +983,7 @@ function rightClick (x: number, y: number, precX: number, precY: number): void {
 }
 
 // Middle button down
-function middlePress (x: number, y: number, precX: number, precY: number): void {
+function middlePress (x: number, y: number, _precX: number, _precY: number): void {
   // Middle button resets these boolean values
   shiftLeft = left = right = oneDotFive = chorded = 0
   middle = 1
@@ -996,21 +992,12 @@ function middlePress (x: number, y: number, precX: number, precY: number): void 
 }
 
 // Middle button up
-function middleClick (x: number, y: number, precX: number, precY: number): void {
+function middleClick (x: number, y: number, _precX: number, _precY: number): void {
   if (!middle) return
   middle = 0
   if (!isInsideBoard(x, y)) return
   doChord(x, y, 0)
   ++doubleClicks
-}
-
-// ==============================================================================================
-// Function to convert string to double (decimal number with high precision)
-// ==============================================================================================
-
-// This is a custom function to mimic atoi but for decimals
-function strToDouble (str: string): number {
-  return parseFloat(str) || 0
 }
 
 export function parse (state: State, data: string): void {
@@ -1019,51 +1006,13 @@ export function parse (state: State, data: string): void {
   console.log(input)
 
   // Initialise local variables
-  let i = 0
-  let r = 0
+  let i: number
+  let r: number
   let c = 0
-  const opts = 0
-  const std = 0
 
   // TODO 处理不同的选项和开关
 
-  // Create an array containing stats we wish to calculate
-  const info = ['RAW_Time', 'RAW_3BV', 'RAW_Solved3BV', 'RAW_3BV/s', 'RAW_ZiNi', 'RAW_ZiNi/s', 'RAW_HZiNi', 'RAW_HZiNi/s',
-    'RAW_Clicks', 'RAW_Clicks/s',
-    'RAW_LeftClicks', 'RAW_LeftClicks/s', 'RAW_RightClicks', 'RAW_RightClicks/s',
-    'RAW_DoubleClicks', 'RAW_DoubleClicks/s', 'RAW_WastedClicks', 'RAW_WastedClicks/s',
-    'RAW_WastedLeftClicks', 'RAW_WastedLeftClicks/s',
-    'RAW_WastedRightClicks', 'RAW_WastedRightClicks/s', 'RAW_WastedDoubleClicks',
-    'RAW_WastedDoubleClicks/s', 'RAW_1.5Clicks', 'RAW_1.5Clicks/s',
-    'RAW_IOE', 'RAW_Correctness', 'RAW_Throughput', 'RAW_ZNE', 'RAW_ZNT', 'RAW_HZNE', 'RAW_HZNT',
-    'RAW_Openings', 'RAW_Islands',
-    'RAW_Flags', 'RAW_WastedFlags', 'RAW_Unflags', 'RAW_Misflags', 'RAW_Misunflags',
-    'RAW_RilianClicks', 'RAW_RilianClicks/s']
-
-  // Initialise local variables
-  // The size of char is 4 (32 bit) or 8 (64 bit) on Linux but is 4 in both cases for Windows
-  // Either way this should return the count of items in the info[] array
-  const numInfo = info.length
-  const hasInfo: number[] = new Array(numInfo)
-  const ptrInfo: number[] = new Array(numInfo)
-  const infoI: number[] = new Array(numInfo)
-  const infoD: number[] = new Array(numInfo)
-
-  // Create array with default values for each stat in the info[] array
-  const intInfo = [0, 1, 1, 0, 1, 0, 1, 0,
-    1, 0,
-    1, 0, 1, 0,
-    1, 0, 1, 0,
-    1, 0,
-    1, 0, 1,
-    0, 1, 0,
-    0, 0, 0, 0, 0, 0, 0,
-    1, 1,
-    1, 1, 1, 1, 1,
-    1, 0]
-
   // Set some local variables to default values
-  const checkInfo: boolean[] = new Array(numInfo)
   let ww = 8
   let hh = 8
   let mm = 10
@@ -1072,19 +1021,12 @@ export function parse (state: State, data: string): void {
   const squareSize = 16
   let claimsWin = 0
 
-  // Clear some arrays related to info[]
-  for (i = 0; i < numInfo; ++i) hasInfo[i] = 0
-  for (i = 0; i < numInfo; ++i) checkInfo[i] = 1 && !noZini
-
   // Clear some arrays related to board[]
   for (i = 0; i < MAXOPS; ++i) sizeOps[i] = 0
   for (i = 0; i < MAXISLS; ++i) sizeIsls[i] = 0
 
   // Read the input file header and extract existing stats to output file (or screen)
   while (1) {
-    let infoStr = 0
-    const ptr = ftell()
-
     // Read a line from input file and store in char event
     fgets()
 
@@ -1118,16 +1060,6 @@ export function parse (state: State, data: string): void {
     } else if (opteq(event, 'Mode')) {
       noMode = 0
       mCl = valeq(event.substring(5), 'Classic')
-    } else {
-      // Print any other lines in the input file header
-      for (i = 0; i < numInfo; ++i) {
-        if (opteq(event, info[i])) {
-          hasInfo[i] = 1
-          ptrInfo[i] = ptr + info[i].length
-          infoStr = 1
-          break
-        }
-      }
     }
     // Write event to the output file (or screen)
     fputs(event)
@@ -1135,14 +1067,6 @@ export function parse (state: State, data: string): void {
 
   // Get number of cells in the board
   board = Array.from(Array(size = w * h), () => new Cell())
-
-  // Writes stats and if no value prints blank value
-  for (i = 0; i < numInfo; ++i) {
-    if (!hasInfo[i]) {
-      ptrInfo[i] = ftell() + 2
-      fputs(info[i] + ':           \n')
-    }
-  }
 
   // Reset any knowledge of cells
   clearBoard()
@@ -1211,7 +1135,7 @@ export function parse (state: State, data: string): void {
       // Mouse events and the function to call in each case
     } else if (isdigit(event[0]) || event[0] === '-') {
       let i = (event[0] === '-' ? 1 : 0)
-      let func = (x: number, y: number, precX: number, precY: number) => {
+      let func = (_x: number, _y: number, _precX: number, _precY: number) => {
         // Variable function
       }
       let x, y
@@ -1328,63 +1252,60 @@ export function parse (state: State, data: string): void {
 
   // Set some local variables
   if (!endTime) endTime = curTime
-  i = 0
   const clicks = leftClicks + rightClicks + doubleClicks
   const wastedClicks = wastedLeftClicks + wastedRightClicks + wastedDoubleClicks
   const eClicks = clicks - wastedClicks
   const coeff = solvedBbbv / bbbv // (double)
+  const rawTime = endTime / 1000
 
   // Calculate all remaining stats
-  infoD[i++] = endTime / 1000.0
-  infoI[i++] = bbbv
-  infoI[i++] = solvedBbbv
-  infoD[i++] = solvedBbbv / infoD[0]
-  infoI[i++] = gzini
-  infoD[i++] = gzini * solvedBbbv / (bbbv * infoD[0])
-  infoI[i++] = hzini
-  infoD[i++] = hzini * solvedBbbv / (bbbv * infoD[0])
-  infoI[i++] = clicks
-  infoD[i] = infoI[i - 1] / infoD[0]
-  ++i
-  infoI[i++] = leftClicks
-  infoD[i] = infoI[i - 1] / infoD[0]
-  ++i
-  infoI[i++] = rightClicks
-  infoD[i] = infoI[i - 1] / infoD[0]
-  ++i
-  infoI[i++] = doubleClicks
-  infoD[i] = infoI[i - 1] / infoD[0]
-  ++i
-  infoI[i++] = wastedClicks
-  infoD[i] = infoI[i - 1] / infoD[0]
-  ++i
-  infoI[i++] = wastedLeftClicks
-  infoD[i] = infoI[i - 1] / infoD[0]
-  ++i
-  infoI[i++] = wastedRightClicks
-  infoD[i] = infoI[i - 1] / infoD[0]
-  ++i
-  infoI[i++] = wastedDoubleClicks
-  infoD[i] = infoI[i - 1] / infoD[0]
-  ++i
-  infoI[i++] = clicks15
-  infoD[i] = infoI[i - 1] / infoD[0]
-  ++i
-  infoD[i++] = solvedBbbv / clicks // (double)
-  infoD[i++] = (eClicks) / clicks // (double)
-  infoD[i++] = solvedBbbv / eClicks // (double)
-  infoD[i++] = gzini * coeff / clicks // (double)
-  infoD[i++] = gzini * coeff / eClicks // (double)
-  infoD[i++] = hzini * coeff / clicks // (double)
-  infoD[i++] = hzini * coeff / eClicks // (double)
-  infoI[i++] = openings
-  infoI[i++] = islands
-  infoI[i++] = flags
-  infoI[i++] = wastedFlags
-  infoI[i++] = unFlags
-  infoI[i++] = misFlags
-  infoI[i++] = misUnFlags
-  infoI[i++] = rilianClicks
-  infoD[i] = infoI[i - 1] / infoD[0]
-  ++i
+  const raw = {
+    RAW_Time: rawTime.toFixed(3),
+    RAW_3BV: bbbv,
+    RAW_Solved3BV: solvedBbbv,
+    'RAW_3BV/s': (solvedBbbv / rawTime).toFixed(3),
+    RAW_ZiNi: gzini,
+    'RAW_ZiNi/s': (gzini / rawTime).toFixed(3),
+    RAW_HZiNi: hzini,
+    'RAW_HZiNi/s': (hzini / rawTime).toFixed(3),
+    RAW_Clicks: clicks,
+    'RAW_Clicks/s': (clicks / rawTime).toFixed(3),
+    RAW_LeftClicks: leftClicks,
+    'RAW_LeftClicks/s': (leftClicks / rawTime).toFixed(3),
+    RAW_RightClicks: rightClicks,
+    'RAW_RightClicks/s': (rightClicks / rawTime).toFixed(3),
+    RAW_DoubleClicks: doubleClicks,
+    'RAW_DoubleClicks/s': (doubleClicks / rawTime).toFixed(3),
+    RAW_WastedClicks: wastedClicks,
+    'RAW_WastedClicks/s': (wastedClicks / rawTime).toFixed(3),
+    RAW_WastedLeftClicks: wastedLeftClicks,
+    'RAW_WastedLeftClicks/s': (wastedLeftClicks / rawTime).toFixed(3),
+    RAW_WastedRightClicks: wastedRightClicks,
+    'RAW_WastedRightClicks/s': (wastedRightClicks / rawTime).toFixed(3),
+    RAW_WastedDoubleClicks: wastedRightClicks,
+    'RAW_WastedDoubleClicks/s': (wastedRightClicks / rawTime).toFixed(3),
+    'RAW_1.5Clicks': clicks15,
+    'RAW_1.5Clicks/s': (clicks15 / rawTime).toFixed(3),
+    RAW_IOE: (solvedBbbv / clicks).toFixed(3),
+    RAW_Correctness: (eClicks / clicks).toFixed(3),
+    RAW_Throughput: (solvedBbbv / eClicks).toFixed(3),
+    RAW_ZNE: (gzini * coeff / clicks).toFixed(3),
+    RAW_ZNT: (gzini * coeff / eClicks).toFixed(3),
+    RAW_HZNE: (hzini * coeff / clicks).toFixed(3),
+    RAW_HZNT: (hzini * coeff / eClicks).toFixed(3),
+    RAW_Openings: openings,
+    RAW_Islands: islands,
+    RAW_Flags: flags,
+    RAW_WastedFlags: wastedFlags,
+    RAW_Unflags: unFlags,
+    RAW_Misflags: misFlags,
+    RAW_Misunflags: misUnFlags,
+    RAW_RilianClicks: rilianClicks,
+    'RAW_RilianClicks/s': (rilianClicks / rawTime).toFixed(3)
+  }
+
+  console.log('\n')
+  Object.keys(raw).forEach((key) => {
+    console.log(key + ': ' + raw[key as keyof typeof raw])
+  })
 }
