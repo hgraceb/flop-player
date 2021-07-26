@@ -103,7 +103,8 @@ function init (data: string) {
 
   w = h = m = size = 0
   won = 0
-  noBoardEvents = noZini = noRilianClicks = noCheckInfo = 0
+  noBoardEvents = noZini = noCheckInfo = 0
+  noRilianClicks = 1
   bbbv = openings = islands = zini = gzini = hzini = 0
   leftClicks = rightClicks = doubleClicks = clicks15 = 0
   wastedLeftClicks = wastedRightClicks = wastedDoubleClicks = wastedClicks15 = 0
@@ -1282,8 +1283,8 @@ export function parse (state: State, data: string): void {
     'RAW_WastedLeftClicks/s': (wastedLeftClicks / rawTime).toFixed(3),
     RAW_WastedRightClicks: wastedRightClicks,
     'RAW_WastedRightClicks/s': (wastedRightClicks / rawTime).toFixed(3),
-    RAW_WastedDoubleClicks: wastedRightClicks,
-    'RAW_WastedDoubleClicks/s': (wastedRightClicks / rawTime).toFixed(3),
+    RAW_WastedDoubleClicks: wastedDoubleClicks,
+    'RAW_WastedDoubleClicks/s': (wastedDoubleClicks / rawTime).toFixed(3),
     'RAW_1.5Clicks': clicks15,
     'RAW_1.5Clicks/s': (clicks15 / rawTime).toFixed(3),
     RAW_IOE: (solvedBbbv / clicks).toFixed(3),
