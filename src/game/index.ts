@@ -21,7 +21,15 @@ export class Cell {
 /**
  * 游戏事件
  */
-export type GameEvent = {
-  name: 'Press' | 'Release' | 'Open' | 'Flag' | 'RemoveFlag' | 'QuestionMark' | 'RemoveQuestionMark'
-  param: number // Press 和 Release 事件的参数为 questionMark；Open 事件的参数为 number
+export type GameEvent = ({
+  name: 'Flag' | 'RemoveFlag' | 'QuestionMark' | 'RemoveQuestionMark'
+} | {
+  name: 'Press' | 'Release'
+  questioned: number // 是否已经被标记为问号
+} | {
+  name: 'Open'
+  number: number // 方块对应的数字，-1代表是雷，0代表是空，1~8为其他数字
+}) & {
+  x: number // 第几列
+  y: number // 第几行
 }

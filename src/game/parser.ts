@@ -63,6 +63,7 @@
 
 import { State } from '@/store/state'
 import { Cell } from '@/game/index'
+import { store } from '@/store'
 
 // TODO 重新启用 ESLint 规则
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -561,11 +562,12 @@ function isInsideBoard (x: number, y: number): boolean {
 function push (x: number, y: number): void {
   if (noBoardEvents) return
   if (!board[x * h + y].opened && !board[x * h + y].flagged) {
-    if (board[x * h + y].questioned) {
-      fprintf('Cell pressed (it is a Questionmark) %d %d\n', x + 1, y + 1)
-    } else {
-      fprintf('Cell pressed %d %d\n', x + 1, y + 1)
-    }
+    store.commit('addEvent', {
+      name: 'Press',
+      questioned: board[x * h + y].questioned,
+      x: x + 1,
+      y: y + 1
+    })
   }
 }
 
@@ -585,11 +587,12 @@ function pushAround (x: number, y: number) {
 // Unpress cell
 function pop (x: number, y: number) {
   if (!board[x * h + y].opened && !board[x * h + y].flagged) {
-    if (board[x * h + y].questioned) {
-      fprintf('Cell released (it is a Questionmark) %d %d\n', x + 1, y + 1)
-    } else {
-      fprintf('Cell released %d %d\n', x + 1, y + 1)
-    }
+    store.commit('addEvent', {
+      name: 'Release',
+      questioned: board[x * h + y].questioned,
+      x: x + 1,
+      y: y + 1
+    })
   }
 }
 
@@ -635,7 +638,12 @@ function fail (): void {
 // Change cell status to open
 function show (x: number, y: number): void {
   const index = x * h + y
-  fprintf('Cell opened (Number %d) %d %d\n', board[index].number, x + 1, y + 1)
+  store.commit('addEvent', {
+    name: 'Open',
+    number: board[index].number,
+    x: x + 1,
+    y: y + 1
+  })
   board[index].opened = 1
   // Increment counters if cell belongs to an opening and if this iteration opens the last cell in that opening
   if (board[index].opening) {
@@ -672,7 +680,12 @@ function doOpen (x: number, y: number): void {
   // Lose if cell is a mine
   if (board[x * h + y].mine) {
     board[x * h + y].opened = 1
-    fprintf('Cell opened (it is a Mine) %d %d\n', x + 1, y + 1)
+    store.commit('addEvent', {
+      name: 'Open',
+      number: -1,
+      x: x + 1,
+      y: y + 1
+    })
     fail()
   } else {
     // Check cell is inside an opening (number zero)
@@ -755,7 +768,11 @@ function doChord (x: number, y: number, oneDotFive: number): void {
 function doSetFlag (x: number, y: number): void {
   // Note that the wastedFlag value becomes 0 after successful chord() function
   board[x * h + y].flagged = board[x * h + y].wastedFlag = 1
-  fprintf('Flag %d %d\n', x + 1, y + 1)
+  store.commit('addEvent', {
+    name: 'Flag',
+    x: x + 1,
+    y: y + 1
+  })
   ++flags
   ++wastedFlags
   // Increase misflag count because cell is not a mine
@@ -765,13 +782,21 @@ function doSetFlag (x: number, y: number): void {
 // Questionmark
 function doQuestion (x: number, y: number): void {
   board[x * h + y].questioned = 1
-  fprintf('Questionmark %d %d\n', x + 1, y + 1)
+  store.commit('addEvent', {
+    name: 'QuestionMark',
+    x: x + 1,
+    y: y + 1
+  })
 }
 
 // Remove Flag or Questionmark
 function doUnsetFlag (x: number, y: number): void {
   board[x * h + y].flagged = board[x * h + y].questioned = 0
-  fprintf('Flag removed %d %d\n', x + 1, y + 1)
+  store.commit('addEvent', {
+    name: 'RemoveFlag',
+    x: x + 1,
+    y: y + 1
+  })
   // Decrease flag count, increase unflag count
   --flags
   ++unFlags
@@ -938,7 +963,11 @@ function rightPress (x: number, y: number, _precX: number, _precY: number): void
           doSetFlag(x, y)
         } else {
           board[x * h + y].flagged = board[x * h + y].questioned = 0
-          fprintf('Questionmark removed %d %d\n', x + 1, y + 1)
+          store.commit('addEvent', {
+            name: 'RemoveQuestionMark',
+            x: x + 1,
+            y: y + 1
+          })
         }
       }
       ++rightClicks
