@@ -1,4 +1,5 @@
 import { GameEvent } from '@/game'
+import { CellImg } from '@/util/image'
 
 export interface State {
   width: number
@@ -8,7 +9,9 @@ export interface State {
   // 游戏级别，1-初级，2-中级，3-高级，4-自定义
   gameLevel: 1 | 2 | 3 | 4
   // 游戏事件
-  gameEvents: GameEvent[]
+  gameEvents: GameEvent[],
+  // 游戏棋盘
+  gameBoard: typeof CellImg[]
 }
 
 export const state: State = {
@@ -16,5 +19,6 @@ export const state: State = {
   height: 8,
   gameOver: false,
   gameLevel: 1,
-  gameEvents: []
+  gameEvents: [],
+  gameBoard: []
 }

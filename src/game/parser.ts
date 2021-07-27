@@ -1094,6 +1094,9 @@ export function parse (state: State, data: string): void {
     fputs(event)
   }
 
+  // 初始化游戏数据
+  store.commit('initGame', { width: w, height: h })
+
   // Get number of cells in the board
   board = Array.from(Array(size = w * h), () => new Cell())
 
