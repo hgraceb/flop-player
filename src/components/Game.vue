@@ -83,8 +83,8 @@ button {
 
 <style scoped>
 [class^='border'] {
-  /* 缩放背景图片以完全装入背景区，可能背景区部分空白，有空白部分可以及时发现并调整布局 */
-  background-size: contain;
+  /* 缩放背景图片以完全装入背景区，使用 contain 会导致部分缩放比例下有白边的问题 */
+  background-size: 100% 100%;
 }
 
 .border-top-left {

@@ -27,6 +27,6 @@ export default defineComponent({
 .cell {
   width: 16px;
   height: 16px;
-  background-size: contain;
+  background-size: 100% 100%;
 }
 </style>

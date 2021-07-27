@@ -59,6 +59,6 @@ export default defineComponent({
 .face-normal {
   width: 26px;
   height: 26px;
-  background-size: contain;
+  background-size: 100% 100%;
 }
 </style>
