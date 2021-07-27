@@ -17,3 +17,11 @@ export class Cell {
   questioned = 0
   premium = 0
 }
+
+/**
+ * 游戏事件
+ */
+export type GameEvent = {
+  name: 'Press' | 'Release' | 'Open' | 'Flag' | 'RemoveFlag' | 'QuestionMark' | 'RemoveQuestionMark'
+  param: number // Press 和 Release 事件的参数为 questionMark；Open 事件的参数为 number
+}
