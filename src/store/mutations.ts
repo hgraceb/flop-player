@@ -6,6 +6,8 @@ export const mutations = {
   initGame: (state: State, { width, height }: { width: number, height: number }): void => {
     state.width = width
     state.height = height
+    state.gameEvents = []
+    state.gameBoard = Array.from(Array(width * height), () => 'Normal')
   },
   addEvent: (state: State, event: GameEvent): void => {
     state.gameEvents.push(event)

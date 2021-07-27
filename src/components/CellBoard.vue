@@ -1,7 +1,7 @@
 <template>
-  <div v-for="item in state.width" :key="item" class="flex cell-board">
-    <div v-for="item in state.height" :key="item" class="flex cell-board">
-      <Cell :img="'Normal'"></Cell>
+  <div v-for="(item, width) in state.width" :key="item" class="flex cell-board">
+    <div v-for="(item, height) in state.height" :key="item" class="flex cell-board">
+      <Cell :img="state.gameBoard[width + height * state.width]"></Cell>
     </div>
   </div>
 </template>

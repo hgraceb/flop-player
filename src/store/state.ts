@@ -1,5 +1,4 @@
 import { GameEvent } from '@/game'
-import { CellImg } from '@/util/image'
 
 export interface State {
   width: number
@@ -11,7 +10,8 @@ export interface State {
   // 游戏事件
   gameEvents: GameEvent[],
   // 游戏棋盘
-  gameBoard: typeof CellImg[]
+  // TODO 完善类型限制
+  gameBoard: string[]
 }
 
 export const state: State = {
