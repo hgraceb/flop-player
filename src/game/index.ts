@@ -30,6 +30,7 @@ export type GameEvent = ({
   name: 'Open'
   number: number // 方块对应的数字，-1代表是雷，0代表是空，1~8为其他数字
 }) & {
+  time: number // 时间
   x: number // 第几列
   y: number // 第几行
 }

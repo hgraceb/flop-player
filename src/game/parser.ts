@@ -565,8 +565,9 @@ function push (x: number, y: number): void {
     store.commit('addEvent', {
       name: 'Press',
       questioned: board[x * h + y].questioned,
-      x: x + 1,
-      y: y + 1
+      time: curTime,
+      x: x,
+      y: y
     })
   }
 }
@@ -590,8 +591,9 @@ function pop (x: number, y: number) {
     store.commit('addEvent', {
       name: 'Release',
       questioned: board[x * h + y].questioned,
-      x: x + 1,
-      y: y + 1
+      time: curTime,
+      x: x,
+      y: y
     })
   }
 }
@@ -641,8 +643,9 @@ function show (x: number, y: number): void {
   store.commit('addEvent', {
     name: 'Open',
     number: board[index].number,
-    x: x + 1,
-    y: y + 1
+    time: curTime,
+    x: x,
+    y: y
   })
   board[index].opened = 1
   // Increment counters if cell belongs to an opening and if this iteration opens the last cell in that opening
@@ -683,8 +686,9 @@ function doOpen (x: number, y: number): void {
     store.commit('addEvent', {
       name: 'Open',
       number: -1,
-      x: x + 1,
-      y: y + 1
+      time: curTime,
+      x: x,
+      y: y
     })
     fail()
   } else {
@@ -770,8 +774,9 @@ function doSetFlag (x: number, y: number): void {
   board[x * h + y].flagged = board[x * h + y].wastedFlag = 1
   store.commit('addEvent', {
     name: 'Flag',
-    x: x + 1,
-    y: y + 1
+    time: curTime,
+    x: x,
+    y: y
   })
   ++flags
   ++wastedFlags
@@ -784,8 +789,9 @@ function doQuestion (x: number, y: number): void {
   board[x * h + y].questioned = 1
   store.commit('addEvent', {
     name: 'QuestionMark',
-    x: x + 1,
-    y: y + 1
+    time: curTime,
+    x: x,
+    y: y
   })
 }
 
@@ -794,8 +800,9 @@ function doUnsetFlag (x: number, y: number): void {
   board[x * h + y].flagged = board[x * h + y].questioned = 0
   store.commit('addEvent', {
     name: 'RemoveFlag',
-    x: x + 1,
-    y: y + 1
+    time: curTime,
+    x: x,
+    y: y
   })
   // Decrease flag count, increase unflag count
   --flags
@@ -965,8 +972,9 @@ function rightPress (x: number, y: number, _precX: number, _precY: number): void
           board[x * h + y].flagged = board[x * h + y].questioned = 0
           store.commit('addEvent', {
             name: 'RemoveQuestionMark',
-            x: x + 1,
-            y: y + 1
+            time: curTime,
+            x: x,
+            y: y
           })
         }
       }
