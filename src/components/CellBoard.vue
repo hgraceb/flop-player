@@ -1,9 +1,11 @@
 <template>
-  <div v-for="(item, width) in state.width" :key="item" class="flex cell-board">
-    <div v-for="(item, height) in state.height" :key="item" class="flex cell-board">
-      <Cell :img="state.gameBoard[width + height * state.width]"></Cell>
+  <template v-if="state.gameBoard.length === state.width * state.height">
+    <div v-for="(item, width) in state.width" :key="item" class="flex cell-board">
+      <div v-for="(item, height) in state.height" :key="item" class="flex cell-board">
+        <Cell :img="state.gameBoard[width + height * state.width]"></Cell>
+      </div>
     </div>
-  </div>
+  </template>
 </template>
 
 <script lang="ts">
