@@ -1,9 +1,3 @@
-import { State } from './state'
-
-export const getters = {
-  isGameOver: (state: State): boolean => {
-    return state.gameOver
-  }
-}
+export const getters = {}
 
 export type Getters = typeof getters

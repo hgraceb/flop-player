@@ -32,7 +32,7 @@ export default defineComponent({
           faceUrl.value = faceNormal
           break
         case FaceStatus.PressCell:
-          if (store.getters.isGameOver) {
+          if (store.state.isGameOver) {
             // 游戏结束后不处理方块的鼠标事件
             return
           }
