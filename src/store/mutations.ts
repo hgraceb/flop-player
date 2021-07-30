@@ -63,8 +63,7 @@ export const mutations = {
       console.log(e)
     }
 
-    // 直接使用 requestAnimationFrame 回调的时间戳，可能会有较大误差，包括回调时间戳本身的误差和小数计算产生的误差
-    // TODO 确认是否需要优化方案减少时间误差
+    // 直接使用 requestAnimationFrame 回调的时间戳，可能会有较大误差，包括回调时间戳本身的误差和小数计算产生的误差，特别是在 Vuex 开启严格模式的时候
     requestAnimationFrame(function performEvent () {
       const timestamp = Date.now()
       if (state.gameEventIndex >= state.gameEvents.length) {
