@@ -84,6 +84,8 @@ button {
 [class^='border'] {
   /* 缩放背景图片以完全装入背景区，使用 contain 会导致部分缩放比例下有白边的问题 */
   background-size: 100% 100%;
+  /* 修复 Chrome 下部分缩放比例显示有空白间距的问题 */
+  background-repeat: round;
 }
 
 .border-top-left {

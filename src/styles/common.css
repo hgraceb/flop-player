@@ -51,6 +51,8 @@
 
 .background {
     background-image: var(--top-fill);
+    background-size: 100% 100%;
+    background-repeat: round;
 }
 
 .flex {
