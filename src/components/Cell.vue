@@ -1,5 +1,5 @@
 <template>
-  <div :style="{ backgroundImage: `url(${url})` }" class="cell"></div>
+  <div :style="{ backgroundImage: `var(--${url})` }" class="cell"></div>
 </template>
 
 <script lang="ts">

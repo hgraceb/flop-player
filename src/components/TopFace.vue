@@ -1,56 +1,58 @@
 <template>
-  <div :style="{ backgroundImage: `url(${faceUrl})` }" class="face-normal" />
+  <div :style="{ backgroundImage: `var(--${faceImg})` }" class="face-normal" />
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, toRefs, watch } from 'vue'
-import { FaceStatus } from '@/status'
-import faceNormal from '@/assets/face-normal.bmp'
+import { defineComponent, PropType, ref, Ref, toRefs, watch } from 'vue'
 import { store } from '@/store'
-import facePressCell from '@/assets/face-press-cell.bmp'
-import facePressNormal from '@/assets/face-press-normal.bmp'
-import faceWin from '@/assets/face-win.bmp'
-import faceLose from '@/assets/face-lose.bmp'
+import { FaceImg } from '@/util/image'
 
 export default defineComponent({
   props: {
     faceStatus: {
-      type: String,
+      type: String as PropType<FaceImg>,
       required: true,
-      validator: (value: FaceStatus) => Object.values(FaceStatus).includes(value)
+      validator: (value: FaceImg) => {
+        switch (value) {
+          case 'face-normal':
+          case 'face-press-cell':
+          case 'face-press-normal':
+          case 'face-win':
+          case 'face-lose':
+            return true
+          default:
+            return false
+        }
+      }
     }
   },
   setup (props) {
     // 外部设置的背景图片
     const { faceStatus } = toRefs(props)
     // 实际展示的背景图片
-    const faceUrl = ref(faceNormal)
+    const faceImg: Ref<FaceImg> = ref(faceStatus.value)
     // 监听外部设置的背景图片的变化
     watch(faceStatus, () => {
       switch (faceStatus.value) {
-        case FaceStatus.Normal:
-          faceUrl.value = faceNormal
+        case 'face-normal':
           break
-        case FaceStatus.PressCell:
+        case 'face-press-cell':
           if (store.state.isGameOver) {
             // 游戏结束后不处理方块的鼠标事件
             return
           }
-          faceUrl.value = facePressCell
           break
-        case FaceStatus.PressNormal:
-          faceUrl.value = facePressNormal
+        case 'face-press-normal':
           break
-        case FaceStatus.Win:
-          faceUrl.value = faceWin
+        case 'face-win':
           break
-        case FaceStatus.Lose:
-          faceUrl.value = faceLose
+        case 'face-lose':
           break
       }
+      faceImg.value = faceStatus.value
     })
 
-    return { faceUrl }
+    return { faceImg }
   }
 })
 </script>

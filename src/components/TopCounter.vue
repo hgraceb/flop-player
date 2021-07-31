@@ -58,7 +58,7 @@ export default defineComponent({
   width: 41px;
   height: 25px;
   padding: 1px;
-  background-image: url("../assets/top-counters.bmp");
+  background-image: var(--top-counters);
   background-size: 100% 100%;
 }
 
@@ -70,46 +70,46 @@ div[class*='count-'] {
 }
 
 .count-minus {
-  background-image: url("../assets/count-minus.bmp");
+  background-image: var(--count-minus);
 }
 
 .count-0 {
-  background-image: url("../assets/count-0.bmp");
+  background-image: var(--count-0);
 }
 
 .count-1 {
-  background-image: url("../assets/count-1.bmp");
+  background-image: var(--count-1);
 }
 
 .count-2 {
-  background-image: url("../assets/count-2.bmp");
+  background-image: var(--count-2);
 }
 
 .count-3 {
-  background-image: url("../assets/count-3.bmp");
+  background-image: var(--count-3);
 }
 
 .count-4 {
-  background-image: url("../assets/count-4.bmp");
+  background-image: var(--count-4);
 }
 
 .count-5 {
-  background-image: url("../assets/count-5.bmp");
+  background-image: var(--count-5);
 }
 
 .count-6 {
-  background-image: url("../assets/count-6.bmp");
+  background-image: var(--count-6);
 }
 
 .count-7 {
-  background-image: url("../assets/count-7.bmp");
+  background-image: var(--count-7);
 }
 
 .count-8 {
-  background-image: url("../assets/count-8.bmp");
+  background-image: var(--count-8);
 }
 
 .count-9 {
-  background-image: url("../assets/count-9.bmp");
+  background-image: var(--count-9);
 }
 </style>

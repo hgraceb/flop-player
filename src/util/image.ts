@@ -2,21 +2,26 @@
  * 方块图片资源
  */
 export const CellImg = {
-  Flag: require('../assets/cell-flag.bmp'),
-  FlagWrong: require('../assets/cell-flag-wrong.bmp'),
-  Mine: require('../assets/cell-mine.bmp'),
-  MineBomb: require('../assets/cell-mine-bomb.bmp'),
-  Normal: require('../assets/cell-normal.bmp'),
-  Number0: require('../assets/cell-number-0.bmp'),
-  Number1: require('../assets/cell-number-1.bmp'),
-  Number2: require('../assets/cell-number-2.bmp'),
-  Number3: require('../assets/cell-number-3.bmp'),
-  Number4: require('../assets/cell-number-4.bmp'),
-  Number5: require('../assets/cell-number-5.bmp'),
-  Number6: require('../assets/cell-number-6.bmp'),
-  Number7: require('../assets/cell-number-7.bmp'),
-  Number8: require('../assets/cell-number-8.bmp'),
-  Press: require('../assets/cell-press.bmp'),
-  Question: require('../assets/cell-question.bmp'),
-  QuestionPress: require('../assets/cell-question-press.bmp')
+  Flag: 'cell-flag',
+  FlagWrong: 'cell-flag-wrong',
+  Mine: 'cell-mine',
+  MineBomb: 'cell-mine-bomb',
+  Normal: 'cell-normal',
+  Number0: 'cell-number-0',
+  Number1: 'cell-number-1',
+  Number2: 'cell-number-2',
+  Number3: 'cell-number-3',
+  Number4: 'cell-number-4',
+  Number5: 'cell-number-5',
+  Number6: 'cell-number-6',
+  Number7: 'cell-number-7',
+  Number8: 'cell-number-8',
+  Press: 'cell-press',
+  Question: 'cell-question',
+  QuestionPress: 'cell-question-press'
 } as const
+
+/**
+ * 笑脸图片资源
+ */
+export type FaceImg = 'face-normal' | 'face-press-cell' | 'face-press-normal' | 'face-win' | 'face-lose'

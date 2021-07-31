@@ -9,9 +9,9 @@
       <div class="border-vertical-left-upper" />
       <div
         class="flex top space-between"
-        @mousedown="faceStatus = FaceStatus.PressNormal"
-        @mouseleave="faceStatus = FaceStatus.Normal"
-        @mouseup="faceStatus = FaceStatus.Normal"
+        @mousedown="faceStatus = 'face-press-normal'"
+        @mouseleave="faceStatus = 'face-normal'"
+        @mouseup="faceStatus = 'face-normal'"
       >
         <TopCounter :count="mines" />
         <top-face :face-status="faceStatus" />
@@ -43,11 +43,10 @@
 </template>
 
 <script lang="ts">
-import { FaceStatus } from '@/status'
-import { computed, defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted, Ref, ref } from 'vue'
 import TopCounter from './TopCounter.vue'
 import TopFace from './TopFace.vue'
-import { CellImg } from '@/util/image'
+import { CellImg, FaceImg } from '@/util/image'
 import { store } from '@/store'
 import CellBoard from '@/components/CellBoard.vue'
 
@@ -58,13 +57,13 @@ export default defineComponent({
     const time = ref(-222)
     const width = computed(() => store.state.width * 16 + 24)
     const height = computed(() => store.state.height * 16)
-    const faceStatus = ref(FaceStatus.Normal)
+    const faceStatus: Ref<FaceImg> = ref('face-normal')
 
     onMounted(() => {
       // 测试数据
       store.dispatch('fetchVideo', '')
     })
-    return { mines, time, width, height, faceStatus, FaceStatus, CellImg }
+    return { mines, time, width, height, faceStatus, CellImg }
   }
 })
 </script>
@@ -90,79 +89,79 @@ button {
 .border-top-left {
   min-width: 12px;
   height: 11px;
-  background-image: url("../assets/border-top-left.bmp");
+  background-image: var(--border-top-left);
 }
 
 .border-horizontal-top {
   width: 100%;
   height: 11px;
-  background-image: url("../assets/border-horizontal-top.bmp");
+  background-image: var(--border-horizontal-top);
 }
 
 .border-top-right {
   min-width: 12px;
   height: 11px;
-  background-image: url("../assets/border-top-right.bmp");
+  background-image: var(--border-top-right);
 }
 
 .border-vertical-left-upper {
   min-width: 12px;
   height: 33px;
-  background-image: url("../assets/border-vertical-left-upper.bmp");
+  background-image: var(--border-vertical-left-upper);
 }
 
 .border-vertical-right-upper {
   min-width: 12px;
   height: 33px;
-  background-image: url("../assets/border-vertical-right-upper.bmp");
+  background-image: var(--border-vertical-right-upper);
 }
 
 .border-middle-left {
   min-width: 12px;
   height: 11px;
-  background-image: url("../assets/border-middle-left.bmp");
+  background-image: var(--border-middle-left);
 }
 
 .border-horizontal-middle {
   width: 100%;
   height: 11px;
-  background-image: url("../assets/border-horizontal-middle.bmp");
+  background-image: var(--border-horizontal-middle);
 }
 
 .border-middle-right {
   min-width: 12px;
   height: 11px;
-  background-image: url("../assets/border-middle-right.bmp");
+  background-image: var(--border-middle-right);
 }
 
 .border-vertical-left-lower {
   min-width: 12px;
   height: 100%;
-  background-image: url("../assets/border-vertical-left-lower.bmp");
+  background-image: var(--border-vertical-left-lower);
 }
 
 .border-vertical-right-lower {
   min-width: 12px;
   height: 100%;
-  background-image: url("../assets/border-vertical-right-lower.bmp");
+  background-image: var(--border-vertical-right-lower);
 }
 
 .border-bottom-left {
   min-width: 12px;
   height: 12px;
-  background-image: url("../assets/border-bottom-left.bmp");
+  background-image: var(--border-bottom-left);
 }
 
 .border-horizontal-bottom {
   width: 100%;
   height: 12px;
-  background-image: url("../assets/border-horizontal-bottom.bmp");
+  background-image: var(--border-horizontal-bottom);
 }
 
 .border-bottom-right {
   min-width: 12px;
   height: 12px;
-  background-image: url("../assets/border-bottom-right.bmp");
+  background-image: var(--border-bottom-right);
 }
 
 .top {
