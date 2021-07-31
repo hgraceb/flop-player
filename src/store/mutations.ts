@@ -3,6 +3,7 @@ import { parse } from '@/game/parser'
 import { GameEvent } from '@/game'
 import { store } from '@/store/index'
 import { plus, times } from 'number-precision'
+import { TypeImgCell } from '@/util/image'
 
 export const mutations = {
   /** 设置游戏开始的时间（毫秒） */
@@ -18,7 +19,7 @@ export const mutations = {
     state.width = width
     state.height = height
     state.gameEvents = []
-    state.gameBoard = Array.from(Array(width * height), () => 'Normal')
+    state.gameBoard = Array.from(Array(width * height), () => 'cell-normal')
     state.gameStartTime = 0.0
     state.gameElapsedTime = 0.0
     state.gameEventIndex = 0
@@ -35,23 +36,23 @@ export const mutations = {
     const index = event.x + event.y * state.width
     switch (event.name) {
       case 'Flag':
-        state.gameBoard[index] = 'Flag'
+        state.gameBoard[index] = 'cell-flag'
         break
       case 'QuestionMark':
-        state.gameBoard[index] = 'Question'
+        state.gameBoard[index] = 'cell-question'
         break
       case 'RemoveQuestionMark':
       case 'RemoveFlag':
-        state.gameBoard[index] = 'Normal'
+        state.gameBoard[index] = 'cell-normal'
         break
       case 'Press':
-        state.gameBoard[index] = 'Press'
+        state.gameBoard[index] = 'cell-press'
         break
       case 'Release':
-        state.gameBoard[index] = 'Normal'
+        state.gameBoard[index] = 'cell-normal'
         break
       case 'Open':
-        state.gameBoard[index] = 'Number' + event.number
+        state.gameBoard[index] = ('cell-number-' + event.number) as TypeImgCell
         break
     }
   },

@@ -1,4 +1,5 @@
 import { GameEvent } from '@/game'
+import { TypeImgCell } from '@/util/image'
 
 export interface State {
   width: number
@@ -11,8 +12,8 @@ export interface State {
   gameEvents: GameEvent[],
   // 游戏事件索引
   gameEventIndex: number
-  // 游戏棋盘，TODO 完善类型限制
-  gameBoard: string[],
+  // 游戏棋盘
+  gameBoard: TypeImgCell[],
   // 游戏速度
   gameSpeed: number,
   // 游戏开始的时间（毫秒）, 值为负数时表示还未开始

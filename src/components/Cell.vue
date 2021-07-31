@@ -1,24 +1,19 @@
 <template>
-  <div :style="{ backgroundImage: `var(--${url})` }" class="cell"></div>
+  <div :style="{ backgroundImage: `var(--${img})` }" class="cell"></div>
 </template>
 
 <script lang="ts">
-import { CellImg } from '@/util/image'
-import { computed, defineComponent, PropType } from 'vue'
+import { ImgCell, TypeImgCell } from '@/util/image'
+import { defineComponent, PropType } from 'vue'
 
 export default defineComponent({
   props: {
     // 背景图片
     img: {
-      type: String as PropType<keyof typeof CellImg>,
+      type: String as PropType<TypeImgCell>,
       required: true,
-      validator: (value: string) => Object.keys(CellImg).includes(value)
+      validator: (value: TypeImgCell) => Object.values(ImgCell).includes(value)
     }
-  },
-  setup (props) {
-    // 背景图片Url
-    const url = computed(() => CellImg[props.img])
-    return { url }
   }
 })
 </script>

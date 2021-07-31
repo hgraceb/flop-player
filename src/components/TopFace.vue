@@ -12,7 +12,7 @@ export default defineComponent({
     faceStatus: {
       type: String as PropType<TypeImgFace>,
       required: true,
-      validator: (value: TypeImgFace): boolean => Object.values(ImgFace).includes(value)
+      validator: (value: TypeImgFace) => Object.values(ImgFace).includes(value)
     }
   },
   setup (props) {

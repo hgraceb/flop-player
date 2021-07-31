@@ -1,25 +1,27 @@
 /**
  * 方块图片资源
  */
-export const CellImg = {
-  Flag: 'cell-flag',
-  FlagWrong: 'cell-flag-wrong',
-  Mine: 'cell-mine',
-  MineBomb: 'cell-mine-bomb',
-  Normal: 'cell-normal',
-  Number0: 'cell-number-0',
-  Number1: 'cell-number-1',
-  Number2: 'cell-number-2',
-  Number3: 'cell-number-3',
-  Number4: 'cell-number-4',
-  Number5: 'cell-number-5',
-  Number6: 'cell-number-6',
-  Number7: 'cell-number-7',
-  Number8: 'cell-number-8',
-  Press: 'cell-press',
-  Question: 'cell-question',
-  QuestionPress: 'cell-question-press'
-} as const
+export const ImgCell = [
+  'cell-flag',
+  'cell-flag-wrong',
+  'cell-mine',
+  'cell-mine-bomb',
+  'cell-normal',
+  'cell-number-0',
+  'cell-number-1',
+  'cell-number-2',
+  'cell-number-3',
+  'cell-number-4',
+  'cell-number-5',
+  'cell-number-6',
+  'cell-number-7',
+  'cell-number-8',
+  'cell-press',
+  'cell-question',
+  'cell-question-press'
+] as const
+
+export type TypeImgCell = typeof ImgCell[number]
 
 /**
  * 笑脸图片资源

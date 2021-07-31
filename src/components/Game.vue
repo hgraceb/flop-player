@@ -46,7 +46,7 @@
 import { computed, defineComponent, onMounted, Ref, ref } from 'vue'
 import TopCounter from './TopCounter.vue'
 import TopFace from './TopFace.vue'
-import { CellImg, TypeImgFace } from '@/util/image'
+import { TypeImgFace } from '@/util/image'
 import { store } from '@/store'
 import CellBoard from '@/components/CellBoard.vue'
 
@@ -63,7 +63,7 @@ export default defineComponent({
       // 测试数据
       store.dispatch('fetchVideo', '')
     })
-    return { mines, time, width, height, faceStatus, CellImg }
+    return { mines, time, width, height, faceStatus }
   }
 })
 </script>
