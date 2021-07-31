@@ -5,32 +5,21 @@
 <script lang="ts">
 import { defineComponent, PropType, ref, Ref, toRefs, watch } from 'vue'
 import { store } from '@/store'
-import { FaceImg } from '@/util/image'
+import { ImgFace, TypeImgFace } from '@/util/image'
 
 export default defineComponent({
   props: {
     faceStatus: {
-      type: String as PropType<FaceImg>,
+      type: String as PropType<TypeImgFace>,
       required: true,
-      validator: (value: FaceImg) => {
-        switch (value) {
-          case 'face-normal':
-          case 'face-press-cell':
-          case 'face-press-normal':
-          case 'face-win':
-          case 'face-lose':
-            return true
-          default:
-            return false
-        }
-      }
+      validator: (value: TypeImgFace): boolean => Object.values(ImgFace).includes(value)
     }
   },
   setup (props) {
     // 外部设置的背景图片
     const { faceStatus } = toRefs(props)
     // 实际展示的背景图片
-    const faceImg: Ref<FaceImg> = ref(faceStatus.value)
+    const faceImg: Ref<TypeImgFace> = ref(faceStatus.value)
     // 监听外部设置的背景图片的变化
     watch(faceStatus, () => {
       switch (faceStatus.value) {

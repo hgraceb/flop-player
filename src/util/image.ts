@@ -24,4 +24,12 @@ export const CellImg = {
 /**
  * 笑脸图片资源
  */
-export type FaceImg = 'face-normal' | 'face-press-cell' | 'face-press-normal' | 'face-win' | 'face-lose'
+export const ImgFace = [
+  'face-normal',
+  'face-press-cell',
+  'face-press-normal',
+  'face-win',
+  'face-lose'
+] as const
+
+export type TypeImgFace = typeof ImgFace[number]

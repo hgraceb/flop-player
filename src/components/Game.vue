@@ -46,7 +46,7 @@
 import { computed, defineComponent, onMounted, Ref, ref } from 'vue'
 import TopCounter from './TopCounter.vue'
 import TopFace from './TopFace.vue'
-import { CellImg, FaceImg } from '@/util/image'
+import { CellImg, TypeImgFace } from '@/util/image'
 import { store } from '@/store'
 import CellBoard from '@/components/CellBoard.vue'
 
@@ -57,7 +57,7 @@ export default defineComponent({
     const time = ref(-222)
     const width = computed(() => store.state.width * 16 + 24)
     const height = computed(() => store.state.height * 16)
-    const faceStatus: Ref<FaceImg> = ref('face-normal')
+    const faceStatus: Ref<TypeImgFace> = ref('face-normal')
 
     onMounted(() => {
       // 测试数据
