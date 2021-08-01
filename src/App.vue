@@ -1,5 +1,5 @@
 <template>
-  <Game />
+  <game />
 </template>
 
 <script lang="ts">

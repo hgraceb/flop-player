@@ -13,9 +13,9 @@
         @mouseleave="faceStatus = 'face-normal'"
         @mouseup="faceStatus = 'face-normal'"
       >
-        <TopCounter :count="mines" />
+        <top-counter :count="mines" />
         <top-face :face-status="faceStatus" />
-        <TopCounter :count="time" :min="0" />
+        <top-counter :count="time" :min="0" />
       </div>
       <div class="border-vertical-right-upper" />
     </div>
@@ -26,7 +26,7 @@
     </div>
     <div :style="{'height': height + 'px'}" class="flex space-between">
       <div class="border-vertical-left-lower" />
-      <CellBoard></CellBoard>
+      <cell-board />
       <div class="border-vertical-right-lower" />
     </div>
     <div class="flex">
