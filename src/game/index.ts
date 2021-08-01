@@ -1,3 +1,5 @@
+import { ImgCellType } from '@/util/image'
+
 /**
  * 游戏区域最小单元
  */
@@ -25,12 +27,19 @@ export type GameEvent = ({
   name: 'Flag' | 'RemoveFlag' | 'QuestionMark' | 'RemoveQuestionMark'
 } | {
   name: 'Press' | 'Release'
-  questioned: number // 是否已经被标记为问号
+  // 是否已经被标记为问号
+  questioned: number
 } | {
   name: 'Open'
-  number: number // 方块对应的数字，-1代表是雷，0代表是空，1~8为其他数字
+  // 方块对应的数字，-1代表是雷，0代表是空，1~8为其他数字
+  number: number
 }) & {
-  time: number // 时间
-  x: number // 第几列
-  y: number // 第几行
+  // 时间
+  time: number
+  // 第几列
+  x: number
+  // 第几行
+  y: number
+  // 未根据游戏事件修改前的图片
+  snapshot?: ImgCellType
 }

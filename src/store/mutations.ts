@@ -31,12 +31,23 @@ export const mutations = {
   addEvent: (state: State, event: GameEvent): void => {
     state.gameEvents.push(event)
   },
+  /** 模拟上一个游戏事件 */
+  performPreviousEvent: (state: State): void => {
+    // 根据事件索引获取游戏事件，并更新事件索引
+    const event = state.gameEvents[--state.gameEventIndex]
+    // 根据坐标获取索引
+    const index = event.x + event.y * state.width
+    // 还原图片快照
+    state.gameBoard[index] = event.snapshot as ImgCellType
+  },
   /** 模拟下一个游戏事件 */
   performNextEvent: (state: State): void => {
     // 根据事件索引获取游戏事件，并更新事件索引
     const event = state.gameEvents[state.gameEventIndex++]
     // 根据坐标获取索引
     const index = event.x + event.y * state.width
+    // 将当前的背景图片保存为快照
+    event.snapshot = state.gameBoard[index]
     switch (event.name) {
       case 'Flag':
         state.gameBoard[index] = 'cell-flag'
@@ -74,6 +85,13 @@ export const mutations = {
     requestAnimationFrame(function performEvent () {
       const timestamp = Date.now()
       if (state.gameEventIndex >= state.gameEvents.length) {
+        requestAnimationFrame(function performPreviousEvent () {
+          if (state.gameEventIndex <= 0) {
+            return
+          }
+          store.commit('performPreviousEvent')
+          window.requestAnimationFrame(performPreviousEvent)
+        })
         return
       }
       // 更新游戏经过的时间（毫秒）,首次时间为 0 ms
@@ -89,7 +107,7 @@ export const mutations = {
 }
 
 /** payload 参数不能为空的函数类型集合 */
-export type MutationsMustPayload = Omit<typeof mutations, 'performNextEvent' | 'playVideo'>
+export type MutationsMustPayload = Omit<typeof mutations, 'performPreviousEvent' | 'performNextEvent' | 'playVideo'>
 
 /** payload 参数可以为空的函数类型集合 */
 export type MutationsEmptyPayload = Omit<typeof mutations, keyof MutationsMustPayload>
