@@ -21,7 +21,7 @@ const ImgCell = [
   'cell-question-press'
 ] as const
 export type ImgCellType = typeof ImgCell[number]
-export const isValidImgCell = (value: ImgCellType) => ImgCell.includes(value)
+export const isValidImgCell = (value: ImgCellType): boolean => ImgCell.includes(value)
 
 /**
  * 笑脸图片资源
@@ -34,4 +34,4 @@ const ImgFace = [
   'face-lose'
 ] as const
 export type ImgFaceType = typeof ImgFace[number]
-export const isValidImgFace = (value: ImgFaceType) => ImgFace.includes(value)
+export const isValidImgFace = (value: ImgFaceType): boolean => ImgFace.includes(value)

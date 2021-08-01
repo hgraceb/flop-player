@@ -5,6 +5,9 @@ import { store } from '@/store/index'
 import { plus, times } from 'number-precision'
 import { ImgCellType } from '@/util/image'
 
+/**
+ * Mutations 函数定义，使用类型推断的方式，可以快速找到函数的所有 Usages
+ */
 export const mutations = {
   /** 设置游戏开始的时间（毫秒） */
   setGameStartTime: (state: State, time: number): void => {
@@ -28,8 +31,8 @@ export const mutations = {
   addEvent: (state: State, event: GameEvent): void => {
     state.gameEvents.push(event)
   },
-  /** 模拟下一个游戏事件，TODO 解决参数未使用的报错 */
-  performNextEvent: (state: State, _: null): void => {
+  /** 模拟下一个游戏事件 */
+  performNextEvent: (state: State): void => {
     // 根据事件索引获取游戏事件，并更新事件索引
     const event = state.gameEvents[state.gameEventIndex++]
     // 根据坐标获取索引
@@ -60,13 +63,13 @@ export const mutations = {
   receiveVideo: (state: State, payload: string): void => {
     try {
       parse(state, payload)
-      store.commit('playVideo', null)
+      store.commit('playVideo')
     } catch (e) {
       console.log(e)
     }
   },
-  /** 播放游戏录像，TODO 解决参数未使用的报错 */
-  playVideo: (state: State, _: null): void => {
+  /** 播放游戏录像 */
+  playVideo: (state: State): void => {
     // 直接使用 requestAnimationFrame 回调的时间戳，可能会有较大误差，包括回调时间戳本身的误差和小数计算产生的误差，特别是在 Vuex 开启严格模式的时候
     requestAnimationFrame(function performEvent () {
       const timestamp = Date.now()
@@ -78,11 +81,15 @@ export const mutations = {
       // 重置游戏开始时间（毫秒）
       store.commit('setGameStartTime', timestamp)
       while (state.gameEventIndex < state.gameEvents.length && state.gameElapsedTime >= state.gameEvents[state.gameEventIndex].time) {
-        store.commit('performNextEvent', null)
+        store.commit('performNextEvent')
       }
       window.requestAnimationFrame(performEvent)
     })
   }
 }
 
-export type Mutations = typeof mutations
+/** payload 参数可以为空的函数类型集合 */
+export type MutationsMustPayload = Omit<typeof mutations, 'performNextEvent' | 'playVideo'>
+
+/** payload 参数不能为空的函数类型集合 */
+export type MutationsEmptyPayload = Omit<typeof mutations, keyof MutationsMustPayload>

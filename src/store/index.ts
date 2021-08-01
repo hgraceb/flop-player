@@ -1,7 +1,7 @@
 import { CommitOptions, createStore, DispatchOptions, Store } from 'vuex'
 import { State, state } from '@/store/state'
 import { Getters, getters } from '@/store/getters'
-import { Mutations, mutations } from '@/store/mutations'
+import { mutations, MutationsEmptyPayload, MutationsMustPayload } from '@/store/mutations'
 import { Actions, actions } from '@/store/actions'
 
 export type VuexStore = Omit<Store<State>, 'getters' | 'commit' | 'dispatch'> & {
@@ -9,11 +9,17 @@ export type VuexStore = Omit<Store<State>, 'getters' | 'commit' | 'dispatch'> & 
     [K in keyof Getters]: ReturnType<Getters[K]>
   }
 } & {
-  commit<K extends keyof Mutations, P extends Parameters<Mutations[K]>[1]> (
+  commit<K extends keyof MutationsMustPayload, P extends Parameters<MutationsMustPayload[K]>[1]> (
     key: K,
     payload: P,
     options?: CommitOptions
-  ): ReturnType<Mutations[K]>
+  ): ReturnType<MutationsMustPayload[K]>
+} & {
+  commit<K extends keyof MutationsEmptyPayload, P extends Parameters<MutationsEmptyPayload[K]>[1]> (
+    key: K,
+    payload?: P,
+    options?: CommitOptions
+  ): ReturnType<MutationsEmptyPayload[K]>
 } & {
   dispatch<K extends keyof Actions> (
     key: K,
