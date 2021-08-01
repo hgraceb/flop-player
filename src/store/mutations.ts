@@ -88,8 +88,8 @@ export const mutations = {
   }
 }
 
-/** payload 参数可以为空的函数类型集合 */
+/** payload 参数不能为空的函数类型集合 */
 export type MutationsMustPayload = Omit<typeof mutations, 'performNextEvent' | 'playVideo'>
 
-/** payload 参数不能为空的函数类型集合 */
+/** payload 参数可以为空的函数类型集合 */
 export type MutationsEmptyPayload = Omit<typeof mutations, keyof MutationsMustPayload>
