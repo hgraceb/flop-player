@@ -3,7 +3,7 @@ import { parse } from '@/game/parser'
 import { GameEvent } from '@/game'
 import { store } from '@/store/index'
 import { plus, times } from 'number-precision'
-import { TypeImgCell } from '@/util/image'
+import { ImgCellType } from '@/util/image'
 
 export const mutations = {
   /** 设置游戏开始的时间（毫秒） */
@@ -28,7 +28,7 @@ export const mutations = {
   addEvent: (state: State, event: GameEvent): void => {
     state.gameEvents.push(event)
   },
-  /** 模拟下一个游戏事件 TODO 解决参数未使用的报错 */
+  /** 模拟下一个游戏事件，TODO 解决参数未使用的报错 */
   performNextEvent: (state: State, _: null): void => {
     // 根据事件索引获取游戏事件，并更新事件索引
     const event = state.gameEvents[state.gameEventIndex++]
@@ -52,7 +52,7 @@ export const mutations = {
         state.gameBoard[index] = 'cell-normal'
         break
       case 'Open':
-        state.gameBoard[index] = ('cell-number-' + event.number) as TypeImgCell
+        state.gameBoard[index] = ('cell-number-' + event.number) as ImgCellType
         break
     }
   },
@@ -60,10 +60,13 @@ export const mutations = {
   receiveVideo: (state: State, payload: string): void => {
     try {
       parse(state, payload)
+      store.commit('playVideo', null)
     } catch (e) {
       console.log(e)
     }
-
+  },
+  /** 播放游戏录像，TODO 解决参数未使用的报错 */
+  playVideo: (state: State, _: null): void => {
     // 直接使用 requestAnimationFrame 回调的时间戳，可能会有较大误差，包括回调时间戳本身的误差和小数计算产生的误差，特别是在 Vuex 开启严格模式的时候
     requestAnimationFrame(function performEvent () {
       const timestamp = Date.now()

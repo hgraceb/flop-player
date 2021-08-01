@@ -1,7 +1,7 @@
 /**
  * 方块图片资源
  */
-export const ImgCell = [
+const ImgCell = [
   'cell-flag',
   'cell-flag-wrong',
   'cell-mine',
@@ -20,18 +20,18 @@ export const ImgCell = [
   'cell-question',
   'cell-question-press'
 ] as const
-
-export type TypeImgCell = typeof ImgCell[number]
+export type ImgCellType = typeof ImgCell[number]
+export const isValidImgCell = (value: ImgCellType) => ImgCell.includes(value)
 
 /**
  * 笑脸图片资源
  */
-export const ImgFace = [
+const ImgFace = [
   'face-normal',
   'face-press-cell',
   'face-press-normal',
   'face-win',
   'face-lose'
 ] as const
-
-export type TypeImgFace = typeof ImgFace[number]
+export type ImgFaceType = typeof ImgFace[number]
+export const isValidImgFace = (value: ImgFaceType) => ImgFace.includes(value)

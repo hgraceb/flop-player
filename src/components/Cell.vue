@@ -3,16 +3,16 @@
 </template>
 
 <script lang="ts">
-import { ImgCell, TypeImgCell } from '@/util/image'
+import { ImgCellType, isValidImgCell } from '@/util/image'
 import { defineComponent, PropType } from 'vue'
 
 export default defineComponent({
   props: {
     // 背景图片
     img: {
-      type: String as PropType<TypeImgCell>,
+      type: String as PropType<ImgCellType>,
       required: true,
-      validator: (value: TypeImgCell) => Object.values(ImgCell).includes(value)
+      validator: isValidImgCell
     }
   }
 })
