@@ -4,6 +4,7 @@ import { GameEvent } from '@/game'
 import { store } from '@/store/index'
 import { plus, times } from 'number-precision'
 import { ImgCellType } from '@/util/image'
+import { speedArr } from '@/game/contants'
 
 /**
  * Mutations 函数定义，使用类型推断的方式，可以快速找到函数的所有 Usages
@@ -12,6 +13,10 @@ export const mutations = {
   /** 设置游戏开始的时间（毫秒） */
   setGameStartTime: (state: State, time: number): void => {
     state.gameStartTime = time
+  },
+  /** 设置游戏速度 */
+  setGameSpeed: (state: State, speed: number): void => {
+    state.gameSpeed = Math.min(Math.max(speedArr[0], speed), speedArr[speedArr.length - 1])
   },
   /** 叠加游戏经过的时间（毫秒） */
   addGameElapsedTime: (state: State, time: number): void => {
@@ -30,6 +35,15 @@ export const mutations = {
   /** 添加游戏事件 */
   addEvent: (state: State, event: GameEvent): void => {
     state.gameEvents.push(event)
+  },
+  /** 接收并处理录像数据 */
+  receiveVideo: (state: State, payload: string): void => {
+    try {
+      parse(state, payload)
+      store.commit('playVideo')
+    } catch (e) {
+      console.log(e)
+    }
   },
   /** 模拟上一个游戏事件 */
   performPreviousEvent: (state: State): void => {
@@ -68,15 +82,6 @@ export const mutations = {
       case 'Open':
         state.gameBoard[index] = ('cell-number-' + event.number) as ImgCellType
         break
-    }
-  },
-  /** 接收并处理录像数据 */
-  receiveVideo: (state: State, payload: string): void => {
-    try {
-      parse(state, payload)
-      store.commit('playVideo')
-    } catch (e) {
-      console.log(e)
     }
   },
   /** 播放游戏录像 */
