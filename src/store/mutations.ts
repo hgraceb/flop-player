@@ -21,6 +21,10 @@ export const mutations = {
       state.gameSpeed = speed
     }
   },
+  /** 设置游戏经过的时间（毫秒）,TODO 完善录像进度控制 */
+  setGameElapsedTime: (state: State, time: number): void => {
+    state.gameElapsedTime = time
+  },
   /** 叠加游戏经过的时间（毫秒） */
   addGameElapsedTime: (state: State, time: number): void => {
     state.gameElapsedTime = plus(state.gameElapsedTime, times(time, state.gameSpeed))

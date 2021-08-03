@@ -12,11 +12,11 @@
     </div>
     <div>
       <input
-        v-model="time"
+        v-model="timeSlider"
         :max="timeMax"
         type="range"
       >
-      <span>{{ time }}</span>
+      <span>{{ timeValue }}</span>
     </div>
   </div>
 </template>
@@ -36,11 +36,27 @@ export default defineComponent({
         store.commit('setGameSpeed', SPEED_ARRAY[parseInt(`${value}`)])
       }
     })
-    // TODO 完善时间进度条，将时间进度条改为按照时间均分
-    const time = computed(() => store.state.gameEventIndex)
-    const timeMax = computed(() => store.state.gameEvents.length)
 
-    return { speed, SPEED_ARRAY, time, timeMax }
+    // 游戏时间进度条的最大值，以最后一个游戏事件的时间作为标准，0.01 秒为一个单位长度
+    const timeMax = computed(() => {
+      return store.state.gameEvents[store.state.gameEvents.length - 1]?.time / 10 || 0
+    })
+    // 游戏时间进度条当前值，通过当前游戏经过的时间计算得到
+    const timeSlider = computed({
+      get: () => {
+        return store.state.gameElapsedTime / 10
+      },
+      set: (value: number) => {
+        store.commit('setGameElapsedTime', parseInt(`${value}`) * 10)
+      }
+    })
+    // 当前游戏时间，精确到两位小数
+    const timeValue = computed(() => {
+      // TODO 确认最后一个游戏事件是否可以正常预览和播放
+      return (Math.min(timeMax.value, timeSlider.value) / 100).toFixed(2)
+    })
+
+    return { speed, SPEED_ARRAY, timeSlider, timeMax, timeValue }
   }
 })
 </script>
