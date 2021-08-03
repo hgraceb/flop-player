@@ -4,7 +4,7 @@ import { GameEvent } from '@/game'
 import { store } from '@/store/index'
 import { plus, times } from 'number-precision'
 import { ImgCellType } from '@/util/image'
-import { speedArr } from '@/game/contants'
+import { SPEED_ARRAY } from '@/game/constants'
 
 /**
  * Mutations 函数定义，使用类型推断的方式，可以快速找到函数的所有 Usages
@@ -16,7 +16,10 @@ export const mutations = {
   },
   /** 设置游戏速度 */
   setGameSpeed: (state: State, speed: number): void => {
-    state.gameSpeed = Math.min(Math.max(speedArr[0], speed), speedArr[speedArr.length - 1])
+    // 判断速度的值是否合法，不合法则不对游戏速度进行修改
+    if (SPEED_ARRAY.indexOf(speed) !== -1) {
+      state.gameSpeed = speed
+    }
   },
   /** 叠加游戏经过的时间（毫秒） */
   addGameElapsedTime: (state: State, time: number): void => {
