@@ -1,7 +1,7 @@
 <template>
   <div>
-    <button>重放</button>
-    <button>暂停</button>
+    <button @click="replayVideo">重放</button>
+    <button @click="pauseVideo">暂停</button>
     <div>
       <input
         v-model="speed"
@@ -28,6 +28,9 @@ import { SPEED_ARRAY } from '@/game/constants'
 
 export default defineComponent({
   setup () {
+    const replayVideo = () => store.commit('replayVideo')
+    const pauseVideo = () => store.commit('pauseVideo')
+
     const speed = computed({
       get: () => {
         return SPEED_ARRAY.indexOf(store.state.gameSpeed)
@@ -56,7 +59,7 @@ export default defineComponent({
       return (Math.min(timeMax.value, timeSlider.value) / 100).toFixed(2)
     })
 
-    return { speed, SPEED_ARRAY, timeSlider, timeMax, timeValue }
+    return { replayVideo, pauseVideo, speed, SPEED_ARRAY, timeSlider, timeMax, timeValue }
   }
 })
 </script>

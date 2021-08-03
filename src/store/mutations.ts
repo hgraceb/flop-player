@@ -34,10 +34,6 @@ export const mutations = {
     state.width = width
     state.height = height
     state.gameEvents = []
-    state.gameBoard = Array.from(Array(width * height), () => 'cell-normal')
-    state.gameStartTime = 0.0
-    state.gameElapsedTime = 0.0
-    state.gameEventIndex = 0
   },
   /** 添加游戏事件 */
   addEvent: (state: State, event: GameEvent): void => {
@@ -47,7 +43,7 @@ export const mutations = {
   receiveVideo: (state: State, payload: string): void => {
     try {
       parse(state, payload)
-      store.commit('playVideo')
+      store.commit('replayVideo')
     } catch (e) {
       console.log(e)
     }
@@ -91,19 +87,31 @@ export const mutations = {
         break
     }
   },
+  /** 重新播放游戏录像 */
+  replayVideo: (state: State): void => {
+    state.gameBoard = Array.from(Array(state.width * state.height), () => 'cell-normal')
+    state.gameStartTime = 0.0
+    state.gameElapsedTime = 0.0
+    state.gameEventIndex = 0
+    store.commit('playVideo')
+  },
   /** 播放游戏录像 */
   playVideo: (state: State): void => {
+    state.gameVideoPaused = false
     // 直接使用 requestAnimationFrame 回调的时间戳，可能会有较大误差，包括回调时间戳本身的误差和小数计算产生的误差，特别是在 Vuex 开启严格模式的时候
     requestAnimationFrame(function performEvent () {
       const timestamp = Date.now()
-      if (state.gameEventIndex >= state.gameEvents.length) {
-        requestAnimationFrame(function performPreviousEvent () {
-          if (state.gameEventIndex <= 0) {
-            return
-          }
-          store.commit('performPreviousEvent')
-          window.requestAnimationFrame(performPreviousEvent)
-        })
+      if (state.gameVideoPaused || state.gameEventIndex >= state.gameEvents.length) {
+        // TODO 将回放的代码抽取为单独的方法
+        if (state.gameEventIndex >= state.gameEvents.length) {
+          requestAnimationFrame(function performPreviousEvent () {
+            if (state.gameEventIndex <= 0) {
+              return
+            }
+            store.commit('performPreviousEvent')
+            window.requestAnimationFrame(performPreviousEvent)
+          })
+        }
         return
       }
       // 更新游戏经过的时间（毫秒）,首次时间为 0 ms
@@ -115,11 +123,24 @@ export const mutations = {
       }
       window.requestAnimationFrame(performEvent)
     })
+  },
+  /** 暂停游戏录像播放，TODO 完善游戏录像暂停逻辑 */
+  pauseVideo: (state: State): void => {
+    state.gameVideoPaused = true
   }
 }
 
+/** payload 参数可以为空的函数名称集合 */
+const EmptyPayloadFunction = [
+  'performPreviousEvent',
+  'performNextEvent',
+  'replayVideo',
+  'playVideo',
+  'pauseVideo'
+] as const
+
 /** payload 参数不能为空的函数类型集合 */
-export type MutationsMustPayload = Omit<typeof mutations, 'performPreviousEvent' | 'performNextEvent' | 'playVideo'>
+export type MutationsMustPayload = Omit<typeof mutations, typeof EmptyPayloadFunction[number]>
 
 /** payload 参数可以为空的函数类型集合 */
 export type MutationsEmptyPayload = Omit<typeof mutations, keyof MutationsMustPayload>

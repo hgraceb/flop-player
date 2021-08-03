@@ -19,7 +19,9 @@ export interface State {
   // 游戏开始的时间（毫秒）, 值为负数时表示还未开始
   gameStartTime: number,
   // 游戏经过的时间（毫秒）
-  gameElapsedTime: number
+  gameElapsedTime: number,
+  // 游戏录像是否处于暂停状态
+  gameVideoPaused: boolean
 }
 
 export const state: State = {
@@ -32,5 +34,6 @@ export const state: State = {
   gameBoard: [],
   gameSpeed: 1.0,
   gameStartTime: 0.0,
-  gameElapsedTime: 0.0
+  gameElapsedTime: 0.0,
+  gameVideoPaused: true
 }
