@@ -27,7 +27,8 @@ export interface State {
 }
 
 export const state: State = {
-  scale: 1,
+  // TODO 开发环境下使用本地缓存替代默认值
+  scale: process.env.NODE_ENV === 'production' ? 1 : 4,
   width: 8,
   height: 8,
   isGameOver: false,

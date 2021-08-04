@@ -82,8 +82,18 @@ button {
 
 <style scoped>
 [class^='border'] {
-  /* 缩放背景图片以完全装入背景区，使用 contain 会导致部分缩放比例下有白边的问题 */
-  background-size: 100% 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+[class^='border-horizontal'] {
+  /* 边框图片水平方向重复显示 */
+  background-repeat: repeat-x;
+}
+
+[class^='border-vertical'] {
+  /* 边框图片垂直方向重复显示 */
+  background-repeat: repeat-y;
 }
 
 .border-top-left {
