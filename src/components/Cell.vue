@@ -23,6 +23,5 @@ export default defineComponent({
   width: 16px;
   height: 16px;
   background-size: 100% 100%;
-  background-repeat: round;
 }
 </style>

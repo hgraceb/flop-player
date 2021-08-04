@@ -20,7 +20,6 @@ export default defineComponent({
   setup () {
     // 通过系统或者浏览器设置缩放比例后，Chrome 在部分缩放比例下布局都有问题，特别是系统和浏览器同时进行设置的时候，比如系统设置了 125%，浏览器设置了 25%，Chrome：“...”
     // 为了兼容 Chrome，使用 zoom 样式将页面强制按照 100% 进行显示，Firefox 不支持 zoom 样式，但是 Firefox 怎么缩放都没有问题，可以不用进行处理，Firefox：“小老弟学着点”
-    // TODO 将之前多余的适配代码（background-repeat）删除
     const zoom = ref(1 / window.devicePixelRatio)
     const resize = () => {
       console.log(window.devicePixelRatio)
