@@ -4,12 +4,18 @@ import { GameEvent } from '@/game'
 import { store } from '@/store/index'
 import { plus, times } from 'number-precision'
 import { ImgCellType } from '@/util/image'
-import { SPEED_ARRAY } from '@/game/constants'
+import { SCALE_ARRAY, SPEED_ARRAY } from '@/game/constants'
 
 /**
  * Mutations 函数定义，使用类型推断的方式，可以快速找到函数的所有 Usages
  */
 export const mutations = {
+  /** 设置页面缩放值 */
+  setScale: (state: State, scale: number): void => {
+    if (SCALE_ARRAY.indexOf(scale) !== -1) {
+      state.scale = scale
+    }
+  },
   /** 设置游戏开始的时间（毫秒） */
   setGameStartTime: (state: State, time: number): void => {
     state.gameStartTime = time

@@ -2,6 +2,8 @@ import { GameEvent } from '@/game'
 import { ImgCellType } from '@/util/image'
 
 export interface State {
+  // 页面缩放值
+  scale: number
   width: number
   height: number
   // 是否游戏结束
@@ -25,6 +27,7 @@ export interface State {
 }
 
 export const state: State = {
+  scale: 1,
   width: 8,
   height: 8,
   isGameOver: false,
