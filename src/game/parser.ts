@@ -1267,7 +1267,6 @@ export function parse (state: State, data: string): void {
       } else if (event[i] === 'n' && event[i + 1] === 'o') {
         continue
       } else {
-        // console.log('i =  ', i, ', event[i] =  ', event[i])
         error('Unknown event: ' + event)
       }
 

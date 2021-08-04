@@ -22,7 +22,6 @@ export default defineComponent({
     // 为了兼容 Chrome，使用 zoom 样式将页面强制按照 100% 进行显示，Firefox 不支持 zoom 样式，但是 Firefox 怎么缩放都没有问题，可以不用进行处理，Firefox：“小老弟学着点”
     const zoom = ref(1 / window.devicePixelRatio)
     const resize = () => {
-      console.log(window.devicePixelRatio)
       zoom.value = 1 / window.devicePixelRatio
     }
 
