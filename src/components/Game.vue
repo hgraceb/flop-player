@@ -21,7 +21,7 @@
     </div>
     <div class="flex container-border-middle">
       <div class="border-middle-left" />
-      <div class="border-horizontal-middle" />
+      <div class="border-middle-horizontal" />
       <div class="border-middle-right" />
     </div>
     <div :style="{'height': height + 'px'}" class="flex space-between">
@@ -78,8 +78,8 @@ button {
   background-size: contain;
 }
 
-/* 顶部边框容器 */
-.container-border-top {
+/* 顶部和中部的边框容器 */
+.container-border-top, .container-border-middle {
   /* 设置可见高度 */
   height: 11px;
   /* 隐藏可见高度外的元素 */
@@ -125,35 +125,29 @@ button {
   background-image: var(--border-vertical-right-upper);
 }
 
-/* 中部边框容器 */
-.container-border-middle {
-  height: 11px;
-  overflow: hidden;
+/* 中部边框适配特殊缩放比例，Chrome 部分特殊缩放倍数下会有白边，如：10.1、10.3 等 */
+/* 将图片以两倍高度重复显示后，取下面的部分进行展示即可，不要问我为什么这里 Chrome 不用取上面的部分，ಥ_ಥ 因为我也不知道，都是用肝试出来的 */
+[class^='border-middle'] {
+  height: calc(11px * 2);
+  background-repeat: repeat;
 }
 
 /* 中部左侧边框 */
 .border-middle-left {
   min-width: 12px;
-  height: calc(11px * 2.5);
-  /* 中部边框使用 repeat 是因为部分缩放比例下（如：10.2）使用 space 会在底部有很明显的白边 */
-  background-repeat: repeat;
   background-image: var(--border-middle-left);
 }
 
 /* 中部水平边框 */
-.border-horizontal-middle {
+.border-middle-horizontal {
   width: 100%;
-  height: calc(11px * 2.5);
-  background-repeat: repeat;
   background-size: 1px;
-  background-image: var(--border-horizontal-middle);
+  background-image: var(--border-middle-horizontal);
 }
 
 /* 中部右侧边框 */
 .border-middle-right {
   min-width: 12px;
-  height: calc(11px * 2.5);
-  background-repeat: repeat;
   background-image: var(--border-middle-right);
 }
 
