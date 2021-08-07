@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO 处理 Firefox 和 Safari 浏览器的缩放适配 -->
   <div :style="{'width': width + 'px'}" class="background" @dragstart.stop.prevent>
     <div class="flex container-border-top">
       <div class="border-top-left" />
@@ -31,7 +32,7 @@
     </div>
     <div class="flex container-border-bottom ">
       <div class="border-bottom-left" />
-      <div class="border-horizontal-bottom" />
+      <div class="border-bottom-horizontal" />
       <div class="border-bottom-right" />
     </div>
   </div>
@@ -169,29 +170,29 @@ button {
   overflow: hidden;
 }
 
+/* 底部边框适配特殊缩放比例，Chrome 部分特殊缩放倍数下会有白边，如：10.4、10.5 等 */
+/* 将图片以两倍高度重复显示后，取下面的部分进行展示即可，为什么 Chrome...都说了不要问我为什么 (っ °Д °;)っ */
+[class^='border-bottom'] {
+  height: calc(12px * 2);
+  background-repeat: repeat;
+}
+
 /* 底部左侧边框 */
 .border-bottom-left {
   min-width: 12px;
-  height: calc(12px * 2.5);
-  /* 底部边框使用 space 是因为部分缩放比例下（如：10.5）使用 repeat 会出现 overflow 的元素没有全部隐藏的情况，导致底部显示黑边 */
-  background-repeat: space;
   background-image: var(--border-bottom-left);
 }
 
 /* 底部水平边框 */
-.border-horizontal-bottom {
+.border-bottom-horizontal {
   width: 100%;
-  height: calc(12px * 2.5);
-  background-repeat: space;
   background-size: 1px;
-  background-image: var(--border-horizontal-bottom);
+  background-image: var(--border-bottom-horizontal);
 }
 
 /* 底部右侧边框 */
 .border-bottom-right {
   min-width: 12px;
-  height: calc(12px * 2.5);
-  background-repeat: space;
   background-image: var(--border-bottom-right);
 }
 
