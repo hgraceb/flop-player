@@ -171,10 +171,11 @@ button {
 }
 
 /* 底部边框适配特殊缩放比例，Chrome 部分特殊缩放倍数下会有白边，如：10.4、10.5 等 */
-/* 将图片以两倍高度重复显示后，取下面的部分进行展示即可，为什么 Chrome...都说了不要问我为什么 (っ °Д °;)っ */
+/* 将图片以 2.5 倍高度重复显示后，隐藏超出的部分即可 */
 [class^='border-bottom'] {
-  height: calc(12px * 2);
-  background-repeat: repeat;
+  height: calc(12px * 2.5);
+  /* 使用 repeat 的话 Chrome 在部分缩放倍数下会底部会显示黑边，如：10.1、10.3 等，因为隐藏得不够干净 */
+  background-repeat: space;
 }
 
 /* 底部左侧边框 */
