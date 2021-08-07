@@ -20,8 +20,9 @@ export default defineComponent({
 
 <style scoped>
 .cell {
-  width: 16px;
   height: 16px;
+  /* 部分缩放比例下有白边，使用 background-repeat 也无法解决，这里直接设置最小宽度，外部需要多余的部分隐藏掉 */
+  min-width: calc(16px * 2);
   background-size: contain;
 }
 </style>
