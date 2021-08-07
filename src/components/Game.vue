@@ -19,7 +19,7 @@
       </div>
       <div class="border-vertical-right-upper" />
     </div>
-    <div class="flex">
+    <div class="flex container-border-middle">
       <div class="border-middle-left" />
       <div class="border-horizontal-middle" />
       <div class="border-middle-right" />
@@ -34,9 +34,6 @@
       <div class="border-horizontal-bottom" />
       <div class="border-bottom-right" />
     </div>
-    <div />
-    <div />
-    <div />
   </div>
   <button type="button" @click="mines = mines < 1111 ? mines + 111 : -999">mines is: {{ mines }}</button>
   <button type="button" @click="time = time < 1111 ? time + 111 : -111">time is: {{ time }}</button>
@@ -124,21 +121,35 @@ button {
   background-image: var(--border-vertical-right-upper);
 }
 
+/* 中部边框容器 */
+.container-border-middle {
+  height: 11px;
+  overflow: hidden;
+}
+
+/* 中部左侧边框 */
 .border-middle-left {
   min-width: 12px;
-  height: 11px;
+  height: calc(11px * 2.5);
+  /* 中部边框使用 repeat 是因为部分缩放比例下（如：10.2）使用 space 会在底部有很明显的白边 */
+  background-repeat: repeat;
   background-image: var(--border-middle-left);
 }
 
+/* 中部水平边框 */
 .border-horizontal-middle {
   width: 100%;
-  height: 11px;
+  height: calc(11px * 2.5);
+  background-repeat: repeat;
+  background-size: 1px;
   background-image: var(--border-horizontal-middle);
 }
 
+/* 中部右侧边框 */
 .border-middle-right {
   min-width: 12px;
-  height: 11px;
+  height: calc(11px * 2.5);
+  background-repeat: repeat;
   background-image: var(--border-middle-right);
 }
 
