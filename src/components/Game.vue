@@ -29,7 +29,7 @@
       <cell-board />
       <div class="border-vertical-right-lower" />
     </div>
-    <div class="flex">
+    <div class="flex container-border-bottom ">
       <div class="border-bottom-left" />
       <div class="border-horizontal-bottom" />
       <div class="border-bottom-right" />
@@ -96,6 +96,7 @@ button {
 .border-horizontal-top {
   width: 100%;
   height: calc(11px * 2.5);
+  /* 顶部边框使用 space 是因为部分缩放比例下（如：10.5）使用 repeat 会在底部有很明显的白边，使用 space 只会有一条不是很明显的灰边 */
   background-repeat: space;
   background-size: 1px;
   background-image: var(--border-horizontal-top);
@@ -165,21 +166,35 @@ button {
   background-image: var(--border-vertical-right-lower);
 }
 
+/* 底部边框容器 */
+.container-border-bottom {
+  height: 12px;
+  overflow: hidden;
+}
+
+/* 底部左侧边框 */
 .border-bottom-left {
   min-width: 12px;
-  height: 12px;
+  height: calc(12px * 2.5);
+  /* 底部边框使用 space 是因为部分缩放比例下（如：10.5）使用 repeat 会出现 overflow 的元素没有全部隐藏的情况，导致底部显示黑边 */
+  background-repeat: space;
   background-image: var(--border-bottom-left);
 }
 
+/* 底部水平边框 */
 .border-horizontal-bottom {
   width: 100%;
-  height: 12px;
+  height: calc(12px * 2.5);
+  background-repeat: space;
+  background-size: 1px;
   background-image: var(--border-horizontal-bottom);
 }
 
+/* 底部右侧边框 */
 .border-bottom-right {
   min-width: 12px;
-  height: 12px;
+  height: calc(12px * 2.5);
+  background-repeat: space;
   background-image: var(--border-bottom-right);
 }
 
