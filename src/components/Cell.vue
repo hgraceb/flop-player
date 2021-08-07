@@ -23,6 +23,5 @@ export default defineComponent({
   width: 16px;
   height: 16px;
   background-size: contain;
-  background-repeat: no-repeat;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div :style="{'width': width + 'px'}" class="background" @dragstart.stop.prevent>
-    <div class="flex">
+    <div class="flex container-border-top">
       <div class="border-top-left" />
       <div class="border-horizontal-top" />
       <div class="border-top-right" />
@@ -70,10 +70,6 @@ export default defineComponent({
 
 <!--测试用-->
 <style scoped>
-[class*='border'] {
-  /*margin: 1px 0 0 1px;*/
-}
-
 button {
   width: 108px;
   text-align: left;
@@ -83,34 +79,36 @@ button {
 <style scoped>
 [class^='border'] {
   background-size: contain;
-  background-repeat: no-repeat;
 }
 
-[class^='border-horizontal'] {
-  /* 边框图片水平方向重复显示 */
-  background-repeat: repeat-x;
+/* 顶部边框容器 */
+.container-border-top {
+  height: 11px;
+  overflow: hidden;
 }
 
-[class^='border-vertical'] {
-  /* 边框图片垂直方向重复显示 */
-  background-repeat: repeat-y;
-}
-
+/* 顶部左侧边框 */
 .border-top-left {
   min-width: 12px;
-  height: 11px;
+  height: calc(11px * 2.5);
+  background-repeat: space;
   background-image: var(--border-top-left);
 }
 
+/* 顶部水平边框 */
 .border-horizontal-top {
   width: 100%;
-  height: 11px;
+  height: calc(11px * 2.5);
+  background-repeat: space;
+  background-size: 1px;
   background-image: var(--border-horizontal-top);
 }
 
+/* 顶部右侧边框 */
 .border-top-right {
   min-width: 12px;
-  height: 11px;
+  height: calc(11px * 2.5);
+  background-repeat: space;
   background-image: var(--border-top-right);
 }
 

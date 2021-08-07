@@ -60,7 +60,6 @@ export default defineComponent({
   padding: 1px;
   background-image: var(--top-counters);
   background-size: contain;
-  background-repeat: no-repeat;
 }
 
 div[class*='count-'] {
@@ -68,7 +67,6 @@ div[class*='count-'] {
   height: 21px;
   margin: 1px;
   background-size: contain;
-  background-repeat: no-repeat;
 }
 
 .count-minus {
