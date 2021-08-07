@@ -2,7 +2,7 @@
   <div :style="{'width': width + 'px'}" class="background" @dragstart.stop.prevent>
     <div class="flex container-border-top">
       <div class="border-top-left" />
-      <div class="border-horizontal-top" />
+      <div class="border-top-horizontal" />
       <div class="border-top-right" />
     </div>
     <div class="flex">
@@ -80,33 +80,36 @@ button {
 
 /* 顶部边框容器 */
 .container-border-top {
+  /* 设置可见高度 */
   height: 11px;
+  /* 隐藏可见高度外的元素 */
   overflow: hidden;
+}
+
+/* 顶部边框适配特殊缩放比例，Chrome 部分特殊缩放倍数下会有白边，如：10.5、10.7 等 */
+/* 将图片以两倍高度重复显示后，Chrome 取上面的部分进行显示，Firefox 取下面的部分进行显示 */
+[class^='border-top'] {
+  height: calc(11px * 2);
+  margin-top: -11px;
+  background-repeat: repeat;
 }
 
 /* 顶部左侧边框 */
 .border-top-left {
   min-width: 12px;
-  height: calc(11px * 2.5);
-  background-repeat: space;
   background-image: var(--border-top-left);
 }
 
 /* 顶部水平边框 */
-.border-horizontal-top {
+.border-top-horizontal {
   width: 100%;
-  height: calc(11px * 2.5);
-  /* 顶部边框使用 space 是因为部分缩放比例下（如：10.5）使用 repeat 会在底部有很明显的白边，使用 space 只会有一条不是很明显的灰边 */
-  background-repeat: space;
   background-size: 1px;
-  background-image: var(--border-horizontal-top);
+  background-image: var(--border-top-horizontal);
 }
 
 /* 顶部右侧边框 */
 .border-top-right {
   min-width: 12px;
-  height: calc(11px * 2.5);
-  background-repeat: space;
   background-image: var(--border-top-right);
 }
 
