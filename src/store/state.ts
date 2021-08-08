@@ -6,6 +6,8 @@ export interface State {
   scale: number
   width: number
   height: number
+  // 边长
+  sideLength: number
   // 是否游戏结束
   isGameOver: boolean
   // 游戏级别，1-初级，2-中级，3-高级，4-自定义
@@ -30,6 +32,7 @@ export const state: State = {
   scale: 1,
   width: 8,
   height: 8,
+  sideLength: 16,
   isGameOver: false,
   gameLevel: 1,
   gameEvents: [],
