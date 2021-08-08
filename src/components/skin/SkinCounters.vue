@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { SIZE_BORDER_COUNTERS, SIZE_BORDER_TOP, SIZE_CELL, SVG_SCALE } from '@/game/constants'
 import { store } from '@/store'
 
@@ -22,7 +22,9 @@ export default defineComponent({
   setup () {
     const translateY = SIZE_BORDER_TOP.height * SVG_SCALE
     const height = SIZE_BORDER_COUNTERS.height * SVG_SCALE
-    const rightTranslateX = (SIZE_BORDER_COUNTERS.width + store.state.width * SIZE_CELL.width) * SVG_SCALE
+    const rightTranslateX = computed(() => {
+      return (SIZE_BORDER_COUNTERS.width + store.state.width * SIZE_CELL.width) * SVG_SCALE
+    })
     return { translateY, height, rightTranslateX }
   }
 })

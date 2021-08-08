@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import SkinSymbol from '@/components/skin/SkinSymbol.vue'
 import { SIZE_BORDER_TOP, SIZE_CELL, SVG_SCALE } from '@/game/constants'
 import { store } from '@/store'
@@ -18,8 +18,12 @@ export default defineComponent({
   components: { SkinSymbol },
   setup () {
     const horizontalTranslateX = SIZE_BORDER_TOP.widthLeft * SVG_SCALE
-    const horizontalWidth = (SIZE_BORDER_TOP.widthHorizontal * store.state.width * SIZE_CELL.width) * SVG_SCALE
-    const rightTranslateX = SIZE_BORDER_TOP.widthLeft * SVG_SCALE + store.state.width * SIZE_BORDER_TOP.widthHorizontal * 16 * SVG_SCALE
+    const horizontalWidth = computed(() => {
+      return (SIZE_BORDER_TOP.widthHorizontal * store.state.width * SIZE_CELL.width) * SVG_SCALE
+    })
+    const rightTranslateX = computed(() => {
+      return (SIZE_BORDER_TOP.widthLeft + store.state.width * SIZE_BORDER_TOP.widthHorizontal * SIZE_CELL.width) * SVG_SCALE
+    })
     return { horizontalTranslateX, horizontalWidth, rightTranslateX }
   }
 })
