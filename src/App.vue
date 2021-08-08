@@ -1,10 +1,11 @@
 <template>
+  <game-new />
   <div :style="{zoom: `${zoom}`, transformOrigin: '0 0 0', transform: `scale(${realScale})`}">
     <game />
     <control-bar />
     <button :disabled="increaseDisabled" @click="increaseScale">放大</button>
     <button :disabled="decreaseDisabled" @click="decreaseScale">缩小</button>
-    <span>{{scale}}x（实际{{ realScale.toFixed(2).substring(0, 4) }}）</span>
+    <span>{{ scale }}x（实际{{ realScale.toFixed(2).substring(0, 4) }}）</span>
   </div>
 </template>
 
@@ -14,9 +15,10 @@ import Game from './components/Game.vue'
 import ControlBar from '@/components/ControlBar.vue'
 import { store } from '@/store'
 import { SCALE_ARRAY } from '@/game/constants'
+import GameNew from '@/components/GameNew.vue'
 
 export default defineComponent({
-  components: { Game, ControlBar },
+  components: { GameNew, Game, ControlBar },
   setup () {
     // 显示器的物理像素分辨率与CSS像素分辨率之比，即像素大小的比率
     const devicePixelRatio = ref(window.devicePixelRatio)
