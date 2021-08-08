@@ -1,20 +1,21 @@
 <template>
-  <game-svg>
-    <cell-number1 translate-x="0" translate-y="0"></cell-number1>
-    <cell-number2 translate-x="160" translate-y="0"></cell-number2>
-    <cell-number3 translate-x="0" translate-y="160"></cell-number3>
-    <cell-number4 translate-x="160" translate-y="160"></cell-number4>
-  </game-svg>
+  <base-svg :height="0" :width="0">
+    <skin-sprites></skin-sprites>
+  </base-svg>
+  <base-svg :height="200" :width="200">
+    <skin-symbol :translate-x="0" :translate-y="0" name="cell-number-1"></skin-symbol>
+    <skin-symbol :translate-x="160" :translate-y="0" name="cell-number-2"></skin-symbol>
+    <skin-symbol :translate-x="0" :translate-y="160" name="cell-number-3"></skin-symbol>
+    <skin-symbol :translate-x="160" :translate-y="160" name="cell-number-4"></skin-symbol>
+  </base-svg>
 </template>
 
 <script lang="ts">
-import GameSvg from '@/components/skin/GameSvg.vue'
-import CellNumber1 from '@/components/skin/CellNumber1.vue'
-import CellNumber2 from '@/components/skin/CellNumber2.vue'
-import CellNumber3 from '@/components/skin/CellNumber3.vue'
-import CellNumber4 from '@/components/skin/CellNumber4.vue'
+import BaseSvg from '@/components/BaseSvg.vue'
+import SkinSymbol from '@/components/skin/SkinSymbol.vue'
+import SkinSprites from '@/components/skin/SkinSprites.vue'
 
 export default {
-  components: { CellNumber4, CellNumber3, CellNumber2, CellNumber1, GameSvg }
+  components: { SkinSprites, SkinSymbol, BaseSvg }
 }
 </script>

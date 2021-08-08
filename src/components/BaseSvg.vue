@@ -5,9 +5,7 @@
        viewBox="0 0 320 320"
        xmlns="http://www.w3.org/2000/svg"
   >
-    <g>
-      <slot />
-    </g>
+    <slot />
   </svg>
 </template>
 
@@ -16,21 +14,13 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   props: {
-    iconName: {
-      type: String,
-      default: 'box'
-    },
     width: {
-      type: [Number, String],
-      default: 180
+      type: Number,
+      required: true
     },
     height: {
-      type: [Number, String],
-      default: 180
-    },
-    iconColor: {
-      type: String,
-      default: 'currentColor'
+      type: Number,
+      required: true
     }
   }
 })
@@ -40,6 +30,6 @@ export default defineComponent({
 svg {
   display: inline-block;
   vertical-align: baseline;
-  margin-bottom: -2px; /* yes, I'm that particular about formatting */
+  margin-bottom: -2px;
 }
 </style>
