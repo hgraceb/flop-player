@@ -10,14 +10,14 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import { SIZE_BORDER_COUNTERS, SIZE_BORDER_MIDDLE, SIZE_BORDER_TOP, SIZE_CELL, SVG_SCALE } from '@/game/constants'
+import { SIZE_BORDER_UPPER, SIZE_BORDER_MIDDLE, SIZE_BORDER_TOP, SIZE_CELL, SVG_SCALE } from '@/game/constants'
 import { store } from '@/store'
 import SkinSymbol from '@/components/skin/SkinSymbol.vue'
 
 export default defineComponent({
   components: { SkinSymbol },
   setup () {
-    const translateY = (SIZE_BORDER_TOP.height + SIZE_BORDER_COUNTERS.height) * SVG_SCALE
+    const translateY = (SIZE_BORDER_TOP.height + SIZE_BORDER_UPPER.height) * SVG_SCALE
     const horizontalTranslateX = SIZE_BORDER_MIDDLE.widthLeft * SVG_SCALE
     const horizontalWidth = computed(() => {
       return (SIZE_BORDER_MIDDLE.widthHorizontal * store.state.width * SIZE_CELL.width) * SVG_SCALE

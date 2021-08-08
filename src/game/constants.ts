@@ -29,17 +29,25 @@ export const SIZE_BORDER_TOP = {
 }
 
 /**
- * 计数器部分边框 SVG 宽高信息
+ * 顶部和中部之间的 SVG 边框宽高信息
  */
-export const SIZE_BORDER_COUNTERS = {
+export const SIZE_BORDER_UPPER = {
   width: 12,
   height: 33
 }
 
 /**
- * 中部部边框 SVG 宽高信息
+ * 中部边框 SVG 宽高信息
  */
 export const SIZE_BORDER_MIDDLE = SIZE_BORDER_TOP
+
+/**
+ * 中部和底部之间的 SVG 边框宽高信息
+ */
+export const SIZE_BORDER_LOWER = {
+  width: 12,
+  height: 1
+}
 
 /**
  * 底部边框 SVG 宽高信息
