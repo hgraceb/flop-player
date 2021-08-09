@@ -3,7 +3,7 @@ import { parse } from '@/game/parser'
 import { GameEvent } from '@/game'
 import { store } from '@/store/index'
 import { plus, times } from 'number-precision'
-import { ImgCellType } from '@/util/image'
+import { ImgCellType, ImgFaceType } from '@/util/image'
 import { SCALE_ARRAY, SPEED_ARRAY } from '@/game/constants'
 
 /**
@@ -15,6 +15,10 @@ export const mutations = {
     if (SCALE_ARRAY.indexOf(scale) !== -1) {
       state.scale = scale
     }
+  },
+  /** 设置笑脸状态，TODO 完善笑脸状态设置逻辑 */
+  setFaceStatus: (state: State, faceStatus: ImgFaceType): void => {
+    state.faceStatus = faceStatus
   },
   /** 设置游戏开始的时间（毫秒） */
   setGameStartTime: (state: State, time: number): void => {

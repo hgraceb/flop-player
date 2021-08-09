@@ -1,5 +1,5 @@
 import { GameEvent } from '@/game'
-import { ImgCellType } from '@/util/image'
+import { ImgCellType, ImgFaceType } from '@/util/image'
 
 export interface State {
   // 页面缩放值
@@ -10,6 +10,8 @@ export interface State {
   mines: number
   // 游戏剩余雷数
   leftMines: number
+  // 笑脸状态
+  faceStatus: ImgFaceType
   // 是否游戏结束
   isGameOver: boolean
   // 游戏级别，1-初级，2-中级，3-高级，4-自定义
@@ -36,6 +38,7 @@ export const state: State = {
   height: 8,
   mines: 10,
   leftMines: 10,
+  faceStatus: 'face-normal',
   isGameOver: false,
   gameLevel: 1,
   gameEvents: [],
