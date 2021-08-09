@@ -5,7 +5,7 @@
   <base-svg :height="height" :width="width">
     <skin-border-top />
     <skin-border-upper />
-    <skin-counter-top :count="10" :translate-x="minesCountTranslateX" />
+    <skin-counter-top :count="countLeftMines" :translate-x="minesCountTranslateX" />
     <skin-counter-top :count="countTime" :min="0" :translate-x="timeCountTranslateX" />
     <skin-border-middle />
     <skin-border-lower />
@@ -52,12 +52,14 @@ export default defineComponent({
     const timeCountTranslateX = computed(() => {
       return (SIZE_BORDER_UPPER.width + store.state.width * SIZE_CELL.width - 41 - 3) * SVG_SCALE
     })
+    // 当前计数器显示的剩余雷数
+    const countLeftMines = computed(() => store.state.leftMines)
     // 当前计数器显示的游戏时间
     const countTime = computed(() => {
       // 当游戏经过的时间为 0 时，计数器显示的时间也为 0，否则需要转换成秒数后 +1
       return store.state.gameElapsedTime === 0 ? 0 : Math.floor(store.state.gameElapsedTime / 1000) + 1
     })
-    return { width, height, minesCountTranslateX, countTime, timeCountTranslateX }
+    return { width, height, countLeftMines, minesCountTranslateX, countTime, timeCountTranslateX }
   }
 })
 </script>

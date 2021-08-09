@@ -1103,7 +1103,7 @@ export function parse (state: State, data: string): void {
   }
 
   // 初始化游戏数据
-  store.commit('initGame', { width: w, height: h })
+  store.commit('initGame', { width: w, height: h, mines: m })
 
   // Get number of cells in the board
   board = Array.from(Array(size = w * h), () => new Cell())

@@ -36,9 +36,11 @@ export const mutations = {
     state.gameElapsedTime = plus(state.gameElapsedTime, times(time, state.gameSpeed))
   },
   /** 初始化游戏 */
-  initGame: (state: State, { width, height }: { width: number, height: number }): void => {
+  initGame: (state: State, { width, height, mines }: { width: number, height: number, mines: number }): void => {
     state.width = width
     state.height = height
+    state.mines = mines
+    state.leftMines = mines
     state.gameEvents = []
   },
   /** 添加游戏事件 */
@@ -60,8 +62,17 @@ export const mutations = {
     const event = state.gameEvents[--state.gameEventIndex]
     // 根据坐标获取索引
     const index = event.x + event.y * state.width
-    // 还原图片快照
+    // 根据快照还原图片状态
     state.gameBoard[index] = event.snapshot as ImgCellType
+    // 根据游戏事件还原剩余雷数
+    switch (event.name) {
+      case 'Flag':
+        state.leftMines++
+        break
+      case 'RemoveFlag':
+        state.leftMines--
+        break
+    }
   },
   /** 模拟下一个游戏事件 */
   performNextEvent: (state: State): void => {
@@ -74,13 +85,17 @@ export const mutations = {
     switch (event.name) {
       case 'Flag':
         state.gameBoard[index] = 'cell-flag'
+        state.leftMines--
         break
       case 'QuestionMark':
         state.gameBoard[index] = 'cell-question'
         break
       case 'RemoveQuestionMark':
+        state.gameBoard[index] = 'cell-normal'
+        break
       case 'RemoveFlag':
         state.gameBoard[index] = 'cell-normal'
+        state.leftMines++
         break
       case 'Press':
         state.gameBoard[index] = 'cell-press'
@@ -95,10 +110,12 @@ export const mutations = {
   },
   /** 重新播放游戏录像，TODO 进行函数节流处理 */
   replayVideo: (state: State): void => {
+    // 重置变量
     state.gameBoard = Array.from(Array(state.width * state.height), () => 'cell-normal')
     state.gameStartTime = 0.0
     state.gameElapsedTime = 0.0
     state.gameEventIndex = 0
+    state.leftMines = state.mines
     store.commit('playVideo')
   },
   /** 播放游戏录像，TODO 进行函数节流处理 */
