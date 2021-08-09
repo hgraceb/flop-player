@@ -43,7 +43,7 @@ export default defineComponent({
       if (store.state.gameBoard.length === 0) {
         return 'cell-normal'
       }
-      return store.state.gameBoard[width + height * gameHeight.value]
+      return store.state.gameBoard[width + height * gameWidth.value]
     }
     // 根据横坐标获取 X 轴坐标偏移量
     const getTranslateX = (width: number): number => {
