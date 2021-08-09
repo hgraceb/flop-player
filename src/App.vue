@@ -1,8 +1,8 @@
 <template>
   <game-new />
+  <control-bar />
   <div :style="{zoom: `${zoom}`, transformOrigin: '0 0 0', transform: `scale(${realScale})`}">
     <game />
-    <control-bar />
     <button :disabled="increaseDisabled" @click="increaseScale">放大</button>
     <button :disabled="decreaseDisabled" @click="decreaseScale">缩小</button>
     <span>{{ scale }}x（实际{{ realScale.toFixed(2).substring(0, 4) }}）</span>
