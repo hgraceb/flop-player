@@ -73,6 +73,8 @@ export const mutations = {
         state.leftMines--
         break
     }
+    // 更新游戏当前经过的时间
+    state.gameElapsedTime = event.time
   },
   /** 模拟下一个游戏事件 */
   performNextEvent: (state: State): void => {
