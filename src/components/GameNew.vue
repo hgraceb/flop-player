@@ -10,6 +10,7 @@
     <skin-counter-top :count="countTime" :min="0" :translate-x="timeCountTranslateX" />
     <skin-border-middle />
     <skin-border-lower />
+    <skin-board />
     <skin-border-bottom />
   </base-svg>
 </template>
@@ -35,9 +36,11 @@ import SkinBorderLower from '@/components/skin/SkinBorderLower.vue'
 import SkinBorderBottom from '@/components/skin/SkinBorderBottom.vue'
 import SkinCounterTop from '@/components/skin/SkinCounterTop.vue'
 import SkinFace from '@/components/skin/SkinFace.vue'
+import SkinBoard from '@/components/skin/SkinBoard.vue'
 
 export default defineComponent({
   components: {
+    SkinBoard,
     SkinFace,
     SkinCounterTop,
     SkinBorderBottom,
