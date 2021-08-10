@@ -1,204 +1,79 @@
 <template>
-  <!-- TODO 处理 Firefox 和 Safari 浏览器的缩放适配 -->
-  <div :style="{'width': width + 'px'}" class="background" @dragstart.stop.prevent>
-    <div class="flex container-border-top">
-      <div class="border-top-left" />
-      <div class="border-top-horizontal" />
-      <div class="border-top-right" />
-    </div>
-    <div class="flex">
-      <div class="border-vertical-left-upper" />
-      <div
-        class="flex top space-between"
-        @mousedown="faceStatus = 'face-press-normal'"
-        @mouseleave="faceStatus = 'face-normal'"
-        @mouseup="faceStatus = 'face-normal'"
-      >
-        <top-counter :count="mines" />
-        <top-face :face-status="faceStatus" />
-        <top-counter :count="time" :min="0" />
-      </div>
-      <div class="border-vertical-right-upper" />
-    </div>
-    <div class="flex container-border-middle">
-      <div class="border-middle-left" />
-      <div class="border-middle-horizontal" />
-      <div class="border-middle-right" />
-    </div>
-    <div :style="{'height': height + 'px'}" class="flex space-between">
-      <div class="border-vertical-left-lower" />
-      <cell-board />
-      <div class="border-vertical-right-lower" />
-    </div>
-    <div class="flex container-border-bottom ">
-      <div class="border-bottom-left" />
-      <div class="border-bottom-horizontal" />
-      <div class="border-bottom-right" />
-    </div>
-  </div>
-  <button type="button" @click="mines = mines < 1111 ? mines + 111 : -999">mines is: {{ mines }}</button>
-  <button type="button" @click="time = time < 1111 ? time + 111 : -111">time is: {{ time }}</button>
+  <base-svg :height="0" :width="0">
+    <skin-sprites />
+  </base-svg>
+  <base-svg :height="height" :width="width">
+    <skin-border-top />
+    <skin-border-upper />
+    <skin-counter-top :count="countLeftMines" :translate-x="minesCountTranslateX" />
+    <skin-face />
+    <skin-counter-top :count="countTime" :min="0" :translate-x="timeCountTranslateX" />
+    <skin-border-middle />
+    <skin-border-lower />
+    <skin-board />
+    <skin-border-bottom />
+  </base-svg>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, Ref, ref } from 'vue'
-import TopCounter from './TopCounter.vue'
-import TopFace from './TopFace.vue'
-import { ImgFaceType } from '@/util/image'
+import BaseSvg from '@/components/BaseSvg.vue'
+import SkinSprites from '@/components/skin/SkinSprites.vue'
+import SkinBorderTop from '@/components/skin/SkinBorderTop.vue'
+import {
+  SIZE_BORDER_BOTTOM,
+  SIZE_BORDER_LOWER,
+  SIZE_BORDER_MIDDLE,
+  SIZE_BORDER_TOP,
+  SIZE_BORDER_UPPER,
+  SIZE_CELL,
+  SVG_SCALE
+} from '@/game/constants'
 import { store } from '@/store'
-import CellBoard from '@/components/CellBoard.vue'
+import SkinBorderUpper from '@/components/skin/SkinBorderUpper.vue'
+import { computed, defineComponent } from 'vue'
+import SkinBorderMiddle from '@/components/skin/SkinBorderMiddle.vue'
+import SkinBorderLower from '@/components/skin/SkinBorderLower.vue'
+import SkinBorderBottom from '@/components/skin/SkinBorderBottom.vue'
+import SkinCounterTop from '@/components/skin/SkinCounterTop.vue'
+import SkinFace from '@/components/skin/SkinFace.vue'
+import SkinBoard from '@/components/skin/SkinBoard.vue'
 
 export default defineComponent({
-  components: { TopCounter, TopFace, CellBoard },
+  components: {
+    SkinBoard,
+    SkinFace,
+    SkinCounterTop,
+    SkinBorderBottom,
+    SkinBorderLower,
+    SkinBorderMiddle,
+    SkinBorderUpper,
+    SkinBorderTop,
+    SkinSprites,
+    BaseSvg
+  },
   setup () {
-    const mines = ref(-999)
-    const time = ref(-222)
-    const width = computed(() => store.state.width * 16 + 24)
-    const height = computed(() => store.state.height * 16)
-    const faceStatus: Ref<ImgFaceType> = ref('face-normal')
-
-    onMounted(() => {
-      // 测试数据
-      store.dispatch('fetchVideo', '')
+    // SVG 高度信息
+    const width = computed(() => {
+      return (SIZE_BORDER_TOP.widthLeft + store.state.width * SIZE_BORDER_TOP.widthHorizontal * SIZE_CELL.width + SIZE_BORDER_TOP.widthRight) * SVG_SCALE
     })
-    return { mines, time, width, height, faceStatus }
+    // SVG 宽度信息
+    const height = computed(() => {
+      return (SIZE_BORDER_TOP.height + SIZE_BORDER_UPPER.height + SIZE_BORDER_MIDDLE.height + store.state.height * SIZE_BORDER_LOWER.height * SIZE_CELL.height + SIZE_BORDER_BOTTOM.height) * SVG_SCALE
+    })
+    // 雷数计数器的 X 轴坐标偏移量，3 为雷数计数器与左边框的距离
+    const minesCountTranslateX = (SIZE_BORDER_UPPER.width + 3) * SVG_SCALE
+    // 时间计数器的 X 轴坐标偏移量，41 为时间计数器的背景宽度，3 为时间计数器与右边框的距离，Minesweeper X 和 Arbiter 中的值均为 6，看着不爽就改成对称的了
+    const timeCountTranslateX = computed(() => {
+      return (SIZE_BORDER_UPPER.width + store.state.width * SIZE_CELL.width - 41 - 3) * SVG_SCALE
+    })
+    // 当前计数器显示的剩余雷数
+    const countLeftMines = computed(() => store.state.leftMines)
+    // 当前计数器显示的游戏时间
+    const countTime = computed(() => {
+      // 当游戏经过的时间为 0 时，计数器显示的时间也为 0，否则需要转换成秒数后 +1
+      return store.state.gameElapsedTime === 0 ? 0 : Math.floor(store.state.gameElapsedTime / 1000) + 1
+    })
+    return { width, height, countLeftMines, minesCountTranslateX, countTime, timeCountTranslateX }
   }
 })
 </script>
-
-<!--测试用-->
-<style scoped>
-button {
-  width: 108px;
-  text-align: left;
-}
-</style>
-
-<style scoped>
-[class^='border'] {
-  background-size: contain;
-}
-
-/* 顶部和中部的边框容器 */
-.container-border-top, .container-border-middle {
-  /* 设置可见高度 */
-  height: 11px;
-  /* 隐藏可见高度外的元素 */
-  overflow: hidden;
-}
-
-/* 顶部边框适配特殊缩放比例，Chrome 部分特殊缩放倍数下会有白边，如：10.5、10.7 等 */
-/* 将图片以两倍高度重复显示后，Chrome 取上面的部分进行显示，Firefox 取下面的部分进行显示 */
-[class^='border-top'] {
-  height: calc(11px * 2);
-  margin-top: -11px;
-  background-repeat: repeat;
-}
-
-/* 顶部左侧边框 */
-.border-top-left {
-  min-width: 12px;
-  background-image: var(--border-top-left);
-}
-
-/* 顶部水平边框 */
-.border-top-horizontal {
-  width: 100%;
-  background-size: 1px;
-  background-image: var(--border-top-horizontal);
-}
-
-/* 顶部右侧边框 */
-.border-top-right {
-  min-width: 12px;
-  background-image: var(--border-top-right);
-}
-
-.border-vertical-left-upper {
-  min-width: 12px;
-  height: 33px;
-  background-image: var(--border-vertical-left-upper);
-}
-
-.border-vertical-right-upper {
-  min-width: 12px;
-  height: 33px;
-  background-image: var(--border-vertical-right-upper);
-}
-
-/* 中部边框适配特殊缩放比例，Chrome 部分特殊缩放倍数下会有白边，如：10.1、10.3 等 */
-/* 将图片以两倍高度重复显示后，取下面的部分进行展示即可，不要问我为什么这里 Chrome 不用取上面的部分，ಥ_ಥ 因为我也不知道，都是用肝试出来的 */
-[class^='border-middle'] {
-  height: calc(11px * 2);
-  background-repeat: repeat;
-}
-
-/* 中部左侧边框 */
-.border-middle-left {
-  min-width: 12px;
-  background-image: var(--border-middle-left);
-}
-
-/* 中部水平边框 */
-.border-middle-horizontal {
-  width: 100%;
-  background-size: 1px;
-  background-image: var(--border-middle-horizontal);
-}
-
-/* 中部右侧边框 */
-.border-middle-right {
-  min-width: 12px;
-  background-image: var(--border-middle-right);
-}
-
-.border-vertical-left-lower {
-  min-width: 12px;
-  height: 100%;
-  background-image: var(--border-vertical-left-lower);
-}
-
-.border-vertical-right-lower {
-  min-width: 12px;
-  height: 100%;
-  background-image: var(--border-vertical-right-lower);
-}
-
-/* 底部边框容器 */
-.container-border-bottom {
-  height: 12px;
-  overflow: hidden;
-}
-
-/* 底部边框适配特殊缩放比例，Chrome 部分特殊缩放倍数下会有白边，如：10.4、10.5 等 */
-/* 将图片以 2.5 倍高度重复显示后，隐藏超出的部分即可 */
-[class^='border-bottom'] {
-  height: calc(12px * 2.5);
-  /* 使用 repeat 的话 Chrome 在部分缩放倍数下会底部会显示黑边，如：10.1、10.3 等，因为隐藏得不够干净 */
-  background-repeat: space;
-}
-
-/* 底部左侧边框 */
-.border-bottom-left {
-  min-width: 12px;
-  background-image: var(--border-bottom-left);
-}
-
-/* 底部水平边框 */
-.border-bottom-horizontal {
-  width: 100%;
-  background-size: 1px;
-  background-image: var(--border-bottom-horizontal);
-}
-
-/* 底部右侧边框 */
-.border-bottom-right {
-  min-width: 12px;
-  background-image: var(--border-bottom-right);
-}
-
-.top {
-  width: 100%;
-  padding: 4px 6px 0 4px;
-}
-</style>

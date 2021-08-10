@@ -35,3 +35,24 @@ const ImgFace = [
 ] as const
 export type ImgFaceType = typeof ImgFace[number]
 export const isValidImgFace = (value: ImgFaceType): boolean => ImgFace.includes(value)
+
+/**
+ * 边框图片资源，TODO 删除 SkinSprites 中多余的代码
+ */
+const ImgBorder = [
+  'border-bottom-left',
+  'border-bottom-right',
+  'border-horizontal-bottom',
+  'border-horizontal-middle',
+  'border-horizontal-top',
+  'border-middle-left',
+  'border-middle-right',
+  'border-top-left',
+  'border-top-right',
+  'border-vertical-left-lower',
+  'border-vertical-left-upper',
+  'border-vertical-right-lower',
+  'border-vertical-right-upper'
+] as const
+export type ImgBorderType = typeof ImgBorder[number]
+export const isValidImgBorder = (value: ImgBorderType): boolean => ImgBorder.includes(value)
