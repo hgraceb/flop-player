@@ -12,6 +12,8 @@
     <skin-border-lower />
     <skin-board />
     <skin-border-bottom />
+    <!-- 鼠标指针需要显示在最上层，所以需要最后进行渲染 -->
+    <skin-cursor />
   </base-svg>
 </template>
 
@@ -37,9 +39,11 @@ import SkinBorderBottom from '@/components/skin/SkinBorderBottom.vue'
 import SkinCounterTop from '@/components/skin/SkinCounterTop.vue'
 import SkinFace from '@/components/skin/SkinFace.vue'
 import SkinBoard from '@/components/skin/SkinBoard.vue'
+import SkinCursor from '@/components/skin/SkinCursor.vue'
 
 export default defineComponent({
   components: {
+    SkinCursor,
     SkinBoard,
     SkinFace,
     SkinCounterTop,

@@ -8,7 +8,6 @@
         :translate-x="getTranslateX(width)"
         :translate-y="getTranslateY(height)"
       />
-      <skin-symbol :translate-x="cursorTranslateX" :translate-y="cursorTranslateY" name="cursor-arrow" />
     </template>
   </g>
 </template>
@@ -54,22 +53,8 @@ export default defineComponent({
     const getTranslateY = (height: number): number => {
       return height * SIZE_CELL.height * SVG_SCALE
     }
-    // 指针 X 轴坐标位置
-    const cursorTranslateX = computed(() => store.state.precisionX * SVG_SCALE)
-    // 指针 Y 轴坐标位置
-    const cursorTranslateY = computed(() => store.state.precisionY * SVG_SCALE)
 
-    return {
-      translateX,
-      translateY,
-      gameWidth,
-      gameHeight,
-      getCellImg,
-      getTranslateX,
-      getTranslateY,
-      cursorTranslateX,
-      cursorTranslateY
-    }
+    return { translateX, translateY, gameWidth, gameHeight, getCellImg, getTranslateX, getTranslateY }
   }
 })
 </script>
