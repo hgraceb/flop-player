@@ -30,6 +30,12 @@ export interface State {
   gameElapsedTime: number,
   // 游戏录像是否处于暂停状态
   gameVideoPaused: boolean
+  // 精确的横坐标
+  precisionX: number
+  // 精确的纵坐标
+  precisionY: number
+  // 是否打印录像解析相关日志
+  enableParserLog: boolean
 }
 
 export const state: State = {
@@ -47,5 +53,8 @@ export const state: State = {
   gameSpeed: 1.0,
   gameStartTime: 0.0,
   gameElapsedTime: 0.0,
-  gameVideoPaused: true
+  gameVideoPaused: true,
+  precisionX: 0,
+  precisionY: 0,
+  enableParserLog: false
 }

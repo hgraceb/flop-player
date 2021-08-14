@@ -24,7 +24,13 @@ export class Cell {
  * 游戏事件
  */
 export type GameEvent = ({
-  name: 'Flag' | 'RemoveFlag' | 'QuestionMark' | 'RemoveQuestionMark'
+  name: 'LeftClick' | 'LeftPress' | 'RightClick' | 'RightPress' | 'MouseMove' | 'MiddleClick' | 'MiddlePress' | 'LeftPressWithShift'
+  // 精确的横坐标
+  precisionX: number
+  // 精确的纵坐标
+  precisionY: number
+} | {
+  name: 'Flag' | 'RemoveFlag' | 'QuestionMark' | 'RemoveQuestionMark' | 'ToggleQuestionMarkSetting'
 } | {
   name: 'Press' | 'Release'
   // 是否已经被标记为问号

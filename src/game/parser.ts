@@ -161,13 +161,17 @@ function isdigit (c: string): boolean {
 
 // TODO 将输出转换为具体的事件
 function fputs (str: string): void {
-  console.log(str)
+  if (store.state.enableParserLog) {
+    console.log(str)
+  }
 }
 
 // TODO 将输出转换为具体的事件
 // eslint-disable-next-line
 function fprintf (...data: any[]): void {
-  console.log(...data)
+  if (store.state.enableParserLog) {
+    console.log(...data)
+  }
 }
 
 // ==============================================================================================
@@ -562,6 +566,11 @@ function isInsideBoard (x: number, y: number): boolean {
 function push (x: number, y: number): void {
   if (noBoardEvents) return
   if (!board[x * h + y].opened && !board[x * h + y].flagged) {
+    if (board[x * h + y].questioned) {
+      fprintf('Cell pressed (it is a Questionmark) %d %d\n', x + 1, y + 1)
+    } else {
+      fprintf('Cell pressed %d %d\n', x + 1, y + 1)
+    }
     store.commit('addEvent', {
       name: 'Press',
       questioned: board[x * h + y].questioned,
@@ -588,6 +597,11 @@ function pushAround (x: number, y: number) {
 // Unpress cell
 function pop (x: number, y: number) {
   if (!board[x * h + y].opened && !board[x * h + y].flagged) {
+    if (board[x * h + y].questioned) {
+      fprintf('Cell released (it is a Questionmark) %d %d\n', x + 1, y + 1)
+    } else {
+      fprintf('Cell released %d %d\n', x + 1, y + 1)
+    }
     store.commit('addEvent', {
       name: 'Release',
       questioned: board[x * h + y].questioned,
@@ -640,6 +654,7 @@ function fail (): void {
 // Change cell status to open
 function show (x: number, y: number): void {
   const index = x * h + y
+  fprintf('Cell opened (Number %d) %d %d\n', board[index].number, x + 1, y + 1)
   store.commit('addEvent', {
     name: 'Open',
     number: board[index].number,
@@ -683,6 +698,7 @@ function doOpen (x: number, y: number): void {
   // Lose if cell is a mine
   if (board[x * h + y].mine) {
     board[x * h + y].opened = 1
+    fprintf('Cell opened (it is a Mine) %d %d\n', x + 1, y + 1)
     store.commit('addEvent', {
       name: 'Open',
       number: -1,
@@ -772,6 +788,7 @@ function doChord (x: number, y: number, oneDotFive: number): void {
 function doSetFlag (x: number, y: number): void {
   // Note that the wastedFlag value becomes 0 after successful chord() function
   board[x * h + y].flagged = board[x * h + y].wastedFlag = 1
+  fprintf('Flag %d %d\n', x + 1, y + 1)
   store.commit('addEvent', {
     name: 'Flag',
     time: curTime,
@@ -787,6 +804,7 @@ function doSetFlag (x: number, y: number): void {
 // Questionmark
 function doQuestion (x: number, y: number): void {
   board[x * h + y].questioned = 1
+  fprintf('Questionmark %d %d\n', x + 1, y + 1)
   store.commit('addEvent', {
     name: 'QuestionMark',
     time: curTime,
@@ -798,6 +816,7 @@ function doQuestion (x: number, y: number): void {
 // Remove Flag or Questionmark
 function doUnsetFlag (x: number, y: number): void {
   board[x * h + y].flagged = board[x * h + y].questioned = 0
+  fprintf('Flag removed %d %d\n', x + 1, y + 1)
   store.commit('addEvent', {
     name: 'RemoveFlag',
     time: curTime,
@@ -841,6 +860,14 @@ function closedSqAround (x: number, y: number) {
 
 // Left click
 function leftClick (x: number, y: number, precX: number, precY: number): void {
+  store.commit('addEvent', {
+    name: 'LeftClick',
+    time: curTime,
+    x: x,
+    y: y,
+    precisionX: precX,
+    precisionY: precY
+  })
   if (!left) return
   if (x !== curX || y !== curY) mouseMove(x, y, precX, precY)
   left = 0
@@ -865,7 +892,11 @@ function leftClick (x: number, y: number, precX: number, precY: number): void {
       if (noRilianClicks) return
     }
     ++leftClicks
-    if (!board[x * h + y].opened && !board[x * h + y].flagged) doOpen(x, y); else ++wastedLeftClicks
+    if (!board[x * h + y].opened && !board[x * h + y].flagged) {
+      doOpen(x, y)
+    } else {
+      ++wastedLeftClicks
+    }
     chorded = 0
   }
   curX = x
@@ -874,6 +905,14 @@ function leftClick (x: number, y: number, precX: number, precY: number): void {
 
 // Mouse movement
 function mouseMove (x: number, y: number, precX: number, precY: number): void {
+  store.commit('addEvent', {
+    name: 'MouseMove',
+    time: curTime,
+    x: x,
+    y: y,
+    precisionX: precX,
+    precisionY: precY
+  })
   if (isInsideBoard(x, y)) {
     if ((left && right) || middle || shiftLeft) {
       if (curX !== x || curY !== y) {
@@ -914,6 +953,14 @@ function mouseMove (x: number, y: number, precX: number, precY: number): void {
 
 // Left button down
 function leftPress (x: number, y: number, precX: number, precY: number): void {
+  store.commit('addEvent', {
+    name: 'LeftPress',
+    time: curTime,
+    x: x,
+    y: y,
+    precisionX: precX,
+    precisionY: precY
+  })
   if (middle) return
   left = 1
   shiftLeft = 0
@@ -933,6 +980,14 @@ function leftPress (x: number, y: number, precX: number, precY: number): void {
 
 // Chord using Shift during LC-LR
 function leftPressWithShift (x: number, y: number, precX: number, precY: number): void {
+  store.commit('addEvent', {
+    name: 'LeftPressWithShift',
+    time: curTime,
+    x: x,
+    y: y,
+    precisionX: precX,
+    precisionY: precY
+  })
   if (middle) return
   left = shiftLeft = 1
   if (!isInsideBoard(x, y)) return
@@ -946,12 +1001,28 @@ function leftPressWithShift (x: number, y: number, precX: number, precY: number)
 }
 
 // Toggle question mark setting
-function toggleQuestionMarkSetting (_x: number, _y: number, _precX: number, _precY: number): void {
+function toggleQuestionMarkSetting (x: number, y: number, precX: number, precY: number): void {
+  store.commit('addEvent', {
+    name: 'ToggleQuestionMarkSetting',
+    time: curTime,
+    x: x,
+    y: y,
+    precisionX: precX,
+    precisionY: precY
+  })
   qm = !qm
 }
 
 // Right button down
-function rightPress (x: number, y: number, _precX: number, _precY: number): void {
+function rightPress (x: number, y: number, precX: number, precY: number): void {
+  store.commit('addEvent', {
+    name: 'RightPress',
+    time: curTime,
+    x: x,
+    y: y,
+    precisionX: precX,
+    precisionY: precY
+  })
   if (middle) return
   right = 1
   shiftLeft = 0
@@ -970,6 +1041,7 @@ function rightPress (x: number, y: number, _precX: number, _precY: number): void
           doSetFlag(x, y)
         } else {
           board[x * h + y].flagged = board[x * h + y].questioned = 0
+          fprintf('Questionmark removed %d %d\n', x + 1, y + 1)
           store.commit('addEvent', {
             name: 'RemoveQuestionMark',
             time: curTime,
@@ -990,7 +1062,15 @@ function rightPress (x: number, y: number, _precX: number, _precY: number): void
 }
 
 // Right button up
-function rightClick (x: number, y: number, _precX: number, _precY: number): void {
+function rightClick (x: number, y: number, precX: number, precY: number): void {
+  store.commit('addEvent', {
+    name: 'RightClick',
+    time: curTime,
+    x: x,
+    y: y,
+    precisionX: precX,
+    precisionY: precY
+  })
   if (!right) return
   right = shiftLeft = 0
   if (!isInsideBoard(x, y)) {
@@ -1020,7 +1100,15 @@ function rightClick (x: number, y: number, _precX: number, _precY: number): void
 }
 
 // Middle button down
-function middlePress (x: number, y: number, _precX: number, _precY: number): void {
+function middlePress (x: number, y: number, precX: number, precY: number): void {
+  store.commit('addEvent', {
+    name: 'MiddlePress',
+    time: curTime,
+    x: x,
+    y: y,
+    precisionX: precX,
+    precisionY: precY
+  })
   // Middle button resets these boolean values
   shiftLeft = left = right = oneDotFive = chorded = 0
   middle = 1
@@ -1029,7 +1117,15 @@ function middlePress (x: number, y: number, _precX: number, _precY: number): voi
 }
 
 // Middle button up
-function middleClick (x: number, y: number, _precX: number, _precY: number): void {
+function middleClick (x: number, y: number, precX: number, precY: number): void {
+  store.commit('addEvent', {
+    name: 'MiddleClick',
+    time: curTime,
+    x: x,
+    y: y,
+    precisionX: precX,
+    precisionY: precY
+  })
   if (!middle) return
   middle = 0
   if (!isInsideBoard(x, y)) return
@@ -1038,9 +1134,11 @@ function middleClick (x: number, y: number, _precX: number, _precY: number): voi
 }
 
 export function parse (state: State, data: string): void {
-  console.log(state)
+  // 打印原始录像数据
+  if (store.state.enableParserLog) {
+    console.log(input)
+  }
   init(data)
-  console.log(input)
 
   // Initialise local variables
   let i: number
@@ -1285,6 +1383,7 @@ export function parse (state: State, data: string): void {
       while (isdigit(event[i]) && i < len) y = y * 10 + event.charCodeAt(i++) - codeAtZero
       if (negY) y = -y
 
+      // 不在这里添加游戏事件是因为函数内部可能还会继续调用到其他函数，如 leftClick 内部可能还会继续调用 mouseMove
       func(Math.floor(x / squareSize), Math.floor(y / squareSize), Math.floor(x), Math.floor(y))
     }
   }
@@ -1343,8 +1442,11 @@ export function parse (state: State, data: string): void {
     'RAW_RilianClicks/s': (rilianClicks / rawTime).toFixed(3)
   }
 
-  console.log('\n')
-  Object.keys(raw).forEach((key) => {
-    console.log(key + ': ' + raw[key as keyof typeof raw])
-  })
+  // 打印计数器信息
+  if (store.state.enableParserLog) {
+    console.log('\n')
+    Object.keys(raw).forEach((key) => {
+      console.log(key + ': ' + raw[key as keyof typeof raw])
+    })
+  }
 }

@@ -79,6 +79,12 @@ export const mutations = {
     }
     // 更新游戏当前经过的时间
     state.gameElapsedTime = event.time
+    if ('precisionX' in event) {
+      state.precisionX = event.precisionX
+    }
+    if ('precisionY' in event) {
+      state.precisionY = event.precisionY
+    }
   },
   /** 模拟下一个游戏事件 */
   performNextEvent: (state: State): void => {
@@ -113,6 +119,12 @@ export const mutations = {
         state.gameBoard[index] = ('cell-number-' + event.number) as ImgCellType
         break
     }
+    if ('precisionX' in event) {
+      state.precisionX = event.precisionX
+    }
+    if ('precisionY' in event) {
+      state.precisionY = event.precisionY
+    }
   },
   /** 重新播放游戏录像，TODO 进行函数节流处理 */
   replayVideo: (state: State): void => {
@@ -122,6 +134,8 @@ export const mutations = {
     state.gameElapsedTime = 0.0
     state.gameEventIndex = 0
     state.leftMines = state.mines
+    state.precisionX = 0
+    state.precisionY = 0
     store.commit('playVideo')
   },
   /** 播放游戏录像，TODO 进行函数节流处理 */
