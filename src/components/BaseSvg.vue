@@ -1,8 +1,8 @@
 <template>
   <svg
-    :height="height / 10"
+    :height="height / SVG_SCALE"
     :viewBox="`0 0 ${width} ${height}`"
-    :width="width / 10"
+    :width="width / SVG_SCALE"
     preserveaspectratio="none"
     xmlns="http://www.w3.org/2000/svg"
   >
@@ -12,6 +12,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { SVG_SCALE } from '@/game/constants'
 
 export default defineComponent({
   props: {
@@ -23,6 +24,9 @@ export default defineComponent({
       type: Number,
       required: true
     }
+  },
+  setup () {
+    return { SVG_SCALE }
   }
 })
 </script>
