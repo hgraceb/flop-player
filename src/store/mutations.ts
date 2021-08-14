@@ -130,7 +130,6 @@ export const mutations = {
   replayVideo: (state: State): void => {
     // 重置变量
     state.gameBoard = Array.from(Array(state.width * state.height), () => 'cell-normal')
-    state.gameStartTime = 0.0
     state.gameElapsedTime = 0.0
     state.gameEventIndex = 0
     state.leftMines = state.mines
@@ -140,7 +139,9 @@ export const mutations = {
   },
   /** 播放游戏录像，TODO 进行函数节流处理 */
   playVideo: (state: State): void => {
+    // 重置变量
     state.gameVideoPaused = false
+    state.gameStartTime = 0.0
     // 直接使用 requestAnimationFrame 回调的时间戳，可能会有较大误差，包括回调时间戳本身的误差和小数计算产生的误差，特别是在 Vuex 开启严格模式的时候
     requestAnimationFrame(function performEvent () {
       const timestamp = Date.now()
@@ -167,9 +168,13 @@ export const mutations = {
       window.requestAnimationFrame(performEvent)
     })
   },
-  /** 暂停游戏录像播放，cancelAnimationFrame 方法没有效果，采用标识位的方式进行暂停处理，TODO 完善游戏录像暂停逻辑，进行函数节流处理 */
+  /** 切换游戏录像播放暂停状态，cancelAnimationFrame 方法没有效果，采用标识位的方式进行暂停处理，TODO 完善游戏录像暂停逻辑，进行函数节流处理 */
   pauseVideo: (state: State): void => {
-    state.gameVideoPaused = true
+    if (state.gameVideoPaused) {
+      store.commit('playVideo')
+    } else {
+      state.gameVideoPaused = true
+    }
   }
 }
 
