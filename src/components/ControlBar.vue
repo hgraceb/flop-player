@@ -36,7 +36,7 @@ export default defineComponent({
         return SPEED_ARRAY.indexOf(store.state.gameSpeed)
       },
       set: (value: number) => {
-        store.commit('setGameSpeed', SPEED_ARRAY[parseInt(`${value}`)])
+        store.commit('setGameSpeed', SPEED_ARRAY[value])
       }
     })
 
@@ -50,7 +50,7 @@ export default defineComponent({
         return store.state.gameElapsedTime / 10
       },
       set: (value: number) => {
-        store.commit('setGameElapsedTime', parseInt(`${value}`) * 10)
+        store.commit('setGameElapsedTime', value * 10)
       }
     })
     // 当前游戏时间，精确到两位小数

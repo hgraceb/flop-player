@@ -31,9 +31,21 @@ export const mutations = {
       state.gameSpeed = speed
     }
   },
-  /** 设置游戏经过的时间（毫秒）,TODO 完善录像进度控制 */
+  /** 设置游戏经过的时间（毫秒） */
   setGameElapsedTime: (state: State, time: number): void => {
-    state.gameElapsedTime = time
+    if (state.gameElapsedTime < time) {
+      state.gameElapsedTime = time
+      while (state.gameEventIndex < state.gameEvents.length && state.gameElapsedTime >= state.gameEvents[state.gameEventIndex].time) {
+        store.commit('performNextEvent')
+      }
+    } else if (state.gameElapsedTime > time) {
+      state.gameElapsedTime = time
+      // 游戏事件索引可能等于游戏事件总数，需要防止数组越界
+      state.gameEventIndex = Math.min(state.gameEventIndex, state.gameEvents.length - 1)
+      while (state.gameEventIndex > 0 && state.gameElapsedTime <= state.gameEvents[state.gameEventIndex].time) {
+        store.commit('performPreviousEvent')
+      }
+    }
   },
   /** 叠加游戏经过的时间（毫秒） */
   addGameElapsedTime: (state: State, time: number): void => {
@@ -77,8 +89,6 @@ export const mutations = {
         state.leftMines--
         break
     }
-    // 更新游戏当前经过的时间
-    state.gameElapsedTime = event.time
     if ('precisionX' in event) {
       state.precisionX = event.precisionX
     }
@@ -146,16 +156,6 @@ export const mutations = {
     requestAnimationFrame(function performEvent () {
       const timestamp = Date.now()
       if (state.gameVideoPaused || state.gameEventIndex >= state.gameEvents.length) {
-        // TODO 将回放的代码抽取为单独的方法
-        if (state.gameEventIndex >= state.gameEvents.length) {
-          requestAnimationFrame(function performPreviousEvent () {
-            if (state.gameEventIndex <= 0) {
-              return
-            }
-            store.commit('performPreviousEvent')
-            window.requestAnimationFrame(performPreviousEvent)
-          })
-        }
         return
       }
       // 更新游戏经过的时间（毫秒）,首次时间为 0 ms
