@@ -42,7 +42,8 @@ export const mutations = {
       state.gameElapsedTime = time
       // 游戏事件索引可能等于游戏事件总数，需要防止数组越界
       state.gameEventIndex = Math.min(state.gameEventIndex, state.gameEvents.length - 1)
-      while (state.gameEventIndex > 0 && state.gameElapsedTime <= state.gameEvents[state.gameEventIndex].time) {
+      // 模拟上一个游戏事件，需要与上一个游戏事件的时间进行比较，当游戏经过的时间小于等于 0 时，模拟所有剩余事件，将游戏状态全部重置
+      while (state.gameEventIndex > 0 && (state.gameElapsedTime < state.gameEvents[state.gameEventIndex - 1].time || state.gameElapsedTime <= 0)) {
         store.commit('performPreviousEvent')
       }
     }
