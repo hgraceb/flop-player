@@ -1,11 +1,7 @@
 <template>
-  <skin-symbol :translate-x="0" :translate-y="0" name="border-top-left"></skin-symbol>
-  <g :transform="`translate(${horizontalTranslateX} 0)`">
-    <path :d="`M0 0L0 30L${horizontalWidth} 30L${horizontalWidth} 0L0 0z`" fill="#fff" />
-    <path :d="`M0 30L0 90L${horizontalWidth} 90L${horizontalWidth} 30L0 30z`" fill="silver" />
-    <path :d="`M0 90L0 110L${horizontalWidth} 110L${horizontalWidth} 90L0 90z`" fill="gray" />
-  </g>
-  <skin-symbol :translate-x="rightTranslateX" :translate-y="0" name="border-top-right"></skin-symbol>
+  <skin-symbol :translate-x="0" :translate-y="0" name="border-top-left" />
+  <skin-symbol :translate-x="horizontalTranslateX" :translate-y="0" name="border-horizontal-top" />
+  <skin-symbol :translate-x="rightTranslateX" :translate-y="0" name="border-top-right" />
 </template>
 
 <script lang="ts">
@@ -18,13 +14,10 @@ export default defineComponent({
   components: { SkinSymbol },
   setup () {
     const horizontalTranslateX = SIZE_BORDER_TOP.widthLeft * SVG_SCALE
-    const horizontalWidth = computed(() => {
-      return store.state.width * SIZE_CELL.width * SVG_SCALE
-    })
     const rightTranslateX = computed(() => {
       return (SIZE_BORDER_TOP.widthLeft + store.state.width * SIZE_CELL.width) * SVG_SCALE
     })
-    return { horizontalTranslateX, horizontalWidth, rightTranslateX }
+    return { horizontalTranslateX, rightTranslateX }
   }
 })
 </script>

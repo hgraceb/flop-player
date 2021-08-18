@@ -13,19 +13,19 @@
       <path d="M90 0v90H0v30h120V0H90z" fill="gray" />
     </symbol>
     <symbol id="border-horizontal-bottom">
-      <path d="M0 0v30h10V0H0z" fill="#fff" />
-      <path d="M0 30v60h10V30H0z" fill="silver" />
-      <path d="M0 90v30h10V90H0z" fill="gray" />
+      <path :d="`M0 0L0 30L${horizontalWidth} 30L${horizontalWidth} 0L0 0z`" fill="#fff" />
+      <path :d="`M0 30L0 90L${horizontalWidth} 90L${horizontalWidth} 30L0 30z`" fill="silver" />
+      <path :d="`M0 90L0 120L${horizontalWidth} 120L${horizontalWidth} 90L0 90z`" fill="gray" />
     </symbol>
     <symbol id="border-horizontal-middle">
-      <path d="M0 0v20h10V0H0z" fill="#fff" />
-      <path d="M0 20v60h10V20H0z" fill="silver" />
-      <path d="M0 80v30h10V80H0z" fill="gray" />
+      <path :d="`M0 0L0 20L${horizontalWidth} 20L${horizontalWidth} 0L0 0z`" fill="#fff" />
+      <path :d="`M0 20L0 80L${horizontalWidth} 80L${horizontalWidth} 20L0 20z`" fill="silver" />
+      <path :d="`M0 80L0 110L${horizontalWidth} 110L${horizontalWidth} 80L0 80z`" fill="gray" />
     </symbol>
     <symbol id="border-horizontal-top">
-      <path d="M0 0v30h10V0H0z" fill="#fff" />
-      <path d="M0 30v60h10V30H0z" fill="silver" />
-      <path d="M0 90v20h10V90H0z" fill="gray" />
+      <path :d="`M0 0L0 30L${horizontalWidth} 30L${horizontalWidth} 0L0 0z`" fill="#fff" />
+      <path :d="`M0 30L0 90L${horizontalWidth} 90L${horizontalWidth} 30L0 30z`" fill="silver" />
+      <path :d="`M0 90L0 110L${horizontalWidth} 110L${horizontalWidth} 90L0 90z`" fill="gray" />
     </symbol>
     <symbol id="border-middle-left">
       <path d="M0 0v110h30V0H0z" fill="#fff" />
@@ -354,3 +354,19 @@
     </symbol>
   </g>
 </template>
+
+<script lang="ts">
+
+import { computed, defineComponent } from 'vue'
+import { store } from '@/store'
+import { SIZE_CELL, SVG_SCALE } from '@/game/constants'
+
+export default defineComponent({
+  setup () {
+    const horizontalWidth = computed(() => {
+      return store.state.width * SIZE_CELL.width * SVG_SCALE
+    })
+    return { horizontalWidth }
+  }
+})
+</script>
