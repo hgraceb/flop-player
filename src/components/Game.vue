@@ -1,8 +1,8 @@
 <template>
-  <base-svg :height="0" :width="0">
+  <base-svg :height="0" :width="0" class="svg-sprites">
     <skin-sprites />
   </base-svg>
-  <base-svg :height="height" :width="width">
+  <base-svg :height="height" :width="width" class="svg-game">
     <skin-border-top />
     <skin-border-upper />
     <skin-background-upper />
@@ -76,3 +76,14 @@ export default defineComponent({
   }
 })
 </script>
+
+<style scoped>
+.svg-sprites {
+  display: none;
+}
+
+.svg-game {
+  /* 部分元素在超出边框时也要进行显示，如鼠标指针元素在最右边的时候 */
+  overflow: visible;
+}
+</style>
