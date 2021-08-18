@@ -53,11 +53,18 @@ export const mutations = {
     state.gameElapsedTime = plus(state.gameElapsedTime, times(time, state.gameSpeed))
   },
   /** 初始化游戏 */
-  initGame: (state: State, { width, height, mines }: { width: number, height: number, mines: number }): void => {
+  initGame: (state: State, {
+    width,
+    height,
+    mines,
+    player
+  }: { width: number, height: number, mines: number, player: string }): void => {
     state.width = width
     state.height = height
     state.mines = mines
     state.leftMines = mines
+    // TODO 玩家名称字符串不同编码格式解析
+    state.player = player
     state.gameEvents = []
   },
   /** 添加游戏事件 */

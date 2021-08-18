@@ -10,6 +10,8 @@ export interface State {
   mines: number
   // 游戏剩余雷数
   leftMines: number
+  // 玩家名称
+  player: string
   // 笑脸状态
   faceStatus: ImgFaceType
   // 是否游戏结束
@@ -44,6 +46,8 @@ export const state: State = {
   height: 8,
   mines: 10,
   leftMines: 10,
+  // 玩家名称
+  player: 'Anonymous',
   faceStatus: 'face-normal',
   isGameOver: false,
   gameLevel: 1,

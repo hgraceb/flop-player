@@ -1151,6 +1151,7 @@ export function parse (state: State, data: string): void {
   let ww = 8
   let hh = 8
   let mm = 10
+  let player = 'Anonymous'
   let mCl = true
   let noMode = 1
   const squareSize = 16
@@ -1175,6 +1176,7 @@ export function parse (state: State, data: string): void {
     else if (opteq(event, 'width')) w = atoi(event.substring(6))
     else if (opteq(event, 'height')) h = atoi(event.substring(7))
     else if (opteq(event, 'mines')) m = atoi(event.substring(6))
+    else if (opteq(event, 'player')) player = event.substring(7)
     else if (opteq(event, 'marks')) qm = valeq(event.substring(6), 'on\n')
     else if (opteq(event, 'level')) {
       const e = event.substring(6)
@@ -1201,7 +1203,7 @@ export function parse (state: State, data: string): void {
   }
 
   // 初始化游戏数据
-  store.commit('initGame', { width: w, height: h, mines: m })
+  store.commit('initGame', { width: w, height: h, mines: m, player: player })
 
   // Get number of cells in the board
   board = Array.from(Array(size = w * h), () => new Cell())

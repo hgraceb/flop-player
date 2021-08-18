@@ -13,6 +13,7 @@
     <skin-border-lower />
     <skin-board />
     <skin-border-bottom />
+    <skin-player-info />
     <!-- 鼠标指针需要显示在最上层，所以需要最后进行渲染 -->
     <skin-cursor />
   </base-svg>
@@ -22,7 +23,15 @@
 import BaseSvg from '@/components/BaseSvg.vue'
 import SkinSprites from '@/components/skin/SkinSprites.vue'
 import SkinBorderTop from '@/components/skin/SkinBorderTop.vue'
-import { SIZE_BORDER_BOTTOM, SIZE_BORDER_LOWER, SIZE_BORDER_MIDDLE, SIZE_BORDER_TOP, SIZE_BORDER_UPPER, SIZE_CELL, SVG_SCALE } from '@/game/constants'
+import {
+  SIZE_BORDER_BOTTOM,
+  SIZE_BORDER_LOWER,
+  SIZE_BORDER_MIDDLE,
+  SIZE_BORDER_TOP,
+  SIZE_BORDER_UPPER,
+  SIZE_CELL,
+  SVG_SCALE
+} from '@/game/constants'
 import { store } from '@/store'
 import SkinBorderUpper from '@/components/skin/SkinBorderUpper.vue'
 import { computed, defineComponent } from 'vue'
@@ -34,9 +43,11 @@ import SkinFace from '@/components/skin/SkinFace.vue'
 import SkinBoard from '@/components/skin/SkinBoard.vue'
 import SkinCursor from '@/components/skin/SkinCursor.vue'
 import SkinBackgroundUpper from '@/components/skin/SkinBackgroundUpper.vue'
+import SkinPlayerInfo from '@/components/skin/SkinPlayerInfo.vue'
 
 export default defineComponent({
   components: {
+    SkinPlayerInfo,
     SkinBackgroundUpper,
     SkinCursor,
     SkinBoard,
