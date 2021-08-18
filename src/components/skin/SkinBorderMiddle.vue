@@ -20,7 +20,7 @@ export default defineComponent({
     const translateY = (SIZE_BORDER_TOP.height + SIZE_BORDER_UPPER.height) * SVG_SCALE
     const horizontalTranslateX = SIZE_BORDER_MIDDLE.widthLeft * SVG_SCALE
     const horizontalWidth = computed(() => {
-      return (SIZE_BORDER_MIDDLE.widthHorizontal * store.state.width * SIZE_CELL.width) * SVG_SCALE
+      return store.state.width * SIZE_CELL.width * SVG_SCALE
     })
     const rightTranslateX = computed(() => {
       return (SIZE_BORDER_MIDDLE.widthLeft + store.state.width * SIZE_CELL.width) * SVG_SCALE

@@ -64,7 +64,7 @@ export default defineComponent({
   setup () {
     // SVG 高度信息
     const width = computed(() => {
-      return (SIZE_BORDER_TOP.widthLeft + store.state.width * SIZE_BORDER_TOP.widthHorizontal * SIZE_CELL.width + SIZE_BORDER_TOP.widthRight) * SVG_SCALE
+      return (SIZE_BORDER_TOP.widthLeft + store.state.width * SIZE_CELL.width + SIZE_BORDER_TOP.widthRight) * SVG_SCALE
     })
     // SVG 宽度信息
     const height = computed(() => {

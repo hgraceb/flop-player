@@ -24,8 +24,7 @@ export const SVG_SCALE = 10
 export const SIZE_BORDER_TOP = {
   height: 11,
   widthLeft: 12,
-  widthRight: 12,
-  widthHorizontal: 1
+  widthRight: 12
 }
 
 /**
@@ -55,8 +54,7 @@ export const SIZE_BORDER_LOWER = {
 export const SIZE_BORDER_BOTTOM = {
   height: 12,
   widthLeft: SIZE_BORDER_TOP.widthLeft,
-  widthRight: SIZE_BORDER_TOP.widthRight,
-  widthHorizontal: SIZE_BORDER_TOP.widthHorizontal
+  widthRight: SIZE_BORDER_TOP.widthRight
 }
 
 /**
