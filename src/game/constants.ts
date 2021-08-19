@@ -60,12 +60,9 @@ export const GAME_BOTTOM_UPPER = {
 }
 
 /**
- * 方块 SVG 宽高信息
+ * 方块边长信息
  */
-export const SIZE_CELL = {
-  width: 16,
-  height: 16
-}
+export const CELL_SIDE_LENGTH = 16
 
 /**
  * 计数器数字 SVG 宽高信息

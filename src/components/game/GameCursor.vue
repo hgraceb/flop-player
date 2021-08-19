@@ -6,7 +6,7 @@
 import { computed, defineComponent } from 'vue'
 import { store } from '@/store'
 import SkinSymbol from '@/components/skin/SkinSymbol.vue'
-import { GAME_MIDDLE, GAME_TOP_LOWER, GAME_TOP_UPPER, GAME_TOP_MIDDLE, SVG_SCALE } from '@/game/constants'
+import { GAME_MIDDLE, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
 
 export default defineComponent({
   components: { SkinSymbol },

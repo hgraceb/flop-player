@@ -359,17 +359,17 @@
 
 import { computed, defineComponent } from 'vue'
 import { store } from '@/store'
-import { GAME_TOP_MIDDLE, SIZE_CELL, SVG_SCALE } from '@/game/constants'
+import { CELL_SIDE_LENGTH, GAME_TOP_MIDDLE, SVG_SCALE } from '@/game/constants'
 
 export default defineComponent({
   setup () {
     // 游戏棋盘宽度
     const boardWidth = computed(() => {
-      return store.state.width * SIZE_CELL.width * SVG_SCALE
+      return store.state.width * CELL_SIDE_LENGTH * SVG_SCALE
     })
     // 游戏棋盘高度
     const boardHeight = computed(() => {
-      return store.state.height * SIZE_CELL.height * SVG_SCALE
+      return store.state.height * CELL_SIDE_LENGTH * SVG_SCALE
     })
     // 顶部计数器高度
     const countTopHeight = computed(() => {

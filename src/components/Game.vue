@@ -17,7 +17,7 @@
 <script lang="ts">
 import BaseSvg from '@/components/BaseSvg.vue'
 import SkinSprites from '@/components/skin/SkinSprites.vue'
-import { GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, GAME_BOTTOM_UPPER, SIZE_CELL, SVG_SCALE } from '@/game/constants'
+import { CELL_SIDE_LENGTH, GAME_BOTTOM_UPPER, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
 import { store } from '@/store'
 import { computed, defineComponent } from 'vue'
 import SkinPlayerInfo from '@/components/skin/SkinPlayerInfo.vue'
@@ -43,11 +43,11 @@ export default defineComponent({
   setup () {
     // SVG 高度信息
     const width = computed(() => {
-      return (GAME_TOP_UPPER.widthLeft + store.state.width * SIZE_CELL.width + GAME_TOP_UPPER.widthRight) * SVG_SCALE
+      return (GAME_TOP_UPPER.widthLeft + store.state.width * CELL_SIDE_LENGTH + GAME_TOP_UPPER.widthRight) * SVG_SCALE
     })
     // SVG 宽度信息
     const height = computed(() => {
-      return (GAME_TOP_UPPER.height + GAME_TOP_MIDDLE.height + GAME_TOP_LOWER.height + store.state.height * SIZE_CELL.height + GAME_BOTTOM_UPPER.height) * SVG_SCALE
+      return (GAME_TOP_UPPER.height + GAME_TOP_MIDDLE.height + GAME_TOP_LOWER.height + store.state.height * CELL_SIDE_LENGTH + GAME_BOTTOM_UPPER.height) * SVG_SCALE
     })
     return { width, height }
   }

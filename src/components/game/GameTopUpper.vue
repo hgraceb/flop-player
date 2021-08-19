@@ -7,7 +7,7 @@
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
 import SkinSymbol from '@/components/skin/SkinSymbol.vue'
-import { GAME_TOP_UPPER, SIZE_CELL, SVG_SCALE } from '@/game/constants'
+import { CELL_SIDE_LENGTH, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
 import { store } from '@/store'
 
 export default defineComponent({
@@ -17,7 +17,7 @@ export default defineComponent({
     const centerTranslateX = GAME_TOP_UPPER.widthLeft * SVG_SCALE
     // 右边框的 X 轴坐标偏移量
     const rightTranslateX = computed(() => {
-      return (GAME_TOP_UPPER.widthLeft + store.state.width * SIZE_CELL.width) * SVG_SCALE
+      return (GAME_TOP_UPPER.widthLeft + store.state.width * CELL_SIDE_LENGTH) * SVG_SCALE
     })
     return { centerTranslateX, rightTranslateX }
   }

@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import { GAME_TOP_UPPER, GAME_TOP_MIDDLE, SIZE_CELL, SVG_SCALE } from '@/game/constants'
+import { CELL_SIDE_LENGTH, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
 import { store } from '@/store'
 
 export default defineComponent({
@@ -16,7 +16,7 @@ export default defineComponent({
     // 顶部重开区域背景的 Y 轴坐标偏移量
     const translateY = GAME_TOP_UPPER.height * SVG_SCALE
     // 顶部重开区域背景的高度
-    const width = computed(() => store.state.width * SIZE_CELL.width * SVG_SCALE)
+    const width = computed(() => store.state.width * CELL_SIDE_LENGTH * SVG_SCALE)
     // 顶部重开区域背景的宽度
     const height = GAME_TOP_MIDDLE.height * SVG_SCALE
     return { translateX, translateY, width, height }

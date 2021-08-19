@@ -18,7 +18,7 @@
 import { computed, defineComponent } from 'vue'
 import { store } from '@/store'
 import SkinSymbol from '@/components/skin/SkinSymbol.vue'
-import { GAME_MIDDLE, GAME_TOP_LOWER, GAME_TOP_UPPER, GAME_TOP_MIDDLE, SIZE_CELL, SVG_SCALE } from '@/game/constants'
+import { CELL_SIDE_LENGTH, GAME_MIDDLE, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
 import { ImgCellType } from '@/util/image'
 
 export default defineComponent({
@@ -34,7 +34,7 @@ export default defineComponent({
     const gameHeight = computed(() => store.state.height)
     // 右边框的 X 轴坐标偏移量
     const rightTranslateX = computed(() => {
-      return (GAME_MIDDLE.widthLeft + store.state.width * SIZE_CELL.width) * SVG_SCALE
+      return (GAME_MIDDLE.widthLeft + store.state.width * CELL_SIDE_LENGTH) * SVG_SCALE
     })
     // 根据横坐标和纵坐标获取方块的图片名称
     const getCellImg = (width: number, height: number): ImgCellType => {
@@ -46,11 +46,11 @@ export default defineComponent({
     }
     // 根据横坐标获取 X 轴坐标偏移量
     const getTranslateX = (width: number): number => {
-      return width * SIZE_CELL.width * SVG_SCALE
+      return width * CELL_SIDE_LENGTH * SVG_SCALE
     }
     // 根据纵坐标获取 Y 轴坐标偏移量
     const getTranslateY = (height: number): number => {
-      return height * SIZE_CELL.height * SVG_SCALE
+      return height * CELL_SIDE_LENGTH * SVG_SCALE
     }
 
     return { translateX, translateY, gameWidth, gameHeight, rightTranslateX, getCellImg, getTranslateX, getTranslateY }
