@@ -13,19 +13,19 @@
       <path d="M90 0v90H0v30h120V0H90z" fill="gray" />
     </symbol>
     <symbol id="border-horizontal-bottom">
-      <path :d="`M0 0L0 30L${horizontalWidth} 30L${horizontalWidth} 0L0 0z`" fill="#fff" />
-      <path :d="`M0 30L0 90L${horizontalWidth} 90L${horizontalWidth} 30L0 30z`" fill="silver" />
-      <path :d="`M0 90L0 120L${horizontalWidth} 120L${horizontalWidth} 90L0 90z`" fill="gray" />
+      <path :d="`M0 0L0 30L${boardWidth} 30L${boardWidth} 0L0 0z`" fill="#fff" />
+      <path :d="`M0 30L0 90L${boardWidth} 90L${boardWidth} 30L0 30z`" fill="silver" />
+      <path :d="`M0 90L0 120L${boardWidth} 120L${boardWidth} 90L0 90z`" fill="gray" />
     </symbol>
     <symbol id="border-horizontal-middle">
-      <path :d="`M0 0L0 20L${horizontalWidth} 20L${horizontalWidth} 0L0 0z`" fill="#fff" />
-      <path :d="`M0 20L0 80L${horizontalWidth} 80L${horizontalWidth} 20L0 20z`" fill="silver" />
-      <path :d="`M0 80L0 110L${horizontalWidth} 110L${horizontalWidth} 80L0 80z`" fill="gray" />
+      <path :d="`M0 0L0 20L${boardWidth} 20L${boardWidth} 0L0 0z`" fill="#fff" />
+      <path :d="`M0 20L0 80L${boardWidth} 80L${boardWidth} 20L0 20z`" fill="silver" />
+      <path :d="`M0 80L0 110L${boardWidth} 110L${boardWidth} 80L0 80z`" fill="gray" />
     </symbol>
     <symbol id="border-horizontal-top">
-      <path :d="`M0 0L0 30L${horizontalWidth} 30L${horizontalWidth} 0L0 0z`" fill="#fff" />
-      <path :d="`M0 30L0 90L${horizontalWidth} 90L${horizontalWidth} 30L0 30z`" fill="silver" />
-      <path :d="`M0 90L0 110L${horizontalWidth} 110L${horizontalWidth} 90L0 90z`" fill="gray" />
+      <path :d="`M0 0L0 30L${boardWidth} 30L${boardWidth} 0L0 0z`" fill="#fff" />
+      <path :d="`M0 30L0 90L${boardWidth} 90L${boardWidth} 30L0 30z`" fill="silver" />
+      <path :d="`M0 90L0 110L${boardWidth} 110L${boardWidth} 90L0 90z`" fill="gray" />
     </symbol>
     <symbol id="border-middle-left">
       <path d="M0 0v110h30V0H0z" fill="#fff" />
@@ -52,9 +52,9 @@
       <path d="M20 100v10h10v-10H20z" fill="#fff" />
     </symbol>
     <symbol id="border-vertical-left-lower">
-      <path d="M0 0v10h30V0H0z" fill="#fff" />
-      <path d="M30 0v10h60V0H30z" fill="silver" />
-      <path d="M90 0v10h30V0H90z" fill="gray" />
+      <path :d="`M0 0L0 ${boardHeight}L30 ${boardHeight}L30 0L0 0z`" fill="#fff" />
+      <path :d="`M30 0L30 ${boardHeight}L90 ${boardHeight}L90 0L30 0z`" fill="silver" />
+      <path :d="`M90 0L90 ${boardHeight}L120 ${boardHeight}L120 0L90 0z`" fill="gray" />
     </symbol>
     <symbol id="border-vertical-left-upper">
       <path d="M0 0v10h30V0H0z" fill="#fff" />
@@ -63,9 +63,9 @@
       <path d="M110 0v10h10V0h-10z" fill="silver" />
     </symbol>
     <symbol id="border-vertical-right-lower">
-      <path d="M0 0v10h30V0H0z" fill="#fff" />
-      <path d="M30 0v10h60V0H30z" fill="silver" />
-      <path d="M90 0v10h30V0H90z" fill="gray" />
+      <path :d="`M0 0L0 ${boardHeight}L30 ${boardHeight}L30 0L0 0z`" fill="#fff" />
+      <path :d="`M30 0L30 ${boardHeight}L90 ${boardHeight}L90 0L30 0z`" fill="silver" />
+      <path :d="`M90 0L90 ${boardHeight}L120 ${boardHeight}L120 0L90 0z`" fill="gray" />
     </symbol>
     <symbol id="border-vertical-right-upper">
       <path d="M0 0v10h10V0H0z" fill="silver" />
@@ -363,10 +363,15 @@ import { SIZE_CELL, SVG_SCALE } from '@/game/constants'
 
 export default defineComponent({
   setup () {
-    const horizontalWidth = computed(() => {
+    // 游戏棋盘宽度
+    const boardWidth = computed(() => {
       return store.state.width * SIZE_CELL.width * SVG_SCALE
     })
-    return { horizontalWidth }
+    // 游戏棋盘高度
+    const boardHeight = computed(() => {
+      return store.state.height * SIZE_CELL.height * SVG_SCALE
+    })
+    return { boardWidth, boardHeight }
   }
 })
 </script>
