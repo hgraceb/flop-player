@@ -29,17 +29,7 @@ import GameCursor from '@/components/game/GameCursor.vue'
 import GameBottomUpper from '@/components/game/GameBottomUpper.vue'
 
 export default defineComponent({
-  components: {
-    GameBottomUpper,
-    GameCursor,
-    GameTopLower,
-    GameTopMiddle,
-    GameTopUpper,
-    GameMiddle,
-    SkinPlayerInfo,
-    SkinSprites,
-    BaseSvg
-  },
+  components: { GameBottomUpper, GameCursor, GameTopLower, GameTopMiddle, GameTopUpper, GameMiddle, SkinPlayerInfo, SkinSprites, BaseSvg },
   setup () {
     // SVG 高度信息
     const width = computed(() => {
