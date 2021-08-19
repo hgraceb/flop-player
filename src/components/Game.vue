@@ -7,7 +7,7 @@
     <game-top-middle />
     <game-top-lower />
     <game-middle />
-    <skin-border-bottom />
+    <game-bottom-upper />
     <skin-player-info />
     <!-- 鼠标指针需要显示在最上层，所以需要最后进行渲染 -->
     <game-cursor />
@@ -20,23 +20,23 @@ import SkinSprites from '@/components/skin/SkinSprites.vue'
 import { SIZE_BORDER_BOTTOM, SIZE_BORDER_LOWER, SIZE_BORDER_MIDDLE, SIZE_BORDER_TOP, SIZE_BORDER_UPPER, SIZE_CELL, SVG_SCALE } from '@/game/constants'
 import { store } from '@/store'
 import { computed, defineComponent } from 'vue'
-import SkinBorderBottom from '@/components/skin/SkinBorderBottom.vue'
 import SkinPlayerInfo from '@/components/skin/SkinPlayerInfo.vue'
 import GameMiddle from '@/components/game/GameMiddle.vue'
 import GameTopUpper from '@/components/game/GameTopUpper.vue'
 import GameTopMiddle from '@/components/game/GameTopMiddle.vue'
 import GameTopLower from '@/components/game/GameTopLower.vue'
 import GameCursor from '@/components/game/GameCursor.vue'
+import GameBottomUpper from '@/components/game/GameBottomUpper.vue'
 
 export default defineComponent({
   components: {
+    GameBottomUpper,
     GameCursor,
     GameTopLower,
     GameTopMiddle,
     GameTopUpper,
     GameMiddle,
     SkinPlayerInfo,
-    SkinBorderBottom,
     SkinSprites,
     BaseSvg
   },
