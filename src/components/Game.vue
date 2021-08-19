@@ -3,7 +3,7 @@
     <skin-sprites />
   </base-svg>
   <base-svg :height="height" :width="width" class="svg-game">
-    <skin-border-top />
+    <game-top-upper />
     <skin-border-upper />
     <skin-background-top />
     <skin-counter-top :count="countLeftMines" :translate-x="minesCountTranslateX" />
@@ -21,7 +21,6 @@
 <script lang="ts">
 import BaseSvg from '@/components/BaseSvg.vue'
 import SkinSprites from '@/components/skin/SkinSprites.vue'
-import SkinBorderTop from '@/components/skin/SkinBorderTop.vue'
 import { SIZE_BORDER_BOTTOM, SIZE_BORDER_LOWER, SIZE_BORDER_MIDDLE, SIZE_BORDER_TOP, SIZE_BORDER_UPPER, SIZE_CELL, SVG_SCALE } from '@/game/constants'
 import { store } from '@/store'
 import SkinBorderUpper from '@/components/skin/SkinBorderUpper.vue'
@@ -34,9 +33,11 @@ import SkinCursor from '@/components/skin/SkinCursor.vue'
 import SkinBackgroundTop from '@/components/skin/SkinBackgroundTop.vue'
 import SkinPlayerInfo from '@/components/skin/SkinPlayerInfo.vue'
 import GameMiddle from '@/components/game/GameMiddle.vue'
+import GameTopUpper from '@/components/game/GameTopUpper.vue'
 
 export default defineComponent({
   components: {
+    GameTopUpper,
     GameMiddle,
     SkinPlayerInfo,
     SkinBackgroundTop,
@@ -46,7 +47,6 @@ export default defineComponent({
     SkinBorderBottom,
     SkinBorderMiddle,
     SkinBorderUpper,
-    SkinBorderTop,
     SkinSprites,
     BaseSvg
   },
