@@ -5,7 +5,7 @@
   <base-svg :height="height" :width="width" class="svg-game">
     <game-top-upper />
     <game-top-middle />
-    <skin-border-middle />
+    <game-top-lower />
     <game-middle />
     <skin-border-bottom />
     <skin-player-info />
@@ -20,23 +20,23 @@ import SkinSprites from '@/components/skin/SkinSprites.vue'
 import { SIZE_BORDER_BOTTOM, SIZE_BORDER_LOWER, SIZE_BORDER_MIDDLE, SIZE_BORDER_TOP, SIZE_BORDER_UPPER, SIZE_CELL, SVG_SCALE } from '@/game/constants'
 import { store } from '@/store'
 import { computed, defineComponent } from 'vue'
-import SkinBorderMiddle from '@/components/skin/SkinBorderMiddle.vue'
 import SkinBorderBottom from '@/components/skin/SkinBorderBottom.vue'
 import SkinCursor from '@/components/skin/SkinCursor.vue'
 import SkinPlayerInfo from '@/components/skin/SkinPlayerInfo.vue'
 import GameMiddle from '@/components/game/GameMiddle.vue'
 import GameTopUpper from '@/components/game/GameTopUpper.vue'
 import GameTopMiddle from '@/components/game/GameTopMiddle.vue'
+import GameTopLower from '@/components/game/GameTopLower.vue'
 
 export default defineComponent({
   components: {
+    GameTopLower,
     GameTopMiddle,
     GameTopUpper,
     GameMiddle,
     SkinPlayerInfo,
     SkinCursor,
     SkinBorderBottom,
-    SkinBorderMiddle,
     SkinSprites,
     BaseSvg
   },

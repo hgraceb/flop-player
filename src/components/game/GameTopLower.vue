@@ -14,7 +14,9 @@ export default defineComponent({
   components: { SkinSymbol },
   setup () {
     const translateY = (SIZE_BORDER_TOP.height + SIZE_BORDER_UPPER.height) * SVG_SCALE
+    // 水平边框的 X 轴坐标偏移量
     const horizontalTranslateX = SIZE_BORDER_MIDDLE.widthLeft * SVG_SCALE
+    // 右边框的 X 轴坐标偏移量
     const rightTranslateX = computed(() => {
       return (SIZE_BORDER_MIDDLE.widthLeft + store.state.width * SIZE_CELL.width) * SVG_SCALE
     })
