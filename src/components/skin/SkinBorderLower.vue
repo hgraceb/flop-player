@@ -15,13 +15,10 @@ export default defineComponent({
     const translateY = computed(() => {
       return (SIZE_BORDER_TOP.height + SIZE_BORDER_UPPER.height + SIZE_BORDER_MIDDLE.height) * SVG_SCALE
     })
-    const height = computed(() => {
-      return SIZE_BORDER_LOWER.height * store.state.height * SIZE_CELL.height * SVG_SCALE
-    })
     const rightTranslateX = computed(() => {
       return (SIZE_BORDER_LOWER.width + store.state.width * SIZE_CELL.width) * SVG_SCALE
     })
-    return { translateY, height, rightTranslateX }
+    return { translateY, rightTranslateX }
   }
 })
 </script>

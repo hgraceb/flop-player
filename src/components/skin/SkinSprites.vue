@@ -51,27 +51,27 @@
       <path d="M110 10v10h-10v10H90v80h30V10h-10M0 90v20h10v-10h10V90H0z" fill="gray" />
       <path d="M20 100v10h10v-10H20z" fill="#fff" />
     </symbol>
+    <symbol id="border-vertical-left-upper">
+      <path :d="`M0 0L0 ${countTopHeight}L30 ${countTopHeight}L30 0L0 0z`" fill="#fff" />
+      <path :d="`M30 0L30 ${countTopHeight}L90 ${countTopHeight}L90 0L30 0z`" fill="silver" />
+      <path :d="`M90 0L90 ${countTopHeight}L110 ${countTopHeight}L110 0L90 0z`" fill="gray" />
+      <path :d="`M110 0L110 ${countTopHeight}L120 ${countTopHeight}L120 0L110 0z`" fill="silver" />
+    </symbol>
+    <symbol id="border-vertical-right-upper">
+      <path :d="`M0 0L0 ${countTopHeight}L10 ${countTopHeight}L10 0L0 0z`" fill="silver" />
+      <path :d="`M10 0L10 ${countTopHeight}L30 ${countTopHeight}L30 0L10 0z`" fill="#fff" />
+      <path :d="`M30 0L30 ${countTopHeight}L90 ${countTopHeight}L90 0L30 0z`" fill="silver" />
+      <path :d="`M90 0L90 ${countTopHeight}L120 ${countTopHeight}L120 0L90 0z`" fill="gray" />
+    </symbol>
     <symbol id="border-vertical-left-lower">
       <path :d="`M0 0L0 ${boardHeight}L30 ${boardHeight}L30 0L0 0z`" fill="#fff" />
       <path :d="`M30 0L30 ${boardHeight}L90 ${boardHeight}L90 0L30 0z`" fill="silver" />
       <path :d="`M90 0L90 ${boardHeight}L120 ${boardHeight}L120 0L90 0z`" fill="gray" />
     </symbol>
-    <symbol id="border-vertical-left-upper">
-      <path d="M0 0v10h30V0H0z" fill="#fff" />
-      <path d="M30 0v10h60V0H30z" fill="silver" />
-      <path d="M90 0v10h20V0H90z" fill="gray" />
-      <path d="M110 0v10h10V0h-10z" fill="silver" />
-    </symbol>
     <symbol id="border-vertical-right-lower">
       <path :d="`M0 0L0 ${boardHeight}L30 ${boardHeight}L30 0L0 0z`" fill="#fff" />
       <path :d="`M30 0L30 ${boardHeight}L90 ${boardHeight}L90 0L30 0z`" fill="silver" />
       <path :d="`M90 0L90 ${boardHeight}L120 ${boardHeight}L120 0L90 0z`" fill="gray" />
-    </symbol>
-    <symbol id="border-vertical-right-upper">
-      <path d="M0 0v10h10V0H0z" fill="silver" />
-      <path d="M10 0v10h20V0H10z" fill="#fff" />
-      <path d="M30 0v10h60V0H30z" fill="silver" />
-      <path d="M90 0v10h30V0H90z" fill="gray" />
     </symbol>
     <symbol id="cell-flag">
       <path d="M0 0v150h10v-10h10V20h120V10h10V0H0z" fill="#fff" />
@@ -359,7 +359,7 @@
 
 import { computed, defineComponent } from 'vue'
 import { store } from '@/store'
-import { SIZE_CELL, SVG_SCALE } from '@/game/constants'
+import { SIZE_BORDER_UPPER, SIZE_CELL, SVG_SCALE } from '@/game/constants'
 
 export default defineComponent({
   setup () {
@@ -371,7 +371,11 @@ export default defineComponent({
     const boardHeight = computed(() => {
       return store.state.height * SIZE_CELL.height * SVG_SCALE
     })
-    return { boardWidth, boardHeight }
+    // 顶部计数器高度
+    const countTopHeight = computed(() => {
+      return SIZE_BORDER_UPPER.height * SVG_SCALE
+    })
+    return { boardWidth, boardHeight, countTopHeight }
   }
 })
 </script>
