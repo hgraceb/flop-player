@@ -5,7 +5,7 @@
   <base-svg :height="height" :width="width" class="svg-game">
     <skin-border-top />
     <skin-border-upper />
-    <skin-background-upper />
+    <skin-background-top />
     <skin-counter-top :count="countLeftMines" :translate-x="minesCountTranslateX" />
     <skin-face />
     <skin-counter-top :count="countTime" :min="0" :translate-x="timeCountTranslateX" />
@@ -42,13 +42,13 @@ import SkinCounterTop from '@/components/skin/SkinCounterTop.vue'
 import SkinFace from '@/components/skin/SkinFace.vue'
 import SkinBoard from '@/components/skin/SkinBoard.vue'
 import SkinCursor from '@/components/skin/SkinCursor.vue'
-import SkinBackgroundUpper from '@/components/skin/SkinBackgroundUpper.vue'
+import SkinBackgroundTop from '@/components/skin/SkinBackgroundTop.vue'
 import SkinPlayerInfo from '@/components/skin/SkinPlayerInfo.vue'
 
 export default defineComponent({
   components: {
     SkinPlayerInfo,
-    SkinBackgroundUpper,
+    SkinBackgroundTop,
     SkinCursor,
     SkinBoard,
     SkinFace,
