@@ -10,8 +10,7 @@
     <skin-face />
     <skin-counter-top :count="countTime" :min="0" :translate-x="timeCountTranslateX" />
     <skin-border-middle />
-    <skin-border-lower />
-    <skin-board />
+    <game-middle />
     <skin-border-bottom />
     <skin-player-info />
     <!-- 鼠标指针需要显示在最上层，所以需要最后进行渲染 -->
@@ -23,38 +22,28 @@
 import BaseSvg from '@/components/BaseSvg.vue'
 import SkinSprites from '@/components/skin/SkinSprites.vue'
 import SkinBorderTop from '@/components/skin/SkinBorderTop.vue'
-import {
-  SIZE_BORDER_BOTTOM,
-  SIZE_BORDER_LOWER,
-  SIZE_BORDER_MIDDLE,
-  SIZE_BORDER_TOP,
-  SIZE_BORDER_UPPER,
-  SIZE_CELL,
-  SVG_SCALE
-} from '@/game/constants'
+import { SIZE_BORDER_BOTTOM, SIZE_BORDER_LOWER, SIZE_BORDER_MIDDLE, SIZE_BORDER_TOP, SIZE_BORDER_UPPER, SIZE_CELL, SVG_SCALE } from '@/game/constants'
 import { store } from '@/store'
 import SkinBorderUpper from '@/components/skin/SkinBorderUpper.vue'
 import { computed, defineComponent } from 'vue'
 import SkinBorderMiddle from '@/components/skin/SkinBorderMiddle.vue'
-import SkinBorderLower from '@/components/skin/SkinBorderLower.vue'
 import SkinBorderBottom from '@/components/skin/SkinBorderBottom.vue'
 import SkinCounterTop from '@/components/skin/SkinCounterTop.vue'
 import SkinFace from '@/components/skin/SkinFace.vue'
-import SkinBoard from '@/components/skin/SkinBoard.vue'
 import SkinCursor from '@/components/skin/SkinCursor.vue'
 import SkinBackgroundTop from '@/components/skin/SkinBackgroundTop.vue'
 import SkinPlayerInfo from '@/components/skin/SkinPlayerInfo.vue'
+import GameMiddle from '@/components/game/GameMiddle.vue'
 
 export default defineComponent({
   components: {
+    GameMiddle,
     SkinPlayerInfo,
     SkinBackgroundTop,
     SkinCursor,
-    SkinBoard,
     SkinFace,
     SkinCounterTop,
     SkinBorderBottom,
-    SkinBorderLower,
     SkinBorderMiddle,
     SkinBorderUpper,
     SkinBorderTop,
