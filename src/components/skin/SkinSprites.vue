@@ -359,7 +359,7 @@
 
 import { computed, defineComponent } from 'vue'
 import { store } from '@/store'
-import { SIZE_BORDER_UPPER, SIZE_CELL, SVG_SCALE } from '@/game/constants'
+import { GAME_TOP_MIDDLE, SIZE_CELL, SVG_SCALE } from '@/game/constants'
 
 export default defineComponent({
   setup () {
@@ -373,7 +373,7 @@ export default defineComponent({
     })
     // 顶部计数器高度
     const countTopHeight = computed(() => {
-      return SIZE_BORDER_UPPER.height * SVG_SCALE
+      return GAME_TOP_MIDDLE.height * SVG_SCALE
     })
     return { boardWidth, boardHeight, countTopHeight }
   }

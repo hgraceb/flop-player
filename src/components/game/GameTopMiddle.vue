@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import { SIZE_BORDER_TOP, SIZE_BORDER_UPPER, SIZE_CELL, SVG_SCALE } from '@/game/constants'
+import { GAME_TOP_UPPER, GAME_TOP_MIDDLE, SIZE_CELL, SVG_SCALE } from '@/game/constants'
 import { store } from '@/store'
 import SkinSymbol from '@/components/skin/SkinSymbol.vue'
 import SkinCounterTop from '@/components/skin/SkinCounterTop.vue'
@@ -18,20 +18,20 @@ import SkinFace from '@/components/skin/SkinFace.vue'
 export default defineComponent({
   components: { SkinFace, SkinCounterTop, SkinSymbol },
   setup () {
-    const translateY = SIZE_BORDER_TOP.height * SVG_SCALE
+    const translateY = GAME_TOP_UPPER.height * SVG_SCALE
     // 背景的 X 轴坐标偏移量
     const centerTranslateX = computed(() => {
-      return SIZE_BORDER_UPPER.width * SVG_SCALE
+      return GAME_TOP_MIDDLE.widthLeft * SVG_SCALE
     })
     // 右边框的 X 轴坐标偏移量
     const rightTranslateX = computed(() => {
-      return (SIZE_BORDER_UPPER.width + store.state.width * SIZE_CELL.width) * SVG_SCALE
+      return (GAME_TOP_MIDDLE.widthLeft + store.state.width * SIZE_CELL.width) * SVG_SCALE
     })
     // 雷数计数器的 X 轴坐标偏移量，3 为雷数计数器与左边框的距离
-    const minesCountTranslateX = (SIZE_BORDER_UPPER.width + 3) * SVG_SCALE
+    const minesCountTranslateX = (GAME_TOP_MIDDLE.widthLeft + 3) * SVG_SCALE
     // 时间计数器的 X 轴坐标偏移量，41 为时间计数器的背景宽度，3 为时间计数器与右边框的距离，Minesweeper X 和 Arbiter 中的值均为 6，看着不爽就改成对称的了
     const timeCountTranslateX = computed(() => {
-      return (SIZE_BORDER_UPPER.width + store.state.width * SIZE_CELL.width - 41 - 3) * SVG_SCALE
+      return (GAME_TOP_MIDDLE.widthLeft + store.state.width * SIZE_CELL.width - 41 - 3) * SVG_SCALE
     })
     // 当前计数器显示的剩余雷数
     const countLeftMines = computed(() => store.state.leftMines)

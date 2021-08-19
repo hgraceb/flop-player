@@ -13,48 +13,50 @@ export const SPEED_ARRAY = [
   1.00,
   1.10, 1.20, 1.30, 1.40, 1.50, 1.60, 1.70, 1.80, 1.90, 2.00, 3.00, 4.00, 5.00, 6.00, 7.00, 8.00, 9.00, 10.0, 15.0, 20.0
 ]
+
 /**
  * SVG 放大倍数
  */
 export const SVG_SCALE = 10
 
 /**
- * 顶部边框 SVG 宽高信息
+ * 游戏顶部上半部分的宽高信息
  */
-export const SIZE_BORDER_TOP = {
+export const GAME_TOP_UPPER = {
   height: 11,
   widthLeft: 12,
   widthRight: 12
 }
 
 /**
- * 顶部和中部之间的 SVG 边框宽高信息
+ * 游戏顶部中间部分边框的宽高信息
  */
-export const SIZE_BORDER_UPPER = {
-  width: 12,
-  height: 33
+export const GAME_TOP_MIDDLE = {
+  height: 33,
+  widthLeft: 12
 }
 
 /**
- * 中部边框 SVG 宽高信息
+ * 游戏顶部下半部分的宽高信息
  */
-export const SIZE_BORDER_MIDDLE = SIZE_BORDER_TOP
-
-/**
- * 中部和底部之间的 SVG 边框宽高信息
- */
-export const SIZE_BORDER_LOWER = {
-  width: 12,
-  height: 1
+export const GAME_TOP_LOWER = {
+  height: GAME_TOP_UPPER.height,
+  widthLeft: 12
 }
 
 /**
- * 底部边框 SVG 宽高信息
+ * 游戏中间部分两侧的高度信息
  */
-export const SIZE_BORDER_BOTTOM = {
+export const GAME_MIDDLE = {
+  widthLeft: GAME_TOP_UPPER.widthLeft
+}
+
+/**
+ * 游戏底部上半部分的宽高信息
+ */
+export const GAME_BOTTOM_UPPER = {
   height: 12,
-  widthLeft: SIZE_BORDER_TOP.widthLeft,
-  widthRight: SIZE_BORDER_TOP.widthRight
+  widthLeft: GAME_TOP_UPPER.widthLeft
 }
 
 /**

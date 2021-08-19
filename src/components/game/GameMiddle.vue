@@ -18,23 +18,23 @@
 import { computed, defineComponent } from 'vue'
 import { store } from '@/store'
 import SkinSymbol from '@/components/skin/SkinSymbol.vue'
-import { SIZE_BORDER_LOWER, SIZE_BORDER_MIDDLE, SIZE_BORDER_TOP, SIZE_BORDER_UPPER, SIZE_CELL, SVG_SCALE } from '@/game/constants'
+import { GAME_MIDDLE, GAME_TOP_LOWER, GAME_TOP_UPPER, GAME_TOP_MIDDLE, SIZE_CELL, SVG_SCALE } from '@/game/constants'
 import { ImgCellType } from '@/util/image'
 
 export default defineComponent({
   components: { SkinSymbol },
   setup () {
     // 游戏棋盘整体的 X 轴坐标偏移量
-    const translateX = (SIZE_BORDER_LOWER.width) * SVG_SCALE
+    const translateX = (GAME_MIDDLE.widthLeft) * SVG_SCALE
     // 游戏棋盘整体的 Y 轴坐标偏移量
-    const translateY = (SIZE_BORDER_TOP.height + SIZE_BORDER_UPPER.height + SIZE_BORDER_MIDDLE.height) * SVG_SCALE
+    const translateY = (GAME_TOP_UPPER.height + GAME_TOP_MIDDLE.height + GAME_TOP_LOWER.height) * SVG_SCALE
     // 游戏宽度
     const gameWidth = computed(() => store.state.width)
     // 游戏高度
     const gameHeight = computed(() => store.state.height)
     // 右边框的 X 轴坐标偏移量
     const rightTranslateX = computed(() => {
-      return (SIZE_BORDER_LOWER.width + store.state.width * SIZE_CELL.width) * SVG_SCALE
+      return (GAME_MIDDLE.widthLeft + store.state.width * SIZE_CELL.width) * SVG_SCALE
     })
     // 根据横坐标和纵坐标获取方块的图片名称
     const getCellImg = (width: number, height: number): ImgCellType => {

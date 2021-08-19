@@ -10,7 +10,7 @@
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
 import SkinSymbol from '@/components/skin/SkinSymbol.vue'
-import { SIZE_BORDER_TOP, SVG_SCALE } from '@/game/constants'
+import { GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
 
 export default defineComponent({
   components: { SkinSymbol },
@@ -34,7 +34,7 @@ export default defineComponent({
   },
   setup (props) {
     // 计数器整体的 Y 轴坐标偏移量
-    const translateY = (SIZE_BORDER_TOP.height + 4) * SVG_SCALE
+    const translateY = (GAME_TOP_UPPER.height + 4) * SVG_SCALE
     // 计数器的数字的 Y 轴坐标偏移量
     const countTranslateY = 2 * SVG_SCALE
     // 计数器第一个数字的 X 轴坐标偏移量，2 为数字的左边距
