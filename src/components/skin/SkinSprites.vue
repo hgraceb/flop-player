@@ -92,10 +92,15 @@
     <symbol id="game-bottom-middle-left">
       <path :d="`M0 0L0 ${gameBottomMiddleHeight}L30 ${gameBottomMiddleHeight}L30 0L0 0z`" fill="white" />
       <path :d="`M30 0L30 ${gameBottomMiddleHeight}L90 ${gameBottomMiddleHeight}L90 0L30 0z`" fill="silver" />
+      <path :d="`M90 0L90 ${gameBottomMiddleHeight}L120 ${gameBottomMiddleHeight}L120 0L90 0z`" fill="#e0e0e0" />
+    </symbol>
+    <symbol id="game-bottom-middle-center">
+      <path :d="`M0 0L0 ${gameBottomMiddleHeight}L${boardWidth} ${gameBottomMiddleHeight}L${boardWidth} 0L0 0z`" fill="#e0e0e0" />
     </symbol>
     <symbol id="game-bottom-middle-right">
-      <path :d="`M0 0L0 ${gameBottomMiddleHeight}L60 ${gameBottomMiddleHeight}L60 0L0 0z`" fill="silver" />
-      <path :d="`M60 0L60 ${gameBottomMiddleHeight}L90 ${gameBottomMiddleHeight}L90 0L60 0z`" fill="gray" />
+      <path :d="`M0 0L0 ${gameBottomMiddleHeight}L30 ${gameBottomMiddleHeight}L30 0L0 0z`" fill="#e0e0e0" />
+      <path :d="`M30 0L30 ${gameBottomMiddleHeight}L90 ${gameBottomMiddleHeight}L90 0L30 0z`" fill="silver" />
+      <path :d="`M90 0L90 ${gameBottomMiddleHeight}L120 ${gameBottomMiddleHeight}L120 0L90 0z`" fill="gray" />
     </symbol>
     <symbol id="game-bottom-lower-left">
       <path d="M0 0v80h10V70h10V60h10V0H0z" fill="white" />
