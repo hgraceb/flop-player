@@ -58,7 +58,7 @@ export default defineComponent({
 }
 
 .svg-game {
-  /* 部分元素在超出边框时也要进行显示，如鼠标指针元素在最右边的时候 */
-  overflow: visible;
+  /* 元素及其子元素的文本不可选中 */
+  user-select: none;
 }
 </style>

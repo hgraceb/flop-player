@@ -1,7 +1,11 @@
 <template>
-  <skin-symbol :translate-x="0" :translate-y="translateY" name="game-bottom-middle-left" />
   <skin-symbol :translate-x="centerTranslateX" :translate-y="translateY" name="game-bottom-middle-center" />
-  <text :transform="`translate(${centerTranslateX} ${translateY})`" x="0" y="0">Flop</text>
+  <g>
+    <title>{{ player }}</title>
+    <!--96.23% 为经验值，将页面一直放大后，测试用户选中文本时上下边距是否基本一致-->
+    <text class="player-name" x="50%" y="96.23%">{{ player }}</text>
+  </g>
+  <skin-symbol :translate-x="0" :translate-y="translateY" name="game-bottom-middle-left" />
   <skin-symbol :translate-x="rightTranslateX" :translate-y="translateY" name="game-bottom-middle-right" />
 </template>
 
@@ -25,7 +29,16 @@ export default defineComponent({
     const rightTranslateX = computed(() => {
       return (GAME_BOTTOM_MIDDLE.widthLeft + store.state.width * CELL_SIDE_LENGTH) * SVG_SCALE
     })
-    return { translateY, centerTranslateX, rightTranslateX }
+    // 玩家名称
+    const player = computed(() => store.state.player)
+    return { translateY, centerTranslateX, rightTranslateX, player }
   }
 })
 </script>
+
+<style scoped>
+.player-name {
+  font-size: 100px;
+  text-anchor: middle;
+}
+</style>
