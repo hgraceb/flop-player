@@ -1,96 +1,96 @@
 <template>
   <g style="display:none;">
     <symbol id="border-bottom-left">
-      <path d="M0 0v110h10v-10h10V90h10V0H0z" fill="#fff" />
+      <path d="M0 0v110h10v-10h10V90h10V0H0z" fill="white" />
       <path d="M30 0v90H20v10H10v10H0v10h10v-10h10v-10h10V90h90V30h-20V20h10V10h10V0h-10v10h-10v10H90V0H30z" fill="silver" />
       <path d="M90 0v20h10V10h10V0H90z" fill="gray" />
-      <path d="M110 10v10h-10v10h20V10h-10z" fill="#fff" />
+      <path d="M110 10v10h-10v10h20V10h-10z" fill="white" />
       <path d="M30 90v10H20v10H10v10h110V90H30z" fill="gray" />
     </symbol>
     <symbol id="border-bottom-right">
-      <path d="M0 0v30h30V0H0z" fill="#fff" />
+      <path d="M0 0v30h30V0H0z" fill="white" />
       <path d="M30 0v30H0v60h90V0H30z" fill="silver" />
       <path d="M90 0v90H0v30h120V0H90z" fill="gray" />
     </symbol>
     <symbol id="border-horizontal-bottom">
-      <path :d="`M0 0L0 30L${boardWidth} 30L${boardWidth} 0L0 0z`" fill="#fff" />
+      <path :d="`M0 0L0 30L${boardWidth} 30L${boardWidth} 0L0 0z`" fill="white" />
       <path :d="`M0 30L0 90L${boardWidth} 90L${boardWidth} 30L0 30z`" fill="silver" />
       <path :d="`M0 90L0 120L${boardWidth} 120L${boardWidth} 90L0 90z`" fill="gray" />
     </symbol>
     <symbol id="border-horizontal-middle">
-      <path :d="`M0 0L0 20L${boardWidth} 20L${boardWidth} 0L0 0z`" fill="#fff" />
+      <path :d="`M0 0L0 20L${boardWidth} 20L${boardWidth} 0L0 0z`" fill="white" />
       <path :d="`M0 20L0 80L${boardWidth} 80L${boardWidth} 20L0 20z`" fill="silver" />
       <path :d="`M0 80L0 110L${boardWidth} 110L${boardWidth} 80L0 80z`" fill="gray" />
     </symbol>
     <symbol id="border-horizontal-top">
-      <path :d="`M0 0L0 30L${boardWidth} 30L${boardWidth} 0L0 0z`" fill="#fff" />
+      <path :d="`M0 0L0 30L${boardWidth} 30L${boardWidth} 0L0 0z`" fill="white" />
       <path :d="`M0 30L0 90L${boardWidth} 90L${boardWidth} 30L0 30z`" fill="silver" />
       <path :d="`M0 90L0 110L${boardWidth} 110L${boardWidth} 90L0 90z`" fill="gray" />
     </symbol>
     <symbol id="border-middle-left">
-      <path d="M0 0v110h30V0H0z" fill="#fff" />
+      <path d="M0 0v110h30V0H0z" fill="white" />
       <path d="M30 0v110h60V80h30V20h-20V10h10V0h-10v10H90V0H30z" fill="silver" />
       <path d="M90 0v10h10V0H90z" fill="gray" />
-      <path d="M110 0v10h-10v10h20V0h-10z" fill="#fff" />
+      <path d="M110 0v10h-10v10h20V0h-10z" fill="white" />
       <path d="M90 80v30h30V80H90z" fill="gray" />
     </symbol>
     <symbol id="border-middle-right">
-      <path d="M0 0v20h30V0H0z" fill="#fff" />
+      <path d="M0 0v20h30V0H0z" fill="white" />
       <path d="M30 0v20H0v60h20v10H10v10H0v10h10v-10h10V90h10v20h60V0H30z" fill="silver" />
       <path d="M90 0v110h30V0H90M0 80v20h10V90h10V80H0z" fill="gray" />
-      <path d="M20 90v10H10v10h20V90H20z" fill="#fff" />
+      <path d="M20 90v10H10v10h20V90H20z" fill="white" />
     </symbol>
     <symbol id="border-top-left">
-      <path d="M0 0v110h30V30h90V0H0z" fill="#fff" />
+      <path d="M0 0v110h30V30h90V0H0z" fill="white" />
       <path d="M30 30v80h60V90h30V30H30z" fill="silver" />
       <path d="M90 90v20h30V90H90z" fill="gray" />
     </symbol>
     <symbol id="border-top-right">
-      <path d="M0 0v30h90V20h10V10h10V0H0z" fill="#fff" />
+      <path d="M0 0v30h90V20h10V10h10V0H0z" fill="white" />
       <path d="M110 0v10h-10v10H90v10H0v60h20v10H10v10h10v-10h10v10h60V30h10V20h10V10h10V0h-10z" fill="silver" />
       <path d="M110 10v10h-10v10H90v80h30V10h-10M0 90v20h10v-10h10V90H0z" fill="gray" />
-      <path d="M20 100v10h10v-10H20z" fill="#fff" />
+      <path d="M20 100v10h10v-10H20z" fill="white" />
     </symbol>
     <symbol id="border-vertical-left-upper">
-      <path :d="`M0 0L0 ${countTopHeight}L30 ${countTopHeight}L30 0L0 0z`" fill="#fff" />
+      <path :d="`M0 0L0 ${countTopHeight}L30 ${countTopHeight}L30 0L0 0z`" fill="white" />
       <path :d="`M30 0L30 ${countTopHeight}L90 ${countTopHeight}L90 0L30 0z`" fill="silver" />
       <path :d="`M90 0L90 ${countTopHeight}L110 ${countTopHeight}L110 0L90 0z`" fill="gray" />
       <path :d="`M110 0L110 ${countTopHeight}L120 ${countTopHeight}L120 0L110 0z`" fill="silver" />
     </symbol>
     <symbol id="border-vertical-right-upper">
       <path :d="`M0 0L0 ${countTopHeight}L10 ${countTopHeight}L10 0L0 0z`" fill="silver" />
-      <path :d="`M10 0L10 ${countTopHeight}L30 ${countTopHeight}L30 0L10 0z`" fill="#fff" />
+      <path :d="`M10 0L10 ${countTopHeight}L30 ${countTopHeight}L30 0L10 0z`" fill="white" />
       <path :d="`M30 0L30 ${countTopHeight}L90 ${countTopHeight}L90 0L30 0z`" fill="silver" />
       <path :d="`M90 0L90 ${countTopHeight}L120 ${countTopHeight}L120 0L90 0z`" fill="gray" />
     </symbol>
     <symbol id="border-vertical-left-lower">
-      <path :d="`M0 0L0 ${boardHeight}L30 ${boardHeight}L30 0L0 0z`" fill="#fff" />
+      <path :d="`M0 0L0 ${boardHeight}L30 ${boardHeight}L30 0L0 0z`" fill="white" />
       <path :d="`M30 0L30 ${boardHeight}L90 ${boardHeight}L90 0L30 0z`" fill="silver" />
       <path :d="`M90 0L90 ${boardHeight}L120 ${boardHeight}L120 0L90 0z`" fill="gray" />
     </symbol>
     <symbol id="border-vertical-right-lower">
-      <path :d="`M0 0L0 ${boardHeight}L30 ${boardHeight}L30 0L0 0z`" fill="#fff" />
+      <path :d="`M0 0L0 ${boardHeight}L30 ${boardHeight}L30 0L0 0z`" fill="white" />
       <path :d="`M30 0L30 ${boardHeight}L90 ${boardHeight}L90 0L30 0z`" fill="silver" />
       <path :d="`M90 0L90 ${boardHeight}L120 ${boardHeight}L120 0L90 0z`" fill="gray" />
     </symbol>
 
     <symbol id="game-bottom-upper-left">
-      <path d="M0 0v90h30V0H0z" fill="#fff" />
+      <path d="M0 0v90h30V0H0z" fill="white" />
       <path d="M30 0v90h90V30h-20V20h10V10h10V0h-10v10h-10v10H90V0H30z" fill="silver" />
       <path d="M90 0v20h10V10h10V0H90z" fill="gray" />
-      <path d="M110 10v10h-10v10h20V10h-10z" fill="#fff" />
+      <path d="M110 10v10h-10v10h20V10h-10z" fill="white" />
     </symbol>
     <symbol id="game-bottom-upper-center">
-      <path :d="`M0 0L0 30L${boardWidth} 30L${boardWidth} 0L0 0z`" fill="#fff" />
+      <path :d="`M0 0L0 30L${boardWidth} 30L${boardWidth} 0L0 0z`" fill="white" />
       <path :d="`M0 30L0 90L${boardWidth} 90L${boardWidth} 30L0 30z`" fill="silver" />
     </symbol>
     <symbol id="game-bottom-upper-right">
-      <path d="M0 0v30h30V0H0z" fill="#fff" />
+      <path d="M0 0v30h30V0H0z" fill="white" />
       <path d="M30 0v30H0v60h90V0H30z" fill="silver" />
       <path d="M90 0v90h30V0H90z" fill="gray" />
     </symbol>
     <symbol id="game-bottom-middle-left">
-      <path :d="`M0 0L0 ${gameBottomMiddleHeight}L30 ${gameBottomMiddleHeight}L30 0L0 0z`" fill="#fff" />
+      <path :d="`M0 0L0 ${gameBottomMiddleHeight}L30 ${gameBottomMiddleHeight}L30 0L0 0z`" fill="white" />
       <path :d="`M30 0L30 ${gameBottomMiddleHeight}L90 ${gameBottomMiddleHeight}L90 0L30 0z`" fill="silver" />
     </symbol>
     <symbol id="game-bottom-middle-right">
@@ -98,7 +98,7 @@
       <path :d="`M60 0L60 ${gameBottomMiddleHeight}L90 ${gameBottomMiddleHeight}L90 0L60 0z`" fill="gray" />
     </symbol>
     <symbol id="game-bottom-lower-left">
-      <path d="M0 0v80h10V70h10V60h10V0H0z" fill="#fff" />
+      <path d="M0 0v80h10V70h10V60h10V0H0z" fill="white" />
       <path d="M30 0v60H20v10H10v10H0v10h10V80h10V70h10V60h90V0H30z" fill="silver" />
       <path d="M30 60v10H20v10H10v10h110V60H30z" fill="gray" />
     </symbol>
@@ -112,7 +112,7 @@
     </symbol>
 
     <symbol id="cell-flag">
-      <path d="M0 0v150h10v-10h10V20h120V10h10V0H0z" fill="#fff" />
+      <path d="M0 0v150h10v-10h10V20h120V10h10V0H0z" fill="white" />
       <path d="M150 0v10h-10v10H20v120H10v10H0v10h10v-10h10v-10h120V20h10V10h10V0h-10z" fill="silver" />
       <path d="M150 10v10h-10v120H20v10H10v10h150V10h-10z" fill="gray" />
       <path d="M70 30v10H50v10H40v10h10v10h20v10h20V30H70z" fill="red" />
@@ -124,23 +124,23 @@
       <path d="M80 20v20H60v20h20v20h10V70h10V60h10V40H90V20H80z" />
       <path d="M20 30v10h10v10h10v10h10v10h10v10h10v20H60v10H50v10H40v10H30v10H20v10h20v-10h10v-10h10v-10h10v-10h10v-10h10v10h10v10h10v10h10v10h10v10h20v-10h-10v-10h-10v-10h-10v-10h-10v-10h-10V80h10V70h10V60h10V50h10V40h10V30h-20v10h-10v10h-10v10h-10v10H90v10H80V70H70V60H60V50H50V40H40V30H20z" fill="red" />
       <path d="M40 60v20H20v10h20v20h20v-10h10V80H60V70H50V60H40z" />
-      <path d="M70 60v10h10V60H70z" fill="#fff" />
+      <path d="M70 60v10h10V60H70z" fill="white" />
       <path d="M120 60v10h-10v10h-10v20h10v10h20V90h20V80h-20V60h-10m-40 40v10H70v10H60v10h20v20h10v-20h20v-10h-10v-10H90v-10H80z" />
     </symbol>
     <symbol id="cell-mine">
       <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
       <path d="M10 10v150h150V10H10z" fill="silver" />
       <path d="M80 20v20H60v10H50V40H40v10h10v10H40v20H20v10h20v20h10v10H40v10h10v-10h10v10h20v20h10v-20h20v-10h10v10h10v-10h-10v-10h10V90h20V80h-20V60h-10V50h10V40h-10v10h-10V40H90V20H80z" />
-      <path d="M60 60v20h20V60H60z" fill="#fff" />
+      <path d="M60 60v20h20V60H60z" fill="white" />
     </symbol>
     <symbol id="cell-mine-bomb">
       <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
       <path d="M10 10v150h150V10H10z" fill="red" />
       <path d="M80 20v20H60v10H50V40H40v10h10v10H40v20H20v10h20v20h10v10H40v10h10v-10h10v10h20v20h10v-20h20v-10h10v10h10v-10h-10v-10h10V90h20V80h-20V60h-10V50h10V40h-10v10h-10V40H90V20H80z" />
-      <path d="M60 60v20h20V60H60z" fill="#fff" />
+      <path d="M60 60v20h20V60H60z" fill="white" />
     </symbol>
     <symbol id="cell-normal">
-      <path d="M0 0v150h10v-10h10V20h120V10h10V0H0z" fill="#fff" />
+      <path d="M0 0v150h10v-10h10V20h120V10h10V0H0z" fill="white" />
       <path d="M150 0v10h-10v10H20v120H10v10H0v10h10v-10h10v-10h120V20h10V10h10V0h-10z" fill="silver" />
       <path d="M150 10v10h-10v120H20v10H10v10h150V10h-10z" fill="gray" />
     </symbol>
@@ -195,7 +195,7 @@
       <path d="M10 10v150h150V10H10z" fill="silver" />
     </symbol>
     <symbol id="cell-question">
-      <path d="M0 0v150h10v-10h10V20h120V10h10V0H0z" fill="#fff" />
+      <path d="M0 0v150h10v-10h10V20h120V10h10V0H0z" fill="white" />
       <path d="M150 0v10h-10v10H20v120H10v10H0v10h10v-10h10v-10h120V20h10V10h10V0h-10z" fill="silver" />
       <path d="M150 10v10h-10v120H20v10H10v10h150V10h-10z" fill="gray" />
       <path d="M60 30v10H50v20h20V40h20v30H80v10H70v20h20V80h10V70h10V40h-10V30H60m10 80v20h20v-20H70z" />
@@ -308,7 +308,7 @@
     <symbol id="face-lose">
       <path d="M0 0v250h10v10h250V10h-10V0H0z" fill="gray" />
       <path d="M250 0v10h10V0h-10z" fill="silver" />
-      <path d="M10 10v230h10v-10h10V30h200V20h10V10H10z" fill="#fff" />
+      <path d="M10 10v230h10v-10h10V30h200V20h10V10H10z" fill="white" />
       <path d="M240 10v10h10V10h-10m-10 10v10h10V20h-10M30 30v200h200V30H30z" fill="silver" />
       <path d="M110 50v10H90v10H80v10H70v10H60v20H50v50h10v20h10v10h10v10h10v10h20v10h50v-10h20v-10h10v-10h10v-10h10v-20h10v-50h-10V90h-10V80h-10V70h-10V60h-20V50h-50z" />
       <path d="M110 60v10H90v10H80v10H70v20H60v50h10v20h10v10h10v10h20v10h50v-10h20v-10h10v-10h10v-20h10v-50h-10V90h-10V80h-10V70h-20V60h-50z" fill="#ff0" />
@@ -318,7 +318,7 @@
     <symbol id="face-normal">
       <path d="M0 0v250h10v10h250V10h-10V0H0z" fill="gray" />
       <path d="M250 0v10h10V0h-10z" fill="silver" />
-      <path d="M10 10v230h10v-10h10V30h200V20h10V10H10z" fill="#fff" />
+      <path d="M10 10v230h10v-10h10V30h200V20h10V10H10z" fill="white" />
       <path d="M240 10v10h10V10h-10m-10 10v10h10V20h-10M30 30v200h200V30H30z" fill="silver" />
       <path d="M110 50v10H90v10H80v10H70v10H60v20H50v50h10v20h10v10h10v10h10v10h20v10h50v-10h20v-10h10v-10h10v-10h10v-20h10v-50h-10V90h-10V80h-10V70h-10V60h-20V50h-50z" />
       <path d="M110 60v10H90v10H80v10H70v20H60v50h10v20h10v10h10v10h20v10h50v-10h20v-10h10v-10h10v-20h10v-50h-10V90h-10V80h-10V70h-20V60h-50z" fill="#ff0" />
@@ -328,7 +328,7 @@
     <symbol id="face-press-cell">
       <path d="M0 0v250h10v10h250V10h-10V0H0z" fill="gray" />
       <path d="M250 0v10h10V0h-10z" fill="silver" />
-      <path d="M10 10v230h10v-10h10V30h200V20h10V10H10z" fill="#fff" />
+      <path d="M10 10v230h10v-10h10V30h200V20h10V10H10z" fill="white" />
       <path d="M240 10v10h10V10h-10m-10 10v10h10V20h-10M30 30v200h200V30H30z" fill="silver" />
       <path d="M110 50v10H90v10H80v10H70v10H60v20H50v50h10v20h10v10h10v10h10v10h20v10h50v-10h20v-10h10v-10h10v-10h10v-20h10v-50h-10V90h-10V80h-10V70h-10V60h-20V50h-50z" />
       <path d="M110 60v10H90v10H80v10H70v20H60v50h10v20h10v10h10v10h20v10h50v-10h20v-10h10v-10h10v-20h10v-50h-10V90h-10V80h-10V70h-20V60h-50z" fill="#ff0" />
@@ -354,7 +354,7 @@
     <symbol id="face-win">
       <path d="M0 0v250h10v10h250V10h-10V0H0z" fill="gray" />
       <path d="M250 0v10h10V0h-10z" fill="silver" />
-      <path d="M10 10v230h10v-10h10V30h200V20h10V10H10z" fill="#fff" />
+      <path d="M10 10v230h10v-10h10V30h200V20h10V10H10z" fill="white" />
       <path d="M240 10v10h10V10h-10m-10 10v10h10V20h-10M30 30v200h200V30H30z" fill="silver" />
       <path d="M110 50v10H90v10H80v10H70v10H60v20H50v50h10v20h10v10h10v10h10v10h20v10h50v-10h20v-10h10v-10h10v-10h10v-20h10v-50h-10V90h-10V80h-10V70h-10V60h-20V50h-50z" />
       <path d="M110 60v10H90v10H80v10H70v20H60v20h10v10H60v20h10v20h10v10h10v10h20v10h50v-10h20v-10h10v-10h10v-20h10v-20h-10v-10h10v-20h-10V90h-10V80h-10V70h-20V60h-50z" fill="#ff0" />
@@ -367,7 +367,7 @@
       <path d="M0 0v240h10V10h390V0H0z" fill="gray" />
       <path d="M400 0v10h10V0h-10z" fill="silver" />
       <path d="M10 10v230h390V10H10z" />
-      <path d="M400 10v230H10v10h400V10h-10z" fill="#fff" />
+      <path d="M400 10v230H10v10h400V10h-10z" fill="white" />
       <path d="M40 20v10h10v10h10v10h10V40h10v10h10V40h10V30h10V20h-10v10H90V20H80v10H70V20H60v10H50V20H40m130 0v10h10v10h10v10h10V40h10v10h10V40h10V30h10V20h-10v10h-10V20h-10v10h-10V20h-10v10h-10V20h-10m130 0v10h10v10h10v10h10V40h10v10h10V40h10V30h10V20h-10v10h-10V20h-10v10h-10V20h-10v10h-10V20h-10M20 30v10h10v10H20v10h10v10H20v10h10v10H20v10h10v10H20v10h10v-10h10v-10h10V90H40V80h10V70H40V60h10V50H40V40H30V30H20z" fill="maroon" />
       <path d="M60 30v10h10V30H60m20 0v10h10V30H80z" />
       <path d="M120 30v10h-10v10h-10v10h10v10h-10v10h10v10h-10v10h10v10h10v10h10v-10h-10v-10h10V90h-10V80h10V70h-10V60h10V50h-10V40h10V30h-10m30 0v10h10v10h-10v10h10v10h-10v10h10v10h-10v10h10v10h-10v10h10v-10h10v-10h10V90h-10V80h10V70h-10V60h10V50h-10V40h-10V30h-10z" fill="maroon" />
