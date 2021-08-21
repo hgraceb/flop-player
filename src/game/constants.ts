@@ -33,7 +33,7 @@ export const GAME_TOP_UPPER = {
  */
 export const GAME_TOP_MIDDLE = {
   height: 33,
-  widthLeft: 12
+  widthLeft: GAME_TOP_UPPER.widthLeft
 }
 
 /**
@@ -41,7 +41,7 @@ export const GAME_TOP_MIDDLE = {
  */
 export const GAME_TOP_LOWER = {
   height: GAME_TOP_UPPER.height,
-  widthLeft: 12
+  widthLeft: GAME_TOP_UPPER.widthLeft
 }
 
 /**
@@ -55,7 +55,15 @@ export const GAME_MIDDLE = {
  * 游戏底部上半部分的宽高信息
  */
 export const GAME_BOTTOM_UPPER = {
-  height: 12,
+  height: 9,
+  widthLeft: GAME_TOP_UPPER.widthLeft
+}
+
+/**
+ * 游戏底部中间部分的宽高信息
+ */
+export const GAME_BOTTOM_MIDDLE = {
+  height: 20,
   widthLeft: GAME_TOP_UPPER.widthLeft
 }
 

@@ -1,7 +1,7 @@
 <template>
-  <skin-symbol :translate-x="0" :translate-y="translateY" name="border-bottom-left" />
-  <skin-symbol :translate-x="horizontalTranslateX" :translate-y="translateY" name="border-horizontal-bottom" />
-  <skin-symbol :translate-x="rightTranslateX" :translate-y="translateY" name="border-bottom-right" />
+  <skin-symbol :translate-x="0" :translate-y="translateY" name="game-bottom-upper-left" />
+  <skin-symbol :translate-x="horizontalTranslateX" :translate-y="translateY" name="game-bottom-upper-center" />
+  <skin-symbol :translate-x="rightTranslateX" :translate-y="translateY" name="game-bottom-upper-right" />
 </template>
 
 <script lang="ts">

@@ -73,6 +73,44 @@
       <path :d="`M30 0L30 ${boardHeight}L90 ${boardHeight}L90 0L30 0z`" fill="silver" />
       <path :d="`M90 0L90 ${boardHeight}L120 ${boardHeight}L120 0L90 0z`" fill="gray" />
     </symbol>
+
+    <symbol id="game-bottom-upper-left">
+      <path d="M0 0v90h30V0H0z" fill="#fff" />
+      <path d="M30 0v90h90V30h-20V20h10V10h10V0h-10v10h-10v10H90V0H30z" fill="silver" />
+      <path d="M90 0v20h10V10h10V0H90z" fill="gray" />
+      <path d="M110 10v10h-10v10h20V10h-10z" fill="#fff" />
+    </symbol>
+    <symbol id="game-bottom-upper-center">
+      <path :d="`M0 0L0 30L${boardWidth} 30L${boardWidth} 0L0 0z`" fill="#fff" />
+      <path :d="`M0 30L0 90L${boardWidth} 90L${boardWidth} 30L0 30z`" fill="silver" />
+    </symbol>
+    <symbol id="game-bottom-upper-right">
+      <path d="M0 0v30h30V0H0z" fill="#fff" />
+      <path d="M30 0v30H0v60h90V0H30z" fill="silver" />
+      <path d="M90 0v90h30V0H90z" fill="gray" />
+    </symbol>
+    <symbol id="game-bottom-middle-left">
+      <path :d="`M0 0L0 ${gameBottomMiddleHeight}L30 ${gameBottomMiddleHeight}L30 0L0 0z`" fill="#fff" />
+      <path :d="`M30 0L30 ${gameBottomMiddleHeight}L120 ${gameBottomMiddleHeight}L120 0L30 0z`" fill="silver" />
+    </symbol>
+    <symbol id="game-bottom-middle-right">
+      <path :d="`M0 0L0 ${gameBottomMiddleHeight}L90 ${gameBottomMiddleHeight}L90 0L0 0z`" fill="silver" />
+      <path :d="`M90 0L90 ${gameBottomMiddleHeight}L120 ${gameBottomMiddleHeight}L120 0L90 0z`" fill="gray" />
+    </symbol>
+    <symbol id="game-bottom-lower-left">
+      <path d="M0 0v80h10V70h10V60h10V0H0z" fill="#fff" />
+      <path d="M30 0v60H20v10H10v10H0v10h10V80h10V70h10V60h90V0H30z" fill="silver" />
+      <path d="M30 60v10H20v10H10v10h110V60H30z" fill="gray" />
+    </symbol>
+    <symbol id="game-bottom-lower-center">
+      <path d="M0 0v60h10V0H0z" fill="silver" />
+      <path d="M0 60v30h10V60H0z" fill="gray" />
+    </symbol>
+    <symbol id="game-bottom-lower-right">
+      <path d="M0 0v60h90V0H0z" fill="silver" />
+      <path d="M90 0v60H0v30h120V0H90z" fill="gray" />
+    </symbol>
+
     <symbol id="cell-flag">
       <path d="M0 0v150h10v-10h10V20h120V10h10V0H0z" fill="#fff" />
       <path d="M150 0v10h-10v10H20v120H10v10H0v10h10v-10h10v-10h120V20h10V10h10V0h-10z" fill="silver" />
@@ -359,7 +397,7 @@
 
 import { computed, defineComponent } from 'vue'
 import { store } from '@/store'
-import { CELL_SIDE_LENGTH, GAME_TOP_MIDDLE, SVG_SCALE } from '@/game/constants'
+import { CELL_SIDE_LENGTH, GAME_BOTTOM_MIDDLE, GAME_TOP_MIDDLE, SVG_SCALE } from '@/game/constants'
 
 export default defineComponent({
   setup () {
@@ -372,10 +410,10 @@ export default defineComponent({
       return store.state.height * CELL_SIDE_LENGTH * SVG_SCALE
     })
     // 顶部计数器高度
-    const countTopHeight = computed(() => {
-      return GAME_TOP_MIDDLE.height * SVG_SCALE
-    })
-    return { boardWidth, boardHeight, countTopHeight }
+    const countTopHeight = GAME_TOP_MIDDLE.height * SVG_SCALE
+    // 游戏底部中间部分的高度信息
+    const gameBottomMiddleHeight = GAME_BOTTOM_MIDDLE.height * SVG_SCALE
+    return { boardWidth, boardHeight, countTopHeight, gameBottomMiddleHeight }
   }
 })
 </script>
