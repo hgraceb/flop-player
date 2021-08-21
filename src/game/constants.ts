@@ -63,7 +63,15 @@ export const GAME_BOTTOM_UPPER = {
  * 游戏底部中间部分的宽高信息
  */
 export const GAME_BOTTOM_MIDDLE = {
-  height: 20,
+  height: 16,
+  widthLeft: GAME_TOP_UPPER.widthLeft
+}
+
+/**
+ * 游戏底部下半部分的宽高信息
+ */
+export const GAME_BOTTOM_LOWER = {
+  height: 9,
   widthLeft: GAME_TOP_UPPER.widthLeft
 }
 

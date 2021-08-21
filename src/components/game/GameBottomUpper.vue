@@ -1,6 +1,6 @@
 <template>
   <skin-symbol :translate-x="0" :translate-y="translateY" name="game-bottom-upper-left" />
-  <skin-symbol :translate-x="horizontalTranslateX" :translate-y="translateY" name="game-bottom-upper-center" />
+  <skin-symbol :translate-x="centerTranslateX" :translate-y="translateY" name="game-bottom-upper-center" />
   <skin-symbol :translate-x="rightTranslateX" :translate-y="translateY" name="game-bottom-upper-right" />
 </template>
 
@@ -16,11 +16,11 @@ export default defineComponent({
     const translateY = computed(() => {
       return (GAME_TOP_UPPER.height + GAME_TOP_MIDDLE.height + GAME_TOP_LOWER.height + store.state.height * CELL_SIDE_LENGTH) * SVG_SCALE
     })
-    const horizontalTranslateX = GAME_BOTTOM_UPPER.widthLeft * SVG_SCALE
+    const centerTranslateX = GAME_BOTTOM_UPPER.widthLeft * SVG_SCALE
     const rightTranslateX = computed(() => {
       return (GAME_BOTTOM_UPPER.widthLeft + store.state.width * CELL_SIDE_LENGTH) * SVG_SCALE
     })
-    return { translateY, horizontalTranslateX, rightTranslateX }
+    return { translateY, centerTranslateX, rightTranslateX }
   }
 })
 </script>
