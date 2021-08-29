@@ -97,6 +97,8 @@ export const mutations = {
     state.gameBoard[index] = event.snapshot!.cellType
     // 根据快照还原笑脸状态
     state.faceStatus = event.snapshot!.faceStatus
+    // 根据快照还原已处理的BBBV
+    state.solvedBbbv = event.snapshot!.solvedBbbv
     // 根据游戏事件还原剩余雷数
     switch (event.name) {
       case 'Flag':
@@ -129,7 +131,8 @@ export const mutations = {
     // 在更新前保存快照
     event.snapshot = {
       cellType: state.gameBoard[index],
-      faceStatus: state.faceStatus
+      faceStatus: state.faceStatus,
+      solvedBbbv: state.solvedBbbv
     }
     switch (event.name) {
       case 'Flag':

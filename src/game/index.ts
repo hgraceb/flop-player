@@ -52,6 +52,8 @@ export type GameEvent = ({
     cellType: ImgCellType,
     // 笑脸状态
     faceStatus: ImgFaceType,
+    // 已处理的BBBV
+    solvedBbbv: number
   }
 } | {
   name: 'Solved3BV'
