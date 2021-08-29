@@ -1,6 +1,7 @@
 <template>
   <div :style="{transformOrigin: '0 0 0', transform: `scale(${scale})`}">
     <game />
+    <counters />
     <control-bar />
     <div>
       <button :disabled="increaseDisabled" @click="increaseScale">放大</button>
@@ -16,9 +17,10 @@ import ControlBar from '@/components/ControlBar.vue'
 import { store } from '@/store'
 import { SCALE_ARRAY } from '@/game/constants'
 import Game from '@/components/Game.vue'
+import Counters from '@/components/Counters.vue'
 
 export default defineComponent({
-  components: { Game, ControlBar },
+  components: { Counters, Game, ControlBar },
   setup () {
     // 用户设置的缩放比例
     const scale = computed(() => store.state.scale)

@@ -55,7 +55,6 @@ export default defineComponent({
     })
     // 当前游戏时间，精确到两位小数
     const timeValue = computed(() => {
-      // TODO 确认最后一个游戏事件是否可以正常预览和播放
       return (Math.min(timeMax.value, timeSlider.value) / 100).toFixed(2)
     })
 
