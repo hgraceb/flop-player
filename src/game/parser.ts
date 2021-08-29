@@ -639,6 +639,11 @@ function checkWin (): void {
   const fixFloated = fix / 10000
 
   fprintf('%.3f Solved 3BV: %d of %d\n', fixFloated, solvedBbbv, bbbv)
+  store.commit('addEvent', {
+    name: 'Solved3BV',
+    solved: solvedBbbv,
+    time: curTime
+  })
   if (bbbv === solvedBbbv) win()
 }
 
@@ -1202,9 +1207,6 @@ export function parse (state: State, data: string): void {
     fputs(event)
   }
 
-  // 初始化游戏数据
-  store.commit('initGame', { width: w, height: h, mines: m, player: player })
-
   // Get number of cells in the board
   board = Array.from(Array(size = w * h), () => new Cell())
 
@@ -1226,6 +1228,9 @@ export function parse (state: State, data: string): void {
 
   // Call function to calculate 3bv
   calcBbbv()
+
+  // 初始化游戏数据
+  store.commit('initGame', { width: w, height: h, mines: m, player: player, bbbv: bbbv })
 
   // Call function to calculate ZiNi
   if (!noZini) calcZini()

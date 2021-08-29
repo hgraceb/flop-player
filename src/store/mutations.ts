@@ -57,14 +57,16 @@ export const mutations = {
     width,
     height,
     mines,
-    player
-  }: { width: number, height: number, mines: number, player: string }): void => {
+    player,
+    bbbv
+  }: { width: number, height: number, mines: number, player: string, bbbv: number }): void => {
     state.width = width
     state.height = height
     state.mines = mines
     state.leftMines = mines
     // TODO 玩家名称字符串不同编码格式解析
     state.player = player
+    state.bbbv = bbbv
     state.gameEvents = []
   },
   /** 添加游戏事件 */
@@ -84,10 +86,17 @@ export const mutations = {
   performPreviousEvent: (state: State): void => {
     // 根据事件索引获取游戏事件，并更新事件索引
     const event = state.gameEvents[--state.gameEventIndex]
+    if (event.name === 'Solved3BV') {
+      // 根据快照还原已处理的BBBV
+      state.solvedBbbv = event.snapshot!.solvedBbbv
+      return
+    }
     // 根据坐标获取索引
     const index = event.x + event.y * state.width
     // 根据快照还原图片状态
-    state.gameBoard[index] = event.snapshot as ImgCellType
+    state.gameBoard[index] = event.snapshot!.cellType
+    // 根据快照还原笑脸状态
+    state.faceStatus = event.snapshot!.faceStatus
     // 根据游戏事件还原剩余雷数
     switch (event.name) {
       case 'Flag':
@@ -108,10 +117,22 @@ export const mutations = {
   performNextEvent: (state: State): void => {
     // 根据事件索引获取游戏事件，并更新事件索引
     const event = state.gameEvents[state.gameEventIndex++]
+    if (event.name === 'Solved3BV') {
+      state.solvedBbbv = event.solved
+      // 保存快照
+      event.snapshot = {
+        solvedBbbv: state.solvedBbbv
+      }
+      store.commit('checkVideoFinished')
+      return
+    }
     // 根据坐标获取索引
     const index = event.x + event.y * state.width
-    // 将当前的背景图片保存为快照
-    event.snapshot = state.gameBoard[index]
+    // 保存快照
+    event.snapshot = {
+      cellType: state.gameBoard[index],
+      faceStatus: state.faceStatus
+    }
     switch (event.name) {
       case 'Flag':
         state.gameBoard[index] = 'cell-flag'
@@ -134,7 +155,37 @@ export const mutations = {
         state.gameBoard[index] = 'cell-normal'
         break
       case 'Open':
-        state.gameBoard[index] = ('cell-number-' + event.number) as ImgCellType
+        if (event.number !== -1) {
+          // 这里不能作为游戏结束的标识，因为可能有多个雷被打开的情况
+          state.gameBoard[index] = ('cell-number-' + event.number) as ImgCellType
+        } else {
+          state.gameBoard[index] = 'cell-mine-bomb'
+        }
+        break
+      case 'ToggleQuestionMarkSetting':
+        break
+      case 'MouseMove':
+        break
+      case 'LeftPressWithShift':
+        state.faceStatus = 'face-press-cell'
+        break
+      case 'LeftPress':
+        state.faceStatus = 'face-press-cell'
+        break
+      case 'LeftClick':
+        state.faceStatus = 'face-normal'
+        break
+      case 'RightPress':
+        state.faceStatus = 'face-press-cell'
+        break
+      case 'RightClick':
+        state.faceStatus = 'face-normal'
+        break
+      case 'MiddlePress':
+        state.faceStatus = 'face-press-cell'
+        break
+      case 'MiddleClick':
+        state.faceStatus = 'face-normal'
         break
     }
     if ('precisionX' in event) {
@@ -143,6 +194,7 @@ export const mutations = {
     if ('precisionY' in event) {
       state.precisionY = event.precisionY
     }
+    store.commit('checkVideoFinished')
   },
   /** 重新播放游戏录像，TODO 进行函数节流处理 */
   replayVideo: (state: State): void => {
@@ -153,6 +205,8 @@ export const mutations = {
     state.leftMines = state.mines
     state.precisionX = 0
     state.precisionY = 0
+    state.solvedBbbv = 0
+    state.faceStatus = 'face-normal'
     store.commit('playVideo')
   },
   /** 播放游戏录像，TODO 进行函数节流处理 */
@@ -183,6 +237,21 @@ export const mutations = {
     } else {
       state.gameVideoPaused = true
     }
+  },
+  /** 检查录像是否播放结束，TODO 处理录像意外结尾的情况，即没有雷被打开并且时间没有超时 */
+  checkVideoFinished: (state: State): void => {
+    // 如果不是最后一个游戏事件，则认为录像还未播放完成
+    if (state.gameEventIndex < state.gameEvents.length) {
+      return
+    }
+    // 游戏胜利
+    if (state.bbbv === state.solvedBbbv) {
+      state.faceStatus = 'face-win'
+
+      // 游戏失败
+    } else {
+      state.faceStatus = 'face-lose'
+    }
   }
 }
 
@@ -192,7 +261,8 @@ const EmptyPayloadFunction = [
   'performNextEvent',
   'replayVideo',
   'playVideo',
-  'pauseVideo'
+  'pauseVideo',
+  'checkVideoFinished'
 ] as const
 
 /** payload 参数不能为空的函数类型集合 */

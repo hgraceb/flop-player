@@ -1,4 +1,4 @@
-import { ImgCellType } from '@/util/image'
+import { ImgCellType, ImgFaceType } from '@/util/image'
 
 /**
  * 游戏区域最小单元
@@ -46,6 +46,22 @@ export type GameEvent = ({
   x: number
   // 第几行
   y: number
-  // 未根据游戏事件修改前的图片
-  snapshot?: ImgCellType
+  // 快照
+  snapshot?: {
+    // 未根据游戏事件修改前的图片
+    cellType: ImgCellType,
+    // 笑脸状态
+    faceStatus: ImgFaceType,
+  }
+} | {
+  name: 'Solved3BV'
+  // 已处理的BBBV
+  solved: number
+  // 时间
+  time: number,
+  // 快照
+  snapshot?: {
+    // 已处理的BBBV
+    solvedBbbv: number
+  }
 }
