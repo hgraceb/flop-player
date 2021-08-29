@@ -118,17 +118,15 @@ export const mutations = {
     // 根据事件索引获取游戏事件，并更新事件索引
     const event = state.gameEvents[state.gameEventIndex++]
     if (event.name === 'Solved3BV') {
+      // 在更新前保存快照
+      event.snapshot = { solvedBbbv: state.solvedBbbv }
       state.solvedBbbv = event.solved
-      // 保存快照
-      event.snapshot = {
-        solvedBbbv: state.solvedBbbv
-      }
       store.commit('checkVideoFinished')
       return
     }
     // 根据坐标获取索引
     const index = event.x + event.y * state.width
-    // 保存快照
+    // 在更新前保存快照
     event.snapshot = {
       cellType: state.gameBoard[index],
       faceStatus: state.faceStatus

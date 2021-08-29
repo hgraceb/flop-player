@@ -97,6 +97,10 @@ export default defineComponent({
       stats.value.RTime.value = `${time.toFixed(2)} (${time === 0 ? 0 : Math.floor(time) + 1})`
     })
 
+    watch(computed(() => store.state.solvedBbbv), () => {
+      stats.value['3BV'].value = `${store.state.solvedBbbv}/${store.state.bbbv}`
+    })
+
     return { stats }
   }
 })
