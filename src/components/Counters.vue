@@ -110,5 +110,12 @@ export default defineComponent({
 table {
   display: inline-block;
   font-size: 12px;
+  border-collapse: collapse;
+  margin: 5px 5px 0 5px;
+}
+
+td {
+  width: 70px;
+  border: 1px solid gray;
 }
 </style>
