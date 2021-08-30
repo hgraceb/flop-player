@@ -58,8 +58,10 @@ export const mutations = {
     height,
     mines,
     player,
-    bbbv
-  }: { width: number, height: number, mines: number, player: string, bbbv: number }): void => {
+    bbbv,
+    gZiNi,
+    hZiNi
+  }: { width: number, height: number, mines: number, player: string, bbbv: number, gZiNi: number, hZiNi: number }): void => {
     state.width = width
     state.height = height
     state.mines = mines
@@ -67,6 +69,8 @@ export const mutations = {
     // TODO 玩家名称字符串不同编码格式解析
     state.player = player
     state.bbbv = bbbv
+    state.gZiNi = gZiNi
+    state.hZiNi = hZiNi
     state.gameEvents = []
   },
   /** 添加游戏事件 */
@@ -87,8 +91,6 @@ export const mutations = {
     // 根据事件索引获取游戏事件，并更新事件索引
     const event = state.gameEvents[--state.gameEventIndex]
     if (event.name === 'Solved3BV') {
-      // 根据快照还原已处理的BBBV
-      state.solvedBbbv = event.snapshot!.solvedBbbv
       return
     }
     // 根据坐标获取索引
@@ -97,8 +99,6 @@ export const mutations = {
     state.gameBoard[index] = event.snapshot!.cellType
     // 根据快照还原笑脸状态
     state.faceStatus = event.snapshot!.faceStatus
-    // 根据快照还原已处理的BBBV
-    state.solvedBbbv = event.snapshot!.solvedBbbv
     // 根据游戏事件还原剩余雷数
     switch (event.name) {
       case 'Flag':
@@ -120,9 +120,6 @@ export const mutations = {
     // 根据事件索引获取游戏事件，并更新事件索引
     const event = state.gameEvents[state.gameEventIndex++]
     if (event.name === 'Solved3BV') {
-      // 在更新前保存快照
-      event.snapshot = { solvedBbbv: state.solvedBbbv }
-      state.solvedBbbv = event.solved
       store.commit('checkVideoFinished')
       return
     }
@@ -131,8 +128,7 @@ export const mutations = {
     // 在更新前保存快照
     event.snapshot = {
       cellType: state.gameBoard[index],
-      faceStatus: state.faceStatus,
-      solvedBbbv: state.solvedBbbv
+      faceStatus: state.faceStatus
     }
     switch (event.name) {
       case 'Flag':
@@ -206,7 +202,6 @@ export const mutations = {
     state.leftMines = state.mines
     state.precisionX = 0
     state.precisionY = 0
-    state.solvedBbbv = 0
     state.faceStatus = 'face-normal'
     store.commit('playVideo')
   },
@@ -245,8 +240,10 @@ export const mutations = {
     if (state.gameEventIndex < state.gameEvents.length) {
       return
     }
+    // 最后一个游戏事件
+    const event = state.gameEvents[state.gameEvents.length - 1]
     // 游戏胜利
-    if (state.bbbv === state.solvedBbbv) {
+    if (state.bbbv === event.stats.solvedBbbv) {
       state.faceStatus = 'face-win'
 
       // 游戏失败

@@ -49,21 +49,34 @@ export type GameEvent = ({
   // 快照
   snapshot?: {
     // 未根据游戏事件修改前的图片
-    cellType: ImgCellType,
+    cellType: ImgCellType
     // 笑脸状态
-    faceStatus: ImgFaceType,
-    // 已处理的BBBV
+    faceStatus: ImgFaceType
+  }
+  // 基础统计数据
+  stats: {
     solvedBbbv: number
+    leftClicks: number
+    rightClicks: number
+    doubleClicks: number
+    wastedLeftClicks: number
+    wastedRightClicks: number
+    wastedDoubleClicks: number
   }
 } | {
   name: 'Solved3BV'
   // 已处理的BBBV
   solved: number
   // 时间
-  time: number,
-  // 快照
-  snapshot?: {
-    // 已处理的BBBV
+  time: number
+  // 基础统计数据
+  stats: {
     solvedBbbv: number
+    leftClicks: number
+    rightClicks: number
+    doubleClicks: number
+    wastedLeftClicks: number
+    wastedRightClicks: number
+    wastedDoubleClicks: number
   }
 }

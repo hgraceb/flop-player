@@ -14,8 +14,8 @@ export interface State {
   player: string
   // BBBV
   bbbv: number
-  // 已处理的BBBV
-  solvedBbbv: number
+  gZiNi: number
+  hZiNi: number
   // 笑脸状态
   faceStatus: ImgFaceType
   // 是否游戏结束
@@ -52,7 +52,8 @@ export const state: State = {
   leftMines: 10,
   player: 'Anonymous',
   bbbv: 0,
-  solvedBbbv: 0,
+  gZiNi: 0,
+  hZiNi: 0,
   faceStatus: 'face-normal',
   isGameOver: false,
   gameLevel: 1,

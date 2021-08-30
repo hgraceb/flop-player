@@ -174,6 +174,21 @@ function fprintf (...data: any[]): void {
   }
 }
 
+/**
+ * 获取统计数据
+ */
+function getStats () {
+  return {
+    solvedBbbv: solvedBbbv,
+    leftClicks: leftClicks,
+    rightClicks: rightClicks,
+    doubleClicks: doubleClicks,
+    wastedLeftClicks: wastedLeftClicks,
+    wastedRightClicks: wastedRightClicks,
+    wastedDoubleClicks: wastedDoubleClicks
+  }
+}
+
 // ==============================================================================================
 // Function to print error messages
 // ==============================================================================================
@@ -576,7 +591,8 @@ function push (x: number, y: number): void {
       questioned: board[x * h + y].questioned,
       time: curTime,
       x: x,
-      y: y
+      y: y,
+      stats: getStats()
     })
   }
 }
@@ -607,7 +623,8 @@ function pop (x: number, y: number) {
       questioned: board[x * h + y].questioned,
       time: curTime,
       x: x,
-      y: y
+      y: y,
+      stats: getStats()
     })
   }
 }
@@ -642,7 +659,8 @@ function checkWin (): void {
   store.commit('addEvent', {
     name: 'Solved3BV',
     solved: solvedBbbv,
-    time: curTime
+    time: curTime,
+    stats: getStats()
   })
   if (bbbv === solvedBbbv) win()
 }
@@ -665,7 +683,8 @@ function show (x: number, y: number): void {
     number: board[index].number,
     time: curTime,
     x: x,
-    y: y
+    y: y,
+    stats: getStats()
   })
   board[index].opened = 1
   // Increment counters if cell belongs to an opening and if this iteration opens the last cell in that opening
@@ -709,7 +728,8 @@ function doOpen (x: number, y: number): void {
       number: -1,
       time: curTime,
       x: x,
-      y: y
+      y: y,
+      stats: getStats()
     })
     fail()
   } else {
@@ -798,7 +818,8 @@ function doSetFlag (x: number, y: number): void {
     name: 'Flag',
     time: curTime,
     x: x,
-    y: y
+    y: y,
+    stats: getStats()
   })
   ++flags
   ++wastedFlags
@@ -814,7 +835,8 @@ function doQuestion (x: number, y: number): void {
     name: 'QuestionMark',
     time: curTime,
     x: x,
-    y: y
+    y: y,
+    stats: getStats()
   })
 }
 
@@ -826,7 +848,8 @@ function doUnsetFlag (x: number, y: number): void {
     name: 'RemoveFlag',
     time: curTime,
     x: x,
-    y: y
+    y: y,
+    stats: getStats()
   })
   // Decrease flag count, increase unflag count
   --flags
@@ -871,7 +894,8 @@ function leftClick (x: number, y: number, precX: number, precY: number): void {
     x: x,
     y: y,
     precisionX: precX,
-    precisionY: precY
+    precisionY: precY,
+    stats: getStats()
   })
   if (!left) return
   if (x !== curX || y !== curY) mouseMove(x, y, precX, precY)
@@ -916,7 +940,8 @@ function mouseMove (x: number, y: number, precX: number, precY: number): void {
     x: x,
     y: y,
     precisionX: precX,
-    precisionY: precY
+    precisionY: precY,
+    stats: getStats()
   })
   if (isInsideBoard(x, y)) {
     if ((left && right) || middle || shiftLeft) {
@@ -964,7 +989,8 @@ function leftPress (x: number, y: number, precX: number, precY: number): void {
     x: x,
     y: y,
     precisionX: precX,
-    precisionY: precY
+    precisionY: precY,
+    stats: getStats()
   })
   if (middle) return
   left = 1
@@ -991,7 +1017,8 @@ function leftPressWithShift (x: number, y: number, precX: number, precY: number)
     x: x,
     y: y,
     precisionX: precX,
-    precisionY: precY
+    precisionY: precY,
+    stats: getStats()
   })
   if (middle) return
   left = shiftLeft = 1
@@ -1013,7 +1040,8 @@ function toggleQuestionMarkSetting (x: number, y: number, precX: number, precY: 
     x: x,
     y: y,
     precisionX: precX,
-    precisionY: precY
+    precisionY: precY,
+    stats: getStats()
   })
   qm = !qm
 }
@@ -1026,7 +1054,8 @@ function rightPress (x: number, y: number, precX: number, precY: number): void {
     x: x,
     y: y,
     precisionX: precX,
-    precisionY: precY
+    precisionY: precY,
+    stats: getStats()
   })
   if (middle) return
   right = 1
@@ -1051,7 +1080,8 @@ function rightPress (x: number, y: number, precX: number, precY: number): void {
             name: 'RemoveQuestionMark',
             time: curTime,
             x: x,
-            y: y
+            y: y,
+            stats: getStats()
           })
         }
       }
@@ -1074,7 +1104,8 @@ function rightClick (x: number, y: number, precX: number, precY: number): void {
     x: x,
     y: y,
     precisionX: precX,
-    precisionY: precY
+    precisionY: precY,
+    stats: getStats()
   })
   if (!right) return
   right = shiftLeft = 0
@@ -1112,7 +1143,8 @@ function middlePress (x: number, y: number, precX: number, precY: number): void 
     x: x,
     y: y,
     precisionX: precX,
-    precisionY: precY
+    precisionY: precY,
+    stats: getStats()
   })
   // Middle button resets these boolean values
   shiftLeft = left = right = oneDotFive = chorded = 0
@@ -1129,7 +1161,8 @@ function middleClick (x: number, y: number, precX: number, precY: number): void 
     x: x,
     y: y,
     precisionX: precX,
-    precisionY: precY
+    precisionY: precY,
+    stats: getStats()
   })
   if (!middle) return
   middle = 0
@@ -1229,11 +1262,11 @@ export function parse (state: State, data: string): void {
   // Call function to calculate 3bv
   calcBbbv()
 
-  // 初始化游戏数据
-  store.commit('initGame', { width: w, height: h, mines: m, player: player, bbbv: bbbv })
-
   // Call function to calculate ZiNi
   if (!noZini) calcZini()
+
+  // 初始化游戏数据
+  store.commit('initGame', { width: w, height: h, mines: m, player: player, bbbv: bbbv, gZiNi: gzini, hZiNi: hzini })
 
   // Initialise variables with default values
   solvedBbbv = distance = leftClicks = rightClicks = doubleClicks = wastedLeftClicks = wastedRightClicks = wastedDoubleClicks =
