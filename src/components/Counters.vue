@@ -21,6 +21,8 @@ export default defineComponent({
     const bbbv = computed(() => store.state.bbbv)
     const solvedBbbv = computed(() => store.state.solvedBbbv)
 
+    // 扫雷网和（新）国际网对二次计算的值都是四舍五入进行显示，此处也对所有经过二次计算的值都进行四舍五入处理，如：3BV/s
+    // 可能与 Arbiter 规则有所不同，如：时间为 20.16 秒、3BV 为 112 时，Arbiter 0.52.3 的 3BV/s 计算结果为 5.55，而四舍五入后为 5.56
     const stats: Ref<Stat> = ref({
       RTime: computed(() => {
         if (time.value <= 0) return '0.00 (0)'
@@ -37,7 +39,6 @@ export default defineComponent({
       }),
       '3BV/s': computed(() => {
         if (time.value <= 0) return '*'
-        // TODO 修复和 Arbiter 计算结果不一致的问题
         return `${(solvedBbbv.value / time.value).toFixed(2)}`
       }),
       ZiNi: '*@*',
