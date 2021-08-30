@@ -49,6 +49,7 @@ export default defineComponent({
     const results: Ref<TypeStat> = ref({
       RTime: computed(() => {
         if (isDefault.value) return '0.00 (0)'
+        // 因为有默认值，不用考虑当时间 <= 0 时的情况，estRTime 同理
         return `${time.value.toFixed(2)} (${Math.floor(time.value) + 1})`
       }),
       'Est RTime': computed(() => {
@@ -121,7 +122,8 @@ export default defineComponent({
       Flags: '0',
       RQP: computed(() => {
         if (isDefault.value) return '*'
-        return `${(time.value * (time.value + 1) / solvedBbbv.value).toFixed(2)}`
+        // 按照 time.value * (time.value + 1) / solvedBbbv.value 计算的话会导致 计算的值一直是递增的，没有参考意义
+        return `${(estRTime.value * (estRTime.value + 1) / bbbv.value).toFixed(2)}`
       }),
       IOS: computed(() => {
         if (isDefault.value) return '*'
