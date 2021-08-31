@@ -34,7 +34,9 @@ export default defineComponent({
       return (GAME_TOP_MIDDLE.widthLeft + store.state.width * CELL_SIDE_LENGTH - 41 - 3) * SVG_SCALE
     })
     // 当前计数器显示的剩余雷数
-    const countLeftMines = computed(() => store.state.leftMines)
+    const countLeftMines = computed(() => {
+      return store.state.mines - (store.state.gameEvents[store.state.gameEventIndex - 1]?.stats.flags || 0)
+    })
     // 当前计数器显示的游戏时间
     const countTime = computed(() => {
       const time = Math.min(store.state.gameEvents[store.state.gameEvents.length - 1]?.time || 0, store.state.gameElapsedTime) / 1000

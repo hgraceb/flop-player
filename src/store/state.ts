@@ -8,8 +8,6 @@ export interface State {
   height: number
   // 游戏雷数
   mines: number
-  // 游戏剩余雷数
-  leftMines: number
   // 玩家名称
   player: string
   // BBBV
@@ -49,7 +47,6 @@ export const state: State = {
   width: 8,
   height: 8,
   mines: 10,
-  leftMines: 10,
   player: 'Anonymous',
   bbbv: 0,
   gZiNi: 0,

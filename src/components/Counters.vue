@@ -120,7 +120,10 @@ export default defineComponent({
         return `${(hZiNi.value * coeff.value / eClicks.value).toFixed(3)}`
       }),
       Path: '0',
-      Flags: '0',
+      Flags: computed(() => {
+        if (isDefault.value) return '0'
+        return store.state.gameEvents[store.state.gameEventIndex - 1]?.stats.flags || 0
+      }),
       RQP: computed(() => {
         if (isDefault.value) return '*'
         // 按照 time.value * (time.value + 1) / solvedBbbv.value 计算的话会导致 计算的值一直是递增的，没有参考意义

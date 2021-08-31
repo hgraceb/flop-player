@@ -65,7 +65,6 @@ export const mutations = {
     state.width = width
     state.height = height
     state.mines = mines
-    state.leftMines = mines
     // TODO 玩家名称字符串不同编码格式解析
     state.player = player
     state.bbbv = bbbv
@@ -99,15 +98,6 @@ export const mutations = {
     state.gameBoard[index] = event.snapshot!.cellType
     // 根据快照还原笑脸状态
     state.faceStatus = event.snapshot!.faceStatus
-    // 根据游戏事件还原剩余雷数
-    switch (event.name) {
-      case 'Flag':
-        state.leftMines++
-        break
-      case 'RemoveFlag':
-        state.leftMines--
-        break
-    }
     if ('precisionX' in event) {
       state.precisionX = event.precisionX
     }
@@ -133,7 +123,6 @@ export const mutations = {
     switch (event.name) {
       case 'Flag':
         state.gameBoard[index] = 'cell-flag'
-        state.leftMines--
         break
       case 'QuestionMark':
         state.gameBoard[index] = 'cell-question'
@@ -143,7 +132,6 @@ export const mutations = {
         break
       case 'RemoveFlag':
         state.gameBoard[index] = 'cell-normal'
-        state.leftMines++
         break
       case 'Press':
         state.gameBoard[index] = 'cell-press'
@@ -199,7 +187,6 @@ export const mutations = {
     state.gameBoard = Array.from(Array(state.width * state.height), () => 'cell-normal')
     state.gameElapsedTime = 0.0
     state.gameEventIndex = 0
-    state.leftMines = state.mines
     state.precisionX = 0
     state.precisionY = 0
     state.faceStatus = 'face-normal'

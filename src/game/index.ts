@@ -62,6 +62,7 @@ export type GameEvent = ({
     wastedLeftClicks: number
     wastedRightClicks: number
     wastedDoubleClicks: number
+    flags: number
   }
 } | {
   name: 'Solved3BV'
@@ -78,5 +79,6 @@ export type GameEvent = ({
     wastedLeftClicks: number
     wastedRightClicks: number
     wastedDoubleClicks: number
+    flags: number
   }
 }
