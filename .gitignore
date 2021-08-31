@@ -24,3 +24,6 @@ pnpm-debug.log*
 
 # Arbiter files
 diagnostics
+
+# Temp files
+/temp
