@@ -44,6 +44,8 @@ export default defineComponent({
     const wastedClicks = computed(() => wastedLeftClicks.value + wastedRightClicks.value + wastedDoubleClicks.value)
     const eClicks = computed(() => clicks.value - wastedClicks.value)
     const coeff = computed(() => solvedBbbv.value / bbbv.value)
+    const path = computed(() => stats.value?.path)
+    const flags = computed(() => stats.value?.flags)
 
     // 是否使用默认值
     const isDefault = computed(() => time.value <= 0)
@@ -129,10 +131,14 @@ export default defineComponent({
         if (isDefault.value) return '*'
         return `${(hZiNi.value * coeff.value / eClicks.value).toFixed(3)}`
       }),
-      Path: '0',
+      Path: computed(() => {
+        if (isDefault.value) return '0'
+        // TODO 修复只对 MouseMove 事件才计算 Path 的问题
+        return path.value
+      }),
       Flags: computed(() => {
         if (isDefault.value) return '0'
-        return store.state.gameEvents[store.state.gameEventIndex - 1]?.stats.flags || 0
+        return flags.value
       }),
       RQP: computed(() => {
         if (isDefault.value) return '*'

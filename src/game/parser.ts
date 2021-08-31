@@ -188,6 +188,7 @@ function getStats () {
     wastedLeftClicks: wastedLeftClicks,
     wastedRightClicks: wastedRightClicks,
     wastedDoubleClicks: wastedDoubleClicks,
+    path: distance,
     flags: flags
   }
 }

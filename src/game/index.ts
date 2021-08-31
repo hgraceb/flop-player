@@ -64,6 +64,7 @@ export type GameEvent = ({
     wastedLeftClicks: number
     wastedRightClicks: number
     wastedDoubleClicks: number
+    path: number
     flags: number
   }
 } | {
@@ -83,6 +84,7 @@ export type GameEvent = ({
     wastedLeftClicks: number
     wastedRightClicks: number
     wastedDoubleClicks: number
+    path: number
     flags: number
   }
 }
