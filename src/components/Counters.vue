@@ -46,6 +46,7 @@ export default defineComponent({
 
     // 扫雷网和（新）国际网对二次计算的值都是四舍五入进行显示，此处也对所有经过二次计算的值都进行四舍五入处理，如：3BV/s
     // 可能与 Arbiter 规则有所不同，如：时间为 20.16 秒、3BV 为 112 时，Arbiter 0.52.3 的 3BV/s 计算结果为 5.55，而四舍五入后为 5.56
+    // IOS 数据可能会出现负值，并且没有太大用处，不进行计算和展示，如：RTime = 1 时，计算公式为：(Math.log(bbbv.value) / Math.log(estRTime.value)
     const results: Ref<TypeStat> = ref({
       RTime: computed(() => {
         if (isDefault.value) return '0.00 (0)'
@@ -124,11 +125,6 @@ export default defineComponent({
         if (isDefault.value) return '*'
         // 按照 time.value * (time.value + 1) / solvedBbbv.value 计算的话会导致 计算的值一直是递增的，没有参考意义
         return `${(estRTime.value * (estRTime.value + 1) / bbbv.value).toFixed(2)}`
-      }),
-      IOS: computed(() => {
-        if (isDefault.value) return '*'
-        // 按照 Math.log(solvedBbbv.value) / Math.log(time.value) 计算的话可能出现负值
-        return `${(Math.log(bbbv.value) / Math.log(estRTime.value)).toFixed(2)}`
       })
     })
 
