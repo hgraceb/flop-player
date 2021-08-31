@@ -19,6 +19,8 @@ export default defineComponent({
 
     // 静态统计数据
     const bbbv = computed(() => store.state.bbbv)
+    const openings = computed(() => store.state.openings)
+    const islands = computed(() => store.state.islands)
     const gZiNi = computed(() => store.state.gZiNi)
     const hZiNi = computed(() => store.state.hZiNi)
 
@@ -30,6 +32,8 @@ export default defineComponent({
       return store.state.gameEvents[Math.min(store.state.gameEventIndex, store.state.gameEvents.length) - 1]?.stats
     })
     const solvedBbbv = computed(() => stats.value?.solvedBbbv)
+    const solvedOps = computed(() => stats.value?.solvedOps)
+    const solvedIsls = computed(() => stats.value?.solvedIsls)
     const leftClicks = computed(() => stats.value?.leftClicks)
     const rightClicks = computed(() => stats.value?.rightClicks)
     const doubleClicks = computed(() => stats.value?.doubleClicks)
@@ -73,8 +77,14 @@ export default defineComponent({
         if (isDefault.value) return '*@*'
         return `${hZiNi.value}@${(hZiNi.value / time.value).toFixed(2)}`
       }),
-      Ops: '*/*',
-      Isls: '0',
+      Ops: computed(() => {
+        if (isDefault.value) return '*/*'
+        return `${solvedOps.value}/${openings.value}`
+      }),
+      Isls: computed(() => {
+        if (isDefault.value) return '*/*'
+        return `${solvedIsls.value}/${islands.value}`
+      }),
       Left: computed(() => {
         if (isDefault.value) return '0@0'
         return `${leftClicks.value}@${(leftClicks.value / time.value).toFixed(2)}`

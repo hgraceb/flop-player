@@ -59,15 +59,19 @@ export const mutations = {
     mines,
     player,
     bbbv,
+    openings,
+    islands,
     gZiNi,
     hZiNi
-  }: { width: number, height: number, mines: number, player: string, bbbv: number, gZiNi: number, hZiNi: number }): void => {
+  }: { width: number, height: number, mines: number, player: string, bbbv: number, openings: number, islands: number, gZiNi: number, hZiNi: number }): void => {
     state.width = width
     state.height = height
     state.mines = mines
     // TODO 玩家名称字符串不同编码格式解析
     state.player = player
     state.bbbv = bbbv
+    state.openings = openings
+    state.islands = islands
     state.gZiNi = gZiNi
     state.hZiNi = hZiNi
     state.gameEvents = []

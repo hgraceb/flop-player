@@ -12,6 +12,8 @@ export interface State {
   player: string
   // BBBV
   bbbv: number
+  openings: number
+  islands: number
   gZiNi: number
   hZiNi: number
   // 笑脸状态
@@ -49,6 +51,8 @@ export const state: State = {
   mines: 10,
   player: 'Anonymous',
   bbbv: 0,
+  openings: 0,
+  islands: 0,
   gZiNi: 0,
   hZiNi: 0,
   faceStatus: 'face-normal',

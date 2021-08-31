@@ -56,6 +56,8 @@ export type GameEvent = ({
   // 基础统计数据
   stats: {
     solvedBbbv: number
+    solvedOps: number
+    solvedIsls: number
     leftClicks: number
     rightClicks: number
     doubleClicks: number
@@ -73,6 +75,8 @@ export type GameEvent = ({
   // 基础统计数据
   stats: {
     solvedBbbv: number
+    solvedOps: number
+    solvedIsls: number
     leftClicks: number
     rightClicks: number
     doubleClicks: number

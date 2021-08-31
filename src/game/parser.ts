@@ -180,6 +180,8 @@ function fprintf (...data: any[]): void {
 function getStats () {
   return {
     solvedBbbv: solvedBbbv,
+    solvedOps: solvedOps,
+    solvedIsls: solvedIsls,
     leftClicks: leftClicks,
     rightClicks: rightClicks,
     doubleClicks: doubleClicks,
@@ -1267,7 +1269,7 @@ export function parse (state: State, data: string): void {
   if (!noZini) calcZini()
 
   // 初始化游戏数据
-  store.commit('initGame', { width: w, height: h, mines: m, player: player, bbbv: bbbv, gZiNi: gzini, hZiNi: hzini })
+  store.commit('initGame', { width: w, height: h, mines: m, player: player, bbbv: bbbv, openings: openings, islands: islands, gZiNi: gzini, hZiNi: hzini })
 
   // Initialise variables with default values
   solvedBbbv = distance = leftClicks = rightClicks = doubleClicks = wastedLeftClicks = wastedRightClicks = wastedDoubleClicks =
