@@ -1,4 +1,5 @@
 <template>
+  <game-menu />
   <div :style="{transformOrigin: '0 0 0', transform: `scale(${scale})`}">
     <game />
     <counters />
@@ -18,9 +19,10 @@ import { store } from '@/store'
 import { SCALE_ARRAY } from '@/game/constants'
 import Game from '@/components/Game.vue'
 import Counters from '@/components/Counters.vue'
+import GameMenu from '@/components/GameMenu.vue'
 
 export default defineComponent({
-  components: { Counters, Game, ControlBar },
+  components: { GameMenu, Counters, Game, ControlBar },
   setup () {
     // 用户设置的缩放比例
     const scale = computed(() => store.state.scale)

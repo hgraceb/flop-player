@@ -1,19 +1,11 @@
 import { createI18n } from 'vue-i18n'
-
-const messages = {
-  en: {
-    message: {
-      hello: 'hello world'
-    }
-  },
-  ja: {
-    message: {
-      hello: 'こんにちは、世界'
-    }
-  }
-}
+import en from '@/locales/en.yml'
+import zhHans from '@/locales/zh-Hans.yml'
 
 export const i18n = createI18n({
-  locale: 'en',
-  messages
+  locale: 'zh-Hans',
+  messages: {
+    en: en,
+    'zh-Hans': zhHans
+  }
 })
