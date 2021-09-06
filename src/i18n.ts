@@ -22,8 +22,8 @@ function loadLocaleMessages () {
 function getDefaultLocale () {
   const languages = navigator.languages || [navigator.language]
   for (const language of languages) {
-    // 简体中文
-    if (/^zh-CN$/i.test(language)) {
+    // 简体中文，包括 zh 和 zh-CN
+    if (/^zh(?:-CN)?$/i.test(language)) {
       return 'zh-Hans'
 
       // 除简体中文外的所有中文默认使用繁体中文
