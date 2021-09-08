@@ -1,5 +1,7 @@
 menu:
   toggleLanguages: 切換語言
+  zoomOut: 縮小
+  zoomIn: 放大
 
 controlBar:
   play: 播放

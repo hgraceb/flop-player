@@ -1,5 +1,7 @@
 menu:
   toggleLanguages: Change languages
+  zoomOut: Zoom out
+  zoomIn: Zoom in
 
 controlBar:
   play: Play
