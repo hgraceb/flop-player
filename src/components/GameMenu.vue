@@ -1,5 +1,5 @@
 <template>
-  <button @click="toggleLocales">{{ $t('menu.toggle-languages') }}</button>
+  <button @click="toggleLocales">{{ $t('menu.toggleLanguages') }}</button>
 </template>
 
 <script lang="ts">

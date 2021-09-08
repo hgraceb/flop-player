@@ -1,7 +1,7 @@
 <template>
   <div>
-    <button @click="replayVideo">重放</button>
-    <button @click="pauseVideo">暂停</button>
+    <button :title="titleReplay" @click="replayVideo">{{ titleReplay }}</button>
+    <button :title="titleTogglePlay" @click="toggleVideoPlay">{{ titleTogglePlay }}</button>
     <div>
       <input
         v-model="speed"
@@ -25,11 +25,27 @@
 import { computed, defineComponent } from 'vue'
 import { store } from '@/store'
 import { SPEED_ARRAY } from '@/game/constants'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   setup () {
+    const { t } = useI18n()
+    // 重放录像
     const replayVideo = () => store.commit('replayVideo')
-    const pauseVideo = () => store.commit('pauseVideo')
+    // 切换录像播放状态
+    const toggleVideoPlay = () => {
+      return store.state.gameEventIndex >= store.state.gameEvents.length ? store.commit('replayVideo') : store.commit('pauseVideo')
+    }
+
+    // 重放录像按钮的标题
+    const titleReplay = computed(() => t('controlBar.replay'))
+    // 切换录像播放状态按钮的标题
+    const titleTogglePlay = computed(() => {
+      if (store.state.gameEventIndex >= store.state.gameEvents.length) {
+        return t('controlBar.replay')
+      }
+      return store.state.gameVideoPaused ? t('controlBar.play') : t('controlBar.pause')
+    })
 
     const speed = computed({
       get: () => {
@@ -58,7 +74,7 @@ export default defineComponent({
       return (Math.min(timeMax.value, timeSlider.value) / 100).toFixed(2)
     })
 
-    return { replayVideo, pauseVideo, speed, SPEED_ARRAY, timeSlider, timeMax, timeValue }
+    return { replayVideo, toggleVideoPlay, titleReplay, titleTogglePlay, speed, SPEED_ARRAY, timeSlider, timeMax, timeValue }
   }
 })
 </script>

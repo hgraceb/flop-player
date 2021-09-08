@@ -1,2 +1,7 @@
 menu:
-  toggle-languages: Change languages
+  toggleLanguages: Change languages
+
+controlBar:
+  play: Play
+  pause: Pause
+  replay: Replay

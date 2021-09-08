@@ -1,2 +1,7 @@
 menu:
-  toggle-languages: 切換語言
+  toggleLanguages: 切換語言
+
+controlBar:
+  play: 播放
+  pause: 暫停
+  replay: 重放
