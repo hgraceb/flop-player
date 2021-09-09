@@ -26,7 +26,8 @@ export default defineComponent({
 
     // 动态统计数据
     const time = computed(() => Math.min(store.state.gameEvents[store.state.gameEvents.length - 1]?.time || 0, store.state.gameElapsedTime) / 1000)
-    const estRTime = computed(() => time.value * (bbbv.value / solvedBbbv.value))
+    // 可能出现 solvedBbbv 为 0 的情况，比如标雷之后开空，时间最大值限制为 999.99
+    const estRTime = computed(() => solvedBbbv.value > 0 ? time.value * (bbbv.value / solvedBbbv.value) : 999.99)
     const stats = computed(() => {
       // 游戏事件索引超出游戏事件总数时按照最后一个游戏事件进行计算
       return store.state.gameEvents[Math.min(store.state.gameEventIndex, store.state.gameEvents.length) - 1]?.stats
@@ -61,7 +62,8 @@ export default defineComponent({
       }),
       'Est RTime': computed(() => {
         if (isDefault.value) return '* (*)'
-        return `${estRTime.value.toFixed(2)} (${Math.floor(estRTime.value) + 1})`
+        // 时间最大值限制为 999
+        return `${estRTime.value.toFixed(2)} (${Math.min(Math.floor(estRTime.value) + 1, 999)})`
       }),
       '3BV': computed(() => {
         if (isDefault.value) return '*/*'
@@ -161,7 +163,7 @@ table {
 }
 
 td {
-  width: 70px;
+  width: 75px;
   border: 1px solid gray;
 }
 </style>
