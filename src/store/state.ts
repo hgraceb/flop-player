@@ -49,7 +49,7 @@ export const state: State = {
   width: 8,
   height: 8,
   mines: 10,
-  player: 'Anonymous',
+  player: '',
   bbbv: 0,
   openings: 0,
   islands: 0,

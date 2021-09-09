@@ -1193,7 +1193,7 @@ export function parse (state: State, data: string): void {
   let ww = 8
   let hh = 8
   let mm = 10
-  let player = 'Anonymous'
+  let player = ''
   let mCl = true
   let noMode = 1
   const squareSize = 16
