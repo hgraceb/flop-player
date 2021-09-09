@@ -75,11 +75,11 @@ export default defineComponent({
       }),
       ZiNi: computed(() => {
         if (isDefault.value) return '*@*'
-        return `${gZiNi.value}@${(gZiNi.value / time.value).toFixed(2)}`
+        return `${gZiNi.value}@${(gZiNi.value / estRTime.value).toFixed(2)}`
       }),
       'H.ZiNi': computed(() => {
         if (isDefault.value) return '*@*'
-        return `${hZiNi.value}@${(hZiNi.value / time.value).toFixed(2)}`
+        return `${hZiNi.value}@${(hZiNi.value / estRTime.value).toFixed(2)}`
       }),
       Ops: computed(() => {
         if (isDefault.value) return '*/*'
