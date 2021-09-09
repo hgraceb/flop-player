@@ -3,7 +3,7 @@
   <g>
     <title>{{ player }}</title>
     <!--119.8 为经验值，将页面一直放大后，测试用户选中文本时上下边距是否基本一致-->
-    <text :style="`fill: ${colorPlayer}`" :transform="`translate(0 ${translateY})`" class="player-name" x="50%" y="119.8">{{ player }}</text>
+    <text :style="`opacity: ${opacityPlayer}`" :transform="`translate(0 ${translateY})`" class="player-name" x="50%" y="119.8">{{ player }}</text>
   </g>
   <skin-symbol :translate-x="0" :translate-y="translateY" name="game-bottom-middle-left" />
   <skin-symbol :translate-x="rightTranslateX" :translate-y="translateY" name="game-bottom-middle-right" />
@@ -35,12 +35,12 @@ export default defineComponent({
       // 没有玩家姓名信息则默认显示 Anonymous
       return player?.trim().length > 0 ? player : 'Anonymous'
     })
-    // 玩家名称的颜色
-    const colorPlayer = computed(() => {
+    // 玩家名称的文本不透明度
+    const opacityPlayer = computed(() => {
       // 没有玩家姓名信息则置灰显示
-      return store.state.player?.trim().length > 0 ? 'black' : 'silver'
+      return store.state.player?.trim().length > 0 ? 1 : 0.25
     })
-    return { translateY, centerTranslateX, rightTranslateX, player, colorPlayer }
+    return { translateY, centerTranslateX, rightTranslateX, player, opacityPlayer }
   }
 })
 </script>
