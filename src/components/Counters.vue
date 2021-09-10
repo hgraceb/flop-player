@@ -10,6 +10,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref, Ref } from 'vue'
 import { store } from '@/store'
+import { round } from 'number-precision'
 
 export default defineComponent({
   setup () {
@@ -52,18 +53,19 @@ export default defineComponent({
     const isDefault = computed(() => time.value <= 0)
 
     // 扫雷网和（新）国际网对二次计算的值都是四舍五入进行显示，此处也对所有经过二次计算的值都进行四舍五入处理，如：3BV/s
-    // 可能与 Arbiter 规则有所不同，如：时间为 20.16 秒、3BV 为 112 时，Arbiter 0.52.3 的 3BV/s 计算结果为 5.55，而四舍五入后为 5.56
+    // 可能与 Arbiter 规则有所不同，如：时间为 20.16 秒、3BV 为 112 时，Arbiter 0.52.3 的 3BV/s 计算结果为 5.55，而四舍五入后为 5.56（使用 toFixed 进行四舍五入可能会不符合预期）
+    // 注意不能使用 toFixed() 方法进行四舍五入，可能与预期结果不一致，如：0.015.toFixed(2) 的计算结果为 '0.01'
     // IOS 数据可能会出现负值，并且没有太大用处，不进行计算和展示，如：RTime = 1 时，计算公式为：(Math.log(bbbv.value) / Math.log(estRTime.value)
     const results: Ref<TypeStat> = ref({
       RTime: computed(() => {
         if (isDefault.value) return '0.00 (0)'
         // 因为有默认值，不用考虑当时间 <= 0 时的情况，estRTime 同理
-        return `${time.value.toFixed(2)} (${Math.floor(time.value) + 1})`
+        return `${round(time.value, 2)} (${Math.floor(time.value) + 1})`
       }),
       'Est RTime': computed(() => {
         if (isDefault.value) return '* (*)'
         // 时间最大值限制为 999
-        return `${estRTime.value.toFixed(2)} (${Math.min(Math.floor(estRTime.value) + 1, 999)})`
+        return `${round(estRTime.value, 2)} (${Math.min(Math.floor(estRTime.value) + 1, 999)})`
       }),
       '3BV': computed(() => {
         if (isDefault.value) return '*/*'
@@ -71,15 +73,15 @@ export default defineComponent({
       }),
       '3BV/s': computed(() => {
         if (isDefault.value) return '*'
-        return `${(solvedBbbv.value / time.value).toFixed(2)}`
+        return `${round(solvedBbbv.value / time.value, 2)}`
       }),
       ZiNi: computed(() => {
         if (isDefault.value) return '*@*'
-        return `${gZiNi.value}@${(gZiNi.value / estRTime.value).toFixed(2)}`
+        return `${gZiNi.value}@${round(gZiNi.value / estRTime.value, 2)}`
       }),
       'H.ZiNi': computed(() => {
         if (isDefault.value) return '*@*'
-        return `${hZiNi.value}@${(hZiNi.value / estRTime.value).toFixed(2)}`
+        return `${hZiNi.value}@${round(hZiNi.value / estRTime.value, 2)}`
       }),
       Ops: computed(() => {
         if (isDefault.value) return '*/*'
@@ -91,47 +93,47 @@ export default defineComponent({
       }),
       Left: computed(() => {
         if (isDefault.value) return '0@0'
-        return `${leftClicks.value}@${(leftClicks.value / time.value).toFixed(2)}`
+        return `${leftClicks.value}@${round(leftClicks.value / time.value, 2)}`
       }),
       Right: computed(() => {
         if (isDefault.value) return '0@0'
-        return `${rightClicks.value}@${(rightClicks.value / time.value).toFixed(2)}`
+        return `${rightClicks.value}@${round(rightClicks.value / time.value, 2)}`
       }),
       Double: computed(() => {
         if (isDefault.value) return '0@0'
-        return `${doubleClicks.value}@${(doubleClicks.value / time.value).toFixed(2)}`
+        return `${doubleClicks.value}@${round(doubleClicks.value / time.value, 2)}`
       }),
       Cl: computed(() => {
         if (isDefault.value) return '0@0'
-        return `${clicks.value}@${(clicks.value / time.value).toFixed(2)}`
+        return `${clicks.value}@${round(clicks.value / time.value, 2)}`
       }),
       IOE: computed(() => {
         if (isDefault.value) return '*'
-        return `${(solvedBbbv.value / clicks.value).toFixed(3)}`
+        return `${round(solvedBbbv.value / clicks.value, 3)}`
       }),
       ThrP: computed(() => {
         if (isDefault.value) return '*'
-        return `${(solvedBbbv.value / eClicks.value).toFixed(3)}`
+        return `${round(solvedBbbv.value / eClicks.value, 3)}`
       }),
       Corr: computed(() => {
         if (isDefault.value) return '*'
-        return `${(eClicks.value / clicks.value).toFixed(3)}`
+        return `${round(eClicks.value / clicks.value, 3)}`
       }),
       ZNE: computed(() => {
         if (isDefault.value) return '*'
-        return `${(gZiNi.value * coeff.value / clicks.value).toFixed(3)}`
+        return `${round(gZiNi.value * coeff.value / clicks.value, 3)}`
       }),
       HZNE: computed(() => {
         if (isDefault.value) return '*'
-        return `${(hZiNi.value * coeff.value / clicks.value).toFixed(3)}`
+        return `${round(hZiNi.value * coeff.value / clicks.value, 3)}`
       }),
       ZNT: computed(() => {
         if (isDefault.value) return '*'
-        return `${(gZiNi.value * coeff.value / eClicks.value).toFixed(3)}`
+        return `${round(gZiNi.value * coeff.value / eClicks.value, 3)}`
       }),
       HZNT: computed(() => {
         if (isDefault.value) return '*'
-        return `${(hZiNi.value * coeff.value / eClicks.value).toFixed(3)}`
+        return `${round(hZiNi.value * coeff.value / eClicks.value, 3)}`
       }),
       Path: computed(() => {
         if (isDefault.value) return '0'
@@ -145,7 +147,7 @@ export default defineComponent({
       RQP: computed(() => {
         if (isDefault.value) return '*'
         // 按照 time.value * (time.value + 1) / solvedBbbv.value 计算的话会导致 计算的值一直是递增的，没有参考意义
-        return `${(estRTime.value * (estRTime.value + 1) / bbbv.value).toFixed(2)}`
+        return `${round(estRTime.value * (estRTime.value + 1) / bbbv.value, 2)}`
       })
     })
 

@@ -26,6 +26,7 @@ import { computed, defineComponent } from 'vue'
 import { store } from '@/store'
 import { SPEED_ARRAY } from '@/game/constants'
 import { useI18n } from 'vue-i18n'
+import { round } from 'number-precision'
 
 export default defineComponent({
   setup () {
@@ -69,9 +70,9 @@ export default defineComponent({
         store.commit('setGameElapsedTime', value * 10)
       }
     })
-    // 当前游戏时间，精确到两位小数
+    // 当前游戏时间，四舍五入精确到两位小数
     const timeValue = computed(() => {
-      return (Math.min(timeMax.value, timeSlider.value) / 100).toFixed(2)
+      return round(Math.min(timeMax.value, timeSlider.value) / 100, 2)
     })
 
     return { replayVideo, toggleVideoPlay, titleReplay, titleTogglePlay, speed, SPEED_ARRAY, timeSlider, timeMax, timeValue }

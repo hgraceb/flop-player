@@ -64,6 +64,7 @@
 import { State } from '@/store/state'
 import { Cell } from '@/game/index'
 import { store } from '@/store'
+import { round } from 'number-precision'
 
 // TODO 重新启用 ESLint 规则
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -1442,39 +1443,39 @@ export function parse (state: State, data: string): void {
 
   // Calculate all remaining stats
   const raw = {
-    RAW_Time: rawTime.toFixed(3),
+    RAW_Time: round(rawTime, 3),
     RAW_3BV: bbbv,
     RAW_Solved3BV: solvedBbbv,
-    'RAW_3BV/s': (solvedBbbv / rawTime).toFixed(3),
+    'RAW_3BV/s': round(solvedBbbv / rawTime, 3),
     RAW_ZiNi: gzini,
-    'RAW_ZiNi/s': (gzini / rawTime).toFixed(3),
+    'RAW_ZiNi/s': round(gzini / rawTime, 3),
     RAW_HZiNi: hzini,
-    'RAW_HZiNi/s': (hzini / rawTime).toFixed(3),
+    'RAW_HZiNi/s': round(hzini / rawTime, 3),
     RAW_Clicks: clicks,
-    'RAW_Clicks/s': (clicks / rawTime).toFixed(3),
+    'RAW_Clicks/s': round(clicks / rawTime, 3),
     RAW_LeftClicks: leftClicks,
-    'RAW_LeftClicks/s': (leftClicks / rawTime).toFixed(3),
+    'RAW_LeftClicks/s': round(leftClicks / rawTime, 3),
     RAW_RightClicks: rightClicks,
-    'RAW_RightClicks/s': (rightClicks / rawTime).toFixed(3),
+    'RAW_RightClicks/s': round(rightClicks / rawTime, 3),
     RAW_DoubleClicks: doubleClicks,
-    'RAW_DoubleClicks/s': (doubleClicks / rawTime).toFixed(3),
+    'RAW_DoubleClicks/s': round(doubleClicks / rawTime, 3),
     RAW_WastedClicks: wastedClicks,
-    'RAW_WastedClicks/s': (wastedClicks / rawTime).toFixed(3),
+    'RAW_WastedClicks/s': round(wastedClicks / rawTime, 3),
     RAW_WastedLeftClicks: wastedLeftClicks,
-    'RAW_WastedLeftClicks/s': (wastedLeftClicks / rawTime).toFixed(3),
+    'RAW_WastedLeftClicks/s': round(wastedLeftClicks / rawTime, 3),
     RAW_WastedRightClicks: wastedRightClicks,
-    'RAW_WastedRightClicks/s': (wastedRightClicks / rawTime).toFixed(3),
+    'RAW_WastedRightClicks/s': round(wastedRightClicks / rawTime, 3),
     RAW_WastedDoubleClicks: wastedDoubleClicks,
-    'RAW_WastedDoubleClicks/s': (wastedDoubleClicks / rawTime).toFixed(3),
+    'RAW_WastedDoubleClicks/s': round(wastedDoubleClicks / rawTime, 3),
     'RAW_1.5Clicks': clicks15,
-    'RAW_1.5Clicks/s': (clicks15 / rawTime).toFixed(3),
-    RAW_IOE: (solvedBbbv / clicks).toFixed(3),
-    RAW_Correctness: (eClicks / clicks).toFixed(3),
-    RAW_Throughput: (solvedBbbv / eClicks).toFixed(3),
-    RAW_ZNE: (gzini * coeff / clicks).toFixed(3),
-    RAW_ZNT: (gzini * coeff / eClicks).toFixed(3),
-    RAW_HZNE: (hzini * coeff / clicks).toFixed(3),
-    RAW_HZNT: (hzini * coeff / eClicks).toFixed(3),
+    'RAW_1.5Clicks/s': round(clicks15 / rawTime, 3),
+    RAW_IOE: round(solvedBbbv / clicks, 3),
+    RAW_Correctness: round(eClicks / clicks, 3),
+    RAW_Throughput: round(solvedBbbv / eClicks, 3),
+    RAW_ZNE: round(gzini * coeff / clicks, 3),
+    RAW_ZNT: round(gzini * coeff / eClicks, 3),
+    RAW_HZNE: round(hzini * coeff / clicks, 3),
+    RAW_HZNT: round(hzini * coeff / eClicks, 3),
     RAW_Openings: openings,
     RAW_Islands: islands,
     RAW_Flags: flags,
@@ -1483,7 +1484,7 @@ export function parse (state: State, data: string): void {
     RAW_Misflags: misFlags,
     RAW_Misunflags: misUnFlags,
     RAW_RilianClicks: rilianClicks,
-    'RAW_RilianClicks/s': (rilianClicks / rawTime).toFixed(3)
+    'RAW_RilianClicks/s': round(rilianClicks / rawTime, 3)
   }
 
   // 打印计数器信息
