@@ -44,6 +44,7 @@ export default defineComponent({
     const wastedRightClicks = computed(() => stats.value?.wastedRightClicks)
     const wastedDoubleClicks = computed(() => stats.value?.wastedDoubleClicks)
     const wastedClicks = computed(() => wastedLeftClicks.value + wastedRightClicks.value + wastedDoubleClicks.value)
+    // 有效点击次数，所有改变当前雷局局面的点击计算为一次有效点击
     const eClicks = computed(() => clicks.value - wastedClicks.value)
     const coeff = computed(() => solvedBbbv.value / bbbv.value)
     const path = computed(() => stats.value?.path)
