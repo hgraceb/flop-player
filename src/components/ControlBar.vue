@@ -8,7 +8,7 @@
         :max="SPEED_ARRAY.length - 1"
         type="range"
       >
-      <span>{{ SPEED_ARRAY[speed].toFixed(2).substring(0, 4) }}x</span>
+      <span>{{ speedValue }}x</span>
     </div>
     <div>
       <input
@@ -72,10 +72,14 @@ export default defineComponent({
     })
     // 当前游戏时间，四舍五入精确到两位小数
     const timeValue = computed(() => {
-      return round(Math.min(timeMax.value, timeSlider.value) / 100, 2)
+      return round(Math.min(timeMax.value, timeSlider.value) / 100, 2).toFixed(2)
+    })
+    // 当前录像播放速度，显示三个数字和一位小数点组成的
+    const speedValue = computed(() => {
+      return round(SPEED_ARRAY[speed.value], 2).toFixed(2).substring(0, 4)
     })
 
-    return { replayVideo, toggleVideoPlay, titleReplay, titleTogglePlay, speed, SPEED_ARRAY, timeSlider, timeMax, timeValue }
+    return { replayVideo, toggleVideoPlay, titleReplay, titleTogglePlay, speed, SPEED_ARRAY, timeSlider, timeMax, timeValue, speedValue }
   }
 })
 </script>
