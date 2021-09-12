@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "element-plus": "^1.0.2-beta.28",
     "number-precision": "^1.5.0",
     "vue": "^3.0.0",
     "vue-i18n": "^9.1.7",
@@ -27,6 +28,7 @@
     "@vue/compiler-sfc": "^3.0.0",
     "@vue/eslint-config-standard": "^5.1.2",
     "@vue/eslint-config-typescript": "^7.0.0",
+    "babel-plugin-component": "^1.1.1",
     "eslint": "^6.7.2",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-node": "^11.1.0",
@@ -34,6 +36,7 @@
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^7.0.0",
     "typescript": "~4.1.5",
+    "vue-cli-plugin-element-plus": "~0.0.13",
     "yaml-loader": "^0.6.0"
   },
   "bugs": {
