@@ -1,5 +1,8 @@
 menu:
+  options: 选项
+  language: 简体中文
   toggleLanguages: 切换语言
+  scaling: 缩放
   zoomOut: 缩小
   zoomIn: 放大
 

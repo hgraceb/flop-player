@@ -1,5 +1,8 @@
 menu:
+  options: Options
+  language: English
   toggleLanguages: Change languages
+  scaling: Scaling
   zoomOut: Zoom out
   zoomIn: Zoom in
 
