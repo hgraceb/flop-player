@@ -1,0 +1,4 @@
+/* 设置 Menu.SubMenu 文字与右侧图标的间距 */
+.ant-dropdown-menu-submenu-vertical .ant-dropdown-menu-title-content {
+    margin-right: 10px;
+}
