@@ -1,3 +1,5 @@
+const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
+
 module.exports = {
   // https://cli.vuejs.org/config/#publicpath
   publicPath: './',
@@ -21,6 +23,12 @@ module.exports = {
         // 解决警告: You are running the esm-bundler build of vue-i18n. It is recommended to configure your bundler to explicitly replace feature flag globals with boolean literals to get proper tree-shaking in the final bundle.
         'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js'
       }
-    }
+    },
+    plugins: [
+      // 使用 Day.js 替换 Moment.js，优化打包体积，https://github.com/ant-design/antd-dayjs-webpack-plugin
+      new AntdDayjsWebpackPlugin({
+        preset: 'antdv3'
+      })
+    ]
   }
 }
