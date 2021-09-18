@@ -1,10 +1,12 @@
 import { App } from 'vue'
 import { Button, Dropdown, Menu } from 'ant-design-vue'
-import { CheckOutlined } from '@ant-design/icons-vue'
+import { CheckOutlined, ExpandAltOutlined, GlobalOutlined, SettingOutlined } from '@ant-design/icons-vue'
 
 // 组件列表
 const components = [
+  // 按钮
   Button,
+  // 下拉菜单
   Dropdown,
   Menu,
   Menu.Item,
@@ -14,7 +16,10 @@ const components = [
 
 // 图标列表
 const icons = [
-  CheckOutlined
+  CheckOutlined,
+  ExpandAltOutlined,
+  GlobalOutlined,
+  SettingOutlined
 ]
 
 export default (app: App<Element>): void => {

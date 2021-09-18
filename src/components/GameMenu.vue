@@ -1,20 +1,39 @@
 <template>
   <a-dropdown>
     <a-button size="small">
+      <SettingOutlined />
       {{ $t('menu.options') }}
     </a-button>
     <template #overlay>
       <a-menu>
         <a-sub-menu :title="$t('menu.toggleLanguages')">
+          <template #icon>
+            <GlobalOutlined />
+          </template>
           <a-menu-item @click="toggleLocales">
             <CheckOutlined />
             {{ $t('menu.language') }}
           </a-menu-item>
         </a-sub-menu>
         <a-menu-divider />
-        <a-sub-menu :title="`${$t('menu.scaling')} (${scale}x)`">
-          <a-menu-item :disabled="zoomOutDisabled" @click="zoomOutScale">{{ $t('menu.zoomOut') }}</a-menu-item>
-          <a-menu-item :disabled="zoomInDisabled" @click="zoomInScale">{{ $t('menu.zoomIn') }}</a-menu-item>
+        <a-sub-menu :title="$t('menu.scaling')">
+          <template #icon>
+            <ExpandAltOutlined />
+          </template>
+          <!-- 如果用户当前设置的缩放比例不在预设的缩放比例中，则单独显示 -->
+          <template v-if="!scales.includes(scale)">
+            <a-menu-item>
+              <CheckOutlined />
+              <span class="anticon" />
+              {{ scale.toFixed(2) }}x
+            </a-menu-item>
+            <a-menu-divider />
+          </template>
+          <a-menu-item v-for="(item, index) in scales" :key="index" @click="changeScale(item)">
+            <CheckOutlined v-if="item === scale" />
+            <span v-if="item !== scale" class="anticon" />
+            {{ item.toFixed(2).substring(0, 4) }}x
+          </a-menu-item>
         </a-sub-menu>
       </a-menu>
     </template>
@@ -37,14 +56,17 @@ export default defineComponent({
     }
 
     // 用户设置的缩放比例
-    const scale = computed(() => store.state.scale.toFixed(2).substring(0, 4))
+    const scale = computed(() => store.state.scale)
+    // 所有可选的缩放比例
+    const scales = SCALE_ARRAY
+    // 设置缩放比例
+    const changeScale = (scale: number) => {
+      if (SCALE_ARRAY.includes(scale)) {
+        store.commit('setScale', scale)
+      }
+    }
 
-    const zoomOutScale = () => store.commit('setScale', SCALE_ARRAY[SCALE_ARRAY.indexOf(store.state.scale) - 1])
-    const zoomInScale = () => store.commit('setScale', SCALE_ARRAY[SCALE_ARRAY.indexOf(store.state.scale) + 1])
-    const zoomOutDisabled = computed(() => store.state.scale <= SCALE_ARRAY[0])
-    const zoomInDisabled = computed(() => store.state.scale >= SCALE_ARRAY[SCALE_ARRAY.length - 1])
-
-    return { toggleLocales, scale, zoomOutScale, zoomInScale, zoomOutDisabled, zoomInDisabled }
+    return { toggleLocales, scale, scales, changeScale }
   }
 })
 </script>

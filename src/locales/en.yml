@@ -3,8 +3,6 @@ menu:
   language: English
   toggleLanguages: Change languages
   scaling: Scaling
-  zoomOut: Zoom out
-  zoomIn: Zoom in
 
 controlBar:
   play: Play
