@@ -3,8 +3,8 @@ import './styles/common.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 import { store } from './store'
-import { i18n } from '@/i18n'
 import NP from 'number-precision'
+import installI18n from './plugins/i18n'
 import installAntDesign from './plugins/ant-design-vue'
 
 // 引入测试用样式
@@ -17,5 +17,6 @@ if (process.env.NODE_ENV !== 'production') {
 NP.enableBoundaryChecking(false) // default param is true
 
 const app = createApp(App)
+installI18n(app)
 installAntDesign(app)
-app.use(store).use(i18n).mount('#app')
+app.use(store).mount('#app')
