@@ -45,8 +45,10 @@ import { computed, defineComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { store } from '@/store'
 import { SCALE_ARRAY } from '@/game/constants'
+import { CheckOutlined, ExpandAltOutlined, GlobalOutlined, SettingOutlined } from '@ant-design/icons-vue'
 
 export default defineComponent({
+  components: { CheckOutlined, ExpandAltOutlined, GlobalOutlined, SettingOutlined },
   setup () {
     const { locale, availableLocales } = useI18n()
 
