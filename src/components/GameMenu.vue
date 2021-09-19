@@ -10,6 +10,15 @@
           <template #icon>
             <GlobalOutlined />
           </template>
+          <!-- 如果用户设置的语言不再当前可用语言列表中，则单独显示 -->
+          <template v-if="!availableLocales.includes(locale)">
+            <a-menu-item>
+              <CheckOutlined />
+              <a-icon-empty />
+              {{ locale }}
+            </a-menu-item>
+            <a-menu-divider />
+          </template>
           <a-menu-item v-for="(item, key) in availableLocales" :key="key" @click="changeLocales(item)">
             <CheckOutlined v-if="locale === item" />
             <a-icon-empty v-else />
@@ -22,7 +31,7 @@
             <ExpandAltOutlined />
           </template>
           <!-- 如果用户当前设置的缩放比例不在预设的缩放比例中，则单独显示 -->
-          <template v-if="!scales.includes(scale)">
+          <template v-if="!availableScales.includes(scale)">
             <a-menu-item>
               <CheckOutlined />
               <a-icon-empty />
@@ -30,7 +39,7 @@
             </a-menu-item>
             <a-menu-divider />
           </template>
-          <a-menu-item v-for="(item, index) in scales" :key="index" @click="changeScale(item)">
+          <a-menu-item v-for="(item, index) in availableScales" :key="index" @click="changeScale(item)">
             <CheckOutlined v-if="item === scale" />
             <a-icon-empty v-else />
             {{ item.toFixed(2).substring(0, 4) }}x
@@ -64,7 +73,7 @@ export default defineComponent({
     // 用户设置的缩放比例
     const scale = computed(() => store.state.scale)
     // 所有可选的缩放比例
-    const scales = SCALE_ARRAY
+    const availableScales = SCALE_ARRAY
     // 设置缩放比例
     const changeScale = (scale: number) => {
       if (SCALE_ARRAY.includes(scale)) {
@@ -72,7 +81,7 @@ export default defineComponent({
       }
     }
 
-    return { locale, availableLocales, changeLocales, scale, scales, changeScale }
+    return { locale, availableLocales, changeLocales, scale, availableScales, changeScale }
   }
 })
 </script>
