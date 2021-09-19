@@ -1,9 +1,14 @@
 <template>
-  <game-menu />
-  <div :style="{transformOrigin: '0 0 0', transform: `scale(${scale})`}">
-    <game />
-    <counters />
-    <control-bar />
+  <div>
+    <!-- TODO 缩放时没有影响到游戏菜单弹出的窗体内容 -->
+    <div :style="{transformOrigin: '0 0 0', transform: `scale(${scale})`}">
+      <div class="game-container">
+        <game-menu />
+        <game />
+      </div>
+      <counters />
+      <control-bar />
+    </div>
   </div>
 </template>
 
@@ -30,3 +35,12 @@ export default defineComponent({
   }
 })
 </script>
+
+<style scoped>
+.game-container {
+  /* 限制游戏宽度 */
+  width: min-content;
+  /* 不换行 */
+  display: inline-block;
+}
+</style>

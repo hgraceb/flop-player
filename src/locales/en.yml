@@ -1,8 +1,13 @@
 menu:
-  options: Options
-  language: English
-  toggleLanguages: Change languages
-  scaling: Scaling
+  game:
+    title: Game
+  options:
+    title: Options
+    language: English
+    toggleLanguages: Change languages
+    scaling: Scaling
+  help:
+    title: '?'
 
 controlBar:
   play: Play
