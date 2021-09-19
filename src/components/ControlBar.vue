@@ -1,23 +1,19 @@
 <template>
   <div>
-    <button :title="titleReplay" @click="replayVideo">{{ titleReplay }}</button>
-    <button :title="titleTogglePlay" @click="toggleVideoPlay">{{ titleTogglePlay }}</button>
-    <div>
-      <input
-        v-model="speed"
-        :max="SPEED_ARRAY.length - 1"
-        type="range"
-      >
-      <span>{{ speedValue }}x</span>
-    </div>
-    <div>
-      <input
-        v-model="timeSlider"
-        :max="timeMax"
-        type="range"
-      >
-      <span>{{ timeValue }}</span>
-    </div>
+    <a-space>
+      <a-button :title="titleReplay" size="small" @click="replayVideo">{{ titleReplay }}</a-button>
+      <a-button :title="titleTogglePlay" size="small" @click="toggleVideoPlay">{{ titleTogglePlay }}</a-button>
+    </a-space>
+    <br />
+    <a-space>
+      <a-slider v-model:value="speed" :max="SPEED_ARRAY.length - 1" :tooltipVisible="false" class="slider" />
+      <a-button class="btn-text" type="text">{{ speedValue }}x</a-button>
+    </a-space>
+    <br />
+    <a-space>
+      <a-slider v-model:value="timeSlider" :max="timeMax" :tooltipVisible="false" class="slider" />
+      {{ timeValue }}
+    </a-space>
   </div>
 </template>
 
@@ -83,3 +79,14 @@ export default defineComponent({
   }
 })
 </script>
+
+<style scoped>
+.slider {
+  width: 120px;
+}
+
+.btn-text {
+  padding-left: 0;
+  padding-right: 0;
+}
+</style>

@@ -1,16 +1,21 @@
 import { App } from 'vue'
-import { Button, Dropdown, Menu } from 'ant-design-vue'
+import { Button, Dropdown, Menu, Slider, Space } from 'ant-design-vue'
 
 // 组件列表
 const components = [
-  // 按钮
+  // 按钮：https://2x.antdv.com/components/button-cn
   Button,
-  // 下拉菜单
+  // 下拉菜单：https://2x.antdv.com/components/dropdown-cn
   Dropdown,
+  // 导航菜单：https://2x.antdv.com/components/menu-cn
   Menu,
   Menu.Item,
   Menu.Divider,
-  Menu.SubMenu
+  Menu.SubMenu,
+  // 滑动输入条：https://2x.antdv.com/components/slider-cn
+  Slider,
+  // 间距：https://2x.antdv.com/components/space-cn
+  Space
 ]
 
 export default (app: App<Element>): void => {
