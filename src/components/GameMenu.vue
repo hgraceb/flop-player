@@ -106,7 +106,7 @@ export default defineComponent({
 }
 
 .ant-btn {
-  /* 右侧按钮向左移动一个像素，模拟共用临近 border 的效果 */
+  /* 右侧按钮向左移动一个像素，模拟合并临近 border 的效果 */
   margin-right: -1px;
 }
 
