@@ -10,9 +10,10 @@
           <template #icon>
             <GlobalOutlined />
           </template>
-          <a-menu-item @click="toggleLocales">
-            <CheckOutlined />
-            {{ $t('menu.language') }}
+          <a-menu-item v-for="(item, key) in availableLocales" :key="key" @click="changeLocales(item)">
+            <CheckOutlined v-if="locale === item" />
+            <a-icon-empty v-else />
+            {{ $t('menu.language', item) }}
           </a-menu-item>
         </a-sub-menu>
         <a-menu-divider />
@@ -24,14 +25,14 @@
           <template v-if="!scales.includes(scale)">
             <a-menu-item>
               <CheckOutlined />
-              <span class="anticon" />
+              <a-icon-empty />
               {{ scale.toFixed(2) }}x
             </a-menu-item>
             <a-menu-divider />
           </template>
           <a-menu-item v-for="(item, index) in scales" :key="index" @click="changeScale(item)">
             <CheckOutlined v-if="item === scale" />
-            <span v-if="item !== scale" class="anticon" />
+            <a-icon-empty v-else />
             {{ item.toFixed(2).substring(0, 4) }}x
           </a-menu-item>
         </a-sub-menu>
@@ -46,15 +47,18 @@ import { useI18n } from 'vue-i18n'
 import { store } from '@/store'
 import { SCALE_ARRAY } from '@/game/constants'
 import { CheckOutlined, ExpandAltOutlined, GlobalOutlined, SettingOutlined } from '@ant-design/icons-vue'
+import AIconEmpty from '@/components/common/AIconEmpty.vue'
 
 export default defineComponent({
-  components: { CheckOutlined, ExpandAltOutlined, GlobalOutlined, SettingOutlined },
+  components: { AIconEmpty, CheckOutlined, ExpandAltOutlined, GlobalOutlined, SettingOutlined },
   setup () {
     const { locale, availableLocales } = useI18n()
 
     // 切换语言
-    const toggleLocales = () => {
-      locale.value = availableLocales[(availableLocales.indexOf(locale.value) + 1) % availableLocales.length]
+    const changeLocales = (item: string) => {
+      if (availableLocales.includes(item)) {
+        locale.value = item
+      }
     }
 
     // 用户设置的缩放比例
@@ -68,7 +72,7 @@ export default defineComponent({
       }
     }
 
-    return { toggleLocales, scale, scales, changeScale }
+    return { locale, availableLocales, changeLocales, scale, scales, changeScale }
   }
 })
 </script>
