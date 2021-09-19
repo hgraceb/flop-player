@@ -7,7 +7,7 @@ menu:
     toggleLanguages: 切換語言
     scaling: 縮放比例
   help:
-    title: '?'
+    title: 幫助
 
 controlBar:
   play: 播放

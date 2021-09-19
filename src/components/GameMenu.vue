@@ -99,13 +99,13 @@ export default defineComponent({
 
 <style scoped>
 .game-menu-container {
-  /* 隐藏超出的游戏菜单内容 */
-  overflow: hidden;
-  /* 设置游戏菜单不换行 */
+  /* 设置游戏菜单不换行，超出部分正常显示 */
   white-space: nowrap;
 }
 
 .ant-btn {
+  /* 修改按钮内边距，保证在初级游戏界面下也能正常显示 */
+  padding: 0 4px;
   /* 右侧按钮向左移动一个像素，模拟合并临近 border 的效果 */
   margin-right: -1px;
 }

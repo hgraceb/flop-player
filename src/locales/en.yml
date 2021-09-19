@@ -7,7 +7,7 @@ menu:
     toggleLanguages: Change languages
     scaling: Scaling
   help:
-    title: '?'
+    title: Help
 
 controlBar:
   play: Play

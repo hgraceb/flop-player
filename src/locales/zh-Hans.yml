@@ -1,3 +1,5 @@
+# 菜单，修改菜单标题时需要注意，要保证在不同浏览器下初级游戏界面都能正常显示菜单标题内容
+# 特别是 Safari 浏览器下的英文文本显示，实在不行可以将“帮助”替换为“?”
 menu:
   game:
     title: 游戏
@@ -7,8 +9,9 @@ menu:
     toggleLanguages: 切换语言
     scaling: 缩放比例
   help:
-    title: '?'
+    title: 帮助
 
+# 录像控制条
 controlBar:
   play: 播放
   pause: 暂停
