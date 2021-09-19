@@ -30,16 +30,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style>
-body {
-  margin: 0;
-}
-</style>
-
-<!-- 测试用 -->
-<style>
-body {
-  background-color: #eeeeee;
-}
-</style>
