@@ -1,5 +1,7 @@
 import { App } from 'vue'
 import { Button, Menu, Slider, Space } from 'ant-design-vue'
+// 按需导入后部分样式不生效，子菜单无法正常显示，需要手动导入 Menu 组件 css 格式样式文件
+import 'ant-design-vue/lib/menu/style/index.css'
 
 // 组件列表
 const components = [
