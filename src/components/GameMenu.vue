@@ -1,64 +1,49 @@
 <template>
-  <div class="game-menu-container">
-    <a-dropdown>
-      <a-button size="small">
-        {{ $t('menu.game.title') }}
-      </a-button>
-    </a-dropdown>
-    <a-dropdown>
-      <a-button size="small">
-        {{ $t('menu.options.title') }}
-      </a-button>
-      <template #overlay>
-        <a-menu>
-          <a-sub-menu :title="$t('menu.options.toggleLanguages')">
-            <template #icon>
-              <GlobalOutlined />
-            </template>
-            <!-- 如果用户设置的语言不再当前可用语言列表中，则单独显示 -->
-            <template v-if="!availableLocales.includes(locale)">
-              <a-menu-item>
-                <CheckOutlined />
-                <a-icon-empty />
-                {{ locale }}
-              </a-menu-item>
-              <a-menu-divider />
-            </template>
-            <a-menu-item v-for="(item, key) in availableLocales" :key="key" @click="changeLocales(item)">
-              <CheckOutlined v-if="locale === item" />
-              <a-icon-empty v-else />
-              {{ $t('menu.options.language', item) }}
-            </a-menu-item>
-          </a-sub-menu>
+  <a-menu v-model:selectedKeys="selected" class="game-menu" mode="horizontal">
+    <a-sub-menu :title="$t('menu.game.title')">
+    </a-sub-menu>
+    <a-sub-menu :title="$t('menu.options.title')">
+      <a-sub-menu :title="$t('menu.options.toggleLanguages')">
+        <template #icon>
+          <GlobalOutlined />
+        </template>
+        <!-- 如果用户设置的语言不再当前可用语言列表中，则单独显示 -->
+        <template v-if="!availableLocales.includes(locale)">
+          <a-menu-item>
+            <CheckOutlined />
+            {{ locale }}
+          </a-menu-item>
           <a-menu-divider />
-          <a-sub-menu :title="$t('menu.options.scaling')">
-            <template #icon>
-              <ExpandAltOutlined />
-            </template>
-            <!-- 如果用户当前设置的缩放比例不在预设的缩放比例中，则单独显示 -->
-            <template v-if="!availableScales.includes(scale)">
-              <a-menu-item>
-                <CheckOutlined />
-                <a-icon-empty />
-                {{ scale.toFixed(2) }}x
-              </a-menu-item>
-              <a-menu-divider />
-            </template>
-            <a-menu-item v-for="(item, index) in availableScales" :key="index" @click="changeScale(item)">
-              <CheckOutlined v-if="item === scale" />
-              <a-icon-empty v-else />
-              {{ item.toFixed(2).substring(0, 4) }}x
-            </a-menu-item>
-          </a-sub-menu>
-        </a-menu>
-      </template>
-    </a-dropdown>
-    <a-dropdown>
-      <a-button size="small">
-        {{ $t('menu.help.title') }}
-      </a-button>
-    </a-dropdown>
-  </div>
+        </template>
+        <a-menu-item v-for="(item, key) in availableLocales" :key="key" @click="changeLocales(item)">
+          <CheckOutlined v-if="locale === item" />
+          <a-icon-empty v-else />
+          {{ $t('menu.options.language', item) }}
+        </a-menu-item>
+      </a-sub-menu>
+      <a-menu-divider />
+      <a-sub-menu :title="$t('menu.options.scaling')">
+        <template #icon>
+          <ExpandAltOutlined />
+        </template>
+        <!-- 如果用户当前设置的缩放比例不在预设的缩放比例中，则单独显示 -->
+        <template v-if="!availableScales.includes(scale)">
+          <a-menu-item>
+            <CheckOutlined />
+            {{ scale.toFixed(2) }}x
+          </a-menu-item>
+          <a-menu-divider />
+        </template>
+        <a-menu-item v-for="(item, index) in availableScales" :key="index" @click="changeScale(item)">
+          <CheckOutlined v-if="item === scale" />
+          <a-icon-empty v-else />
+          {{ item.toFixed(2).substring(0, 4) }}x
+        </a-menu-item>
+      </a-sub-menu>
+    </a-sub-menu>
+    <a-sub-menu :title="$t('menu.help.title')">
+    </a-sub-menu>
+  </a-menu>
 </template>
 
 <script lang="ts">
@@ -72,6 +57,9 @@ import AIconEmpty from '@/components/common/AIconEmpty.vue'
 export default defineComponent({
   components: { AIconEmpty, CheckOutlined, ExpandAltOutlined, GlobalOutlined },
   setup () {
+    // 当前选中的菜单项 key 数组，设置为 null 实现不可变的效果
+    const selected = null
+
     const { locale, availableLocales } = useI18n()
 
     // 切换语言
@@ -92,26 +80,25 @@ export default defineComponent({
       }
     }
 
-    return { locale, availableLocales, changeLocales, scale, availableScales, changeScale }
+    return { selected, locale, availableLocales, changeLocales, scale, availableScales, changeScale }
   }
 })
 </script>
 
 <style scoped>
-.game-menu-container {
-  /* 设置游戏菜单不换行，超出部分正常显示 */
-  white-space: nowrap;
+.game-menu {
+  /* 设置游戏菜单行高 */
+  line-height: 24px;
 }
 
-.ant-btn {
-  /* 修改按钮内边距，保证在初级游戏界面下也能正常显示 */
-  padding: 0 4px;
-  /* 右侧按钮向左移动一个像素，模拟合并临近 border 的效果 */
-  margin-right: -1px;
+/* 使用 scoped 限定样式作用域之后，可以使用 :not(:root) 的方式选择子元素，使用其他方式可能会被加上 [data-v-**] 选择器导致样式无法生效 */
+.game-menu > :not(:root) {
+  /* 使用调整内边距的方式进行排版，使用 margin 属性进行调整的话会影响菜单折叠功能 */
+  padding: 0 5px !important;
 }
 
-.ant-btn:hover, .ant-btn:focus {
-  /* 当按钮处于悬浮或者激活状态时提升按钮的显示优先级，保证 border 完整显示 */
-  z-index: 1;
+.game-menu > :not(:root)::after {
+  /* 取消游戏菜单选中后底部边框的显示 */
+  border-bottom: 0 !important;
 }
 </style>
