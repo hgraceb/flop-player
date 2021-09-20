@@ -1,5 +1,5 @@
 <template>
-  <a-menu v-model:selectedKeys="selected" class="game-menu" mode="horizontal">
+  <a-menu v-model:selectedKeys="selected" :style="`max-width: ${width}px`" class="game-menu" mode="horizontal">
     <a-sub-menu :title="$t('menu.game.title')">
     </a-sub-menu>
     <a-sub-menu :title="$t('menu.options.title')">
@@ -50,13 +50,17 @@
 import { computed, defineComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { store } from '@/store'
-import { SCALE_ARRAY } from '@/game/constants'
+import { CELL_SIDE_LENGTH, GAME_TOP_UPPER, SCALE_ARRAY } from '@/game/constants'
 import { CheckOutlined, ExpandAltOutlined, GlobalOutlined } from '@ant-design/icons-vue'
 import AIconEmpty from '@/components/common/AIconEmpty.vue'
 
 export default defineComponent({
   components: { AIconEmpty, CheckOutlined, ExpandAltOutlined, GlobalOutlined },
   setup () {
+    // 菜单宽度
+    const width = computed(() => {
+      return GAME_TOP_UPPER.widthLeft + GAME_TOP_UPPER.widthRight + store.state.width * CELL_SIDE_LENGTH
+    })
     // 当前选中的菜单项 key 数组，设置为 null 实现不可变的效果
     const selected = null
 
@@ -80,7 +84,7 @@ export default defineComponent({
       }
     }
 
-    return { selected, locale, availableLocales, changeLocales, scale, availableScales, changeScale }
+    return { width, selected, locale, availableLocales, changeLocales, scale, availableScales, changeScale }
   }
 })
 </script>

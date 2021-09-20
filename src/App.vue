@@ -38,8 +38,6 @@ export default defineComponent({
 
 <style scoped>
 .game-container {
-  /* 限制游戏宽度 */
-  width: min-content;
   /* 不换行 */
   display: inline-block;
 }
