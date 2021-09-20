@@ -1,4 +1,4 @@
-/* 设置 Menu.SubMenu 文字与右侧图标的间距 */
-.ant-dropdown-menu-submenu-vertical .ant-dropdown-menu-title-content {
-    margin-right: 10px;
+/* 覆盖二级菜单的最小宽度设置，让二级菜单的宽度根据内容自适应 */
+.ant-menu-vertical.ant-menu-sub {
+    min-width: 0 !important;
 }
