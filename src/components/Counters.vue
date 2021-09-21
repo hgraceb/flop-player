@@ -11,6 +11,7 @@
 import { computed, defineComponent, ref, Ref } from 'vue'
 import { store } from '@/store'
 import { round } from 'number-precision'
+import { TIME_MAX } from '@/game/constants'
 
 export default defineComponent({
   setup () {
@@ -18,17 +19,21 @@ export default defineComponent({
       [key: string]: string | number
     }
 
-    // 静态统计数据
+    /* 静态统计数据 */
     const bbbv = computed(() => store.state.bbbv)
     const openings = computed(() => store.state.openings)
     const islands = computed(() => store.state.islands)
     const gZiNi = computed(() => store.state.gZiNi)
     const hZiNi = computed(() => store.state.hZiNi)
 
-    // 动态统计数据
-    const time = computed(() => Math.min(store.state.gameEvents[store.state.gameEvents.length - 1]?.time || 0, store.state.gameElapsedTime) / 1000)
+    /* 动态统计数据 */
+    // 当前时间，时间精度为两位小数，此处直接四舍五入保留两位小数
+    const time = computed(() => {
+      const time = Math.min(store.state.gameEvents[store.state.gameEvents.length - 1]?.time || 0, store.state.gameElapsedTime, TIME_MAX * 1000)
+      return round(time / 1000, 2)
+    })
     // 可能出现 solvedBbbv 为 0 的情况，比如标雷之后开空，时间最大值限制为 999.99
-    const estRTime = computed(() => solvedBbbv.value > 0 ? time.value * (bbbv.value / solvedBbbv.value) : 999.99)
+    const estRTime = computed(() => solvedBbbv.value > 0 ? Math.min(time.value * (bbbv.value / solvedBbbv.value), TIME_MAX) : TIME_MAX)
     const stats = computed(() => {
       // 游戏事件索引超出游戏事件总数时按照最后一个游戏事件进行计算
       return store.state.gameEvents[Math.min(store.state.gameEventIndex, store.state.gameEvents.length) - 1]?.stats
@@ -62,12 +67,12 @@ export default defineComponent({
       RTime: computed(() => {
         if (isDefault.value) return '0.00 (0)'
         // 因为有默认值，不用考虑当时间 <= 0 时的情况，estRTime 同理
-        return `${round(time.value, 2).toFixed(2)} (${Math.floor(time.value) + 1})`
+        return `${round(time.value, 2).toFixed(2)} (${Math.min(Math.floor(time.value) + 1, Math.floor(TIME_MAX))})`
       }),
       'Est RTime': computed(() => {
         if (isDefault.value) return '* (*)'
         // 时间最大值限制为 999
-        return `${round(estRTime.value, 2).toFixed(2)} (${Math.min(Math.floor(estRTime.value) + 1, 999)})`
+        return `${round(estRTime.value, 2).toFixed(2)} (${Math.min(Math.floor(estRTime.value) + 1, Math.floor(TIME_MAX))})`
       }),
       '3BV': computed(() => {
         if (isDefault.value) return '*/*'

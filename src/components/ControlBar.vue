@@ -20,7 +20,7 @@
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
 import { store } from '@/store'
-import { SPEED_ARRAY } from '@/game/constants'
+import { SPEED_ARRAY, TIME_MAX } from '@/game/constants'
 import { useI18n } from 'vue-i18n'
 import { round } from 'number-precision'
 
@@ -31,14 +31,14 @@ export default defineComponent({
     const replayVideo = () => store.commit('replayVideo')
     // 切换录像播放状态
     const toggleVideoPlay = () => {
-      return store.state.gameEventIndex >= store.state.gameEvents.length ? store.commit('replayVideo') : store.commit('pauseVideo')
+      return store.state.isGameOver ? store.commit('replayVideo') : store.commit('pauseVideo')
     }
 
     // 重放录像按钮的标题
     const titleReplay = computed(() => t('controlBar.replay'))
     // 切换录像播放状态按钮的标题
     const titleTogglePlay = computed(() => {
-      if (store.state.gameEventIndex >= store.state.gameEvents.length) {
+      if (store.state.isGameOver) {
         return t('controlBar.replay')
       }
       return store.state.gameVideoPaused ? t('controlBar.play') : t('controlBar.pause')
@@ -53,9 +53,9 @@ export default defineComponent({
       }
     })
 
-    // 游戏时间进度条的最大值，以最后一个游戏事件的时间作为标准，0.01 秒为一个单位长度
+    // 游戏时间进度条的最大值，以最后一个游戏事件的时间作为标准，0.01 秒为一个单位长度，最大不超过 999.99
     const timeMax = computed(() => {
-      return store.state.gameEvents[store.state.gameEvents.length - 1]?.time / 10 || 0
+      return Math.min(store.state.gameEvents[store.state.gameEvents.length - 1]?.time / 10 || 0, TIME_MAX * 100)
     })
     // 游戏时间进度条当前值，通过当前游戏经过的时间计算得到
     const timeSlider = computed({
