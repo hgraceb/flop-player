@@ -53,22 +53,22 @@ export default defineComponent({
       }
     })
 
-    // 游戏时间进度条的最大值，以最后一个游戏事件的时间作为标准，0.01 秒为一个单位长度
+    // 游戏时间进度条的最大值，以最后一个游戏事件的时间作为标准，0.001 秒为一个单位长度
     const timeMax = computed(() => {
-      return store.state.gameEvents[store.state.gameEvents.length - 1]?.time / 10 || 0
+      return store.state.gameEvents[store.state.gameEvents.length - 1]?.time || 0
     })
     // 游戏时间进度条当前值，通过当前游戏经过的时间计算得到
     const timeSlider = computed({
       get: () => {
-        return store.state.gameElapsedTime / 10
+        return store.state.gameElapsedTime
       },
       set: (value: number) => {
-        store.commit('setGameElapsedTime', value * 10)
+        store.commit('setGameElapsedTime', value)
       }
     })
     // 当前游戏时间，四舍五入精确到两位小数
     const timeValue = computed(() => {
-      return round(Math.min(timeMax.value, timeSlider.value) / 100, 2).toFixed(2)
+      return round(Math.min(timeMax.value, timeSlider.value) / 1000, 3).toFixed(3)
     })
     // 当前录像播放速度，显示三个数字和一位小数点组成的
     const speedValue = computed(() => {

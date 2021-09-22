@@ -2,7 +2,7 @@ import { State } from './state'
 import { parse } from '@/game/parser'
 import { GameEvent } from '@/game'
 import { store } from '@/store/index'
-import { plus, times } from 'number-precision'
+import { plus, round, times } from 'number-precision'
 import { ImgCellType, ImgFaceType } from '@/util/image'
 import { SCALE_ARRAY, SPEED_ARRAY } from '@/game/constants'
 
@@ -31,7 +31,7 @@ export const mutations = {
       state.gameSpeed = speed
     }
   },
-  /** 设置游戏经过的时间（毫秒） */
+  /** 设置游戏经过的时间（毫秒），TODO 此处要进行防抖或者节流处理，拖动进度条的话在短时间内会调用很多次 */
   setGameElapsedTime: (state: State, time: number): void => {
     if (state.gameElapsedTime < time) {
       state.gameElapsedTime = time
@@ -74,6 +74,8 @@ export const mutations = {
   },
   /** 添加游戏事件 */
   addEvent: (state: State, event: GameEvent): void => {
+    // 时间四舍五入保留三位小数，因为游戏时间进度条是以 0.001 秒为一个单位长度，如果有更多位小数的话，可能会导致进度条的最大值比实际游戏时间来得小
+    event.time = round(event.time, 3)
     state.gameEvents.push(event)
   },
   /** 接收并处理录像数据 */
@@ -225,6 +227,8 @@ export const mutations = {
     if (state.gameEventIndex < state.gameEvents.length) {
       return
     }
+    // 设置游戏播放暂停，如果不设置的话，在游戏播放结束之后会误以为游戏还处于正常播放的状态
+    state.gameVideoPaused = true
     // 最后一个游戏事件
     const event = state.gameEvents[state.gameEvents.length - 1]
     // 游戏胜利

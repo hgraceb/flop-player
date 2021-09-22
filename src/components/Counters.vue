@@ -63,12 +63,12 @@ export default defineComponent({
       RTime: computed(() => {
         if (isDefault.value) return '0.00 (0)'
         // 因为有默认值，不用考虑当时间 <= 0 时的情况，estRTime 同理
-        return `${round(time.value, 2).toFixed(2)} (${Math.floor(time.value) + 1})`
+        return `${round(time.value, 3).toFixed(3)} (${Math.floor(time.value) + 1})`
       }),
       'Est RTime': computed(() => {
         // 如果 estRTime 值为 null 则返回默认值
         if (isDefault.value || !estRTime.value) return '* (*)'
-        return `${round(estRTime.value, 2).toFixed(2)} (${Math.floor(estRTime.value) + 1})`
+        return `${round(estRTime.value, 3).toFixed(3)} (${Math.floor(estRTime.value) + 1})`
       }),
       '3BV': computed(() => {
         if (isDefault.value) return '*/*'
@@ -76,15 +76,15 @@ export default defineComponent({
       }),
       '3BV/s': computed(() => {
         if (isDefault.value) return '*'
-        return `${round(solvedBbbv.value / time.value, 2).toFixed(2)}`
+        return `${round(solvedBbbv.value / time.value, 3).toFixed(3)}`
       }),
       ZiNi: computed(() => {
         if (isDefault.value || !estRTime.value) return '*@*'
-        return `${gZiNi.value}@${round(gZiNi.value / estRTime.value, 2).toFixed(2)}`
+        return `${gZiNi.value}@${round(gZiNi.value / estRTime.value, 3).toFixed(3)}`
       }),
       'H.ZiNi': computed(() => {
         if (isDefault.value || !estRTime.value) return '*@*'
-        return `${hZiNi.value}@${round(hZiNi.value / estRTime.value, 2).toFixed(2)}`
+        return `${hZiNi.value}@${round(hZiNi.value / estRTime.value, 3).toFixed(3)}`
       }),
       Ops: computed(() => {
         if (isDefault.value) return '*/*'
@@ -96,19 +96,19 @@ export default defineComponent({
       }),
       Left: computed(() => {
         if (isDefault.value) return '0@0'
-        return `${leftClicks.value}@${round(leftClicks.value / time.value, 2).toFixed(2)}`
+        return `${leftClicks.value}@${round(leftClicks.value / time.value, 3).toFixed(3)}`
       }),
       Right: computed(() => {
         if (isDefault.value) return '0@0'
-        return `${rightClicks.value}@${round(rightClicks.value / time.value, 2).toFixed(2)}`
+        return `${rightClicks.value}@${round(rightClicks.value / time.value, 3).toFixed(3)}`
       }),
       Double: computed(() => {
         if (isDefault.value) return '0@0'
-        return `${doubleClicks.value}@${round(doubleClicks.value / time.value, 2).toFixed(2)}`
+        return `${doubleClicks.value}@${round(doubleClicks.value / time.value, 3).toFixed(3)}`
       }),
       Cl: computed(() => {
         if (isDefault.value) return '0@0'
-        return `${clicks.value}@${round(clicks.value / time.value, 2).toFixed(2)}`
+        return `${clicks.value}@${round(clicks.value / time.value, 3).toFixed(3)}`
       }),
       IOE: computed(() => {
         if (isDefault.value) return '*'
@@ -150,7 +150,7 @@ export default defineComponent({
       RQP: computed(() => {
         if (isDefault.value || !estRTime.value) return '*'
         // 按照 time.value * (time.value + 1) / solvedBbbv.value 计算的话会导致 计算的值一直是递增的，没有参考意义
-        return `${round(estRTime.value * (estRTime.value + 1) / bbbv.value, 2).toFixed(2)}`
+        return `${round(estRTime.value * (estRTime.value + 1) / bbbv.value, 3).toFixed(3)}`
       })
     })
 
