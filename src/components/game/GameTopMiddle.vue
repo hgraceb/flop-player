@@ -4,12 +4,12 @@
   <skin-symbol :translate-x="rightTranslateX" :translate-y="translateY" name="border-vertical-right-upper" />
   <skin-counter-top :count="countLeftMines" :translate-x="minesCountTranslateX" />
   <skin-face />
-  <skin-counter-top :count="countTime" :max="timeMax" :min="0" :translate-x="timeCountTranslateX" />
+  <skin-counter-top :count="countTime" :min="0" :translate-x="timeCountTranslateX" />
 </template>
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
-import { CELL_SIDE_LENGTH, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE, TIME_MAX } from '@/game/constants'
+import { CELL_SIDE_LENGTH, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
 import { store } from '@/store'
 import SkinSymbol from '@/components/skin/SkinSymbol.vue'
 import SkinCounterTop from '@/components/skin/SkinCounterTop.vue'
@@ -43,10 +43,7 @@ export default defineComponent({
       // 当游戏经过的时间为 0 时，计数器显示的时间也为 0，否则需要转换成秒数后 +1
       return time === 0 ? 0 : Math.floor(time) + 1
     })
-    // 当前计数器显示的游戏时间最大值
-    const timeMax = Math.floor(TIME_MAX)
-
-    return { translateY, centerTranslateX, rightTranslateX, countLeftMines, minesCountTranslateX, countTime, timeCountTranslateX, timeMax }
+    return { translateY, centerTranslateX, rightTranslateX, countLeftMines, minesCountTranslateX, countTime, timeCountTranslateX }
   }
 })
 </script>

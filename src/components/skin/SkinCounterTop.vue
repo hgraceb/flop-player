@@ -30,12 +30,6 @@ export default defineComponent({
       type: Number,
       required: false,
       default: Number.MIN_SAFE_INTEGER
-    },
-    // 最大值
-    max: {
-      type: Number,
-      required: false,
-      default: Number.MAX_SAFE_INTEGER
     }
   },
   setup (props) {
@@ -52,7 +46,7 @@ export default defineComponent({
 
     // 实际显示的值，最大只显示999
     const value = computed((): number => {
-      return Math.min(Math.max(props.count, props.min), Math.floor(props.max))
+      return Math.min(Math.max(props.count, props.min), 999)
     })
 
     // 百位数的值

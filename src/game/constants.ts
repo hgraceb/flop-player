@@ -15,12 +15,6 @@ export const SPEED_ARRAY = [
 ]
 
 /**
- * 最长游戏时间，单位：秒
- * 超过此时间自动判负，一般为 999.99，只适合在调试的时候进行临时修改
- */
-export const TIME_MAX = 999.99
-
-/**
  * SVG 放大倍数
  */
 export const SVG_SCALE = 10
