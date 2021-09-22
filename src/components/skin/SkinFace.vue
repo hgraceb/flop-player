@@ -3,6 +3,9 @@
     :name="faceStatus"
     :translate-x="translateX"
     :translate-y="translateY"
+    @mousedown="handleMouseDown"
+    @mouseleave="handleMouseUp"
+    @mouseup="handleMouseUp"
   />
 </template>
 
@@ -22,16 +25,12 @@ export default defineComponent({
     // 笑脸的 Y 轴坐标偏移量
     const translateY = (GAME_TOP_UPPER.height + 4) * SVG_SCALE
     // 笑脸状态
-    const faceStatus = computed(() => {
-      if (!store.state.isGameOver) {
-        // 游戏还未结束时根据游戏事件中记录的笑脸转态进行显示
-        return store.state.faceStatus
-      } else {
-        // 如果游戏已经结束，则根据游戏胜利与否设置笑脸状态
-        return store.state.isGameWon ? 'face-win' : 'face-lose'
-      }
-    })
-    return { translateX, translateY, faceStatus }
+    const faceStatus = computed(() => store.state.faceStatus)
+    // 处理鼠标点击事件
+    const handleMouseDown = () => store.commit('setFaceStatus', 'face-press-normal')
+    // 处理鼠标松开事件
+    const handleMouseUp = () => store.commit('setFaceStatus', 'face-normal')
+    return { translateX, translateY, faceStatus, handleMouseDown, handleMouseUp }
   }
 })
 </script>

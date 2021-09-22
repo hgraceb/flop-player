@@ -55,10 +55,6 @@ export default defineComponent({
 
     // 游戏时间进度条的最大值，以最后一个游戏事件的时间作为标准，0.01 秒为一个单位长度，最大不超过 999.99
     const timeMax = computed(() => {
-      // 如果游戏没有胜利，则按照最大时间显示
-      if (!store.state.isGameWon) {
-        return TIME_MAX * 100
-      }
       return Math.min(store.state.gameEvents[store.state.gameEvents.length - 1]?.time / 10 || 0, TIME_MAX * 100)
     })
     // 游戏时间进度条当前值，通过当前游戏经过的时间计算得到
@@ -86,7 +82,7 @@ export default defineComponent({
 
 <style scoped>
 .slider {
-  width: 300px;
+  width: 120px;
 }
 
 .btn-text {

@@ -20,24 +20,22 @@ export interface State {
   faceStatus: ImgFaceType
   // 是否游戏结束
   isGameOver: boolean
-  // 游戏级别，1 = 初级、2 = 中级、3 = 高级、4 = 自定义
+  // 游戏级别，1-初级，2-中级，3-高级，4-自定义
   gameLevel: 1 | 2 | 3 | 4
   // 游戏事件
-  gameEvents: GameEvent[]
+  gameEvents: GameEvent[],
   // 游戏事件索引
   gameEventIndex: number
   // 游戏棋盘
-  gameBoard: ImgCellType[]
+  gameBoard: ImgCellType[],
   // 游戏速度
-  gameSpeed: number
+  gameSpeed: number,
   // 游戏开始的时间（毫秒）, 值为负数时表示还未开始
-  gameStartTime: number
+  gameStartTime: number,
   // 游戏经过的时间（毫秒）
-  gameElapsedTime: number
+  gameElapsedTime: number,
   // 游戏录像是否处于暂停状态
   gameVideoPaused: boolean
-  // 是否游戏胜利
-  isGameWon: boolean
   // 精确的横坐标
   precisionX: number
   // 精确的纵坐标
@@ -67,7 +65,6 @@ export const state: State = {
   gameStartTime: 0.0,
   gameElapsedTime: 0.0,
   gameVideoPaused: true,
-  isGameWon: false,
   precisionX: 0,
   precisionY: 0,
   enableParserLog: false
