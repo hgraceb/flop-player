@@ -82,7 +82,7 @@ export default defineComponent({
 
 <style scoped>
 .slider {
-  width: 120px;
+  width: 300px;
 }
 
 .btn-text {

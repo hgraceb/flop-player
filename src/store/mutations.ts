@@ -48,10 +48,6 @@ export const mutations = {
       }
     }
   },
-  /** 叠加游戏经过的时间（毫秒） */
-  addGameElapsedTime: (state: State, time: number): void => {
-    state.gameElapsedTime = plus(state.gameElapsedTime, times(time, state.gameSpeed))
-  },
   /** 初始化游戏 */
   initGame: (state: State, {
     width,
@@ -208,12 +204,10 @@ export const mutations = {
         return
       }
       // 更新游戏经过的时间（毫秒）,首次时间为 0 ms
-      store.commit('addGameElapsedTime', state.gameStartTime <= 0 ? 0 : timestamp - state.gameStartTime)
+      const elapsedTime = state.gameStartTime <= 0 ? 0 : timestamp - state.gameStartTime
+      store.commit('setGameElapsedTime', plus(state.gameElapsedTime, times(elapsedTime, state.gameSpeed)))
       // 重置游戏开始时间（毫秒）
       store.commit('setGameStartTime', timestamp)
-      while (state.gameEventIndex < state.gameEvents.length && state.gameElapsedTime >= state.gameEvents[state.gameEventIndex].time) {
-        store.commit('performNextEvent')
-      }
       window.requestAnimationFrame(performEvent)
     })
   },
@@ -237,7 +231,7 @@ export const mutations = {
     if (state.bbbv === event.stats.solvedBbbv) {
       state.faceStatus = 'face-win'
 
-      // 游戏失败
+      // 所有游戏事件模拟结束后，如果游戏没有胜利，则认为游戏失败
     } else {
       state.faceStatus = 'face-lose'
     }
