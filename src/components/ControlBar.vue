@@ -12,7 +12,7 @@
     <br />
     <a-space>
       <a-slider v-model:value="timeSlider" :max="timeMax" :tooltipVisible="false" class="slider" />
-      {{ timeValue }}
+      <a-input-number v-model:value="timeValue" size="small" />
     </a-space>
   </div>
 </template>
@@ -22,7 +22,7 @@ import { computed, defineComponent } from 'vue'
 import { store } from '@/store'
 import { SPEED_ARRAY } from '@/game/constants'
 import { useI18n } from 'vue-i18n'
-import { round } from 'number-precision'
+import { divide, round, times } from 'number-precision'
 
 export default defineComponent({
   setup () {
@@ -63,12 +63,24 @@ export default defineComponent({
         return store.state.gameElapsedTime
       },
       set: (value: number) => {
-        store.commit('setGameElapsedTime', value)
+        // 判断数字是否合法
+        if (value >= 0 && value <= timeMax.value) {
+          store.commit('setGameElapsedTime', value)
+        }
       }
     })
-    // 当前游戏时间，四舍五入精确到两位小数
-    const timeValue = computed(() => {
-      return round(Math.min(timeMax.value, timeSlider.value) / 1000, 3).toFixed(3)
+    // 当前游戏时间，精确到三位小数
+    const timeValue = computed({
+      get: () => {
+        return divide(timeSlider.value, 1000)
+      },
+      set: (value: number | string) => {
+        // 如果输入值是合法的数字
+        if (typeof value === 'number') {
+          // 最多只计算后三位小数
+          timeSlider.value = Math.floor(times(value, 1000))
+        }
+      }
     })
     // 当前录像播放速度，显示三个数字和一位小数点组成的
     const speedValue = computed(() => {
