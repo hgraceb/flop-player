@@ -1,6 +1,7 @@
 <template>
   <table>
     <tr v-for="key in Object.keys(results)" :key="key">
+      <!-- TODO 处理文本太长导致换行的问题 -->
       <td>{{ key }}</td>
       <td>{{ results[key] }}</td>
     </tr>
@@ -27,8 +28,8 @@ export default defineComponent({
 
     // 动态统计数据
     const time = computed(() => Math.min(store.state.gameEvents[store.state.gameEvents.length - 1]?.time || 0, store.state.gameElapsedTime) / 1000)
-    // 可能出现 solvedBbbv 为 0 的情况，比如标雷之后开空，时间最大值限制为 999.99
-    const estRTime = computed(() => solvedBbbv.value > 0 ? time.value * (bbbv.value / solvedBbbv.value) : 999.99)
+    // 可能出现 solvedBbbv 为 0 的情况，比如标雷之后开空
+    const estRTime = computed(() => solvedBbbv.value > 0 ? time.value * (bbbv.value / solvedBbbv.value) : null)
     const stats = computed(() => {
       // 游戏事件索引超出游戏事件总数时按照最后一个游戏事件进行计算
       return store.state.gameEvents[Math.min(store.state.gameEventIndex, store.state.gameEvents.length) - 1]?.stats
@@ -65,9 +66,9 @@ export default defineComponent({
         return `${round(time.value, 2).toFixed(2)} (${Math.floor(time.value) + 1})`
       }),
       'Est RTime': computed(() => {
-        if (isDefault.value) return '* (*)'
-        // 时间最大值限制为 999
-        return `${round(estRTime.value, 2).toFixed(2)} (${Math.min(Math.floor(estRTime.value) + 1, 999)})`
+        // 如果 estRTime 值为 null 则返回默认值
+        if (isDefault.value || !estRTime.value) return '* (*)'
+        return `${round(estRTime.value, 2).toFixed(2)} (${Math.floor(estRTime.value) + 1})`
       }),
       '3BV': computed(() => {
         if (isDefault.value) return '*/*'
@@ -78,11 +79,11 @@ export default defineComponent({
         return `${round(solvedBbbv.value / time.value, 2).toFixed(2)}`
       }),
       ZiNi: computed(() => {
-        if (isDefault.value) return '*@*'
+        if (isDefault.value || !estRTime.value) return '*@*'
         return `${gZiNi.value}@${round(gZiNi.value / estRTime.value, 2).toFixed(2)}`
       }),
       'H.ZiNi': computed(() => {
-        if (isDefault.value) return '*@*'
+        if (isDefault.value || !estRTime.value) return '*@*'
         return `${hZiNi.value}@${round(hZiNi.value / estRTime.value, 2).toFixed(2)}`
       }),
       Ops: computed(() => {
@@ -147,7 +148,7 @@ export default defineComponent({
         return flags.value
       }),
       RQP: computed(() => {
-        if (isDefault.value) return '*'
+        if (isDefault.value || !estRTime.value) return '*'
         // 按照 time.value * (time.value + 1) / solvedBbbv.value 计算的话会导致 计算的值一直是递增的，没有参考意义
         return `${round(estRTime.value * (estRTime.value + 1) / bbbv.value, 2).toFixed(2)}`
       })

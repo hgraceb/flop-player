@@ -4,6 +4,7 @@
   <skin-symbol :translate-x="rightTranslateX" :translate-y="translateY" name="border-vertical-right-upper" />
   <skin-counter-top :count="countLeftMines" :translate-x="minesCountTranslateX" />
   <skin-face />
+  <!-- Arbiter 中设置的游戏时间最大值为 999.00，超时自动判负，但是 Minesweeper X 没有对游戏时间做限制，所以一般不设置游戏时间最大值 -->
   <skin-counter-top :count="countTime" :min="0" :translate-x="timeCountTranslateX" />
 </template>
 

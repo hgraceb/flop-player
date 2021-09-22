@@ -30,6 +30,12 @@ export default defineComponent({
       type: Number,
       required: false,
       default: Number.MIN_SAFE_INTEGER
+    },
+    // 最大值
+    max: {
+      type: Number,
+      required: false,
+      default: Number.MAX_SAFE_INTEGER
     }
   },
   setup (props) {
@@ -44,9 +50,9 @@ export default defineComponent({
     // 计数器第三个数字的 X 轴坐标偏移量
     const thirdTranslateX = (2 * 3 + 11 * 2) * SVG_SCALE
 
-    // 实际显示的值，最大只显示999
+    // 实际显示的值，可以限制最大值和最小值
     const value = computed((): number => {
-      return Math.min(Math.max(props.count, props.min), 999)
+      return Math.min(Math.max(props.count, props.min), props.max)
     })
 
     // 百位数的值
