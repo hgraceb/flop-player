@@ -1,7 +1,6 @@
 <template>
   <table>
     <tr v-for="key in Object.keys(results)" :key="key">
-      <!-- TODO 处理文本太长导致换行的问题 -->
       <td>{{ key }}</td>
       <td>{{ results[key] }}</td>
     </tr>
@@ -168,7 +167,10 @@ table {
 }
 
 td {
-  width: 75px;
+  min-width: 80px;
+  max-width: 80px;
   border: 1px solid gray;
+  white-space: nowrap;
+  overflow: hidden;
 }
 </style>
