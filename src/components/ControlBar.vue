@@ -72,7 +72,7 @@ export default defineComponent({
     // 当前游戏时间，精确到三位小数
     const timeValue = computed({
       get: () => {
-        return divide(timeSlider.value, 1000)
+        return divide(timeSlider.value, 1000).toFixed(3)
       },
       set: (value: number | string) => {
         // 如果输入值是合法的数字
