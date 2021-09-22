@@ -33,7 +33,10 @@ export default defineComponent({
       return round(time / 1000, 2)
     })
     // 可能出现 solvedBbbv 为 0 的情况，比如标雷之后开空，时间最大值限制为 999.99
-    const estRTime = computed(() => solvedBbbv.value > 0 ? Math.min(time.value * (bbbv.value / solvedBbbv.value), TIME_MAX) : TIME_MAX)
+    const estRTime = computed(() => {
+      // 此处和 Arbiter 处理不同，Arbiter 只对 solvedBbbv 为 0 的情况对预计时间做了限制，最大值显示为 999.99(99)，solvedBbbv 大于 0 时则不做限制
+      return solvedBbbv.value > 0 ? Math.min(time.value * (bbbv.value / solvedBbbv.value), TIME_MAX) : TIME_MAX
+    })
     const stats = computed(() => {
       // 游戏事件索引超出游戏事件总数时按照最后一个游戏事件进行计算
       return store.state.gameEvents[Math.min(store.state.gameEventIndex, store.state.gameEvents.length) - 1]?.stats

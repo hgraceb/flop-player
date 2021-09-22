@@ -35,22 +35,34 @@ export const mutations = {
   setGameElapsedTime: (state: State, time: number): void => {
     if (state.gameElapsedTime < time) {
       state.gameElapsedTime = time
-      while (state.gameEventIndex < state.gameEvents.length && state.gameElapsedTime >= state.gameEvents[state.gameEventIndex].time) {
-        store.commit('performNextEvent')
+      if (state.gameEventIndex < state.gameEvents.length - 1) {
+        // 测试需要判断游戏是否结束，因为有的录像实际记录的事件可能超出时间限制
+        while (!state.isGameOver && state.gameEventIndex < state.gameEvents.length - 1 && state.gameElapsedTime >= state.gameEvents[state.gameEventIndex].time) {
+          // 循环模拟下一个游戏事件
+          store.commit('performNextEvent')
+        }
+      } else {
+        // 检查游戏是否结束
+        store.commit('checkVideoFinished')
       }
+
+      // 当前游戏经过时间大于目标时间，不一定是在录像回放的时候触发，也有可能在录像事件控制条的最大值小于当前游戏经过的时间时触发
     } else if (state.gameElapsedTime > time) {
       state.gameElapsedTime = time
-      // 游戏事件索引可能等于游戏事件总数，需要防止数组越界
+      // 如果当前游戏经过时间比最后一个游戏事件的时间还大，则不用循环模拟上一个游戏事件，判断是否需要修改游戏结束状态即可，笑脸状态会跟着游戏结束状态动态改变
+      if (state.gameElapsedTime >= state.gameEvents[state.gameEvents.length - 1].time) {
+        // 当目标时间小于游戏限制的最大时间时，重置游戏结束状态，保证录像可以按当前进度继续播放
+        store.state.isGameOver = time < TIME_MAX * 1000 ? false : store.state.isGameOver
+        return
+      }
+      // 在上面逻辑的保证下，在此处游戏经过的时间一定小于最后一个游戏事件的时间，所以如果游戏事件索引超出数组长度的话可以直接重置
       state.gameEventIndex = Math.min(state.gameEventIndex, state.gameEvents.length - 1)
       // 模拟上一个游戏事件，需要与上一个游戏事件的时间进行比较，当游戏经过的时间小于等于 0 时，模拟所有剩余事件，将游戏状态全部重置
       while (state.gameEventIndex > 0 && (state.gameElapsedTime < state.gameEvents[state.gameEventIndex - 1].time || state.gameElapsedTime <= 0)) {
+        // 循环模拟上一个游戏事件
         store.commit('performPreviousEvent')
       }
     }
-  },
-  /** 叠加游戏经过的时间（毫秒） */
-  addGameElapsedTime: (state: State, time: number): void => {
-    state.gameElapsedTime = plus(state.gameElapsedTime, times(time, state.gameSpeed))
   },
   /** 初始化游戏 */
   initGame: (state: State, {
@@ -75,6 +87,8 @@ export const mutations = {
     state.gZiNi = gZiNi
     state.hZiNi = hZiNi
     state.gameEvents = []
+    // 没有覆盖设置的话默认为游戏失败
+    state.isGameWon = false
   },
   /** 添加游戏事件 */
   addEvent: (state: State, event: GameEvent): void => {
@@ -211,12 +225,10 @@ export const mutations = {
         return
       }
       // 更新游戏经过的时间（毫秒）,首次时间为 0 ms
-      store.commit('addGameElapsedTime', state.gameStartTime <= 0 ? 0 : timestamp - state.gameStartTime)
+      const elapsedTime = state.gameStartTime <= 0 ? 0 : timestamp - state.gameStartTime
+      store.commit('setGameElapsedTime', plus(state.gameElapsedTime, times(elapsedTime, state.gameSpeed)))
       // 重置游戏开始时间（毫秒）
       store.commit('setGameStartTime', timestamp)
-      while (!state.isGameOver && state.gameElapsedTime >= state.gameEvents[state.gameEventIndex].time) {
-        store.commit('performNextEvent')
-      }
       window.requestAnimationFrame(performEvent)
     })
   },
@@ -230,26 +242,19 @@ export const mutations = {
   },
   /** 检查录像是否播放结束，TODO 处理录像意外结尾的情况，即没有雷被打开并且时间没有超时 */
   checkVideoFinished: (state: State): void => {
-    // 当前游戏事件
-    const event = state.gameEvents[Math.min(state.gameEventIndex, state.gameEvents.length - 1)]
-    // 下个游戏事件
-    const nextEvent = state.gameEvents[Math.min(state.gameEventIndex + 1, state.gameEvents.length - 1)]
-    // 所有游戏事件均已模拟完成，则认为游戏已经结束
-    // 当前还有游戏事件暂未模拟，但是游戏经过的时间已经到达游戏最大时间限制（大于等于），并且下个游戏事件的时间大于最大游戏时间限制，则认为游戏超时（失败）
-    // 注意不能单独使用当前时间或者下个游戏事件的时间判断是否超时，因为当前事件和下个游戏事件中间可能还有一段没有任何事件发生的时间存在
-    if (state.gameEventIndex >= state.gameEvents.length || (state.gameElapsedTime >= TIME_MAX * 1000 && nextEvent.time > TIME_MAX * 1000)) {
-      // 设置游戏播放结束
+    // 下一个游戏事件
+    const nextEvent = state.gameEvents[state.gameEventIndex + 1]
+    if (
+      // 游戏预期结果为胜利并且所有游戏事件均已模拟完成，则认为游戏已经结束
+      (state.isGameWon && state.gameEventIndex >= state.gameEvents.length) ||
+      // 当前还有游戏事件暂未模拟，但是游戏经过的时间已经到达游戏最大时间限制（大于等于），并且下个游戏事件的时间大于最大游戏时间限制，则认为游戏超时（失败）
+      // 注意不能单独使用当前时间或者下个游戏事件的时间判断是否超时，因为当前事件和下个游戏事件中间可能还有一段没有任何事件发生的时间存在
+      (state.gameElapsedTime >= TIME_MAX * 1000 && (!nextEvent || nextEvent.time > TIME_MAX * 1000))
+    ) {
+      // 设置游戏播放结束，会和 isGameWon 一起影响到笑脸状态的显示，此处如果要直接改变笑脸状态的话还需要一个变量储存当前的笑脸状态，否则在回放的时候会丢失上一个笑脸状态
       state.isGameOver = true
       // 设置游戏播放暂停，如果不设置的话，在游戏播放结束的状态被重置之后会误以为游戏还处于正常播放的状态
       state.gameVideoPaused = true
-      // 游戏胜利
-      if (state.bbbv === event.stats.solvedBbbv) {
-        state.faceStatus = 'face-win'
-
-        // 游戏失败
-      } else {
-        state.faceStatus = 'face-lose'
-      }
     }
   }
 }
