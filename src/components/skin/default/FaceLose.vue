@@ -1,0 +1,10 @@
+<template id="face-lose">
+  <path d="M0 0v250h10v10h250V10h-10V0H0z" fill="gray" />
+  <path d="M250 0v10h10V0h-10z" fill="silver" />
+  <path d="M10 10v230h10v-10h10V30h200V20h10V10H10z" fill="white" />
+  <path d="M240 10v10h10V10h-10m-10 10v10h10V20h-10M30 30v200h200V30H30z" fill="silver" />
+  <path d="M110 50v10H90v10H80v10H70v10H60v20H50v50h10v20h10v10h10v10h10v10h20v10h50v-10h20v-10h10v-10h10v-10h10v-20h10v-50h-10V90h-10V80h-10V70h-10V60h-20V50h-50z" />
+  <path d="M110 60v10H90v10H80v10H70v20H60v50h10v20h10v10h10v10h20v10h50v-10h20v-10h10v-10h10v-20h10v-50h-10V90h-10V80h-10V70h-20V60h-50z" fill="#ff0" />
+  <path d="M90 90v10h10v10H90v10h10v-10h10v10h10v-10h-10v-10h10V90h-10v10h-10V90H90m60 0v10h10v10h-10v10h10v-10h10v10h10v-10h-10v-10h10V90h-10v10h-10V90h-10m-40 60v10h-10v10H90v10h10v-10h10v-10h50v10h10v10h10v-10h-10v-10h-10v-10h-50z" />
+  <path d="M20 230v10h10v-10H20m-10 10v10h10v-10H10M0 250v10h10v-10H0z" fill="silver" />
+</template>
