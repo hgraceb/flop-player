@@ -117,98 +117,98 @@
     </symbol>
 
     <symbol id="cell-flag">
-      <path d="M0 0v150h10v-10h10V20h120V10h10V0H0z" fill="white" />
-      <path d="M150 0v10h-10v10H20v120H10v10H0v10h10v-10h10v-10h120V20h10V10h10V0h-10z" fill="silver" />
-      <path d="M150 10v10h-10v120H20v10H10v10h150V10h-10z" fill="gray" />
-      <path d="M70 30v10H50v10H40v10h10v10h20v10h20V30H70z" fill="red" />
-      <path d="M80 80v20H60v10H40v20h80v-20h-20v-10H90V80H80z" />
+      <path :d="`M${pathChromeFix}0 0v150h10v-10h10V20h120V10h10V0H0z`" fill="white" />
+      <path :d="`M${pathChromeFix}150 0v10h-10v10H20v120H10v10H0v10h10v-10h10v-10h120V20h10V10h10V0h-10z`" fill="silver" />
+      <path :d="`M${pathChromeFix}150 10v10h-10v120H20v10H10v10h150V10h-10z`" fill="gray" />
+      <path :d="`M${pathChromeFix}70 30v10H50v10H40v10h10v10h20v10h20V30H70z`" fill="red" />
+      <path :d="`M${pathChromeFix}80 80v20H60v10H40v20h80v-20h-20v-10H90V80H80z`" />
     </symbol>
     <symbol id="cell-flag-wrong">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-      <path d="M80 20v20H60v20h20v20h10V70h10V60h10V40H90V20H80z" />
-      <path d="M20 30v10h10v10h10v10h10v10h10v10h10v20H60v10H50v10H40v10H30v10H20v10h20v-10h10v-10h10v-10h10v-10h10v-10h10v10h10v10h10v10h10v10h10v10h20v-10h-10v-10h-10v-10h-10v-10h-10v-10h-10V80h10V70h10V60h10V50h10V40h10V30h-20v10h-10v10h-10v10h-10v10H90v10H80V70H70V60H60V50H50V40H40V30H20z" fill="red" />
-      <path d="M40 60v20H20v10h20v20h20v-10h10V80H60V70H50V60H40z" />
-      <path d="M70 60v10h10V60H70z" fill="white" />
-      <path d="M120 60v10h-10v10h-10v20h10v10h20V90h20V80h-20V60h-10m-40 40v10H70v10H60v10h20v20h10v-20h20v-10h-10v-10H90v-10H80z" />
+      <path :d="`M${pathChromeFix}0 0v160h10V10h150V0H0z`" fill="gray" />
+      <path :d="`M${pathChromeFix}10 10v150h150V10H10z`" fill="silver" />
+      <path :d="`M${pathChromeFix}80 20v20H60v20h20v20h10V70h10V60h10V40H90V20H80z`" />
+      <path :d="`M${pathChromeFix}20 30v10h10v10h10v10h10v10h10v10h10v20H60v10H50v10H40v10H30v10H20v10h20v-10h10v-10h10v-10h10v-10h10v-10h10v10h10v10h10v10h10v10h10v10h20v-10h-10v-10h-10v-10h-10v-10h-10v-10h-10V80h10V70h10V60h10V50h10V40h10V30h-20v10h-10v10h-10v10h-10v10H90v10H80V70H70V60H60V50H50V40H40V30H20z`" fill="red" />
+      <path :d="`M${pathChromeFix}40 60v20H20v10h20v20h20v-10h10V80H60V70H50V60H40z`" />
+      <path :d="`M${pathChromeFix}70 60v10h10V60H70z`" fill="white" />
+      <path :d="`M${pathChromeFix}120 60v10h-10v10h-10v20h10v10h20V90h20V80h-20V60h-10m-40 40v10H70v10H60v10h20v20h10v-20h20v-10h-10v-10H90v-10H80z`" />
     </symbol>
     <symbol id="cell-mine">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-      <path d="M80 20v20H60v10H50V40H40v10h10v10H40v20H20v10h20v20h10v10H40v10h10v-10h10v10h20v20h10v-20h20v-10h10v10h10v-10h-10v-10h10V90h20V80h-20V60h-10V50h10V40h-10v10h-10V40H90V20H80z" />
-      <path d="M60 60v20h20V60H60z" fill="white" />
+      <path :d="`M${pathChromeFix}0 0v160h10V10h150V0H0z`" fill="gray" />
+      <path :d="`M${pathChromeFix}10 10v150h150V10H10z`" fill="silver" />
+      <path :d="`M${pathChromeFix}80 20v20H60v10H50V40H40v10h10v10H40v20H20v10h20v20h10v10H40v10h10v-10h10v10h20v20h10v-20h20v-10h10v10h10v-10h-10v-10h10V90h20V80h-20V60h-10V50h10V40h-10v10h-10V40H90V20H80z`" />
+      <path :d="`M${pathChromeFix}60 60v20h20V60H60z`" fill="white" />
     </symbol>
     <symbol id="cell-mine-bomb">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="red" />
-      <path d="M80 20v20H60v10H50V40H40v10h10v10H40v20H20v10h20v20h10v10H40v10h10v-10h10v10h20v20h10v-20h20v-10h10v10h10v-10h-10v-10h10V90h20V80h-20V60h-10V50h10V40h-10v10h-10V40H90V20H80z" />
-      <path d="M60 60v20h20V60H60z" fill="white" />
+      <path :d="`M${pathChromeFix}0 0v160h10V10h150V0H0z`" fill="gray" />
+      <path :d="`M${pathChromeFix}10 10v150h150V10H10z`" fill="red" />
+      <path :d="`M${pathChromeFix}80 20v20H60v10H50V40H40v10h10v10H40v20H20v10h20v20h10v10H40v10h10v-10h10v10h20v20h10v-20h20v-10h10v10h10v-10h-10v-10h10V90h20V80h-20V60h-10V50h10V40h-10v10h-10V40H90V20H80z`" />
+      <path :d="`M${pathChromeFix}60 60v20h20V60H60z`" fill="white" />
     </symbol>
     <symbol id="cell-normal">
-      <path d="M0 0v150h10v-10h10V20h120V10h10V0H0z" fill="white" />
-      <path d="M150 0v10h-10v10H20v120H10v10H0v10h10v-10h10v-10h120V20h10V10h10V0h-10z" fill="silver" />
-      <path d="M150 10v10h-10v120H20v10H10v10h150V10h-10z" fill="gray" />
+      <path :d="`M${pathChromeFix}0 0v150h10v-10h10V20h120V10h10V0H0z`" fill="white" />
+      <path :d="`M${pathChromeFix}150 0v10h-10v10H20v120H10v10H0v10h10v-10h10v-10h120V20h10V10h10V0h-10z`" fill="silver" />
+      <path :d="`M${pathChromeFix}150 10v10h-10v120H20v10H10v10h150V10h-10z`" fill="gray" />
     </symbol>
     <symbol id="cell-number-0">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
+      <path :d="`M${pathChromeFix}0 0v160h10V10h150V0H0z`" fill="gray" />
+      <path :d="`M${pathChromeFix}10 10v150h150V10H10z`" fill="silver" />
     </symbol>
     <symbol id="cell-number-1">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-      <path d="M80 30v10H70v10H60v10H50v10h20v40H50v20h70v-20h-20V30H80z" fill="#00f" />
+      <path :d="`M${pathChromeFix}0 0v160h10V10h150V0H0z`" fill="gray" />
+      <path :d="`M${pathChromeFix}10 10v150h150V10H10z`" fill="silver" />
+      <path :d="`M${pathChromeFix}80 30v10H70v10H60v10H50v10h20v40H50v20h70v-20h-20V30H80z`" fill="#00f" />
     </symbol>
     <symbol id="cell-number-2">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-      <path d="M40 30v10H30v20h30V50h40v20H80v10H60v10H40v10H30v30h100v-20H70v-10h20V90h20V80h10V70h10V40h-10V30H40z" fill="green" />
+      <path :d="`M${pathChromeFix}0 0v160h10V10h150V0H0z`" fill="gray" />
+      <path :d="`M${pathChromeFix}10 10v150h150V10H10z`" fill="silver" />
+      <path :d="`M${pathChromeFix}40 30v10H30v20h30V50h40v20H80v10H60v10H40v10H30v30h100v-20H70v-10h20V90h20V80h10V70h10V40h-10V30H40z`" fill="green" />
     </symbol>
     <symbol id="cell-number-3">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-      <path d="M30 30v20h70v20H60v20h40v20H30v20h90v-10h10V90h-10V70h10V40h-10V30H30z" fill="red" />
+      <path :d="`M${pathChromeFix}0 0v160h10V10h150V0H0z`" fill="gray" />
+      <path :d="`M${pathChromeFix}10 10v150h150V10H10z`" fill="silver" />
+      <path :d="`M${pathChromeFix}30 30v20h70v20H60v20h40v20H30v20h90v-10h10V90h-10V70h10V40h-10V30H30z`" fill="red" />
     </symbol>
     <symbol id="cell-number-4">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-      <path d="M50 30v20H40v20H30v20h60v40h30V90h10V70h-10V30H90v40H70V50h10V30H50z" fill="navy" />
+      <path :d="`M${pathChromeFix}0 0v160h10V10h150V0H0z`" fill="gray" />
+      <path :d="`M${pathChromeFix}10 10v150h150V10H10z`" fill="silver" />
+      <path :d="`M${pathChromeFix}50 30v20H40v20H30v20h60v40h30V90h10V70h-10V30H90v40H70V50h10V30H50z`" fill="navy" />
     </symbol>
     <symbol id="cell-number-5">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-      <path d="M30 30v60h70v20H30v20h90v-10h10V80h-10V70H60V50h70V30H30z" fill="maroon" />
+      <path :d="`M${pathChromeFix}0 0v160h10V10h150V0H0z`" fill="gray" />
+      <path :d="`M${pathChromeFix}10 10v150h150V10H10z`" fill="silver" />
+      <path :d="`M${pathChromeFix}30 30v60h70v20H30v20h90v-10h10V80h-10V70H60V50h70V30H30z`" fill="maroon" />
     </symbol>
     <symbol id="cell-number-6">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-      <path d="M40 30v10H30v80h10v10h80v-10h10V80h-10V70H60V50h60V30H40z" fill="teal" />
-      <path d="M60 90v20h40V90H60z" fill="silver" />
+      <path :d="`M${pathChromeFix}0 0v160h10V10h150V0H0z`" fill="gray" />
+      <path :d="`M${pathChromeFix}10 10v150h150V10H10z`" fill="silver" />
+      <path :d="`M${pathChromeFix}40 30v10H30v80h10v10h80v-10h10V80h-10V70H60V50h60V30H40z`" fill="teal" />
+      <path :d="`M${pathChromeFix}60 90v20h40V90H60z`" fill="silver" />
     </symbol>
     <symbol id="cell-number-7">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-      <path d="M30 30v20h70v20H90v20H80v20H70v20h30v-20h10V90h10V70h10V30H30z" />
+      <path :d="`M${pathChromeFix}0 0v160h10V10h150V0H0z`" fill="gray" />
+      <path :d="`M${pathChromeFix}10 10v150h150V10H10z`" fill="silver" />
+      <path :d="`M${pathChromeFix}30 30v20h70v20H90v20H80v20H70v20h30v-20h10V90h10V70h10V30H30z`" />
     </symbol>
     <symbol id="cell-number-8">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-      <path d="M40 30v10H30v30h10v20H30v30h10v10h80v-10h10V90h-10V70h10V40h-10V30H40z" fill="gray" />
-      <path d="M60 50v20h40V50H60m0 40v20h40V90H60z" fill="silver" />
+      <path :d="`M${pathChromeFix}0 0v160h10V10h150V0H0z`" fill="gray" />
+      <path :d="`M${pathChromeFix}10 10v150h150V10H10z`" fill="silver" />
+      <path :d="`M${pathChromeFix}40 30v10H30v30h10v20H30v30h10v10h80v-10h10V90h-10V70h10V40h-10V30H40z`" fill="gray" />
+      <path :d="`M${pathChromeFix}60 50v20h40V50H60m0 40v20h40V90H60z`" fill="silver" />
     </symbol>
     <symbol id="cell-press">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
+      <path :d="`M${pathChromeFix}0 0v160h10V10h150V0H0z`" fill="gray" />
+      <path :d="`M${pathChromeFix}10 10v150h150V10H10z`" fill="silver" />
     </symbol>
     <symbol id="cell-question">
-      <path d="M0 0v150h10v-10h10V20h120V10h10V0H0z" fill="white" />
-      <path d="M150 0v10h-10v10H20v120H10v10H0v10h10v-10h10v-10h120V20h10V10h10V0h-10z" fill="silver" />
-      <path d="M150 10v10h-10v120H20v10H10v10h150V10h-10z" fill="gray" />
-      <path d="M60 30v10H50v20h20V40h20v30H80v10H70v20h20V80h10V70h10V40h-10V30H60m10 80v20h20v-20H70z" />
+      <path :d="`M${pathChromeFix}0 0v150h10v-10h10V20h120V10h10V0H0z`" fill="white" />
+      <path :d="`M${pathChromeFix}150 0v10h-10v10H20v120H10v10H0v10h10v-10h10v-10h120V20h10V10h10V0h-10z`" fill="silver" />
+      <path :d="`M${pathChromeFix}150 10v10h-10v120H20v10H10v10h150V10h-10z`" fill="gray" />
+      <path :d="`M${pathChromeFix}60 30v10H50v20h20V40h20v30H80v10H70v20h20V80h10V70h10V40h-10V30H60m10 80v20h20v-20H70z`" />
     </symbol>
     <symbol id="cell-question-press">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-      <path d="M70 40v10H60v20h20V50h20v30H90v10H80v20h20V90h10V80h10V50h-10V40H70m10 80v20h20v-20H80z" />
+      <path :d="`M${pathChromeFix}0 0v160h10V10h150V0H0z`" fill="gray" />
+      <path :d="`M${pathChromeFix}10 10v150h150V10H10z`" fill="silver" />
+      <path :d="`M${pathChromeFix}70 40v10H60v20h20V50h20v30H90v10H80v20h20V90h10V80h10V50h-10V40H70m10 80v20h20v-20H80z`" />
     </symbol>
     <symbol id="count-0">
       <path d="M0 0v10h10v10h10v10h10v50H20v10H10v10H0v10h10v10h10v10h10v50H20v10H10v10H0v10h10v-10h10v-10h10v-10h50v10h10v10h10v10h10v-10h-10v-10H90v-10H80v-50h10v-10h10v-10h10v-10h-10V90H90V80H80V30h10V20h10V10h10V0h-10v10H90v10H80v10H30V20H20V10H10V0H0z" />
@@ -418,7 +418,16 @@ export default defineComponent({
     const countTopHeight = GAME_TOP_MIDDLE.height * SVG_SCALE
     // 游戏底部中间部分的高度信息
     const gameBottomMiddleHeight = GAME_BOTTOM_MIDDLE.height * SVG_SCALE
-    return { boardWidth, boardHeight, countTopHeight, gameBottomMiddleHeight }
+
+    // 修复 Windows 平台 Google Chrome 94.0.4606.61 浏览器在特定情况下复用 SVG 时渲染错误的问题，Edge、Firefox 等浏览器均未发现此问题...Google 还是你牛逼呀 （；´д｀）ゞ
+    // 渲染错误的具体表现就是一些使用 <symbol> 和 <use> 标签进行复用的 SVG 图片，在特定情况下会有部分图片出现颠倒、错位的情况，如：Windows 缩放比例为 200%、Chrome 缩放比例为 110% 时
+    // 调整 SVG 的 viewBox 大小、宽度、高度等都会影响到渲染结果，但是效果并不是太好，最后发现在 path 中添加一个点也会影响到最终渲染的结果，可以比较完美地解决渲染错误的问题 ( •̀ ω •́ )✧
+    // 测试过程：Windows 缩放比例 200%、高级游戏界面，将所有游戏区域的图片换成同一张，再依次尝试在 Chrome 浏览器所有缩放比例（如：25%、33%、50% 等等）是否有渲染问题，啊...我的狗眼...
+    // 10000 是用上我的钛合金狗眼测试了大半天得到的一个经验值，因为浏览器缩放比例调整为 80% 渲染 cell-number-8 的时候，取 6400 以下的值总感觉和修改前有微妙的差别，所以干脆取整到 10000 了
+    // 有一部分图片不用添加以下代码也可以正常显示，但是为了代码统一、降低维护成本，而且加上这个点也没什么太大影响，所以游戏区域内用到的所有图片就全都给加上了，即：id 为 cell-* 的图片
+    const pathChromeFix = '10000 0L'
+
+    return { boardWidth, boardHeight, countTopHeight, gameBottomMiddleHeight, pathChromeFix }
   }
 })
 </script>
