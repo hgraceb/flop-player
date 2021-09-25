@@ -1,4 +1,7 @@
 <template>
+  <base-svg :height="0" :width="0" class="svg-sprites">
+    <skin-sprites />
+  </base-svg>
   <base-svg :height="height" :width="width" class="svg-game">
     <game-top-upper />
     <game-top-middle />
@@ -14,6 +17,7 @@
 
 <script lang="ts">
 import BaseSvg from '@/components/BaseSvg.vue'
+import SkinSprites from '@/components/skin/SkinSprites.vue'
 import { CELL_SIDE_LENGTH, GAME_BOTTOM_LOWER, GAME_BOTTOM_MIDDLE, GAME_BOTTOM_UPPER, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
 import { store } from '@/store'
 import { computed, defineComponent } from 'vue'
@@ -27,7 +31,7 @@ import GameBottomMiddle from '@/components/game/GameBottomMiddle.vue'
 import GameBottomLower from '@/components/game/GameBottomLower.vue'
 
 export default defineComponent({
-  components: { GameBottomLower, GameBottomMiddle, GameBottomUpper, GameCursor, GameTopLower, GameTopMiddle, GameTopUpper, GameMiddle, BaseSvg },
+  components: { GameBottomLower, GameBottomMiddle, GameBottomUpper, GameCursor, GameTopLower, GameTopMiddle, GameTopUpper, GameMiddle, SkinSprites, BaseSvg },
   setup () {
     // SVG 高度信息
     const width = computed(() => {
@@ -49,6 +53,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.svg-sprites {
+  display: none;
+}
+
 .svg-game {
   /* 元素及其子元素的文本不可选中 */
   user-select: none;
