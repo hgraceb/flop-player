@@ -6,13 +6,13 @@
     </a-space>
     <br />
     <a-space>
-      <a-slider v-model:value="speed" :max="SPEED_ARRAY.length - 1" :tooltipVisible="false" class="slider" />
+      <a-slider v-model:value="speedSlider" :max="SPEED_ARRAY.length - 1" :tooltipVisible="false" class="slider" />
       <a-button class="btn-text" type="text">{{ speedValue }}x</a-button>
     </a-space>
     <br />
     <a-space>
       <a-slider v-model:value="timeSlider" :max="timeMax" :tooltipVisible="false" class="slider" />
-      <a-input-number v-model:value="timeValue" size="small" />
+      <a-input-number v-model:value="timeValue" :precision="3" size="small" />
     </a-space>
   </div>
 </template>
@@ -44,13 +44,18 @@ export default defineComponent({
       return store.state.gameVideoPaused ? t('controlBar.play') : t('controlBar.pause')
     })
 
-    const speed = computed({
+    // 当前录像实际速度，类型为 number
+    const speedSlider = computed({
       get: () => {
         return SPEED_ARRAY.indexOf(store.state.gameSpeed)
       },
       set: (value: number) => {
         store.commit('setGameSpeed', SPEED_ARRAY[value])
       }
+    })
+    // 当前录像播放速度，显示为三位数字和一位小数点组成的字符串
+    const speedValue = computed(() => {
+      return round(SPEED_ARRAY[speedSlider.value], 2).toFixed(2).substring(0, 4)
     })
 
     // 游戏时间进度条的最大值，以最后一个游戏事件的时间作为标准，0.001 秒为一个单位长度
@@ -72,7 +77,8 @@ export default defineComponent({
     // 当前游戏时间，精确到三位小数
     const timeValue = computed({
       get: () => {
-        return divide(timeSlider.value, 1000).toFixed(3)
+        // 通过 precision 属性控制小数位数，数字输入框组件内部会调用 toFixed(precision)，此处直接调用 toFixed(precision) 可能不会生效
+        return divide(timeSlider.value, 1000)
       },
       set: (value: number | string) => {
         // 如果输入值是合法的数字
@@ -82,12 +88,8 @@ export default defineComponent({
         }
       }
     })
-    // 当前录像播放速度，显示三个数字和一位小数点组成的
-    const speedValue = computed(() => {
-      return round(SPEED_ARRAY[speed.value], 2).toFixed(2).substring(0, 4)
-    })
 
-    return { replayVideo, toggleVideoPlay, titleReplay, titleTogglePlay, speed, SPEED_ARRAY, timeSlider, timeMax, timeValue, speedValue }
+    return { replayVideo, toggleVideoPlay, titleReplay, titleTogglePlay, speedSlider, speedValue, SPEED_ARRAY, timeSlider, timeMax, timeValue }
   }
 })
 </script>
