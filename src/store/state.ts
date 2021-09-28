@@ -1,9 +1,8 @@
 import { GameEvent } from '@/game'
 import { ImgCellType, ImgFaceType } from '@/util/image'
+import { storage, storageDefault } from '@/store/plugins'
 
-export interface State {
-  // 页面缩放值
-  scale: number
+export type State = typeof storageDefault & {
   width: number
   height: number
   // 游戏雷数
@@ -28,8 +27,6 @@ export interface State {
   gameEventIndex: number
   // 游戏棋盘
   gameBoard: ImgCellType[],
-  // 游戏速度
-  gameSpeed: number,
   // 游戏开始的时间（毫秒）, 值为负数时表示还未开始
   gameStartTime: number,
   // 游戏经过的时间（毫秒）
@@ -45,7 +42,10 @@ export interface State {
 }
 
 export const state: State = {
-  scale: 1,
+  // 进行本地缓存的变量，不一定都能获取到默认值（比如本地只缓存了部分键值），需要手动进行设置
+  scale: storage.value.scale || storageDefault.scale,
+  gameSpeed: storage.value.gameSpeed || storageDefault.gameSpeed,
+  // 不进行本地缓存的变量
   width: 8,
   height: 8,
   mines: 10,
@@ -61,7 +61,6 @@ export const state: State = {
   gameEvents: [],
   gameEventIndex: 0,
   gameBoard: [],
-  gameSpeed: 1.0,
   gameStartTime: 0.0,
   gameElapsedTime: 0.0,
   gameVideoPaused: true,
