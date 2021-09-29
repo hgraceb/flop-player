@@ -68,13 +68,13 @@ export default defineComponent({
       get: () => {
         return store.state.gameElapsedTime
       },
-      // 函数节流，避免调用次数过多造成资源浪费和控制条拖动卡顿，30ms 是经过实际测试后定的经验值
+      // 函数节流，避免调用次数过多造成资源浪费和控制条拖动卡顿，20ms 是经过实际测试后定的经验值，其他值要么拖快容易卡，要么拖慢容易卡
       set: useThrottleFn((value: number) => {
         // 判断数字是否合法
         if (value >= 0 && value <= timeMax.value) {
           store.commit('setGameElapsedTime', value)
         }
-      }, 30)
+      }, 20)
     })
     // 当前游戏时间，精确到三位小数
     const timeValue = computed({
