@@ -95,13 +95,12 @@ export default defineComponent({
   line-height: 24px;
 }
 
-/* 使用 scoped 限定样式作用域之后，可以使用 :not(:root) 的方式选择子元素，使用其他方式可能会被加上 [data-v-**] 选择器导致样式无法生效 */
-.game-menu > :not(:root) {
+.game-menu >>> li {
   /* 使用调整内边距的方式进行排版，使用 margin 属性进行调整的话会影响菜单折叠功能 */
   padding: 0 5px !important;
 }
 
-.game-menu > :not(:root)::after {
+.game-menu >>> li::after {
   /* 取消游戏菜单选中后底部边框的显示 */
   border-bottom: 0 !important;
 }
