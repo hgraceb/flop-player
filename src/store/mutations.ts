@@ -31,7 +31,7 @@ export const mutations = {
       state.gameSpeed = speed
     }
   },
-  /** 设置游戏经过的时间（毫秒），TODO 此处要进行防抖或者节流处理，拖动进度条的话在短时间内会调用很多次 */
+  /** 设置游戏经过的时间（毫秒），拖动控制条调用此处时要进行节流处理 */
   setGameElapsedTime: (state: State, time: number): void => {
     if (state.gameElapsedTime < time) {
       state.gameElapsedTime = time

@@ -23,6 +23,7 @@ import { store } from '@/store'
 import { SPEED_ARRAY } from '@/game/constants'
 import { useI18n } from 'vue-i18n'
 import { divide, round, times } from 'number-precision'
+import { useThrottleFn } from '@vueuse/core'
 
 export default defineComponent({
   setup () {
@@ -67,12 +68,13 @@ export default defineComponent({
       get: () => {
         return store.state.gameElapsedTime
       },
-      set: (value: number) => {
+      // 函数节流，避免调用次数过多造成资源浪费和控制条拖动卡顿，30ms 是经过实际测试后定的经验值
+      set: useThrottleFn((value: number) => {
         // 判断数字是否合法
         if (value >= 0 && value <= timeMax.value) {
           store.commit('setGameElapsedTime', value)
         }
-      }
+      }, 30)
     })
     // 当前游戏时间，精确到三位小数
     const timeValue = computed({
