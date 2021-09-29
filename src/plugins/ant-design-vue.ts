@@ -1,5 +1,5 @@
 import { App } from 'vue'
-import { Button, InputNumber, Menu, Slider, Space } from 'ant-design-vue'
+import { Button, InputNumber, Menu, Slider, Space, Table } from 'ant-design-vue'
 // 按需引入导航菜单后部分样式不生效，导致子菜单无法正常显示，需要手动引入 css 格式的样式文件
 import 'ant-design-vue/lib/menu/style/index.css'
 
@@ -7,6 +7,8 @@ import 'ant-design-vue/lib/menu/style/index.css'
 const components = [
   // 按钮：https://2x.antdv.com/components/button-cn
   Button,
+  // 表格：https://2x.antdv.com/components/table-cn
+  Table,
   // 数字输入框：https://2x.antdv.com/components/input-number-cn
   InputNumber,
   // 间距：https://2x.antdv.com/components/space-cn

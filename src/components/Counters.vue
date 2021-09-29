@@ -1,10 +1,13 @@
 <template>
-  <table>
-    <tr v-for="key in Object.keys(results)" :key="key">
-      <td>{{ key }}</td>
-      <td>{{ results[key] }}</td>
-    </tr>
-  </table>
+  <a-table
+    :columns="columns"
+    :data-source="data"
+    :pagination="false"
+    :rowClassName="(record, index) => (index % 2 === 1 ? 'table-counters' : null)"
+    :show-header="false"
+    bordered
+    class="ant-table-counters"
+  />
 </template>
 
 <script lang="ts">
@@ -13,7 +16,7 @@ import { store } from '@/store'
 import { round } from 'number-precision'
 
 export default defineComponent({
-  setup () {
+  setup: function () {
     interface TypeStat {
       [key: string]: string | number
     }
@@ -53,124 +56,206 @@ export default defineComponent({
     // 是否使用默认值
     const isDefault = computed(() => time.value <= 0)
 
+    // 表格定义
+    const columns = [
+      {
+        // 数据列表中每个数据都需要唯一的 key，否则控制台会报错，这里直接用 key 作为普通的数据索引
+        dataIndex: 'key',
+        width: 1
+      },
+      {
+        dataIndex: 'value',
+        width: 1,
+        // 让单元格内容根据宽度自动省略
+        ellipsis: true
+      }
+    ]
+
     // 扫雷网和（新）国际网对二次计算的值都是四舍五入进行显示，此处也对所有经过二次计算的值都进行四舍五入处理，如：3BV/s
     // 可能与 Arbiter 规则有所不同，如：时间为 20.16 秒、3BV 为 112 时，Arbiter 0.52.3 的 3BV/s 计算结果为 5.55，而四舍五入后为 5.56（使用 toFixed 进行四舍五入可能会不符合预期）
     // 注意不能直接使用 toFixed() 方法进行四舍五入，可能与预期结果不一致，如：0.015.toFixed(2) 的计算结果为 '0.01'，需要先将 0.015 四舍五入为 0.02 再使用 toFixed() 补零
     // 其中四舍五入不能使用类似 Math.round(1.005 * 100) / 100 的方法，因为乘法和除法都可能有问题，如：Chrome 中 1.005 * 100 的结果为 100.49999999999999
     // IOS 数据可能会出现负值，并且没有太大用处，不进行计算和展示，如：RTime = 1 时，计算公式为：(Math.log(bbbv.value) / Math.log(estRTime.value)
-    const results: Ref<TypeStat> = ref({
-      RTime: computed(() => {
-        if (isDefault.value) return '0.00 (0)'
-        // 因为有默认值，不用考虑当时间 <= 0 时的情况，estRTime 同理
-        return `${round(time.value, 3).toFixed(3)} (${Math.floor(time.value) + 1})`
-      }),
-      'Est RTime': computed(() => {
-        // 如果 estRTime 值为 null 则返回默认值
-        if (isDefault.value || !estRTime.value) return '* (*)'
-        return `${round(estRTime.value, 3).toFixed(3)} (${Math.floor(estRTime.value) + 1})`
-      }),
-      '3BV': computed(() => {
-        if (isDefault.value) return '*/*'
-        return `${solvedBbbv.value}/${bbbv.value}`
-      }),
-      '3BV/s': computed(() => {
-        if (isDefault.value) return '*'
-        return `${round(solvedBbbv.value / time.value, 3).toFixed(3)}`
-      }),
-      ZiNi: computed(() => {
-        if (isDefault.value || !estRTime.value) return '*@*'
-        return `${gZiNi.value}@${round(gZiNi.value / estRTime.value, 3).toFixed(3)}`
-      }),
-      'H.ZiNi': computed(() => {
-        if (isDefault.value || !estRTime.value) return '*@*'
-        return `${hZiNi.value}@${round(hZiNi.value / estRTime.value, 3).toFixed(3)}`
-      }),
-      Ops: computed(() => {
-        if (isDefault.value) return '*/*'
-        return `${solvedOps.value}/${openings.value}`
-      }),
-      Isls: computed(() => {
-        if (isDefault.value) return '*/*'
-        return `${solvedIsls.value}/${islands.value}`
-      }),
-      Left: computed(() => {
-        if (isDefault.value) return '0@0'
-        return `${leftClicks.value}@${round(leftClicks.value / time.value, 3).toFixed(3)}`
-      }),
-      Right: computed(() => {
-        if (isDefault.value) return '0@0'
-        return `${rightClicks.value}@${round(rightClicks.value / time.value, 3).toFixed(3)}`
-      }),
-      Double: computed(() => {
-        if (isDefault.value) return '0@0'
-        return `${doubleClicks.value}@${round(doubleClicks.value / time.value, 3).toFixed(3)}`
-      }),
-      Cl: computed(() => {
-        if (isDefault.value) return '0@0'
-        return `${clicks.value}@${round(clicks.value / time.value, 3).toFixed(3)}`
-      }),
-      IOE: computed(() => {
-        if (isDefault.value) return '*'
-        return `${round(solvedBbbv.value / clicks.value, 3).toFixed(3)}`
-      }),
-      ThrP: computed(() => {
-        if (isDefault.value) return '*'
-        return `${round(solvedBbbv.value / eClicks.value, 3).toFixed(3)}`
-      }),
-      Corr: computed(() => {
-        if (isDefault.value) return '*'
-        return `${round(eClicks.value / clicks.value, 3).toFixed(3)}`
-      }),
-      ZNE: computed(() => {
-        if (isDefault.value) return '*'
-        return `${round(gZiNi.value * coeff.value / clicks.value, 3).toFixed(3)}`
-      }),
-      HZNE: computed(() => {
-        if (isDefault.value) return '*'
-        return `${round(hZiNi.value * coeff.value / clicks.value, 3).toFixed(3)}`
-      }),
-      ZNT: computed(() => {
-        if (isDefault.value) return '*'
-        return `${round(gZiNi.value * coeff.value / eClicks.value, 3).toFixed(3)}`
-      }),
-      HZNT: computed(() => {
-        if (isDefault.value) return '*'
-        return `${round(hZiNi.value * coeff.value / eClicks.value, 3).toFixed(3)}`
-      }),
-      Path: computed(() => {
-        if (isDefault.value) return '0'
-        // TODO 修复只对 MouseMove 事件才计算 Path 的问题
-        return path.value
-      }),
-      Flags: computed(() => {
-        if (isDefault.value) return '0'
-        return flags.value
-      }),
-      RQP: computed(() => {
-        if (isDefault.value || !estRTime.value) return '*'
-        // 按照 time.value * (time.value + 1) / solvedBbbv.value 计算的话会导致 计算的值一直是递增的，没有参考意义
-        return `${round(estRTime.value * (estRTime.value + 1) / bbbv.value, 3).toFixed(3)}`
-      })
-    })
+    const data: Ref<TypeStat[]> = ref([
+      {
+        key: 'RTime',
+        value: computed(() => {
+          if (isDefault.value) return '0.00 (0)'
+          // 因为有默认值，不用考虑当时间 <= 0 时的情况，estRTime 同理
+          return `${round(time.value, 3).toFixed(3)} (${Math.floor(time.value) + 1})`
+        })
+      },
+      {
+        key: 'Est RTime',
+        value: computed(() => {
+          // 如果 estRTime 值为 null 则返回默认值
+          if (isDefault.value || !estRTime.value) return '* (*)'
+          return `${round(estRTime.value, 3).toFixed(3)} (${Math.floor(estRTime.value) + 1})`
+        })
+      },
+      {
+        key: '3BV',
+        value: computed(() => {
+          if (isDefault.value) return '*/*'
+          return `${solvedBbbv.value}/${bbbv.value}`
+        })
+      },
+      {
+        key: '3BV/s',
+        value: computed(() => {
+          if (isDefault.value) return '*'
+          return `${round(solvedBbbv.value / time.value, 3).toFixed(3)}`
+        })
+      },
+      {
+        key: 'ZiNi',
+        value: computed(() => {
+          if (isDefault.value || !estRTime.value) return '*@*'
+          return `${gZiNi.value}@${round(gZiNi.value / estRTime.value, 3).toFixed(3)}`
+        })
+      },
+      {
+        key: 'H.ZiNi',
+        value: computed(() => {
+          if (isDefault.value || !estRTime.value) return '*@*'
+          return `${hZiNi.value}@${round(hZiNi.value / estRTime.value, 3).toFixed(3)}`
+        })
+      },
+      {
+        key: 'Ops',
+        value: computed(() => {
+          if (isDefault.value) return '*/*'
+          return `${solvedOps.value}/${openings.value}`
+        })
+      },
+      {
+        key: 'Isls',
+        value: computed(() => {
+          if (isDefault.value) return '*/*'
+          return `${solvedIsls.value}/${islands.value}`
+        })
+      },
+      {
+        key: 'Left',
+        value: computed(() => {
+          if (isDefault.value) return '0@0'
+          return `${leftClicks.value}@${round(leftClicks.value / time.value, 3).toFixed(3)}`
+        })
+      },
+      {
+        key: 'Right',
+        value: computed(() => {
+          if (isDefault.value) return '0@0'
+          return `${rightClicks.value}@${round(rightClicks.value / time.value, 3).toFixed(3)}`
+        })
+      },
+      {
+        key: 'Double',
+        value: computed(() => {
+          if (isDefault.value) return '0@0'
+          return `${doubleClicks.value}@${round(doubleClicks.value / time.value, 3).toFixed(3)}`
+        })
+      },
+      {
+        key: 'Cl',
+        value: computed(() => {
+          if (isDefault.value) return '0@0'
+          return `${clicks.value}@${round(clicks.value / time.value, 3).toFixed(3)}`
+        })
+      },
+      {
+        key: 'IOE',
+        value: computed(() => {
+          if (isDefault.value) return '*'
+          return `${round(solvedBbbv.value / clicks.value, 3).toFixed(3)}`
+        })
+      },
+      {
+        key: 'ThrP',
+        value: computed(() => {
+          if (isDefault.value) return '*'
+          return `${round(solvedBbbv.value / eClicks.value, 3).toFixed(3)}`
+        })
+      },
+      {
+        key: 'Corr',
+        value: computed(() => {
+          if (isDefault.value) return '*'
+          return `${round(eClicks.value / clicks.value, 3).toFixed(3)}`
+        })
+      },
+      {
+        key: 'ZNE',
+        value: computed(() => {
+          if (isDefault.value) return '*'
+          return `${round(gZiNi.value * coeff.value / clicks.value, 3).toFixed(3)}`
+        })
+      },
+      {
+        key: 'HZNE',
+        value: computed(() => {
+          if (isDefault.value) return '*'
+          return `${round(hZiNi.value * coeff.value / clicks.value, 3).toFixed(3)}`
+        })
+      },
+      {
+        key: 'ZNT',
+        value: computed(() => {
+          if (isDefault.value) return '*'
+          return `${round(gZiNi.value * coeff.value / eClicks.value, 3).toFixed(3)}`
+        })
+      },
+      {
+        key: 'HZNT',
+        value: computed(() => {
+          if (isDefault.value) return '*'
+          return `${round(hZiNi.value * coeff.value / eClicks.value, 3).toFixed(3)}`
+        })
+      },
+      {
+        key: 'Path',
+        value: computed(() => {
+          if (isDefault.value) return '0'
+          // TODO 修复只对 MouseMove 事件才计算 Path 的问题
+          return path.value
+        })
+      },
+      {
+        key: 'Flags',
+        value: computed(() => {
+          if (isDefault.value) return '0'
+          return flags.value
+        })
+      },
+      {
+        key: 'RQP',
+        value: computed(() => {
+          if (isDefault.value || !estRTime.value) return '*'
+          // 按照 time.value * (time.value + 1) / solvedBbbv.value 计算的话会导致 计算的值一直是递增的，没有参考意义
+          return `${round(estRTime.value * (estRTime.value + 1) / bbbv.value, 3).toFixed(3)}`
+        })
+      }
+    ])
 
-    return { results }
+    return { columns, data }
   }
 })
 </script>
 
 <style scoped>
-table {
-  display: inline-block;
-  font-size: 12px;
-  border-collapse: collapse;
+.ant-table-counters {
+  width: 160px;
   margin: 5px 5px 0 5px;
+  display: inline-block;
 }
 
-td {
-  min-width: 80px;
-  max-width: 80px;
-  border: 1px solid gray;
-  white-space: nowrap;
-  overflow: hidden;
+.ant-table-counters >>> td {
+  padding: 1px !important;
+  font-size: 12px;
+}
+
+/* 表格条纹 */
+.ant-table-counters >>> .table-counters td {
+  background-color: #fafafa;
 }
 </style>
