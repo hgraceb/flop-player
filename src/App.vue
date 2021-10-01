@@ -1,15 +1,19 @@
 <template>
-  <div>
-    <!-- TODO 缩放时没有影响到游戏菜单弹出的窗体内容 -->
-    <div :style="{transformOrigin: '0 0 0', transform: `scale(${scale})`}">
-      <div class="game-container">
+  <!-- TODO 缩放时没有影响到游戏菜单弹出的窗体内容 -->
+  <a-layout :style="{transformOrigin: '0 0 0', transform: `scale(${scale})`}" class="layout-background">
+    <a-layout-sider class="layout-slider-counters layout-background">
+      <counters />
+    </a-layout-sider>
+    <a-layout class="layout-background">
+      <a-layout-content>
         <game-menu />
         <game />
-      </div>
-      <counters />
-      <control-bar />
-    </div>
-  </div>
+      </a-layout-content>
+      <a-layout-content>
+        <control-bar />
+      </a-layout-content>
+    </a-layout>
+  </a-layout>
 </template>
 
 <script lang="ts">
@@ -37,8 +41,17 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.game-container {
-  /* 不换行 */
-  display: inline-block;
+/* 布局背景 */
+.layout-background {
+  /* 清除布局默认背景颜色 */
+  background-color: transparent;
+}
+
+/* 侧边栏计数器布局，清除原有侧边栏样式 */
+.layout-slider-counters {
+  min-width: 0 !important;
+  max-width: none !important;
+  width: max-content !important;
+  flex-basis: auto !important;
 }
 </style>

@@ -1,5 +1,5 @@
 import { App } from 'vue'
-import { Button, InputNumber, Menu, Slider, Space, Table } from 'ant-design-vue'
+import { Button, InputNumber, Layout, Menu, Slider, Space, Table } from 'ant-design-vue'
 // 按需引入导航菜单后部分样式不生效，导致子菜单无法正常显示，需要手动引入 css 格式的样式文件
 import 'ant-design-vue/lib/menu/style/index.css'
 
@@ -20,7 +20,11 @@ const components = [
   Menu.Item,
   Menu.Divider,
   Menu.SubMenu,
-  Menu.ItemGroup
+  Menu.ItemGroup,
+  // 布局：https://2x.antdv.com/components/layout-cn
+  Layout,
+  Layout.Sider,
+  Layout.Content
 ]
 
 export default (app: App<Element>): void => {

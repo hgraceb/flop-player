@@ -3,10 +3,9 @@
     :columns="columns"
     :data-source="data"
     :pagination="false"
-    :rowClassName="(record, index) => (index % 2 === 1 ? 'table-counters' : null)"
     :show-header="false"
     bordered
-    class="ant-table-counters"
+    class="table-counters"
   />
 </template>
 
@@ -61,11 +60,11 @@ export default defineComponent({
       {
         // 数据列表中每个数据都需要唯一的 key，否则控制台会报错，这里直接用 key 作为普通的数据索引
         dataIndex: 'key',
-        width: 1
+        width: 45
       },
       {
         dataIndex: 'value',
-        width: 1,
+        width: 55,
         // 让单元格内容根据宽度自动省略
         ellipsis: true
       }
@@ -243,19 +242,20 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.ant-table-counters {
+/* 表格整体样式 */
+.table-counters {
   width: 160px;
-  margin: 5px 5px 0 5px;
-  display: inline-block;
 }
 
-.ant-table-counters >>> td {
+/* 表格数据单元格样式 */
+.table-counters ::v-deep(td) {
   padding: 1px !important;
   font-size: 12px;
+  background-color: rgb(192, 192, 192);
 }
 
-/* 表格条纹 */
-.ant-table-counters >>> .table-counters td {
-  background-color: #fafafa;
+/* 表格数据单元格样式悬浮样式 */
+.table-counters ::v-deep(tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected)) > td {
+  background: rgba(192, 192, 192, .5) !important;
 }
 </style>

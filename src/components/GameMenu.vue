@@ -95,12 +95,12 @@ export default defineComponent({
   line-height: 24px;
 }
 
-.game-menu >>> li {
+.game-menu ::v-deep(li) {
   /* 使用调整内边距的方式进行排版，使用 margin 属性进行调整的话会影响菜单折叠功能 */
   padding: 0 5px !important;
 }
 
-.game-menu >>> li::after {
+.game-menu ::v-deep(li::after) {
   /* 取消游戏菜单选中后底部边框的显示 */
   border-bottom: 0 !important;
 }
