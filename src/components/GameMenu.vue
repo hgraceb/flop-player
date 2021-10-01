@@ -1,5 +1,5 @@
 <template>
-  <a-menu v-model:selectedKeys="selected" :style="`max-width: ${width}px`" class="game-menu" mode="horizontal">
+  <a-menu v-model:selectedKeys="selected" :style="`width: ${width}px`" class="game-menu" mode="horizontal">
     <a-sub-menu :title="$t('menu.game.title')">
     </a-sub-menu>
     <a-sub-menu :title="$t('menu.options.title')">
