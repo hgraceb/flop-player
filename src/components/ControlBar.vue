@@ -66,7 +66,8 @@ export default defineComponent({
     // 游戏时间进度条当前值，通过当前游戏经过的时间计算得到
     const timeSlider = computed({
       get: () => {
-        return store.state.gameElapsedTime
+        // 限制最大值
+        return Math.min(store.state.gameElapsedTime, timeMax.value)
       },
       // 函数节流，避免调用次数过多造成资源浪费和控制条拖动卡顿，20ms 是经过实际测试后定的经验值，其他值要么拖快容易卡，要么拖慢容易卡
       set: useThrottleFn((value: number) => {

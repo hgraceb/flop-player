@@ -254,7 +254,7 @@ export default defineComponent({
   background-color: rgb(192, 192, 192);
 }
 
-/* 表格数据单元格样式悬浮样式 */
+/* 表格数据单元格悬浮样式 */
 .table-counters ::v-deep(tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected)) > td {
   background: rgba(192, 192, 192, .5) !important;
 }
