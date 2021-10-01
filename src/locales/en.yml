@@ -4,7 +4,7 @@ menu:
   options:
     title: Options
     language: English
-    toggleLanguages: Change languages
+    toggleLanguages: Languages
     scaling: Scaling
   help:
     title: Help
