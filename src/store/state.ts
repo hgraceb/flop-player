@@ -35,6 +35,12 @@ export type State = typeof storageDefault & {
   gameVideoPaused: boolean
   // 游戏路径点坐标数组，x：精确的横坐标，y：精确的纵坐标
   gameMousePoints: { x: number, y: number }[]
+  // 游戏左键点坐标数组，x：精确的横坐标，y：精确的纵坐标
+  gameLeftPoints: { x: number, y: number }[]
+  // 游戏右键点坐标数组，x：精确的横坐标，y：精确的纵坐标
+  gameRightPoints: { x: number, y: number }[]
+  // 游戏双击点坐标数组，x：精确的横坐标，y：精确的纵坐标
+  gameDoublePoints: { x: number, y: number }[]
   // 是否打印录像解析相关日志
   enableParserLog: boolean
 }
@@ -63,5 +69,8 @@ export const state: State = {
   gameElapsedTime: 0.0,
   gameVideoPaused: true,
   gameMousePoints: [],
+  gameLeftPoints: [],
+  gameRightPoints: [],
+  gameDoublePoints: [],
   enableParserLog: false
 }

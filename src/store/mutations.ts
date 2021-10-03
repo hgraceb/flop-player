@@ -100,6 +100,17 @@ export const mutations = {
     state.gameBoard[index] = event.snapshot!.cellType
     // 根据快照还原笑脸状态
     state.faceStatus = event.snapshot!.faceStatus
+    switch (event.name) {
+      case 'LeftClicksAdded':
+        state.gameLeftPoints.pop()
+        break
+      case 'RightClicksAdded':
+        state.gameRightPoints.pop()
+        break
+      case 'DoubleClicksAdded':
+        state.gameDoublePoints.pop()
+        break
+    }
     // 设置当前所在坐标
     if ('precisionX' in event || 'precisionY' in event) {
       // 最后一个鼠标路径坐标
@@ -177,6 +188,16 @@ export const mutations = {
       case 'MiddleClick':
         state.faceStatus = 'face-normal'
         break
+      case 'LeftClicksAdded':
+        // 可以先判断坐标是否重复，但是本来也没有多少个坐标点，没必要为了这几个坐标点多写十几行代码
+        state.gameLeftPoints.push({ x: event.precisionX, y: event.precisionY })
+        break
+      case 'RightClicksAdded':
+        state.gameRightPoints.push({ x: event.precisionX, y: event.precisionY })
+        break
+      case 'DoubleClicksAdded':
+        state.gameDoublePoints.push({ x: event.precisionX, y: event.precisionY })
+        break
     }
     // 设置当前所在坐标
     if ('precisionX' in event || 'precisionY' in event) {
@@ -197,6 +218,9 @@ export const mutations = {
     state.gameEventIndex = 0
     state.faceStatus = 'face-normal'
     state.gameMousePoints = []
+    state.gameLeftPoints = []
+    state.gameRightPoints = []
+    state.gameDoublePoints = []
     store.commit('playVideo')
   },
   /** 播放游戏录像，TODO 进行函数节流处理 */

@@ -912,6 +912,15 @@ function leftClick (x: number, y: number, precX: number, precY: number): void {
   // Chord
   if (right || shiftLeft || (superClick && board[x * h + y].opened)) {
     ++doubleClicks
+    store.commit('addEvent', {
+      name: 'DoubleClicksAdded',
+      time: curTime,
+      x: x,
+      y: y,
+      precisionX: precX,
+      precisionY: precY,
+      stats: getStats()
+    })
     if (oneDotFive) ++clicks15
     doChord(x, y, oneDotFive)
     chorded = right
@@ -926,6 +935,15 @@ function leftClick (x: number, y: number, precX: number, precY: number): void {
       if (noRilianClicks) return
     }
     ++leftClicks
+    store.commit('addEvent', {
+      name: 'LeftClicksAdded',
+      time: curTime,
+      x: x,
+      y: y,
+      precisionX: precX,
+      precisionY: precY,
+      stats: getStats()
+    })
     if (!board[x * h + y].opened && !board[x * h + y].flagged) {
       doOpen(x, y)
     } else {
@@ -1091,6 +1109,15 @@ function rightPress (x: number, y: number, precX: number, precY: number): void {
         }
       }
       ++rightClicks
+      store.commit('addEvent', {
+        name: 'RightClicksAdded',
+        time: curTime,
+        x: x,
+        y: y,
+        precisionX: precX,
+        precisionY: precY,
+        stats: getStats()
+      })
     } else if (superFlag && board[x * h + y].opened) {
       if (board[x * h + y].number && board[x * h + y].number >= closedSqAround(x, y)) {
         doFlagAround(x, y)
@@ -1124,6 +1151,15 @@ function rightClick (x: number, y: number, precX: number, precY: number): void {
     popAround(curX, curY)
     doChord(x, y, 0)
     ++doubleClicks
+    store.commit('addEvent', {
+      name: 'DoubleClicksAdded',
+      time: curTime,
+      x: x,
+      y: y,
+      precisionX: precX,
+      precisionY: precY,
+      stats: getStats()
+    })
     chorded = 1
 
     // Click did not produce a Flag or Chord
@@ -1131,6 +1167,15 @@ function rightClick (x: number, y: number, precX: number, precY: number): void {
     // It was a RC not the beginning of a Chord
     if (!oneDotFive && !chorded) {
       ++rightClicks
+      store.commit('addEvent', {
+        name: 'RightClicksAdded',
+        time: curTime,
+        x: x,
+        y: y,
+        precisionX: precX,
+        precisionY: precY,
+        stats: getStats()
+      })
       ++wastedRightClicks
     }
     chorded = 0
@@ -1174,6 +1219,15 @@ function middleClick (x: number, y: number, precX: number, precY: number): void 
   if (!isInsideBoard(x, y)) return
   doChord(x, y, 0)
   ++doubleClicks
+  store.commit('addEvent', {
+    name: 'DoubleClicksAdded',
+    time: curTime,
+    x: x,
+    y: y,
+    precisionX: precX,
+    precisionY: precY,
+    stats: getStats()
+  })
 }
 
 export function parse (state: State, data: string): void {

@@ -30,6 +30,13 @@ export type GameEvent = ({
   // 精确的纵坐标
   precisionY: number
 } | {
+  // 点击数增加事件，用于绘制路径图
+  name: 'LeftClicksAdded' | 'RightClicksAdded' | 'DoubleClicksAdded'
+  // 精确的横坐标
+  precisionX: number
+  // 精确的纵坐标
+  precisionY: number
+} | {
   name: 'Flag' | 'RemoveFlag' | 'QuestionMark' | 'RemoveQuestionMark' | 'ToggleQuestionMarkSetting'
 } | {
   name: 'Press' | 'Release'
