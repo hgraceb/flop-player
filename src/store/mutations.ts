@@ -100,11 +100,16 @@ export const mutations = {
     state.gameBoard[index] = event.snapshot!.cellType
     // 根据快照还原笑脸状态
     state.faceStatus = event.snapshot!.faceStatus
-    if ('precisionX' in event) {
+    // 设置当前所在坐标
+    if ('precisionX' in event || 'precisionY' in event) {
       state.precisionX = event.precisionX
-    }
-    if ('precisionY' in event) {
       state.precisionY = event.precisionY
+      // 最后一个鼠标路径坐标
+      const lastPoint = state.gameMousePath[state.gameMousePath.length - 1]
+      // 如果鼠标的坐标有变动，则移除上一个鼠标路径坐标
+      if (lastPoint?.x !== state.precisionX || lastPoint?.y !== state.precisionY) {
+        state.gameMousePath.pop()
+      }
     }
   },
   /** 模拟下一个游戏事件 */
@@ -175,11 +180,16 @@ export const mutations = {
         state.faceStatus = 'face-normal'
         break
     }
-    if ('precisionX' in event) {
+    // 设置当前所在坐标
+    if ('precisionX' in event || 'precisionY' in event) {
       state.precisionX = event.precisionX
-    }
-    if ('precisionY' in event) {
       state.precisionY = event.precisionY
+      // 最后一个鼠标路径坐标
+      const lastPoint = state.gameMousePath[state.gameMousePath.length - 1]
+      // 如果鼠标的坐标有变动，则添加一个新的鼠标路径坐标
+      if (lastPoint?.x !== state.precisionX || lastPoint?.y !== state.precisionY) {
+        state.gameMousePath.push({ x: state.precisionX, y: state.precisionY })
+      }
     }
     store.commit('checkVideoFinished')
   },
@@ -192,6 +202,7 @@ export const mutations = {
     state.precisionX = 0
     state.precisionY = 0
     state.faceStatus = 'face-normal'
+    state.gameMousePath = []
     store.commit('playVideo')
   },
   /** 播放游戏录像，TODO 进行函数节流处理 */

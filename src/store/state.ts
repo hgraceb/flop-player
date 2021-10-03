@@ -33,6 +33,8 @@ export type State = typeof storageDefault & {
   gameElapsedTime: number,
   // 游戏录像是否处于暂停状态
   gameVideoPaused: boolean
+  // 游戏路径点坐标数组
+  gameMousePath: { x: number, y: number }[]
   // 精确的横坐标
   precisionX: number
   // 精确的纵坐标
@@ -64,6 +66,7 @@ export const state: State = {
   gameStartTime: 0.0,
   gameElapsedTime: 0.0,
   gameVideoPaused: true,
+  gameMousePath: [],
   precisionX: 0,
   precisionY: 0,
   enableParserLog: false
