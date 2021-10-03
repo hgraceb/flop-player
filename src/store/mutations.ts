@@ -102,13 +102,11 @@ export const mutations = {
     state.faceStatus = event.snapshot!.faceStatus
     // 设置当前所在坐标
     if ('precisionX' in event || 'precisionY' in event) {
-      state.precisionX = event.precisionX
-      state.precisionY = event.precisionY
       // 最后一个鼠标路径坐标
-      const lastPoint = state.gameMousePath[state.gameMousePath.length - 1]
+      const lastPoint = state.gameMousePoints[state.gameMousePoints.length - 1]
       // 如果鼠标的坐标有变动，则移除上一个鼠标路径坐标
-      if (lastPoint?.x !== state.precisionX || lastPoint?.y !== state.precisionY) {
-        state.gameMousePath.pop()
+      if (event.precisionX !== lastPoint?.x || event.precisionY !== lastPoint?.y) {
+        state.gameMousePoints.pop()
       }
     }
   },
@@ -182,13 +180,11 @@ export const mutations = {
     }
     // 设置当前所在坐标
     if ('precisionX' in event || 'precisionY' in event) {
-      state.precisionX = event.precisionX
-      state.precisionY = event.precisionY
       // 最后一个鼠标路径坐标
-      const lastPoint = state.gameMousePath[state.gameMousePath.length - 1]
+      const lastPoint = state.gameMousePoints[state.gameMousePoints.length - 1]
       // 如果鼠标的坐标有变动，则添加一个新的鼠标路径坐标
-      if (lastPoint?.x !== state.precisionX || lastPoint?.y !== state.precisionY) {
-        state.gameMousePath.push({ x: state.precisionX, y: state.precisionY })
+      if (event.precisionX !== lastPoint?.x || event.precisionY !== lastPoint?.y) {
+        state.gameMousePoints.push({ x: event.precisionX, y: event.precisionY })
       }
     }
     store.commit('checkVideoFinished')
@@ -199,10 +195,8 @@ export const mutations = {
     state.gameBoard = Array.from(Array(state.width * state.height), () => 'cell-normal')
     state.gameElapsedTime = 0.0
     state.gameEventIndex = 0
-    state.precisionX = 0
-    state.precisionY = 0
     state.faceStatus = 'face-normal'
-    state.gameMousePath = []
+    state.gameMousePoints = []
     store.commit('playVideo')
   },
   /** 播放游戏录像，TODO 进行函数节流处理 */

@@ -28,7 +28,7 @@ export default defineComponent({
     const mousePathElement = ref<SVGPolylineElement>()
 
     onMounted(() => {
-      watch(computed(() => store.state.gameMousePath.length), length => {
+      watch(computed(() => store.state.gameMousePoints.length), length => {
         // 选择直接操作 SVGPointList 是因为路径点位数据很多，按照字符串形式进行处理的话容易造成页面卡顿
         const points = mousePathElement.value?.points
         // 如果鼠标路径对应的元素没有被渲染，则不进行后续操作
@@ -40,7 +40,7 @@ export default defineComponent({
         } else if (length > points.length) {
           // 新增鼠标路径点位数据
           for (let i = points.length; i < length; i++) {
-            const point = store.state.gameMousePath[i]
+            const point = store.state.gameMousePoints[i]
             if (point) {
               const svgPoint = svg.createSVGPoint()
               svgPoint.x = point.x * SVG_SCALE

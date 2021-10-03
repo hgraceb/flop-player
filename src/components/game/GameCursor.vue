@@ -11,11 +11,13 @@ import { GAME_MIDDLE, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE
 export default defineComponent({
   components: { SkinSymbol },
   setup () {
+    // 当前鼠标的坐标位置，默认为 (0, 0)
+    const currentMousePoint = computed(() => store.state.gameMousePoints[store.state.gameMousePoints.length - 1] || { x: 0, y: 0 })
     // 指针 X 轴坐标位置
-    const cursorTranslateX = computed(() => (GAME_MIDDLE.widthLeft + store.state.precisionX) * SVG_SCALE)
+    const cursorTranslateX = computed(() => (GAME_MIDDLE.widthLeft + currentMousePoint.value.x) * SVG_SCALE)
     // 指针 Y 轴坐标位置
     const cursorTranslateY = computed(() => {
-      return (GAME_TOP_UPPER.height + GAME_TOP_MIDDLE.height + GAME_TOP_LOWER.height + store.state.precisionY) * SVG_SCALE
+      return (GAME_TOP_UPPER.height + GAME_TOP_MIDDLE.height + GAME_TOP_LOWER.height + currentMousePoint.value.y) * SVG_SCALE
     })
 
     return { cursorTranslateX, cursorTranslateY }
