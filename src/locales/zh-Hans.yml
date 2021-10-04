@@ -5,9 +5,18 @@ menu:
     title: 游戏
   options:
     title: 选项
+    # 切换语言
     language: 简体中文
     toggleLanguages: 切换语言
+    # 切换缩放比例
     scaling: 缩放比例
+    # 切换轨迹图显示状态
+    mousePath:
+      title: 鼠标轨迹
+      move: 鼠标移动
+      left: 鼠标左键
+      right: 鼠标右键
+      double: 鼠标双击
   help:
     title: 帮助
 

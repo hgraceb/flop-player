@@ -10,6 +10,26 @@ import { SCALE_ARRAY, SPEED_ARRAY } from '@/game/constants'
  * Mutations 函数定义，使用类型推断的方式，可以快速找到函数的所有 Usages
  */
 export const mutations = {
+  /** 设置是否显示鼠标轨迹图 */
+  setMousePath: (state: State, isMousePath: boolean): void => {
+    state.isMousePath = isMousePath
+  },
+  /** 设置是否显示鼠标移动轨迹图 */
+  setMousePathMove: (state: State, isMousePathMove: boolean): void => {
+    state.isMousePathMove = isMousePathMove
+  },
+  /** 设置是否显示鼠标左键散点图 */
+  setMousePathLeft: (state: State, isMousePathLeft: boolean): void => {
+    state.isMousePathLeft = isMousePathLeft
+  },
+  /** 设置是否显示鼠标右键散点图 */
+  setMousePathRight: (state: State, isMousePathRight: boolean): void => {
+    state.isMousePathRight = isMousePathRight
+  },
+  /** 设置是否显示鼠标双击散点图 */
+  setMousePathDouble: (state: State, isMousePathDouble: boolean): void => {
+    state.isMousePathDouble = isMousePathDouble
+  },
   /** 设置页面缩放值 */
   setScale: (state: State, scale: number): void => {
     if (SCALE_ARRAY.indexOf(scale) !== -1) {

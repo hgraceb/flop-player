@@ -1,20 +1,20 @@
 <template>
-  <g :transform="`translate(${translateX} ${translateY})`" class="container-mouse-path">
+  <g v-if="display.isMousePath" :transform="`translate(${translateX} ${translateY})`">
     <!-- 遮罩 -->
-    <path :d="`M0 0 H ${maskWidth} V ${maskHeight} H 0 L 0 0`" style="fill: rgba(0, 0, 0, .5);" />
+    <path :d="`M0 0 H ${maskWidth} V ${maskHeight} H 0 L 0 0`" class="mouse-mask" />
     <!-- 鼠标路径 -->
-    <polyline ref="mousePathElement" class="mouse-path" points="" />
+    <polyline v-if="display.isMousePathMove" ref="mousePathElement" class="mouse-path" points="" />
     <!-- 鼠标左键坐标点 -->
-    <polygon ref="leftPointsElement" class="left-points" points="" />
+    <polygon v-if="display.isMousePathLeft" ref="mouseLeftElement" class="mouse-left" points="" />
     <!-- 鼠标右键坐标点 -->
-    <polygon ref="rightPointsElement" class="right-points" points="" />
+    <polygon v-if="display.isMousePathRight" ref="mouseRightElement" class="mouse-right" points="" />
     <!-- 鼠标双击坐标点 -->
-    <polygon ref="doublePointsElement" class="double-points" points="" />
+    <polygon v-if="display.isMousePathDouble" ref="mouseDoubleElement" class="mouse-double" points="" />
   </g>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, Ref, ref, watch } from 'vue'
+import { computed, defineComponent, onMounted, reactive, ref, Ref, watch } from 'vue'
 import { store } from '@/store'
 import { CELL_SIDE_LENGTH, GAME_MIDDLE, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
 
@@ -50,11 +50,40 @@ const removeSquare = (points: SVGPointList) => {
     points.removeItem(points.length - 1)
   }
 }
-// 处理点坐标列表
-const handlePointList = (polygonElementRef: Ref<SVGPolygonElement | undefined>, targetPoints: { x: number; y: number }[], length: number, prevLength: number) => {
+// 处理对应折线图的点坐标列表
+const handleLinePoints = (polygonElementRef: Ref<SVGPolylineElement | undefined>, targetPoints: { x: number; y: number }[]) => {
+  // 选择直接操作 SVGPointList 是因为路径点位数据很多，按照字符串形式进行处理的话容易造成页面卡顿
+  const points = polygonElementRef.value?.points
+  // 如果鼠标路径对应的元素没有被渲染，则不进行后续操作
+  if (!points) return
+
+  // 需要处理的点坐标个数
+  const length = targetPoints.length
+  // 已经处理过的点坐标个数
+  const prevLength = points.length
+  if (length === 0) {
+    // 清空鼠标路径点位数据
+    points.clear()
+  } else if (length > prevLength) {
+    // 新增鼠标路径点位数据
+    for (let i = prevLength; i < length; i++) {
+      const point = targetPoints[i]
+      appendPoint(points, point.x * SVG_SCALE, point.y * SVG_SCALE)
+    }
+  } else if (length < prevLength) {
+    // 移除鼠标路径点位数据
+    for (let i = prevLength - 1; i >= length; i--) {
+      points.removeItem(i)
+    }
+  }
+}
+// 处理对应正方形散点的点坐标列表
+const handleSquareList = (polygonElementRef: Ref<SVGPolygonElement | undefined>, targetPoints: { x: number; y: number }[]) => {
   const points = polygonElementRef.value?.points
   if (!points) return
 
+  const length = targetPoints.length
+  const prevLength = Math.floor(points.length / squarePoints)
   if (length === 0) {
     points.clear()
   } else if (length > prevLength) {
@@ -84,56 +113,50 @@ export default defineComponent({
     // 鼠标路径对应的元素
     const mousePathElement = ref<SVGPolylineElement | undefined>()
     // 鼠标左键坐标点对应的元素
-    const leftPointsElement = ref<SVGPolygonElement | undefined>()
+    const mouseLeftElement = ref<SVGPolygonElement | undefined>()
     // 鼠标右键坐标点对应的元素
-    const rightPointsElement = ref<SVGPolygonElement | undefined>()
+    const mouseRightElement = ref<SVGPolygonElement | undefined>()
     // 鼠标双击坐标点对应的元素
-    const doublePointsElement = ref<SVGPolygonElement | undefined>()
+    const mouseDoubleElement = ref<SVGPolygonElement | undefined>()
+    // 轨迹图显示状态
+    const display = reactive({
+      isMousePath: computed(() => store.state.isMousePath),
+      isMousePathMove: computed(() => store.state.isMousePathMove),
+      isMousePathLeft: computed(() => store.state.isMousePathLeft),
+      isMousePathRight: computed(() => store.state.isMousePathRight),
+      isMousePathDouble: computed(() => store.state.isMousePathDouble)
+    })
 
     onMounted(() => {
-      watch(computed(() => store.state.gameMousePoints.length), length => {
-        // 选择直接操作 SVGPointList 是因为路径点位数据很多，按照字符串形式进行处理的话容易造成页面卡顿
-        const points = mousePathElement.value?.points
-        // 如果鼠标路径对应的元素没有被渲染，则不进行后续操作
-        if (!points) return
-
-        if (length === 0) {
-          // 清空鼠标路径点位数据
-          points.clear()
-        } else if (length > points.length) {
-          // 新增鼠标路径点位数据
-          for (let i = points.length; i < length; i++) {
-            const point = store.state.gameMousePoints[i]
-            appendPoint(points, point.x * SVG_SCALE, point.y * SVG_SCALE)
-          }
-        } else if (length < points.length) {
-          // 移除鼠标路径点位数据
-          for (let i = points.length - 1; i >= length; i--) {
-            points.removeItem(i)
-          }
-        }
+      // 鼠标移动路径，监听 mousePathElement 是因为元素重新渲染时需要重绘所有点坐标
+      watch([mousePathElement, computed(() => store.state.gameMousePoints.length)], () => {
+        handleLinePoints(mousePathElement, store.state.gameMousePoints)
       })
-
       // 鼠标左键坐标点
-      watch(computed(() => store.state.gameLeftPoints.length), (length, prevLength) => {
-        handlePointList(leftPointsElement, store.state.gameLeftPoints, length, prevLength)
+      watch([mouseLeftElement, computed(() => store.state.gameLeftPoints.length)], () => {
+        handleSquareList(mouseLeftElement, store.state.gameLeftPoints)
       })
       // 鼠标右键坐标点
-      watch(computed(() => store.state.gameRightPoints.length), (length, prevLength) => {
-        handlePointList(rightPointsElement, store.state.gameRightPoints, length, prevLength)
+      watch([mouseRightElement, computed(() => store.state.gameRightPoints.length)], () => {
+        handleSquareList(mouseRightElement, store.state.gameRightPoints)
       })
       // 鼠标双击坐标点
-      watch(computed(() => store.state.gameDoublePoints.length), (length, prevLength) => {
-        handlePointList(doublePointsElement, store.state.gameDoublePoints, length, prevLength)
+      watch([mouseDoubleElement, computed(() => store.state.gameDoublePoints.length)], () => {
+        handleSquareList(mouseDoubleElement, store.state.gameDoublePoints)
       })
     })
 
-    return { translateX, translateY, maskWidth, maskHeight, mousePathElement, leftPointsElement, rightPointsElement, doublePointsElement }
+    return { translateX, translateY, display, maskWidth, maskHeight, mousePathElement, mouseLeftElement, mouseRightElement, mouseDoubleElement }
   }
 })
 </script>
 
 <style scoped>
+/* 遮罩 */
+.mouse-mask {
+  fill: rgba(0, 0, 0, .5);
+}
+
 /* 鼠标路径 */
 .mouse-path {
   fill: none;
@@ -142,19 +165,19 @@ export default defineComponent({
 }
 
 /* 鼠标左键坐标点 */
-.left-points {
+.mouse-left {
   fill: #00ffff;
   stroke: none;
 }
 
 /* 鼠标右键坐标点 */
-.right-points {
+.mouse-right {
   fill: #00ff00;
   stroke: none;
 }
 
 /* 鼠标双击坐标点 */
-.double-points {
+.mouse-double {
   fill: #ff00ff;
   stroke: none;
 }

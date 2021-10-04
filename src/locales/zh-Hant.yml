@@ -6,6 +6,12 @@ menu:
     language: 繁體中文
     toggleLanguages: 切換語言
     scaling: 縮放比例
+    mousePath:
+      title: 鼠標軌跡
+      move: 鼠標移動
+      left: 鼠標左鍵
+      right: 鼠標右鍵
+      double: 鼠標雙擊
   help:
     title: 幫助
 

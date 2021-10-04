@@ -1,4 +1,5 @@
 <template>
+  <!-- 设置 triggerSubMenuAction="click" 可以将菜单展开方式切换为点击后展开（源代码中查看的属性，不同版本可能会有差异） -->
   <a-menu v-model:selectedKeys="selected" :style="`width: ${width}px`" class="game-menu" mode="horizontal">
     <a-sub-menu :title="$t('menu.game.title')">
     </a-sub-menu>
@@ -21,6 +22,11 @@
           {{ $t('menu.options.language', item) }}
         </a-menu-item>
       </a-sub-menu>
+
+      <!-- 鼠标轨迹 -->
+      <sub-menu-mouse-path />
+
+      <!-- 缩放比例 -->
       <a-menu-divider />
       <a-sub-menu :title="$t('menu.options.scaling')">
         <template #icon>
@@ -53,9 +59,10 @@ import { store } from '@/store'
 import { CELL_SIDE_LENGTH, GAME_TOP_UPPER, SCALE_ARRAY } from '@/game/constants'
 import { CheckOutlined, ExpandAltOutlined, GlobalOutlined } from '@ant-design/icons-vue'
 import AIconEmpty from '@/components/common/AIconEmpty.vue'
+import SubMenuMousePath from '@/components/menu/SubMenuMousePath.vue'
 
 export default defineComponent({
-  components: { AIconEmpty, CheckOutlined, ExpandAltOutlined, GlobalOutlined },
+  components: { SubMenuMousePath, AIconEmpty, CheckOutlined, ExpandAltOutlined, GlobalOutlined },
   setup () {
     // 菜单宽度
     const width = computed(() => {

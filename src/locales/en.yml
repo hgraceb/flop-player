@@ -6,6 +6,12 @@ menu:
     language: English
     toggleLanguages: Languages
     scaling: Scaling
+    mousePath:
+      title: Mouse path
+      move: Mouse move
+      left: Left click
+      right: Right click
+      double: Double click
   help:
     title: Help
 
