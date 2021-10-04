@@ -1,5 +1,6 @@
 import { VuexStore } from '@/store/index'
 import { useStorage } from '@vueuse/core'
+import { i18n } from '@/plugins/i18n'
 
 export const STORAGE_KEY = 'flop-mine-locale-storage'
 
@@ -9,6 +10,8 @@ export const STORAGE_KEY = 'flop-mine-locale-storage'
 export const storageDefault = {
   // 页面缩放值
   scale: 1,
+  // 当前语言
+  locale: i18n.global.locale,
   // 游戏速度
   gameSpeed: 1.0,
   // 是否显示鼠标轨迹图
@@ -34,6 +37,15 @@ export const storage = useStorage(STORAGE_KEY, storageDefault)
 const localStoragePlugin = (store: VuexStore) => {
   store.watch(state => state.scale, value => {
     storage.value.scale = value
+  })
+  store.watch(state => state.locale, value => {
+    // 更新本地缓存的语言
+    storage.value.locale = value
+    // 更新当前显示的语言
+    i18n.global.locale = value
+  }, {
+    // 首次赋值时更新，因为如果有语言缓存，需要将当前显示的语言更新为缓存对应的值
+    immediate: true
   })
   store.watch(state => state.gameSpeed, value => {
     storage.value.gameSpeed = value

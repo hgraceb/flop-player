@@ -5,6 +5,7 @@ import { store } from '@/store/index'
 import { plus, round, times } from 'number-precision'
 import { ImgCellType, ImgFaceType } from '@/util/image'
 import { SCALE_ARRAY, SPEED_ARRAY } from '@/game/constants'
+import { i18n } from '@/plugins/i18n'
 
 /**
  * Mutations 函数定义，使用类型推断的方式，可以快速找到函数的所有 Usages
@@ -32,8 +33,14 @@ export const mutations = {
   },
   /** 设置页面缩放值 */
   setScale: (state: State, scale: number): void => {
-    if (SCALE_ARRAY.indexOf(scale) !== -1) {
+    if (SCALE_ARRAY.includes(scale)) {
       state.scale = scale
+    }
+  },
+  /** 设置当前语言 */
+  setLocale: (state: State, locale: string): void => {
+    if (i18n.global.availableLocales.includes(locale)) {
+      state.locale = locale
     }
   },
   /** 设置笑脸状态，TODO 完善笑脸状态设置逻辑 */

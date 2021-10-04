@@ -43,7 +43,7 @@ function getDefaultLocale () {
 /**
  * 配置 Vue I18n，开发工具参见：https://kazupon.github.io/vue-i18n/guide/tooling.html
  */
-const i18n = createI18n({
+export const i18n = createI18n({
   // 基础配置，https://vue-i18n.intlify.dev/ja/guide/advanced/composition.html#basic-usage
   fallbackLocale: 'en',
   locale: getDefaultLocale(),

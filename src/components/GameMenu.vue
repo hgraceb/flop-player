@@ -75,9 +75,7 @@ export default defineComponent({
 
     // 切换语言
     const changeLocales = (item: string) => {
-      if (availableLocales.includes(item)) {
-        locale.value = item
-      }
+      store.commit('setLocale', item)
     }
 
     // 用户设置的缩放比例
@@ -86,9 +84,7 @@ export default defineComponent({
     const availableScales = SCALE_ARRAY
     // 设置缩放比例
     const changeScale = (scale: number) => {
-      if (SCALE_ARRAY.includes(scale)) {
-        store.commit('setScale', scale)
-      }
+      store.commit('setScale', scale)
     }
 
     return { width, selected, locale, availableLocales, changeLocales, scale, availableScales, changeScale }
