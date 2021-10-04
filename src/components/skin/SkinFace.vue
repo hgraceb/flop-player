@@ -3,9 +3,6 @@
     :name="faceStatus"
     :translate-x="translateX"
     :translate-y="translateY"
-    @mousedown="handleMouseDown"
-    @mouseleave="handleMouseUp"
-    @mouseup="handleMouseUp"
   />
 </template>
 
@@ -26,11 +23,7 @@ export default defineComponent({
     const translateY = (GAME_TOP_UPPER.height + 4) * SVG_SCALE
     // 笑脸状态
     const faceStatus = computed(() => store.state.faceStatus)
-    // 处理鼠标点击事件
-    const handleMouseDown = () => store.commit('setFaceStatus', 'face-press-normal')
-    // 处理鼠标松开事件
-    const handleMouseUp = () => store.commit('setFaceStatus', 'face-normal')
-    return { translateX, translateY, faceStatus, handleMouseDown, handleMouseUp }
+    return { translateX, translateY, faceStatus }
   }
 })
 </script>
