@@ -52,7 +52,11 @@ const removeSquare = (points: SVGPointList) => {
 }
 // 处理对应折线图的点坐标列表
 const handleLinePoints = (polygonElementRef: Ref<SVGPolylineElement | undefined>, targetPoints: { x: number; y: number }[]) => {
-  // 选择直接操作 SVGPointList 是因为路径点位数据很多，按照字符串形式进行处理的话容易造成页面卡顿
+  // 选择直接操作 SVGPointList 是因为路径点位数据很多，按照字符串形式进行处理的话容易造成页面卡顿，就算自己维护一个和 SVGPointList 类似的数组，也会有页面卡顿的问题
+  // 比如将 ['M 0 0', 'L 16 16'] 作为参数传递给 path 标签画一条线，最后也是将字符串数组转成了字符串，当点位越来越多，拖动进度条进行测试可以感受到明显的卡顿
+  // polyline 和 polygon 标签对外提供了 SVGPointList 及其对应的属性还有方法，应该是内部专门做了优化，即使点位比较多，拖动进度条的时候也还是比较流畅 ヽ(✿ﾟ▽ﾟ)ノ
+  // 测试时候最主要的依据是播放高级录像时拖动进度条是否会有明显卡顿现象，Chrome 的 Performance 面板感觉有比较大的偶然性，最好是简单看下不同内容的耗时占比就行
+  // 没有特殊需求的话就尽量使用 polyline 和 polygon 标签，需要使用 path 的时候可以先调研一下其他框架是如何处理的，标签过多或者同个标签内容过多都容易造成卡顿
   const points = polygonElementRef.value?.points
   // 如果鼠标路径对应的元素没有被渲染，则不进行后续操作
   if (!points) return
