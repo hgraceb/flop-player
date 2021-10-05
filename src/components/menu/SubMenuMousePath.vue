@@ -8,7 +8,23 @@
       <a-menu-item @click="item.click">
         <CheckOutlined v-if="item.checked" />
         <a-icon-empty v-else />
-        {{ item.title }}
+        <div style="display: inline-block">
+          <!-- 宽度设为 100px 是为了兼容英语文本的显示 -->
+          <div style="display: flex;align-items: center;width: 100px;margin-left: 4px">
+            <!-- 菜单标题 -->
+            {{ item.title }}
+            <!-- 颜色提示 -->
+            <base-svg v-if="item.color" :height="100" :width="100" style="margin-left: auto;">
+              <!-- 非透明认为是鼠标点击事件 -->
+              <polygon v-if="item.color !== 'transparent'" :style="`fill: ${item.color};stroke: none;`" points="0,0 0,100 100,100 100,0" />
+              <!-- 透明则认为是鼠标移动路径 -->
+              <template v-else>
+                <polygon points="0,0 0,100 100,100 100,0" style="fill: rgba(0, 0, 0, .25);stroke: none;" />
+                <polyline points="0,50 100,50" style="fill: none;stroke: white;stroke-width: 10" />
+              </template>
+            </base-svg>
+          </div>
+        </div>
       </a-menu-item>
       <a-menu-divider v-if="item.divider" />
     </template>
@@ -21,13 +37,14 @@ import { useI18n } from 'vue-i18n'
 import { store } from '@/store'
 import { CheckOutlined, StockOutlined } from '@ant-design/icons-vue'
 import AIconEmpty from '@/components/common/AIconEmpty.vue'
+import BaseSvg from '@/components/BaseSvg.vue'
 
 export default defineComponent({
-  components: { AIconEmpty, CheckOutlined, StockOutlined },
+  components: { BaseSvg, AIconEmpty, CheckOutlined, StockOutlined },
   setup () {
     const { t } = useI18n()
     const menuMousePath = computed(() => {
-      const result: { title: string, checked: boolean, divider?: boolean, click: () => void }[] = [
+      const result: { title: string, checked: boolean, divider?: boolean, color?: string, click: () => void }[] = [
         {
           title: t('menu.options.mousePath.title'),
           checked: store.state.isMousePath,
@@ -37,21 +54,25 @@ export default defineComponent({
         {
           title: t('menu.options.mousePath.move'),
           checked: store.state.isMousePathMove,
+          color: 'transparent',
           click: () => store.commit('setMousePathMove', !store.state.isMousePathMove)
         },
         {
           title: t('menu.options.mousePath.left'),
           checked: store.state.isMousePathLeft,
+          color: '#00ffff',
           click: () => store.commit('setMousePathLeft', !store.state.isMousePathLeft)
         },
         {
           title: t('menu.options.mousePath.right'),
           checked: store.state.isMousePathRight,
+          color: '#00ff00',
           click: () => store.commit('setMousePathRight', !store.state.isMousePathRight)
         },
         {
           title: t('menu.options.mousePath.double'),
           checked: store.state.isMousePathDouble,
+          color: '#ff00ff',
           click: () => store.commit('setMousePathDouble', !store.state.isMousePathDouble)
         }
       ]
