@@ -96,6 +96,8 @@ export default defineComponent({
 .game-menu {
   /* 设置游戏菜单行高 */
   line-height: 24px;
+  /* SVG 动画效果不好，为了统一 SVG 和游戏菜单的动画效果，去除游戏菜单宽度改变时的动画效果，原始值：background 0.3s ease 0s, width 0.3s cubic-bezier(0.2, 0, 0, 1) 0s */
+  transition: background 0.3s ease 0s;
 }
 
 .game-menu ::v-deep(li) {

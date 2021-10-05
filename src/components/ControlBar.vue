@@ -32,7 +32,16 @@ export default defineComponent({
     const replayVideo = () => store.commit('replayVideo')
     // 切换录像播放状态
     const toggleVideoPlay = () => {
-      return store.state.gameEventIndex >= store.state.gameEvents.length ? store.commit('replayVideo') : store.commit('pauseVideo')
+      if (store.state.gameEventIndex >= store.state.gameEvents.length) {
+        // 重新播放录像
+        store.commit('replayVideo')
+      } else if (store.state.gameVideoPaused) {
+        // 继续播放录像
+        store.commit('playVideo')
+      } else {
+        // 暂停录像播放
+        store.commit('setVideoPaused', true)
+      }
     }
 
     // 重放录像按钮的标题

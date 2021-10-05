@@ -75,6 +75,10 @@ export const mutations = {
       }
     }
   },
+  /** 设置游戏录像是否暂停播放，cancelAnimationFrame 方法没有效果，采用标识位的方式进行暂停处理，TODO 完善游戏录像暂停逻辑，进行函数节流处理 */
+  setVideoPaused: (state: State, videoPaused: boolean): void => {
+    state.gameVideoPaused = videoPaused
+  },
   /** 初始化游戏 */
   initGame: (state: State, {
     width,
@@ -264,14 +268,6 @@ export const mutations = {
       store.commit('setGameStartTime', timestamp)
       window.requestAnimationFrame(performEvent)
     })
-  },
-  /** 切换游戏录像播放暂停状态，cancelAnimationFrame 方法没有效果，采用标识位的方式进行暂停处理，TODO 完善游戏录像暂停逻辑，进行函数节流处理 */
-  pauseVideo: (state: State): void => {
-    if (state.gameVideoPaused) {
-      store.commit('playVideo')
-    } else {
-      state.gameVideoPaused = true
-    }
   },
   /** 检查录像是否播放结束，TODO 处理录像意外结尾的情况，即没有雷被打开并且时间没有超时 */
   checkVideoFinished: (state: State): void => {
