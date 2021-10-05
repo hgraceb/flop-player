@@ -9,8 +9,7 @@
         <CheckOutlined v-if="item.checked" />
         <a-icon-empty v-else />
         <div style="display: inline-block">
-          <!-- 宽度设为 100px 是为了兼容英语文本的显示 -->
-          <div style="display: flex;align-items: center;width: 100px;margin-left: 4px">
+          <div :style="`display: flex;align-items: center;width: ${maxTitleWidth}px;margin-left: 4px`">
             <!-- 菜单标题 -->
             {{ item.title }}
             <!-- 颜色提示 -->
@@ -38,11 +37,13 @@ import { store } from '@/store'
 import { CheckOutlined, StockOutlined } from '@ant-design/icons-vue'
 import AIconEmpty from '@/components/common/AIconEmpty.vue'
 import BaseSvg from '@/components/BaseSvg.vue'
+import { getStrWidth } from '@/util/common'
 
 export default defineComponent({
   components: { BaseSvg, AIconEmpty, CheckOutlined, StockOutlined },
   setup () {
     const { t } = useI18n()
+    // 鼠标路径菜单信息
     const menuMousePath = computed(() => {
       const result: { title: string, checked: boolean, divider?: boolean, color?: string, click: () => void }[] = [
         {
@@ -78,8 +79,25 @@ export default defineComponent({
       ]
       return result
     })
+    // 字号和字体
+    const font = computed(() => {
+      // 直接获取 body 的字号和字体，有问题再说吧 (*￣3￣)╭
+      const computedStyle = window.getComputedStyle(document.body, null)
+      return `${computedStyle.getPropertyValue('font-size')} ${computedStyle.getPropertyValue('font-family')}`
+    })
+    // 最大标题宽度，用于右侧元素对齐
+    const maxTitleWidth = computed(() => {
+      let width = 0
+      for (const menu of menuMousePath.value) {
+        const titleWidth = getStrWidth(menu.title, font.value)
+        // 更新标题最大宽度
+        width = titleWidth && titleWidth > width ? titleWidth : width
+      }
+      // 20 的宽度是留给右侧元素的，如果宽度计算失败则返回 -1，不对最大宽度进行设置
+      return width > 0 ? width + 20 : -1
+    })
 
-    return { menuMousePath }
+    return { menuMousePath, maxTitleWidth }
   }
 })
 </script>
