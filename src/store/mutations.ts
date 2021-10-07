@@ -84,18 +84,18 @@ export const mutations = {
     width,
     height,
     mines,
-    player,
+    playerArray,
     bbbv,
     openings,
     islands,
     gZiNi,
     hZiNi
-  }: { width: number, height: number, mines: number, player: string, bbbv: number, openings: number, islands: number, gZiNi: number, hZiNi: number }): void => {
+  }: { width: number, height: number, mines: number, playerArray: Uint8Array, bbbv: number, openings: number, islands: number, gZiNi: number, hZiNi: number }): void => {
     state.width = width
     state.height = height
     state.mines = mines
     // TODO 玩家名称字符串不同编码格式解析
-    state.player = player
+    state.playerArray = playerArray
     state.bbbv = bbbv
     state.openings = openings
     state.islands = islands
@@ -110,7 +110,7 @@ export const mutations = {
     state.gameEvents.push(event)
   },
   /** 接收并处理录像数据 */
-  receiveVideo: (state: State, payload: string): void => {
+  receiveVideo: (state: State, payload: ArrayBuffer): void => {
     try {
       parse(state, payload)
       store.commit('replayVideo')

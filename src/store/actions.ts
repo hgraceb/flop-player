@@ -3,7 +3,7 @@ import * as api from '../api'
 
 export const actions = {
   fetchVideo: ({ commit }: { commit: Commit }, url: string): void => {
-    api.fetchVideo(url, (messages: string) => {
+    api.fetchVideo(url, (messages: ArrayBuffer) => {
       // 暂停录像播放
       commit('setVideoPaused', true)
       // 接收并处理录像数据

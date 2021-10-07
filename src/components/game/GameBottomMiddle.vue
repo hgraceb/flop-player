@@ -31,14 +31,14 @@ export default defineComponent({
     })
     // 玩家名称
     const player = computed(() => {
-      const player = store.state.player
+      const player = new TextDecoder('windows-1252').decode(store.state.playerArray)
       // 没有玩家姓名信息则默认显示 Anonymous
       return player?.trim().length > 0 ? player : 'Anonymous'
     })
     // 玩家名称的文本不透明度
     const opacityPlayer = computed(() => {
       // 没有玩家姓名信息则置灰显示
-      return store.state.player?.trim().length > 0 ? 1 : 0.25
+      return new TextDecoder('windows-1252').decode(store.state.playerArray)?.trim().length > 0 ? 1 : 0.25
     })
     return { translateY, centerTranslateX, rightTranslateX, player, opacityPlayer }
   }

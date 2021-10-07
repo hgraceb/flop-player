@@ -7,8 +7,8 @@ export type State = typeof storageDefault & {
   height: number
   // 游戏雷数
   mines: number
-  // 玩家名称
-  player: string
+  // 玩家名称原始数据
+  playerArray: Uint8Array
   // BBBV
   bbbv: number
   openings: number
@@ -59,7 +59,7 @@ export const state: State = {
   width: 8,
   height: 8,
   mines: 10,
-  player: '',
+  playerArray: new Uint8Array(),
   bbbv: 0,
   openings: 0,
   islands: 0,

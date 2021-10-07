@@ -100,7 +100,7 @@ let elmar: number, nono: number, superClick: number, superFlag: number
 // 自定义参数
 let input: string | null
 
-function init (data: string) {
+function init (data: ArrayBuffer) {
   board = []
 
   w = h = m = size = 0
@@ -126,7 +126,7 @@ function init (data: string) {
   qm = false
   elmar = nono = superClick = superFlag = 0
 
-  input = data
+  input = new TextDecoder().decode(new Uint8Array(data))
 }
 
 // TODO 测试函数是否可用
@@ -192,6 +192,35 @@ function getStats () {
     path: distance,
     flags: flags
   }
+}
+
+/**
+ * 获取玩家姓名原始数据，可以切换不同字符编码进行解析
+ *
+ * @param uint8Array 包含玩家名称的原始数据
+ */
+function getPlayerArray (uint8Array: Uint8Array): Uint8Array {
+  const playerStr = 'Player:'
+  const playerArr = new TextEncoder().encode(playerStr)
+  const textDecoder = new TextDecoder()
+  let start = 0
+  let end = 0
+
+  for (let i = 0; i < uint8Array.length; i++) {
+    // 按行读取，如果当前字符不是换行符则继续读取下一个字符
+    if (uint8Array[i] !== '\n'.charCodeAt(0)) continue
+    // 先判断首字符是否相等，再判断开头的字符串是否相等，虽然实际上影响不大，但蚊子肉也是肉嘛 ✧(๑•̀ㅂ•́)و✧
+    if ((playerStr.toLowerCase().charCodeAt(0) === uint8Array[start] || playerStr.toUpperCase().charCodeAt(0) === uint8Array[start]) &&
+      textDecoder.decode(playerArr).toLowerCase() === textDecoder.decode(uint8Array.slice(start, start + playerArr.length)).toLowerCase()) {
+      start += playerArr.length
+      end = i
+      break
+    } else {
+      // 将 start 指向下一行的行首，i 指向的是换行符的位置
+      start = i + 1
+    }
+  }
+  return uint8Array.slice(start, end)
 }
 
 // ==============================================================================================
@@ -1230,7 +1259,7 @@ function middleClick (x: number, y: number, precX: number, precY: number): void 
   })
 }
 
-export function parse (state: State, data: string): void {
+export function parse (state: State, data: ArrayBuffer): void {
   // 打印原始录像数据
   if (store.state.enableParserLog) {
     console.log(input)
@@ -1248,11 +1277,11 @@ export function parse (state: State, data: string): void {
   let ww = 8
   let hh = 8
   let mm = 10
-  let player = ''
   let mCl = true
   let noMode = 1
   const squareSize = 16
   let claimsWin = 0
+  let playerArray = new Uint8Array()
 
   // Clear some arrays related to board[]
   for (i = 0; i < MAXOPS; ++i) sizeOps[i] = 0
@@ -1273,7 +1302,6 @@ export function parse (state: State, data: string): void {
     else if (opteq(event, 'width')) w = atoi(event.substring(6))
     else if (opteq(event, 'height')) h = atoi(event.substring(7))
     else if (opteq(event, 'mines')) m = atoi(event.substring(6))
-    else if (opteq(event, 'player')) player = event.substring(7)
     else if (opteq(event, 'marks')) qm = valeq(event.substring(6), 'on\n')
     else if (opteq(event, 'level')) {
       const e = event.substring(6)
@@ -1294,6 +1322,9 @@ export function parse (state: State, data: string): void {
     } else if (opteq(event, 'Mode')) {
       noMode = 0
       mCl = valeq(event.substring(5), 'Classic')
+    } else if (opteq(event, 'player')) {
+      // 检测到有玩家姓名数据才进行获取
+      playerArray = getPlayerArray(new Uint8Array(data))
     }
     // Write event to the output file (or screen)
     fputs(event)
@@ -1325,7 +1356,7 @@ export function parse (state: State, data: string): void {
   if (!noZini) calcZini()
 
   // 初始化游戏数据
-  store.commit('initGame', { width: w, height: h, mines: m, player: player, bbbv: bbbv, openings: openings, islands: islands, gZiNi: gzini, hZiNi: hzini })
+  store.commit('initGame', { width: w, height: h, mines: m, playerArray: playerArray, bbbv: bbbv, openings: openings, islands: islands, gZiNi: gzini, hZiNi: hzini })
 
   // Initialise variables with default values
   solvedBbbv = distance = leftClicks = rightClicks = doubleClicks = wastedLeftClicks = wastedRightClicks = wastedDoubleClicks =

@@ -1,4 +1,4 @@
-export const data = `RawVF_Version: Rev6
+RawVF_Version: Rev6
 Program: Minesweeper Arbiter
 Version: 0.52.3
 Player: Flop
@@ -5580,4 +5580,3 @@ Events:
 20.120 mv 14 16 (219 254)
 20.120 mv 14 16 (219 255)
 20.160 lr 14 16 (219 255)
-`
