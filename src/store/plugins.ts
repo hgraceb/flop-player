@@ -34,7 +34,7 @@ export const storage = useStorage(STORAGE_KEY, storageDefault)
 /**
  * 本地缓存插件，响应式更新本地缓存
  */
-const localStoragePlugin = (store: VuexStore) => {
+const localStoragePlugin = (store: VuexStore): void => {
   store.watch(state => state.scale, value => {
     storage.value.scale = value
   })

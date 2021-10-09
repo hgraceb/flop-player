@@ -31,7 +31,7 @@ export default defineComponent({
     const scale = computed(() => store.state.scale)
 
     onMounted(() => {
-      // TODO 删除测试代码和对应的文件（最后不参与打包或者在 README 文件中说明）
+      // TODO 删除测试代码和对应的文件（最后不参与打包或者在 README 文件中说明需要手动删除对应的测试录像文件）
       store.dispatch('fetchVideo', 'videos/arbiter_int.rawvf')
     })
 
