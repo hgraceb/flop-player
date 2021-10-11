@@ -19,3 +19,5 @@ controlBar:
   play: Play
   pause: Pause
   replay: Replay
+  displayMousePath: Display mouse path
+  hideMousePath: Hide mouse path

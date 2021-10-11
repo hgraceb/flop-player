@@ -19,3 +19,5 @@ controlBar:
   play: 播放
   pause: 暫停
   replay: 重放
+  displayMousePath: 顯示鼠標軌跡
+  hideMousePath: 隱藏鼠標軌跡

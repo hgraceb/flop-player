@@ -2,7 +2,7 @@
   <div class="container-control-bar">
     <a-card size="small">
       <a-space :size="4">
-        <a-button :title="titleReplay" size="small" @click="replayVideo">
+        <a-button :title="$t('controlBar.replay')" size="small" @click="replayVideo">
           <template #icon>
             <ReloadOutlined />
           </template>
@@ -11,6 +11,12 @@
           <template #icon>
             <CaretRightOutlined v-if="isVideoPaused" />
             <PauseOutlined v-else />
+          </template>
+        </a-button>
+        <a-button :title="`${isMousePath ? $t('controlBar.hideMousePath') : $t('controlBar.displayMousePath')}`" size="small" @click="toggleMousePath">
+          <template #icon>
+            <EyeInvisibleOutlined v-if="isMousePath" />
+            <EyeOutlined v-else />
           </template>
         </a-button>
         <a-slider v-model:value="speedSlider" :max="SPEED_ARRAY.length - 1" :tooltipVisible="false" style="width: 80px" />
@@ -29,14 +35,18 @@ import { SPEED_ARRAY } from '@/game/constants'
 import { useI18n } from 'vue-i18n'
 import { divide, round, times } from 'number-precision'
 import { useThrottleFn } from '@vueuse/core'
-import { CaretRightOutlined, PauseOutlined, ReloadOutlined } from '@ant-design/icons-vue'
+import { CaretRightOutlined, EyeInvisibleOutlined, EyeOutlined, PauseOutlined, ReloadOutlined } from '@ant-design/icons-vue'
 
 export default defineComponent({
-  components: { CaretRightOutlined, PauseOutlined, ReloadOutlined },
+  components: { CaretRightOutlined, PauseOutlined, ReloadOutlined, EyeOutlined, EyeInvisibleOutlined },
   setup () {
     const { t } = useI18n()
     // 重放录像
     const replayVideo = () => store.commit('replayVideo')
+    // 录像是否处于暂停状态（录像播放结束也认为处于暂停状态）
+    const isVideoPaused = computed(() => {
+      return store.state.gameVideoPaused || store.state.gameEventIndex >= store.state.gameEvents.length
+    })
     // 切换录像播放状态
     const toggleVideoPlay = () => {
       if (store.state.gameEventIndex >= store.state.gameEvents.length) {
@@ -51,12 +61,12 @@ export default defineComponent({
       }
     }
 
-    // 重放录像按钮的标题
-    const titleReplay = computed(() => t('controlBar.replay'))
-    // 录像是否处于暂停状态（录像播放结束也认为处于暂停状态）
-    const isVideoPaused = computed(() => {
-      return store.state.gameVideoPaused || store.state.gameEventIndex >= store.state.gameEvents.length
-    })
+    // 鼠标轨迹图是否处于显示状态
+    const isMousePath = computed(() => store.state.isMousePath)
+    // 切换鼠标轨迹图显示状态
+    const toggleMousePath = () => {
+      store.commit('setMousePath', !store.state.isMousePath)
+    }
 
     // 当前录像实际速度，类型为 number
     const speedSlider = computed({
@@ -105,7 +115,7 @@ export default defineComponent({
       }
     })
 
-    return { replayVideo, toggleVideoPlay, titleReplay, isVideoPaused, speedSlider, speedValue, SPEED_ARRAY, timeSlider, timeMax, timeValue }
+    return { replayVideo, isVideoPaused, toggleVideoPlay, isMousePath, toggleMousePath, speedSlider, speedValue, SPEED_ARRAY, timeMax, timeSlider, timeValue }
   }
 })
 </script>

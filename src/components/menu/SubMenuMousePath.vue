@@ -2,7 +2,7 @@
   <!-- 鼠标轨迹，可以在 Menu 组件中结合 multiple 属性和 openChange 回调控制是否可以多选，但是会有样式显示问题，暂时不进行处理 -->
   <a-sub-menu :title="$t('menu.options.mousePath.title')">
     <template #icon>
-      <StockOutlined />
+      <EyeOutlined />
     </template>
     <template v-for="(item, index) in menuMousePath" :key="index">
       <a-menu-item @click="item.click">
@@ -34,13 +34,13 @@
 import { computed, defineComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { store } from '@/store'
-import { CheckOutlined, StockOutlined } from '@ant-design/icons-vue'
+import { CheckOutlined, EyeOutlined } from '@ant-design/icons-vue'
 import AIconEmpty from '@/components/common/AIconEmpty.vue'
 import BaseSvg from '@/components/BaseSvg.vue'
 import { getStrWidth } from '@/util/common'
 
 export default defineComponent({
-  components: { BaseSvg, AIconEmpty, CheckOutlined, StockOutlined },
+  components: { BaseSvg, AIconEmpty, CheckOutlined, EyeOutlined },
   setup () {
     const { t } = useI18n()
     // 鼠标路径菜单信息
