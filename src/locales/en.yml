@@ -21,3 +21,4 @@ controlBar:
   replay: Replay
   displayMousePath: Display mouse path
   hideMousePath: Hide mouse path
+  reset: Reset

@@ -20,7 +20,7 @@
           </template>
         </a-button>
         <a-slider v-model:value="speedSlider" :max="SPEED_ARRAY.length - 1" :tooltipVisible="false" style="width: 80px" />
-        <a-button class="text-btn" type="text">{{ speedValue }}x</a-button>
+        <a-button :title="$t('controlBar.reset')" class="text-btn" size="small" type="text" @click="resetSpeed">{{ speedValue }}x</a-button>
         <a-slider v-model:value="timeSlider" :max="timeMax" :tooltipVisible="false" style="width: 240px" />
         <a-input-number v-model:value="timeValue" :precision="3" size="small" />
       </a-space>
@@ -81,6 +81,10 @@ export default defineComponent({
     const speedValue = computed(() => {
       return round(SPEED_ARRAY[speedSlider.value], 2).toFixed(2).substring(0, 4)
     })
+    // 重置录像播放速度
+    const resetSpeed = () => {
+      store.commit('setGameSpeed', 1.00)
+    }
 
     // 游戏时间进度条的最大值，以最后一个游戏事件的时间作为标准，0.001 秒为一个单位长度
     const timeMax = computed(() => {
@@ -115,7 +119,7 @@ export default defineComponent({
       }
     })
 
-    return { replayVideo, isVideoPaused, toggleVideoPlay, isMousePath, toggleMousePath, speedSlider, speedValue, SPEED_ARRAY, timeMax, timeSlider, timeValue }
+    return { replayVideo, isVideoPaused, toggleVideoPlay, isMousePath, toggleMousePath, speedSlider, speedValue, resetSpeed, SPEED_ARRAY, timeMax, timeSlider, timeValue }
   }
 })
 </script>

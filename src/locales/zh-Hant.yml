@@ -21,3 +21,4 @@ controlBar:
   replay: 重放
   displayMousePath: 顯示鼠標軌跡
   hideMousePath: 隱藏鼠標軌跡
+  reset: 重置
