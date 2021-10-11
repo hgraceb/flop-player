@@ -1,19 +1,24 @@
 <template>
-  <div>
-    <a-space>
-      <a-button :title="titleReplay" size="small" @click="replayVideo">{{ titleReplay }}</a-button>
-      <a-button :title="titleTogglePlay" size="small" @click="toggleVideoPlay">{{ titleTogglePlay }}</a-button>
-    </a-space>
-    <br />
-    <a-space>
-      <a-slider v-model:value="speedSlider" :max="SPEED_ARRAY.length - 1" :tooltipVisible="false" class="slider" />
-      <a-button class="btn-text" type="text">{{ speedValue }}x</a-button>
-    </a-space>
-    <br />
-    <a-space>
-      <a-slider v-model:value="timeSlider" :max="timeMax" :tooltipVisible="false" class="slider" />
-      <a-input-number v-model:value="timeValue" :precision="3" size="small" />
-    </a-space>
+  <div class="container-control-bar">
+    <a-card size="small">
+      <a-space :size="4">
+        <a-button :title="titleReplay" size="small" @click="replayVideo">
+          <template #icon>
+            <ReloadOutlined />
+          </template>
+        </a-button>
+        <a-button :title="`${isVideoPaused ? $t('controlBar.play') : $t('controlBar.pause')}`" size="small" @click="toggleVideoPlay">
+          <template #icon>
+            <CaretRightOutlined v-if="isVideoPaused" />
+            <PauseOutlined v-else />
+          </template>
+        </a-button>
+        <a-slider v-model:value="speedSlider" :max="SPEED_ARRAY.length - 1" :tooltipVisible="false" style="width: 80px" />
+        <a-button class="text-btn" type="text">{{ speedValue }}x</a-button>
+        <a-slider v-model:value="timeSlider" :max="timeMax" :tooltipVisible="false" style="width: 240px" />
+        <a-input-number v-model:value="timeValue" :precision="3" size="small" />
+      </a-space>
+    </a-card>
   </div>
 </template>
 
@@ -24,8 +29,10 @@ import { SPEED_ARRAY } from '@/game/constants'
 import { useI18n } from 'vue-i18n'
 import { divide, round, times } from 'number-precision'
 import { useThrottleFn } from '@vueuse/core'
+import { CaretRightOutlined, PauseOutlined, ReloadOutlined } from '@ant-design/icons-vue'
 
 export default defineComponent({
+  components: { CaretRightOutlined, PauseOutlined, ReloadOutlined },
   setup () {
     const { t } = useI18n()
     // 重放录像
@@ -46,12 +53,9 @@ export default defineComponent({
 
     // 重放录像按钮的标题
     const titleReplay = computed(() => t('controlBar.replay'))
-    // 切换录像播放状态按钮的标题
-    const titleTogglePlay = computed(() => {
-      if (store.state.gameEventIndex >= store.state.gameEvents.length) {
-        return t('controlBar.replay')
-      }
-      return store.state.gameVideoPaused ? t('controlBar.play') : t('controlBar.pause')
+    // 录像是否处于暂停状态（录像播放结束也认为处于暂停状态）
+    const isVideoPaused = computed(() => {
+      return store.state.gameVideoPaused || store.state.gameEventIndex >= store.state.gameEvents.length
     })
 
     // 当前录像实际速度，类型为 number
@@ -101,17 +105,23 @@ export default defineComponent({
       }
     })
 
-    return { replayVideo, toggleVideoPlay, titleReplay, titleTogglePlay, speedSlider, speedValue, SPEED_ARRAY, timeSlider, timeMax, timeValue }
+    return { replayVideo, toggleVideoPlay, titleReplay, isVideoPaused, speedSlider, speedValue, SPEED_ARRAY, timeSlider, timeMax, timeValue }
   }
 })
 </script>
 
 <style scoped>
-.slider {
-  width: 300px;
+.container-control-bar {
+  /* 宽度根据内容自适应 */
+  width: fit-content;
 }
 
-.btn-text {
+.container-control-bar ::v-deep(.ant-card-body) {
+  /* 覆盖卡片的内边距设置，让卡片四周的空白区域保持一致 */
+  padding: 0 7px;
+}
+
+.text-btn {
   padding-left: 0;
   padding-right: 0;
 }
