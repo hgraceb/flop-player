@@ -63,5 +63,7 @@ export default defineComponent({
 .svg-game {
   /* 元素及其子元素的文本不可选中 */
   user-select: none;
+  /* 默认的 display 属性值为 inline，会导致底部和其他元素之间有间距 */
+  display: block;
 }
 </style>
