@@ -1,4 +1,4 @@
-import { GameEvent } from '@/game'
+import { Cell, GameEvent } from '@/game'
 import { ImgCellType, ImgFaceType } from '@/util/image'
 import { storage, storageDefault } from '@/store/plugins'
 
@@ -25,8 +25,10 @@ export type State = typeof storageDefault & {
   gameEvents: GameEvent[],
   // 游戏事件索引
   gameEventIndex: number
-  // 游戏棋盘
-  gameBoard: ImgCellType[],
+  // 游戏方块信息棋盘
+  gameCellBoard: Cell[],
+  // 游戏图片信息棋盘
+  gameImgBoard: ImgCellType[],
   // 游戏开始的时间（毫秒）, 值为负数时表示还未开始
   gameStartTime: number,
   // 游戏经过的时间（毫秒）
@@ -70,7 +72,8 @@ export const state: State = {
   gameLevel: 1,
   gameEvents: [],
   gameEventIndex: 0,
-  gameBoard: [],
+  gameCellBoard: [],
+  gameImgBoard: [],
   gameStartTime: 0.0,
   gameElapsedTime: 0.0,
   gameVideoPaused: true,

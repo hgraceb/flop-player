@@ -1356,7 +1356,7 @@ export function parse (state: State, data: ArrayBuffer): void {
   if (!noZini) calcZini()
 
   // 初始化游戏数据
-  store.commit('initGame', { width: w, height: h, mines: m, playerArray: playerArray, bbbv: bbbv, openings: openings, islands: islands, gZiNi: gzini, hZiNi: hzini })
+  store.commit('initGame', { width: w, height: h, mines: m, playerArray: playerArray, bbbv: bbbv, openings: openings, islands: islands, gZiNi: gzini, hZiNi: hzini, board: board })
 
   // Initialise variables with default values
   solvedBbbv = distance = leftClicks = rightClicks = doubleClicks = wastedLeftClicks = wastedRightClicks = wastedDoubleClicks =

@@ -39,10 +39,10 @@ export default defineComponent({
     // 根据横坐标和纵坐标获取方块的图片名称
     const getCellImg = (width: number, height: number): ImgCellType => {
       // 如果游戏棋盘信息为空，则返回默认值
-      if (store.state.gameBoard.length === 0) {
+      if (store.state.gameImgBoard.length === 0) {
         return 'cell-normal'
       }
-      return store.state.gameBoard[width + height * gameWidth.value]
+      return store.state.gameImgBoard[width + height * gameWidth.value]
     }
     // 根据横坐标获取 X 轴坐标偏移量
     const getTranslateX = (width: number): number => {

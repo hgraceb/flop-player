@@ -1,6 +1,6 @@
 import { State } from './state'
 import { parse } from '@/game/parser'
-import { GameEvent } from '@/game'
+import { Cell, GameEvent } from '@/game'
 import { store } from '@/store/index'
 import { plus, round, times } from 'number-precision'
 import { ImgCellType, ImgFaceType } from '@/util/image'
@@ -89,8 +89,9 @@ export const mutations = {
     openings,
     islands,
     gZiNi,
-    hZiNi
-  }: { width: number, height: number, mines: number, playerArray: Uint8Array, bbbv: number, openings: number, islands: number, gZiNi: number, hZiNi: number }): void => {
+    hZiNi,
+    board
+  }: { width: number, height: number, mines: number, playerArray: Uint8Array, bbbv: number, openings: number, islands: number, gZiNi: number, hZiNi: number, board: Cell[] }): void => {
     state.width = width
     state.height = height
     state.mines = mines
@@ -102,6 +103,7 @@ export const mutations = {
     state.gZiNi = gZiNi
     state.hZiNi = hZiNi
     state.gameEvents = []
+    state.gameCellBoard = board
   },
   /** 添加游戏事件 */
   addEvent: (state: State, event: GameEvent): void => {
@@ -128,7 +130,7 @@ export const mutations = {
     // 根据坐标获取索引
     const index = event.x + event.y * state.width
     // 根据快照还原图片状态
-    state.gameBoard[index] = event.snapshot!.cellType
+    state.gameImgBoard[index] = event.snapshot!.cellType
     // 根据快照还原笑脸状态
     state.faceStatus = event.snapshot!.faceStatus
     switch (event.name) {
@@ -164,31 +166,31 @@ export const mutations = {
     const index = event.x + event.y * state.width
     // 在更新前保存快照
     event.snapshot = {
-      cellType: state.gameBoard[index],
+      cellType: state.gameImgBoard[index],
       faceStatus: state.faceStatus
     }
     switch (event.name) {
       case 'Flag':
-        state.gameBoard[index] = 'cell-flag'
+        state.gameImgBoard[index] = 'cell-flag'
         break
       case 'QuestionMark':
-        state.gameBoard[index] = 'cell-question'
+        state.gameImgBoard[index] = 'cell-question'
         break
       case 'RemoveQuestionMark':
-        state.gameBoard[index] = 'cell-normal'
+        state.gameImgBoard[index] = 'cell-normal'
         break
       case 'RemoveFlag':
-        state.gameBoard[index] = 'cell-normal'
+        state.gameImgBoard[index] = 'cell-normal'
         break
       case 'Press':
-        state.gameBoard[index] = 'cell-press'
+        state.gameImgBoard[index] = 'cell-press'
         break
       case 'Release':
-        state.gameBoard[index] = 'cell-normal'
+        state.gameImgBoard[index] = 'cell-normal'
         break
       case 'Open':
         // event.number === -1 不能作为游戏结束的标识，因为可能有多个雷被打开的情况
-        state.gameBoard[index] = event.number !== -1 ? ('cell-number-' + event.number) as ImgCellType : 'cell-mine-bomb'
+        state.gameImgBoard[index] = event.number !== -1 ? ('cell-number-' + event.number) as ImgCellType : 'cell-mine-bomb'
         break
       case 'ToggleQuestionMarkSetting':
         break
@@ -240,7 +242,7 @@ export const mutations = {
   /** 重新播放游戏录像，TODO 进行函数节流处理 */
   replayVideo: (state: State): void => {
     // 重置变量
-    state.gameBoard = Array.from(Array(state.width * state.height), () => 'cell-normal')
+    state.gameImgBoard = Array.from(Array(state.width * state.height), () => 'cell-normal')
     state.gameElapsedTime = 0.0
     state.gameEventIndex = 0
     state.faceStatus = 'face-normal'
