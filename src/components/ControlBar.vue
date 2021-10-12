@@ -32,7 +32,6 @@
 import { computed, defineComponent } from 'vue'
 import { store } from '@/store'
 import { SPEED_ARRAY } from '@/game/constants'
-import { useI18n } from 'vue-i18n'
 import { divide, round, times } from 'number-precision'
 import { useThrottleFn } from '@vueuse/core'
 import { CaretRightOutlined, EyeInvisibleOutlined, EyeOutlined, PauseOutlined, ReloadOutlined } from '@ant-design/icons-vue'
@@ -40,7 +39,6 @@ import { CaretRightOutlined, EyeInvisibleOutlined, EyeOutlined, PauseOutlined, R
 export default defineComponent({
   components: { CaretRightOutlined, PauseOutlined, ReloadOutlined, EyeOutlined, EyeInvisibleOutlined },
   setup () {
-    const { t } = useI18n()
     // 重放录像
     const replayVideo = () => store.commit('replayVideo')
     // 录像是否处于暂停状态（录像播放结束也认为处于暂停状态）
