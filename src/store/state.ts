@@ -25,9 +25,9 @@ export type State = typeof storageDefault & {
   gameEvents: GameEvent[],
   // 游戏事件索引
   gameEventIndex: number
-  // 游戏方块信息棋盘
+  // 游戏方块信息棋盘，存放方块固有信息
   gameCellBoard: Cell[],
-  // 游戏图片信息棋盘
+  // 游戏图片信息棋盘，存放方块当前对应的图片信息
   gameImgBoard: ImgCellType[],
   // 游戏开始的时间（毫秒）, 值为负数时表示还未开始
   gameStartTime: number,
