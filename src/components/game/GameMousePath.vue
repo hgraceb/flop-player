@@ -125,26 +125,22 @@ const getOpeningPath = (path: string, index: number, opening: number, straight: 
   let cell = null
   // 初始化路径，将位置移动到左上方向的第一个开空处
   if (path === '') {
-    const result = `M ${((column + 0.5) * sideLength)} ${(row + 0.5) * sideLength}`
-    return getOpeningPath(result, index, opening, true, 1)
+    return getOpeningPath(`M ${((column + 0.5) * sideLength)} ${(row + 0.5) * sideLength}`, index, opening, true, 1)
   }
   // 往上（direction === 1），往下（direction === -1）
   cell = store.state.gameCellBoard[index - direction]
   if (straight && (direction === 1 ? row > 0 : row < store.state.height - 1) && (cell.opening === opening || cell.opening2 === opening)) {
-    const result = `${path} L ${(column + 0.5) * sideLength} ${(row + 0.5 - direction) * sideLength}`
-    return getOpeningPath(result, index - direction, opening, true, direction)
+    return getOpeningPath(`${path} L ${(column + 0.5) * sideLength} ${(row + 0.5 - direction) * sideLength}`, index - direction, opening, true, direction)
   }
   // 往右（direction === 1），往左（direction === -1）
   cell = store.state.gameCellBoard[index + store.state.height * direction]
   if ((direction === 1 ? column < store.state.width - 1 : column > 0) && (cell.opening === opening || cell.opening2 === opening)) {
-    const result = `${path} L ${(column + 0.5 + direction) * sideLength} ${(row + 0.5) * sideLength}`
-    return getOpeningPath(result, index + store.state.height * direction, opening, true, direction)
+    return getOpeningPath(`${path} L ${(column + 0.5 + direction) * sideLength} ${(row + 0.5) * sideLength}`, index + store.state.height * direction, opening, true, direction)
   }
   // 往下（direction === 1），往上（direction === -1）
   cell = store.state.gameCellBoard[index + direction]
   if ((direction === 1 ? row < store.state.height - 1 : row > 0) && (cell.opening === opening || cell.opening2 === opening)) {
-    const result = `${path} L ${(column + 0.5) * sideLength} ${(row + 0.5 + direction) * sideLength}`
-    return getOpeningPath(result, index + direction, opening, false, direction)
+    return getOpeningPath(`${path} L ${(column + 0.5) * sideLength} ${(row + 0.5 + direction) * sideLength}`, index + direction, opening, false, direction)
   }
   // 切换方向，从”上右下“切换为”下左上“，继续绘制另外一半的路径
   if (direction === 1) {
