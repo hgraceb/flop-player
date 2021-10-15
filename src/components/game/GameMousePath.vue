@@ -2,6 +2,8 @@
   <g v-if="display.isMousePath" :transform="`translate(${translateX} ${translateY})`">
     <!-- 遮罩 -->
     <path :d="`M0 0 H ${maskWidth} V ${maskHeight} H 0 L 0 0`" class="mouse-mask" />
+    <!-- Openings 路径 -->
+    <path v-for="(item, index) in openingPaths" :key="index" :d="item" class="openings-path" />
     <!-- 鼠标路径 -->
     <polyline v-if="display.isMousePathMove" ref="mousePathElement" class="mouse-path" points="" />
     <!-- 鼠标左键坐标点 -->
@@ -103,6 +105,54 @@ const handleSquareList = (polygonElementRef: Ref<SVGPolygonElement | undefined>,
     }
   }
 }
+/**
+ * 获取 Openings 的路径
+ *
+ * @param path 当前已处理的路径
+ * @param index 当前索引
+ * @param opening Opening 的序号
+ * @param straight 能否按照第一优先级方向继续直行
+ * @param direction 搜寻方向的优先级，1：上右下、-1：下左上
+ */
+const getOpeningPath = (path: string, index: number, opening: number, straight: boolean, direction: 1 | -1): string => {
+  // 当前索引所在行，首行为第 0 行
+  const row = index % store.state.height
+  // 当前索引所在列，首列为第 0 列
+  const column = Math.floor(index / store.state.height)
+  // 方块实际边长
+  const sideLength = CELL_SIDE_LENGTH * SVG_SCALE
+  // 下一个需要连线的方块
+  let cell = null
+  // 初始化路径，将位置移动到左上方向的第一个开空处
+  if (path === '') {
+    const result = `M ${((column + 0.5) * sideLength)} ${(row + 0.5) * sideLength}`
+    return getOpeningPath(result, index, opening, true, 1)
+  }
+  // 往上（direction === 1），往下（direction === -1）
+  cell = store.state.gameCellBoard[index - direction]
+  if (straight && (direction === 1 ? row > 0 : row < store.state.height - 1) && (cell.opening === opening || cell.opening2 === opening)) {
+    const result = `${path} L ${(column + 0.5) * sideLength} ${(row + 0.5 - direction) * sideLength}`
+    return getOpeningPath(result, index - direction, opening, true, direction)
+  }
+  // 往右（direction === 1），往左（direction === -1）
+  cell = store.state.gameCellBoard[index + store.state.height * direction]
+  if ((direction === 1 ? column < store.state.width - 1 : column > 0) && (cell.opening === opening || cell.opening2 === opening)) {
+    const result = `${path} L ${(column + 0.5 + direction) * sideLength} ${(row + 0.5) * sideLength}`
+    return getOpeningPath(result, index + store.state.height * direction, opening, true, direction)
+  }
+  // 往下（direction === 1），往上（direction === -1）
+  cell = store.state.gameCellBoard[index + direction]
+  if ((direction === 1 ? row < store.state.height - 1 : row > 0) && (cell.opening === opening || cell.opening2 === opening)) {
+    const result = `${path} L ${(column + 0.5) * sideLength} ${(row + 0.5 + direction) * sideLength}`
+    return getOpeningPath(result, index + direction, opening, false, direction)
+  }
+  // 切换方向，从”上右下“切换为”下左上“，继续绘制另外一半的路径
+  if (direction === 1) {
+    return getOpeningPath(path, index, opening, true, -1)
+  }
+  // 向上偏移半个单位长度，让边框的显示为闭合路径，不然会有一个边长为半个单位长度的正方形缺口
+  return `${path} l 0 ${-0.5 * SVG_SCALE}`
+}
 
 export default defineComponent({
   setup () {
@@ -130,6 +180,18 @@ export default defineComponent({
       isMousePathRight: computed(() => store.state.isMousePathRight),
       isMousePathDouble: computed(() => store.state.isMousePathDouble)
     })
+    // Openings 的路径数组
+    const openingPaths = computed(() => {
+      const paths = new Array<string>(store.state.openings)
+      for (let i = 0; i < store.state.gameCellBoard.length; i++) {
+        const cell = store.state.gameCellBoard[i]
+        // 一个 Opening 只绘制一次
+        if (cell.opening > 0 && cell.opening <= paths.length && !paths[cell.opening]) {
+          paths[cell.opening] = getOpeningPath('', i, cell.opening, true, 1)
+        }
+      }
+      return paths
+    })
 
     onMounted(() => {
       // 鼠标移动路径，监听 mousePathElement 是因为元素重新渲染时需要重绘所有点坐标
@@ -150,7 +212,7 @@ export default defineComponent({
       })
     })
 
-    return { translateX, translateY, display, maskWidth, maskHeight, mousePathElement, mouseLeftElement, mouseRightElement, mouseDoubleElement }
+    return { translateX, translateY, display, maskWidth, maskHeight, mousePathElement, mouseLeftElement, mouseRightElement, mouseDoubleElement, openingPaths }
   }
 })
 </script>
@@ -159,6 +221,14 @@ export default defineComponent({
 /* 遮罩 */
 .mouse-mask {
   fill: rgba(0, 0, 0, .5);
+}
+
+/* Openings 路径 */
+.openings-path {
+  fill: blue;
+  fill-opacity: 0.33;
+  stroke: yellow;
+  stroke-width: 10;
 }
 
 /* 鼠标路径 */

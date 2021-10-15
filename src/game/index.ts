@@ -5,7 +5,9 @@ import { ImgCellType, ImgFaceType } from '@/util/image'
  */
 export class Cell {
   mine = 0
+  // 当前所在的 Opening 编号，0 表示不属于任何 Opening
   opening = 0
+  // 当前所在的另外一个 Opening 的编号，两个 Opening 可能有重叠的部分，0 表示不属于任何 Opening
   opening2 = 0
   island = 0
   number = 0
