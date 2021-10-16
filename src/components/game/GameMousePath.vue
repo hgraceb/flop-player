@@ -2,8 +2,8 @@
   <g v-if="display.isMousePath" :transform="`translate(${translateX} ${translateY})`">
     <!-- 遮罩 -->
     <path :d="`M0 0 H ${maskWidth} V ${maskHeight} H 0 L 0 0`" class="mouse-mask" />
-    <!-- Openings 路径 -->
-    <path v-for="(item, index) in openingPaths" :key="index" :d="item" class="openings-path" />
+    <!-- Openings 边框路径 -->
+    <path :d="openingsStroke" class="openings-stroke" />
     <!-- 鼠标路径 -->
     <polyline v-if="display.isMousePathMove" ref="mousePathElement" class="mouse-path" points="" />
     <!-- 鼠标左键坐标点 -->
@@ -19,6 +19,7 @@
 import { computed, defineComponent, onMounted, reactive, ref, Ref, watch } from 'vue'
 import { store } from '@/store'
 import { CELL_SIDE_LENGTH, GAME_MIDDLE, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
+import { Cell } from '@/game'
 
 // SVG 元素，用于创建 SVGPoint 对象，因为 SVGPoint 没有单独的构造方法
 const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
@@ -105,50 +106,6 @@ const handleSquareList = (polygonElementRef: Ref<SVGPolygonElement | undefined>,
     }
   }
 }
-/**
- * 获取 Openings 的路径
- *
- * @param path 当前已处理的路径
- * @param index 当前索引
- * @param opening Opening 的序号
- * @param straight 能否按照第一优先级方向继续直行
- * @param direction 搜寻方向的优先级，1：上右下、-1：下左上
- */
-const getOpeningPath = (path: string, index: number, opening: number, straight: boolean, direction: 1 | -1): string => {
-  // 当前索引所在行，首行为第 0 行
-  const row = index % store.state.height
-  // 当前索引所在列，首列为第 0 列
-  const column = Math.floor(index / store.state.height)
-  // 方块实际边长
-  const sideLength = CELL_SIDE_LENGTH * SVG_SCALE
-  // 下一个需要连线的方块
-  let cell = null
-  // 初始化路径，将位置移动到左上方向的第一个开空处
-  if (path === '') {
-    return getOpeningPath(`M ${((column + 0.5) * sideLength)} ${(row + 0.5) * sideLength}`, index, opening, true, 1)
-  }
-  // 往上（direction === 1），往下（direction === -1）
-  cell = store.state.gameCellBoard[index - direction]
-  if (straight && (direction === 1 ? row > 0 : row < store.state.height - 1) && (cell.opening === opening || cell.opening2 === opening)) {
-    return getOpeningPath(`${path} L ${(column + 0.5) * sideLength} ${(row + 0.5 - direction) * sideLength}`, index - direction, opening, true, direction)
-  }
-  // 往右（direction === 1），往左（direction === -1）
-  cell = store.state.gameCellBoard[index + store.state.height * direction]
-  if ((direction === 1 ? column < store.state.width - 1 : column > 0) && (cell.opening === opening || cell.opening2 === opening)) {
-    return getOpeningPath(`${path} L ${(column + 0.5 + direction) * sideLength} ${(row + 0.5) * sideLength}`, index + store.state.height * direction, opening, true, direction)
-  }
-  // 往下（direction === 1），往上（direction === -1）
-  cell = store.state.gameCellBoard[index + direction]
-  if ((direction === 1 ? row < store.state.height - 1 : row > 0) && (cell.opening === opening || cell.opening2 === opening)) {
-    return getOpeningPath(`${path} L ${(column + 0.5) * sideLength} ${(row + 0.5 + direction) * sideLength}`, index + direction, opening, false, direction)
-  }
-  // 切换方向，从”上右下“切换为”下左上“，继续绘制另外一半的路径
-  if (direction === 1) {
-    return getOpeningPath(path, index, opening, true, -1)
-  }
-  // 向上偏移半个单位长度，让边框的显示为闭合路径，不然会有一个边长为半个单位长度的正方形缺口
-  return `${path} l 0 ${-0.5 * SVG_SCALE}`
-}
 
 export default defineComponent({
   setup () {
@@ -176,17 +133,50 @@ export default defineComponent({
       isMousePathRight: computed(() => store.state.isMousePathRight),
       isMousePathDouble: computed(() => store.state.isMousePathDouble)
     })
-    // Openings 的路径数组
-    const openingPaths = computed(() => {
-      const paths = new Array<string>(store.state.openings)
+    // 判断两个方块是否属于同一个 Opening
+    const isSameOpening = (first: Cell | null, second: Cell | null): boolean => {
+      return first?.opening === second?.opening || first?.opening === second?.opening2
+    }
+    // Openings 的边框路径，没有绘制 Islands 是因为显示效果不好，就算了绘制了也还是分不太清楚各个 Island
+    const openingsStroke = computed(() => {
+      let path = ''
       for (let i = 0; i < store.state.gameCellBoard.length; i++) {
-        const cell = store.state.gameCellBoard[i]
-        // 一个 Opening 只绘制一次
-        if (cell.opening > 0 && cell.opening <= paths.length && !paths[cell.opening]) {
-          paths[cell.opening] = getOpeningPath('', i, cell.opening, true, 1)
+        // 当前索引对应的方块
+        const current = store.state.gameCellBoard[i]
+        if (current.opening <= 0) continue
+        // 当前索引所在行，首行为第 0 行
+        const row = i % store.state.height
+        // 当前索引所在列，首列为第 0 列
+        const column = Math.floor(i / store.state.height)
+        // 方块实际边长
+        const sideLength = CELL_SIDE_LENGTH * SVG_SCALE
+        // 半个单位长度，用于修正线段没有闭合导致显示时会有半个像素点缺口的问题
+        const half = SVG_SCALE / 2
+        // 临近的方块是否与当前方块属于同个 Opening
+        const isUp = isSameOpening(current, row > 0 ? store.state.gameCellBoard[i - 1] : null)
+        const isDown = isSameOpening(current, row < store.state.height - 1 ? store.state.gameCellBoard[i + 1] : null)
+        const isLeft = isSameOpening(current, store.state.gameCellBoard[i - store.state.height])
+        const isRight = isSameOpening(current, store.state.gameCellBoard[i + store.state.height])
+        // 如果要绘制水平边框
+        if (!isUp || !isDown) {
+          if (isRight) {
+            path = `${path} M ${(column + 0.5) * sideLength - half} ${(row + 0.5) * sideLength} l ${sideLength + SVG_SCALE} 0 Z`
+          }
+          if (isLeft) {
+            path = `${path} M ${(column - 0.5) * sideLength - half} ${(row + 0.5) * sideLength} l ${sideLength + SVG_SCALE} 0 Z`
+          }
+        }
+        // 如果要绘制垂直边框
+        if (!isLeft || !isRight) {
+          if (isUp) {
+            path = `${path} M ${(column + 0.5) * sideLength} ${(row - 0.5) * sideLength - half} l 0 ${sideLength + SVG_SCALE} Z`
+          }
+          if (isDown) {
+            path = `${path} M ${(column + 0.5) * sideLength} ${(row + 0.5) * sideLength - half} l 0 ${sideLength + SVG_SCALE} Z`
+          }
         }
       }
-      return paths
+      return path
     })
 
     onMounted(() => {
@@ -208,7 +198,7 @@ export default defineComponent({
       })
     })
 
-    return { translateX, translateY, display, maskWidth, maskHeight, mousePathElement, mouseLeftElement, mouseRightElement, mouseDoubleElement, openingPaths }
+    return { translateX, translateY, display, maskWidth, maskHeight, mousePathElement, mouseLeftElement, mouseRightElement, mouseDoubleElement, openingsStroke }
   }
 })
 </script>
@@ -219,10 +209,9 @@ export default defineComponent({
   fill: rgba(0, 0, 0, .5);
 }
 
-/* Openings 路径 */
-.openings-path {
-  fill: blue;
-  fill-opacity: 0.33;
+/* Openings 边框路径 */
+.openings-stroke {
+  fill: none;
   stroke: yellow;
   stroke-width: 10;
 }
