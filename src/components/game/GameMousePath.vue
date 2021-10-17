@@ -135,10 +135,11 @@ export default defineComponent({
     })
     // 判断两个方块是否属于同一个 Opening
     const isSameOpening = (first: Cell | null, second: Cell | null): boolean => {
-      return first?.opening === second?.opening || first?.opening === second?.opening2
+      return first?.opening === second?.opening || first?.opening === second?.opening2 || first?.opening2 === second?.opening || first?.opening2 === second?.opening2
     }
     // Openings 的边框路径，没有绘制 Islands 是因为显示效果不好，就算了绘制了也还是分不太清楚各个 Island
     const openingsStroke = computed(() => {
+      console.time('openingsStroke')
       let path = ''
       for (let i = 0; i < store.state.gameCellBoard.length; i++) {
         // 当前索引对应的方块
@@ -153,29 +154,45 @@ export default defineComponent({
         // 半个单位长度，用于修正线段没有闭合导致显示时会有半个像素点缺口的问题
         const half = SVG_SCALE / 2
         // 临近的方块是否与当前方块属于同个 Opening
-        const isUp = isSameOpening(current, row > 0 ? store.state.gameCellBoard[i - 1] : null)
-        const isDown = isSameOpening(current, row < store.state.height - 1 ? store.state.gameCellBoard[i + 1] : null)
-        const isLeft = isSameOpening(current, store.state.gameCellBoard[i - store.state.height])
-        const isRight = isSameOpening(current, store.state.gameCellBoard[i + store.state.height])
-        // 如果要绘制水平边框
-        if (!isUp || !isDown) {
-          if (isRight) {
-            path = `${path} M ${(column + 0.5) * sideLength - half} ${(row + 0.5) * sideLength} l ${sideLength + SVG_SCALE} 0 Z`
-          }
-          if (isLeft) {
-            path = `${path} M ${(column - 0.5) * sideLength - half} ${(row + 0.5) * sideLength} l ${sideLength + SVG_SCALE} 0 Z`
-          }
-        }
-        // 如果要绘制垂直边框
-        if (!isLeft || !isRight) {
-          if (isUp) {
-            path = `${path} M ${(column + 0.5) * sideLength} ${(row - 0.5) * sideLength - half} l 0 ${sideLength + SVG_SCALE} Z`
-          }
-          if (isDown) {
+        const down = row < store.state.height - 1 ? store.state.gameCellBoard[i + 1] : null
+        const right = store.state.gameCellBoard[i + store.state.height]
+        const up = row > 0 ? store.state.gameCellBoard[i - 1] : null
+        const left = store.state.gameCellBoard[i - store.state.height]
+        const leftDown = row < store.state.height - 1 ? store.state.gameCellBoard[i - store.state.height + 1] : null
+        const rightDown = row < store.state.height - 1 ? store.state.gameCellBoard[i + store.state.height + 1] : null
+        const rightUp = row > 0 ? store.state.gameCellBoard[i + store.state.height - 1] : null
+        if (current.number > 0 && down && isSameOpening(current, down) && (!!down.number || !isSameOpening(current, left) || !isSameOpening(current, right))) {
+          if (
+            (down && down.number === 0 && isSameOpening(current, down)) ||
+            (left && left.number === 0 && isSameOpening(current, left)) ||
+            (right && right.number === 0 && isSameOpening(current, right)) ||
+            (leftDown && leftDown.number === 0 && isSameOpening(current, leftDown)) ||
+            (rightDown && rightDown.number === 0 && isSameOpening(current, rightDown))
+          ) {
             path = `${path} M ${(column + 0.5) * sideLength} ${(row + 0.5) * sideLength - half} l 0 ${sideLength + SVG_SCALE} Z`
           }
         }
+        if (current.number > 0 && isSameOpening(current, right) && (!!right?.number || !isSameOpening(current, up) || !isSameOpening(current, down))) {
+          if (
+            (up && up.number === 0 && isSameOpening(current, up)) ||
+            (down && down.number === 0 && isSameOpening(current, down)) ||
+            (rightUp && rightUp.number === 0 && isSameOpening(current, rightUp)) ||
+            (rightDown && rightDown.number === 0 && isSameOpening(current, rightDown)) ||
+            (right && right.number === 0 && isSameOpening(current, right))
+          ) {
+            path = `${path} M ${(column + 0.5) * sideLength - half} ${(row + 0.5) * sideLength} l ${sideLength + SVG_SCALE} 0 Z`
+          }
+        }
+        if (current.number === 0) {
+          if (isSameOpening(current, down) && (!isSameOpening(current, left) || !isSameOpening(current, right))) {
+            path = `${path} M ${(column + 0.5) * sideLength} ${(row + 0.5) * sideLength - half} l 0 ${sideLength + SVG_SCALE} Z`
+          }
+          if (isSameOpening(current, right) && (!isSameOpening(current, up) || !isSameOpening(current, down))) {
+            path = `${path} M ${(column + 0.5) * sideLength - half} ${(row + 0.5) * sideLength} l ${sideLength + SVG_SCALE} 0 Z`
+          }
+        }
       }
+      console.timeEnd('openingsStroke')
       return path
     })
 
