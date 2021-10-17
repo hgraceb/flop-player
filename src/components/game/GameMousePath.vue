@@ -3,7 +3,7 @@
     <!-- 遮罩 -->
     <path :d="`M0 0 H ${maskWidth} V ${maskHeight} H 0 L 0 0`" class="mouse-mask" />
     <!-- Openings 边框路径 -->
-    <path :d="openingsStroke" class="openings-stroke" />
+    <path :d="openingsPath" class="openings-path" />
     <!-- 鼠标路径 -->
     <polyline v-if="display.isMousePathMove" ref="mousePathElement" class="mouse-path" points="" />
     <!-- 鼠标左键坐标点 -->
@@ -133,66 +133,55 @@ export default defineComponent({
       isMousePathRight: computed(() => store.state.isMousePathRight),
       isMousePathDouble: computed(() => store.state.isMousePathDouble)
     })
-    // 判断两个方块是否属于同一个 Opening
-    const isSameOpening = (first: Cell | null, second: Cell | null): boolean => {
-      return first?.opening === second?.opening || first?.opening === second?.opening2 || first?.opening2 === second?.opening || first?.opening2 === second?.opening2
-    }
-    // Openings 的边框路径，没有绘制 Islands 是因为显示效果不好，就算了绘制了也还是分不太清楚各个 Island
-    const openingsStroke = computed(() => {
-      console.time('openingsStroke')
+    // Openings 的非零数字边框路径，没有绘制 Islands 是因为显示效果不好，就算了绘制了也还是分不太清楚各个 Island
+    const openingsPath = computed(() => {
+      console.time('openingsPath')
       let path = ''
       for (let i = 0; i < store.state.gameCellBoard.length; i++) {
         // 当前索引对应的方块
         const current = store.state.gameCellBoard[i]
-        if (current.opening <= 0) continue
+        // 只遍历属于 Opening 的非零数字方块
+        if (current.opening <= 0 || current.number <= 0) continue
         // 当前索引所在行，首行为第 0 行
         const row = i % store.state.height
         // 当前索引所在列，首列为第 0 列
         const column = Math.floor(i / store.state.height)
         // 方块实际边长
         const sideLength = CELL_SIDE_LENGTH * SVG_SCALE
-        // 半个单位长度，用于修正线段没有闭合导致显示时会有半个像素点缺口的问题
-        const half = SVG_SCALE / 2
-        // 临近的方块是否与当前方块属于同个 Opening
-        const down = row < store.state.height - 1 ? store.state.gameCellBoard[i + 1] : null
-        const right = store.state.gameCellBoard[i + store.state.height]
-        const up = row > 0 ? store.state.gameCellBoard[i - 1] : null
-        const left = store.state.gameCellBoard[i - store.state.height]
-        const leftDown = row < store.state.height - 1 ? store.state.gameCellBoard[i - store.state.height + 1] : null
-        const rightDown = row < store.state.height - 1 ? store.state.gameCellBoard[i + store.state.height + 1] : null
-        const rightUp = row > 0 ? store.state.gameCellBoard[i + store.state.height - 1] : null
-        if (current.number > 0 && down && isSameOpening(current, down) && (!!down.number || !isSameOpening(current, left) || !isSameOpening(current, right))) {
-          if (
-            (down && down.number === 0 && isSameOpening(current, down)) ||
-            (left && left.number === 0 && isSameOpening(current, left)) ||
-            (right && right.number === 0 && isSameOpening(current, right)) ||
-            (leftDown && leftDown.number === 0 && isSameOpening(current, leftDown)) ||
-            (rightDown && rightDown.number === 0 && isSameOpening(current, rightDown))
-          ) {
-            path = `${path} M ${(column + 0.5) * sideLength} ${(row + 0.5) * sideLength - half} l 0 ${sideLength + SVG_SCALE} Z`
-          }
+        // 边框宽度，需要修正线段没有闭合导致显示时会有半个像素点缺口的问题
+        const width = 3 * SVG_SCALE
+        // 判断目标方块与当前方块是否属于同一个 Opening，equalZero 表示目标方块的数字是否为 0
+        const isSameOpening = (equalZero: boolean, current?: Cell, target?: Cell): boolean => {
+          if (current === undefined || target === undefined || (equalZero ? target.number !== 0 : target.number === 0)) return false
+          return current.opening === target.opening || current.opening === target.opening2 || current.opening2 === target.opening || current.opening2 === target.opening2
         }
-        if (current.number > 0 && isSameOpening(current, right) && (!!right?.number || !isSameOpening(current, up) || !isSameOpening(current, down))) {
-          if (
-            (up && up.number === 0 && isSameOpening(current, up)) ||
-            (down && down.number === 0 && isSameOpening(current, down)) ||
-            (rightUp && rightUp.number === 0 && isSameOpening(current, rightUp)) ||
-            (rightDown && rightDown.number === 0 && isSameOpening(current, rightDown)) ||
-            (right && right.number === 0 && isSameOpening(current, right))
-          ) {
-            path = `${path} M ${(column + 0.5) * sideLength - half} ${(row + 0.5) * sideLength} l ${sideLength + SVG_SCALE} 0 Z`
-          }
+        // 临近的方块
+        const down = row < store.state.height - 1 ? store.state.gameCellBoard[i + 1] : undefined
+        const right = column < store.state.width - 1 ? store.state.gameCellBoard[i + store.state.height] : undefined
+        // 临近的方块是否与当前方块属于同一个 Opening 并且 number 属性的值不为 0
+        const isNonZeroDown = isSameOpening(false, current, down)
+        const isNonZeroRight = isSameOpening(false, current, right)
+        // 临近的方块是否与当前方块属于同一个 Opening 并且 number 属性的值为 0
+        const isZeroRight = isSameOpening(true, current, right)
+        const isZeroDown = isSameOpening(true, current, down)
+        const isZeroLeft = isSameOpening(true, current, column > 0 ? store.state.gameCellBoard[i - store.state.height] : undefined)
+        const isZeroLeftDown = isSameOpening(true, current, row < store.state.height - 1 ? store.state.gameCellBoard[i - store.state.height + 1] : undefined)
+        const isZeroRightDown = isSameOpening(true, current, row < store.state.height - 1 ? store.state.gameCellBoard[i + store.state.height + 1] : undefined)
+        const isZeroUp = isSameOpening(true, current, row > 0 ? store.state.gameCellBoard[i - 1] : undefined)
+        const isZeroRightUp = isSameOpening(true, current, row > 0 ? store.state.gameCellBoard[i + store.state.height - 1] : undefined)
+        // 如果当前非零数字方块的底部方块也是非零数字方块，并且当前方块的左侧、右侧、左下角、右下角至少有一个是属于当前 Opening 的零数字方块
+        if (isNonZeroDown && (isZeroLeft || isZeroRight || isZeroLeftDown || isZeroRightDown)) {
+          // 边框长度
+          const length = (1 + (row === 0 || row === store.state.height - 2 ? 0.5 : 0)) * sideLength + (row === 0 || row === store.state.height - 2 ? width / 2 : width)
+          path = `${path} M ${(column + 0.5) * sideLength} ${(row + (row !== 0 ? 0.5 : 0)) * sideLength - (row !== 0 ? width / 2 : 0)} l 0 ${length} Z`
         }
-        if (current.number === 0) {
-          if (isSameOpening(current, down) && (!isSameOpening(current, left) || !isSameOpening(current, right))) {
-            path = `${path} M ${(column + 0.5) * sideLength} ${(row + 0.5) * sideLength - half} l 0 ${sideLength + SVG_SCALE} Z`
-          }
-          if (isSameOpening(current, right) && (!isSameOpening(current, up) || !isSameOpening(current, down))) {
-            path = `${path} M ${(column + 0.5) * sideLength - half} ${(row + 0.5) * sideLength} l ${sideLength + SVG_SCALE} 0 Z`
-          }
+        // 如果当前非零数字方块的右侧方块也是非零数字方块，并且当前方块的上侧、底部、右上角、右下角至少有一个是属于当前 Opening 的零数字方块
+        if (isNonZeroRight && (isZeroUp || isZeroDown || isZeroRightUp || isZeroRightDown)) {
+          const length = (1 + (column === 0 || column === store.state.width - 2 ? 0.5 : 0)) * sideLength + (column === 0 || column === store.state.width - 2 ? width / 2 : width)
+          path = `${path} M ${(column + (column !== 0 ? 0.5 : 0)) * sideLength - (column !== 0 ? width / 2 : 0)} ${(row + 0.5) * sideLength} l ${length} 0 Z`
         }
       }
-      console.timeEnd('openingsStroke')
+      console.timeEnd('openingsPath')
       return path
     })
 
@@ -215,7 +204,7 @@ export default defineComponent({
       })
     })
 
-    return { translateX, translateY, display, maskWidth, maskHeight, mousePathElement, mouseLeftElement, mouseRightElement, mouseDoubleElement, openingsStroke }
+    return { translateX, translateY, display, maskWidth, maskHeight, mousePathElement, mouseLeftElement, mouseRightElement, mouseDoubleElement, openingsPath }
   }
 })
 </script>
@@ -227,10 +216,10 @@ export default defineComponent({
 }
 
 /* Openings 边框路径 */
-.openings-stroke {
+.openings-path {
   fill: none;
   stroke: yellow;
-  stroke-width: 10;
+  stroke-width: 30;
 }
 
 /* 鼠标路径 */
