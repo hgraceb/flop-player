@@ -4,6 +4,8 @@
     <path :d="`M0 0 H ${maskWidth} V ${maskHeight} H 0 L 0 0`" class="mouse-mask" />
     <!-- Openings 边框路径 -->
     <path :d="openingsPath" class="openings-path" />
+    <!-- Openings 编号文本 -->
+    <text v-for="(item, index) in openingsNumber" :key="index" :x="item.x" :y="item.y" class="openings-number">{{ index + 1 }}</text>
     <!-- 鼠标路径 -->
     <polyline v-if="display.isMousePathMove" ref="mousePathElement" class="mouse-path" points="" />
     <!-- 鼠标左键坐标点 -->
@@ -133,9 +135,35 @@ export default defineComponent({
       isMousePathRight: computed(() => store.state.isMousePathRight),
       isMousePathDouble: computed(() => store.state.isMousePathDouble)
     })
+    // Openings 的编号文本信息
+    const openingsNumber = computed(() => {
+      const result = new Array<{ x: number, y: number }>(store.state.openings)
+      const points: { x: number, y: number }[][] = Array.from(Array(result.length), () => [])
+      // 方块实际边长
+      const sideLength = CELL_SIDE_LENGTH * SVG_SCALE
+      // 编号文本字体大小，单位：px
+      const fontSize = 120
+      for (let i = 0; i < store.state.gameCellBoard.length; i++) {
+        // 当前索引对应的方块
+        const current = store.state.gameCellBoard[i]
+        // 只在零数字方块上进行文本编号显示
+        if (current.number !== 0 || current.opening <= 0 || current.opening > result.length) continue
+        points[current.opening - 1].push({ x: Math.floor(i / store.state.height), y: i % store.state.height })
+      }
+      for (let i = 0; i < points.length; i++) {
+        // 选择横坐标和纵坐标都比较居中的方块进行文本展示
+        const sortedX = [...new Set(points[i].map(point => point.x))].sort((a, b) => a - b)
+        const middleX = sortedX[Math.floor((sortedX.length - 1) / 2)]
+        const sortedY = [...new Set(points[i].filter(point => point.x === middleX))].sort((a, b) => a.y - b.y)
+        const middlePoint = sortedY[Math.floor((sortedY.length - 1) / 2)]
+        // 横坐标偏移半个方块的距离，纵坐标偏移与文本字体大小一样的距离
+        // 不用因为零数字方块对应图片的左侧和上侧有一个单位长度的灰边额外偏移半个单位长度，因为这样子会导致方块还没打开时在视觉效果上有比较大的偏差
+        result[i] = { x: (middlePoint.x + 0.5) * sideLength, y: middlePoint.y * sideLength + fontSize }
+      }
+      return result
+    })
     // Openings 的非零数字边框路径，没有绘制 Islands 是因为显示效果不好，就算了绘制了也还是分不太清楚各个 Island
     const openingsPath = computed(() => {
-      console.time('openingsPath')
       let path = ''
       for (let i = 0; i < store.state.gameCellBoard.length; i++) {
         // 当前索引对应的方块
@@ -181,7 +209,6 @@ export default defineComponent({
           path = `${path} M ${(column + (column !== 0 ? 0.5 : 0)) * sideLength - (column !== 0 ? width / 2 : 0)} ${(row + 0.5) * sideLength} l ${length} 0 Z`
         }
       }
-      console.timeEnd('openingsPath')
       return path
     })
 
@@ -204,7 +231,7 @@ export default defineComponent({
       })
     })
 
-    return { translateX, translateY, display, maskWidth, maskHeight, mousePathElement, mouseLeftElement, mouseRightElement, mouseDoubleElement, openingsPath }
+    return { translateX, translateY, display, maskWidth, maskHeight, mousePathElement, mouseLeftElement, mouseRightElement, mouseDoubleElement, openingsNumber, openingsPath }
   }
 })
 </script>
@@ -220,6 +247,13 @@ export default defineComponent({
   fill: none;
   stroke: yellow;
   stroke-width: 30;
+}
+
+/* Openings 编号文本 */
+.openings-number {
+  font-size: 120px;
+  text-anchor: middle;
+  fill: yellow;
 }
 
 /* 鼠标路径 */
