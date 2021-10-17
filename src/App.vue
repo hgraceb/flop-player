@@ -10,7 +10,7 @@
         <game />
       </div>
     </div>
-    <control-bar style="margin-left: auto" />
+    <control-bar style="margin-left: auto;margin-right: auto" />
   </div>
 </template>
 
