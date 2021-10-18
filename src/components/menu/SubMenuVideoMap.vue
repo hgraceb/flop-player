@@ -14,13 +14,13 @@
             {{ item.title }}
             <!-- 颜色提示 -->
             <base-svg v-if="item.color" :height="100" :width="100" style="margin-left: auto;">
-              <!-- 非透明认为是鼠标点击事件 -->
-              <polygon v-if="item.color !== 'transparent'" :style="`fill: ${item.color};stroke: none;`" points="0,0 0,100 100,100 100,0" />
-              <!-- 透明则认为是鼠标移动路径 -->
-              <template v-else>
-                <polygon points="0,0 0,100 100,100 100,0" style="fill: rgba(0, 0, 0, .25);stroke: none;" />
-                <polyline points="0,50 100,50" style="fill: none;stroke: white;stroke-width: 10" />
+              <!-- 正方形提示 -->
+              <template v-if="item.bgColor">
+                <polygon :fill="item.bgColor" points="0,0 0,100 100,100 100,0" stroke="none" />
+                <polyline :stroke="item.color" fill="none" points="0,50 100,50" stroke-width="18" />
               </template>
+              <!-- 连线提示 -->
+              <polygon v-else :fill="item.color" points="0,0 0,100 100,100 100,0" stroke="none" />
             </base-svg>
           </div>
         </div>
@@ -45,7 +45,7 @@ export default defineComponent({
     const { t } = useI18n()
     // 鼠标路径菜单信息
     const menuVideoMap = computed(() => {
-      const result: { title: string, checked: boolean, divider?: boolean, color?: string, click: () => void }[] = [
+      const result: { title: string, checked: boolean, click: () => void, divider?: boolean, color?: string, bgColor?: string }[] = [
         {
           title: t('menu.options.videoMap.title'),
           checked: store.state.isVideoMap,
@@ -55,7 +55,8 @@ export default defineComponent({
         {
           title: t('menu.options.videoMap.move'),
           checked: store.state.isMousePathMove,
-          color: 'transparent',
+          color: '#ffffff',
+          bgColor: '#888888',
           click: () => store.commit('setMousePathMove', !store.state.isMousePathMove)
         },
         {
@@ -74,7 +75,15 @@ export default defineComponent({
           title: t('menu.options.videoMap.double'),
           checked: store.state.isMousePathDouble,
           color: '#ff00ff',
-          click: () => store.commit('setMousePathDouble', !store.state.isMousePathDouble)
+          click: () => store.commit('setMousePathDouble', !store.state.isMousePathDouble),
+          divider: true
+        },
+        {
+          title: t('menu.options.videoMap.opening'),
+          checked: store.state.isShowOpening,
+          color: '#ffff00',
+          bgColor: '#888888',
+          click: () => store.commit('setShowOpening', !store.state.isShowOpening)
         }
       ]
       return result

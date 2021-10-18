@@ -2,10 +2,12 @@
   <g v-if="display.isVideoMap" :transform="`translate(${translateX} ${translateY})`">
     <!-- 遮罩 -->
     <path :d="`M0 0 H ${maskWidth} V ${maskHeight} H 0 L 0 0`" class="mouse-mask" />
-    <!-- Openings 边框路径 -->
-    <path :d="openingsPath" class="openings-path" />
-    <!-- Openings 编号文本 -->
-    <text v-for="(item, index) in openingsNumber" :key="index" :x="item.x" :y="item.y" class="openings-number">{{ index + 1 }}</text>
+    <template v-if="display.isShowOpening">
+      <!-- Openings 边框路径 -->
+      <path :d="openingsPath" class="openings-path" />
+      <!-- Openings 编号文本 -->
+      <text v-for="(item, index) in openingsNumber" :key="index" :x="item.x" :y="item.y" class="openings-number">{{ index + 1 }}</text>
+    </template>
     <!-- 鼠标路径 -->
     <polyline v-if="display.isMousePathMove" ref="mousePathElement" class="mouse-move" points="" />
     <!-- 鼠标左键坐标点 -->
@@ -133,7 +135,8 @@ export default defineComponent({
       isMousePathMove: computed(() => store.state.isMousePathMove),
       isMousePathLeft: computed(() => store.state.isMousePathLeft),
       isMousePathRight: computed(() => store.state.isMousePathRight),
-      isMousePathDouble: computed(() => store.state.isMousePathDouble)
+      isMousePathDouble: computed(() => store.state.isMousePathDouble),
+      isShowOpening: computed(() => store.state.isShowOpening)
     })
     // Openings 的编号文本信息
     const openingsNumber = computed(() => {

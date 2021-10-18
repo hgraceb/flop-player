@@ -12,6 +12,7 @@ menu:
       left: Left click
       right: Right click
       double: Double click
+      opening: Opening
   help:
     title: Help
 

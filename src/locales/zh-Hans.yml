@@ -17,6 +17,7 @@ menu:
       left: 鼠标左键
       right: 鼠标右键
       double: 鼠标双击
+      opening: 开空
   help:
     title: 帮助
 

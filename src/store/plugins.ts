@@ -23,7 +23,9 @@ export const storageDefault = {
   // 是否显示鼠标右键散点图
   isMousePathRight: true,
   // 是否显示鼠标双击散点图
-  isMousePathDouble: true
+  isMousePathDouble: true,
+  // 是否显示开空区域
+  isShowOpening: false
 }
 
 /**
@@ -64,6 +66,9 @@ const localStoragePlugin = (store: VuexStore): void => {
   })
   store.watch(state => state.isMousePathDouble, value => {
     storage.value.isMousePathDouble = value
+  })
+  store.watch(state => state.isShowOpening, value => {
+    storage.value.isShowOpening = value
   })
 }
 

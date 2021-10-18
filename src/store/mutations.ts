@@ -31,6 +31,10 @@ export const mutations = {
   setMousePathDouble: (state: State, isMousePathDouble: boolean): void => {
     state.isMousePathDouble = isMousePathDouble
   },
+  /** 设置是否显示开空区域 */
+  setShowOpening: (state: State, isShowOpening: boolean): void => {
+    state.isShowOpening = isShowOpening
+  },
   /** 设置页面缩放值 */
   setScale: (state: State, scale: number): void => {
     if (SCALE_ARRAY.includes(scale)) {

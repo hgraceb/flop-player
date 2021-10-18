@@ -57,6 +57,7 @@ export const state: State = {
   isMousePathLeft: storage.value.isMousePathLeft ?? storageDefault.isMousePathLeft,
   isMousePathRight: storage.value.isMousePathRight ?? storageDefault.isMousePathRight,
   isMousePathDouble: storage.value.isMousePathDouble ?? storageDefault.isMousePathDouble,
+  isShowOpening: storage.value.isShowOpening ?? storageDefault.isShowOpening,
   // 不进行本地缓存的变量
   width: 8,
   height: 8,
