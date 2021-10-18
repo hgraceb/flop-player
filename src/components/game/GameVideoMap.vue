@@ -1,5 +1,5 @@
 <template>
-  <g v-if="display.isMousePath" :transform="`translate(${translateX} ${translateY})`">
+  <g v-if="display.isVideoMap" :transform="`translate(${translateX} ${translateY})`">
     <!-- 遮罩 -->
     <path :d="`M0 0 H ${maskWidth} V ${maskHeight} H 0 L 0 0`" class="mouse-mask" />
     <!-- Openings 边框路径 -->
@@ -7,7 +7,7 @@
     <!-- Openings 编号文本 -->
     <text v-for="(item, index) in openingsNumber" :key="index" :x="item.x" :y="item.y" class="openings-number">{{ index + 1 }}</text>
     <!-- 鼠标路径 -->
-    <polyline v-if="display.isMousePathMove" ref="mousePathElement" class="mouse-path" points="" />
+    <polyline v-if="display.isMousePathMove" ref="mousePathElement" class="mouse-move" points="" />
     <!-- 鼠标左键坐标点 -->
     <polygon v-if="display.isMousePathLeft" ref="mouseLeftElement" class="mouse-left" points="" />
     <!-- 鼠标右键坐标点 -->
@@ -129,7 +129,7 @@ export default defineComponent({
     const mouseDoubleElement = ref<SVGPolygonElement | undefined>()
     // 轨迹图显示状态
     const display = reactive({
-      isMousePath: computed(() => store.state.isMousePath),
+      isVideoMap: computed(() => store.state.isVideoMap),
       isMousePathMove: computed(() => store.state.isMousePathMove),
       isMousePathLeft: computed(() => store.state.isMousePathLeft),
       isMousePathRight: computed(() => store.state.isMousePathRight),
@@ -257,7 +257,7 @@ export default defineComponent({
 }
 
 /* 鼠标路径 */
-.mouse-path {
+.mouse-move {
   fill: none;
   stroke: white;
   stroke-width: 10;

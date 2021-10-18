@@ -13,9 +13,9 @@
             <PauseOutlined v-else />
           </template>
         </a-button>
-        <a-button :title="`${isMousePath ? $t('controlBar.hideMousePath') : $t('controlBar.displayMousePath')}`" size="small" @click="toggleMousePath">
+        <a-button :title="`${isVideoMap ? $t('controlBar.hideVideoMap') : $t('controlBar.displayVideoMap')}`" size="small" @click="toggleVideoMap">
           <template #icon>
-            <EyeInvisibleOutlined v-if="isMousePath" />
+            <EyeInvisibleOutlined v-if="isVideoMap" />
             <EyeOutlined v-else />
           </template>
         </a-button>
@@ -59,11 +59,11 @@ export default defineComponent({
       }
     }
 
-    // 鼠标轨迹图是否处于显示状态
-    const isMousePath = computed(() => store.state.isMousePath)
-    // 切换鼠标轨迹图显示状态
-    const toggleMousePath = () => {
-      store.commit('setMousePath', !store.state.isMousePath)
+    // 录像地图是否处于显示状态
+    const isVideoMap = computed(() => store.state.isVideoMap)
+    // 切换录像地图显示状态
+    const toggleVideoMap = () => {
+      store.commit('setVideoMap', !store.state.isVideoMap)
     }
 
     // 当前录像实际速度，类型为 number
@@ -117,7 +117,7 @@ export default defineComponent({
       }
     })
 
-    return { replayVideo, isVideoPaused, toggleVideoPlay, isMousePath, toggleMousePath, speedSlider, speedValue, resetSpeed, SPEED_ARRAY, timeMax, timeSlider, timeValue }
+    return { replayVideo, isVideoPaused, toggleVideoPlay, isVideoMap, toggleVideoMap, speedSlider, speedValue, resetSpeed, SPEED_ARRAY, timeMax, timeSlider, timeValue }
   }
 })
 </script>

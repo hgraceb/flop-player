@@ -52,7 +52,7 @@ export const state: State = {
   scale: storage.value.scale ?? storageDefault.scale,
   locale: storage.value.locale ?? storageDefault.locale,
   gameSpeed: storage.value.gameSpeed ?? storageDefault.gameSpeed,
-  isMousePath: storage.value.isMousePath ?? storageDefault.isMousePath,
+  isVideoMap: storage.value.isVideoMap ?? storageDefault.isVideoMap,
   isMousePathMove: storage.value.isMousePathMove ?? storageDefault.isMousePathMove,
   isMousePathLeft: storage.value.isMousePathLeft ?? storageDefault.isMousePathLeft,
   isMousePathRight: storage.value.isMousePathRight ?? storageDefault.isMousePathRight,

@@ -11,9 +11,9 @@ import { i18n } from '@/plugins/i18n'
  * Mutations 函数定义，使用类型推断的方式，可以快速找到函数的所有 Usages
  */
 export const mutations = {
-  /** 设置是否显示鼠标轨迹图 */
-  setMousePath: (state: State, isMousePath: boolean): void => {
-    state.isMousePath = isMousePath
+  /** 设置是否显示录像地图 */
+  setVideoMap: (state: State, isVideoMap: boolean): void => {
+    state.isVideoMap = isVideoMap
   },
   /** 设置是否显示鼠标移动轨迹图 */
   setMousePathMove: (state: State, isMousePathMove: boolean): void => {

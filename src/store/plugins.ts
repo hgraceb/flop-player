@@ -14,8 +14,8 @@ export const storageDefault = {
   locale: i18n.global.locale,
   // 游戏速度
   gameSpeed: 1.0,
-  // 是否显示鼠标轨迹图
-  isMousePath: false,
+  // 是否显示录像地图
+  isVideoMap: false,
   // 是否显示鼠标移动轨迹图
   isMousePathMove: true,
   // 是否显示鼠标左键散点图
@@ -50,8 +50,8 @@ const localStoragePlugin = (store: VuexStore): void => {
   store.watch(state => state.gameSpeed, value => {
     storage.value.gameSpeed = value
   })
-  store.watch(state => state.isMousePath, value => {
-    storage.value.isMousePath = value
+  store.watch(state => state.isVideoMap, value => {
+    storage.value.isVideoMap = value
   })
   store.watch(state => state.isMousePathMove, value => {
     storage.value.isMousePathMove = value

@@ -1,10 +1,10 @@
 <template>
-  <!-- 鼠标轨迹，可以在 Menu 组件中结合 multiple 属性和 openChange 回调控制是否可以多选，但是会有样式显示问题，暂时不进行处理 -->
-  <a-sub-menu :title="$t('menu.options.mousePath.title')">
+  <!-- 录像地图，可以在 Menu 组件中结合 multiple 属性和 openChange 回调控制是否可以多选，但是会有样式显示问题，暂时不进行处理 -->
+  <a-sub-menu :title="$t('menu.options.videoMap.title')">
     <template #icon>
       <EyeOutlined />
     </template>
-    <template v-for="(item, index) in menuMousePath" :key="index">
+    <template v-for="(item, index) in menuVideoMap" :key="index">
       <a-menu-item @click="item.click">
         <CheckOutlined v-if="item.checked" />
         <a-icon-empty v-else />
@@ -44,34 +44,34 @@ export default defineComponent({
   setup () {
     const { t } = useI18n()
     // 鼠标路径菜单信息
-    const menuMousePath = computed(() => {
+    const menuVideoMap = computed(() => {
       const result: { title: string, checked: boolean, divider?: boolean, color?: string, click: () => void }[] = [
         {
-          title: t('menu.options.mousePath.title'),
-          checked: store.state.isMousePath,
+          title: t('menu.options.videoMap.title'),
+          checked: store.state.isVideoMap,
           divider: true,
-          click: () => store.commit('setMousePath', !store.state.isMousePath)
+          click: () => store.commit('setVideoMap', !store.state.isVideoMap)
         },
         {
-          title: t('menu.options.mousePath.move'),
+          title: t('menu.options.videoMap.move'),
           checked: store.state.isMousePathMove,
           color: 'transparent',
           click: () => store.commit('setMousePathMove', !store.state.isMousePathMove)
         },
         {
-          title: t('menu.options.mousePath.left'),
+          title: t('menu.options.videoMap.left'),
           checked: store.state.isMousePathLeft,
           color: '#00ffff',
           click: () => store.commit('setMousePathLeft', !store.state.isMousePathLeft)
         },
         {
-          title: t('menu.options.mousePath.right'),
+          title: t('menu.options.videoMap.right'),
           checked: store.state.isMousePathRight,
           color: '#00ff00',
           click: () => store.commit('setMousePathRight', !store.state.isMousePathRight)
         },
         {
-          title: t('menu.options.mousePath.double'),
+          title: t('menu.options.videoMap.double'),
           checked: store.state.isMousePathDouble,
           color: '#ff00ff',
           click: () => store.commit('setMousePathDouble', !store.state.isMousePathDouble)
@@ -88,7 +88,7 @@ export default defineComponent({
     // 最大标题宽度，用于右侧元素对齐
     const maxTitleWidth = computed(() => {
       let width = 0
-      for (const menu of menuMousePath.value) {
+      for (const menu of menuVideoMap.value) {
         const titleWidth = getStrWidth(menu.title, font.value)
         // 更新标题最大宽度
         width = titleWidth && titleWidth > width ? titleWidth : width
@@ -97,7 +97,7 @@ export default defineComponent({
       return width > 0 ? width + 20 : -1
     })
 
-    return { menuMousePath, maxTitleWidth }
+    return { menuVideoMap, maxTitleWidth }
   }
 })
 </script>

@@ -23,8 +23,8 @@
         </a-menu-item>
       </a-sub-menu>
 
-      <!-- 鼠标轨迹 -->
-      <sub-menu-mouse-path />
+      <!-- 录像地图 -->
+      <sub-menu-video-map />
 
       <!-- 缩放比例 -->
       <a-menu-divider />
@@ -59,10 +59,10 @@ import { store } from '@/store'
 import { CELL_SIDE_LENGTH, GAME_TOP_UPPER, SCALE_ARRAY } from '@/game/constants'
 import { CheckOutlined, ExpandAltOutlined, GlobalOutlined } from '@ant-design/icons-vue'
 import AIconEmpty from '@/components/common/AIconEmpty.vue'
-import SubMenuMousePath from '@/components/menu/SubMenuMousePath.vue'
+import SubMenuVideoMap from '@/components/menu/SubMenuVideoMap.vue'
 
 export default defineComponent({
-  components: { SubMenuMousePath, AIconEmpty, CheckOutlined, ExpandAltOutlined, GlobalOutlined },
+  components: { SubMenuVideoMap, AIconEmpty, CheckOutlined, ExpandAltOutlined, GlobalOutlined },
   setup () {
     // 菜单宽度
     const width = computed(() => {

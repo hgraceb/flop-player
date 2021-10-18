@@ -6,8 +6,8 @@ menu:
     language: 繁體中文
     toggleLanguages: 切換語言
     scaling: 縮放比例
-    mousePath:
-      title: 鼠標軌跡
+    videoMap:
+      title: 錄像地圖
       move: 鼠標移動
       left: 鼠標左鍵
       right: 鼠標右鍵
@@ -19,6 +19,6 @@ controlBar:
   play: 播放
   pause: 暫停
   replay: 重放
-  displayMousePath: 顯示鼠標軌跡
-  hideMousePath: 隱藏鼠標軌跡
+  displayVideoMap: 顯示錄像地圖
+  hideVideoMap: 隱藏錄像地圖
   reset: 重置

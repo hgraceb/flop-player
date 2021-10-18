@@ -6,8 +6,8 @@ menu:
     language: English
     toggleLanguages: Languages
     scaling: Scaling
-    mousePath:
-      title: Mouse path
+    videoMap:
+      title: Video map
       move: Mouse move
       left: Left click
       right: Right click
@@ -19,6 +19,6 @@ controlBar:
   play: Play
   pause: Pause
   replay: Replay
-  displayMousePath: Display mouse path
-  hideMousePath: Hide mouse path
+  displayVideoMap: Display video map
+  hideVideoMap: Hide video map
   reset: Reset

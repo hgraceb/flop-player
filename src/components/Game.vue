@@ -11,7 +11,7 @@
     <game-bottom-middle />
     <game-bottom-lower />
     <!-- 将鼠标路径放在最上层显示，超出遮罩部分也正常进行渲染，谁叫你自己鬼画符的 (σ｀д′)σ -->
-    <game-mouse-path />
+    <game-video-map />
     <!-- 鼠标指针需要显示在最上层，所以需要最后进行渲染 -->
     <game-cursor />
   </base-svg>
@@ -31,10 +31,10 @@ import GameCursor from '@/components/game/GameCursor.vue'
 import GameBottomUpper from '@/components/game/GameBottomUpper.vue'
 import GameBottomMiddle from '@/components/game/GameBottomMiddle.vue'
 import GameBottomLower from '@/components/game/GameBottomLower.vue'
-import GameMousePath from '@/components/game/GameMousePath.vue'
+import GameVideoMap from '@/components/game/GameVideoMap.vue'
 
 export default defineComponent({
-  components: { GameMousePath, GameBottomLower, GameBottomMiddle, GameBottomUpper, GameCursor, GameTopLower, GameTopMiddle, GameTopUpper, GameMiddle, SkinSprites, BaseSvg },
+  components: { GameVideoMap, GameBottomLower, GameBottomMiddle, GameBottomUpper, GameCursor, GameTopLower, GameTopMiddle, GameTopUpper, GameMiddle, SkinSprites, BaseSvg },
   setup () {
     // SVG 高度信息
     const width = computed(() => {
