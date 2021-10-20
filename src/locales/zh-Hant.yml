@@ -16,6 +16,9 @@ menu:
   help:
     title: 幫助
 
+game:
+  anonymous: 佚名
+
 controlBar:
   play: 播放
   pause: 暫停

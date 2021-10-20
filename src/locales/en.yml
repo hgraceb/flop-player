@@ -16,6 +16,9 @@ menu:
   help:
     title: Help
 
+game:
+  anonymous: Anonymous
+
 controlBar:
   play: Play
   pause: Pause

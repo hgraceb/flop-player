@@ -1,121 +1,5 @@
 <template>
   <g style="display:none;">
-    <symbol id="border-bottom-left">
-      <path d="M0 0v110h10v-10h10V90h10V0H0z" fill="white" />
-      <path d="M30 0v90H20v10H10v10H0v10h10v-10h10v-10h10V90h90V30h-20V20h10V10h10V0h-10v10h-10v10H90V0H30z" fill="silver" />
-      <path d="M90 0v20h10V10h10V0H90z" fill="gray" />
-      <path d="M110 10v10h-10v10h20V10h-10z" fill="white" />
-      <path d="M30 90v10H20v10H10v10h110V90H30z" fill="gray" />
-    </symbol>
-    <symbol id="border-bottom-right">
-      <path d="M0 0v30h30V0H0z" fill="white" />
-      <path d="M30 0v30H0v60h90V0H30z" fill="silver" />
-      <path d="M90 0v90H0v30h120V0H90z" fill="gray" />
-    </symbol>
-    <symbol id="border-horizontal-bottom">
-      <path :d="`M0 0L0 30L${boardWidth} 30L${boardWidth} 0L0 0z`" fill="white" />
-      <path :d="`M0 30L0 90L${boardWidth} 90L${boardWidth} 30L0 30z`" fill="silver" />
-      <path :d="`M0 90L0 120L${boardWidth} 120L${boardWidth} 90L0 90z`" fill="gray" />
-    </symbol>
-    <symbol id="border-horizontal-middle">
-      <path :d="`M0 0L0 20L${boardWidth} 20L${boardWidth} 0L0 0z`" fill="white" />
-      <path :d="`M0 20L0 80L${boardWidth} 80L${boardWidth} 20L0 20z`" fill="silver" />
-      <path :d="`M0 80L0 110L${boardWidth} 110L${boardWidth} 80L0 80z`" fill="gray" />
-    </symbol>
-    <symbol id="border-horizontal-top">
-      <path :d="`M0 0L0 30L${boardWidth} 30L${boardWidth} 0L0 0z`" fill="white" />
-      <path :d="`M0 30L0 90L${boardWidth} 90L${boardWidth} 30L0 30z`" fill="silver" />
-      <path :d="`M0 90L0 110L${boardWidth} 110L${boardWidth} 90L0 90z`" fill="gray" />
-    </symbol>
-    <symbol id="border-middle-left">
-      <path d="M0 0v110h30V0H0z" fill="white" />
-      <path d="M30 0v110h60V80h30V20h-20V10h10V0h-10v10H90V0H30z" fill="silver" />
-      <path d="M90 0v10h10V0H90z" fill="gray" />
-      <path d="M110 0v10h-10v10h20V0h-10z" fill="white" />
-      <path d="M90 80v30h30V80H90z" fill="gray" />
-    </symbol>
-    <symbol id="border-middle-right">
-      <path d="M0 0v20h30V0H0z" fill="white" />
-      <path d="M30 0v20H0v60h20v10H10v10H0v10h10v-10h10V90h10v20h60V0H30z" fill="silver" />
-      <path d="M90 0v110h30V0H90M0 80v20h10V90h10V80H0z" fill="gray" />
-      <path d="M20 90v10H10v10h20V90H20z" fill="white" />
-    </symbol>
-    <symbol id="border-top-left">
-      <path d="M0 0v110h30V30h90V0H0z" fill="white" />
-      <path d="M30 30v80h60V90h30V30H30z" fill="silver" />
-      <path d="M90 90v20h30V90H90z" fill="gray" />
-    </symbol>
-    <symbol id="border-top-right">
-      <path d="M0 0v30h90V20h10V10h10V0H0z" fill="white" />
-      <path d="M110 0v10h-10v10H90v10H0v60h20v10H10v10h10v-10h10v10h60V30h10V20h10V10h10V0h-10z" fill="silver" />
-      <path d="M110 10v10h-10v10H90v80h30V10h-10M0 90v20h10v-10h10V90H0z" fill="gray" />
-      <path d="M20 100v10h10v-10H20z" fill="white" />
-    </symbol>
-    <symbol id="border-vertical-left-upper">
-      <path :d="`M0 0L0 ${countTopHeight}L30 ${countTopHeight}L30 0L0 0z`" fill="white" />
-      <path :d="`M30 0L30 ${countTopHeight}L90 ${countTopHeight}L90 0L30 0z`" fill="silver" />
-      <path :d="`M90 0L90 ${countTopHeight}L110 ${countTopHeight}L110 0L90 0z`" fill="gray" />
-      <path :d="`M110 0L110 ${countTopHeight}L120 ${countTopHeight}L120 0L110 0z`" fill="silver" />
-    </symbol>
-    <symbol id="border-vertical-right-upper">
-      <path :d="`M0 0L0 ${countTopHeight}L10 ${countTopHeight}L10 0L0 0z`" fill="silver" />
-      <path :d="`M10 0L10 ${countTopHeight}L30 ${countTopHeight}L30 0L10 0z`" fill="white" />
-      <path :d="`M30 0L30 ${countTopHeight}L90 ${countTopHeight}L90 0L30 0z`" fill="silver" />
-      <path :d="`M90 0L90 ${countTopHeight}L120 ${countTopHeight}L120 0L90 0z`" fill="gray" />
-    </symbol>
-    <symbol id="border-vertical-left-lower">
-      <path :d="`M0 0L0 ${boardHeight}L30 ${boardHeight}L30 0L0 0z`" fill="white" />
-      <path :d="`M30 0L30 ${boardHeight}L90 ${boardHeight}L90 0L30 0z`" fill="silver" />
-      <path :d="`M90 0L90 ${boardHeight}L120 ${boardHeight}L120 0L90 0z`" fill="gray" />
-    </symbol>
-    <symbol id="border-vertical-right-lower">
-      <path :d="`M0 0L0 ${boardHeight}L30 ${boardHeight}L30 0L0 0z`" fill="white" />
-      <path :d="`M30 0L30 ${boardHeight}L90 ${boardHeight}L90 0L30 0z`" fill="silver" />
-      <path :d="`M90 0L90 ${boardHeight}L120 ${boardHeight}L120 0L90 0z`" fill="gray" />
-    </symbol>
-
-    <symbol id="game-bottom-upper-left">
-      <path d="M0 0v90h30V0H0z" fill="white" />
-      <path d="M30 0v90h90V30h-20V20h10V10h10V0h-10v10h-10v10H90V0H30z" fill="silver" />
-      <path d="M90 0v20h10V10h10V0H90z" fill="gray" />
-      <path d="M110 10v10h-10v10h20V10h-10z" fill="white" />
-    </symbol>
-    <symbol id="game-bottom-upper-center">
-      <path :d="`M0 0L0 30L${boardWidth} 30L${boardWidth} 0L0 0z`" fill="white" />
-      <path :d="`M0 30L0 90L${boardWidth} 90L${boardWidth} 30L0 30z`" fill="silver" />
-    </symbol>
-    <symbol id="game-bottom-upper-right">
-      <path d="M0 0v30h30V0H0z" fill="white" />
-      <path d="M30 0v30H0v60h90V0H30z" fill="silver" />
-      <path d="M90 0v90h30V0H90z" fill="gray" />
-    </symbol>
-    <symbol id="game-bottom-middle-left">
-      <path :d="`M0 0L0 ${gameBottomMiddleHeight}L30 ${gameBottomMiddleHeight}L30 0L0 0z`" fill="white" />
-      <path :d="`M30 0L30 ${gameBottomMiddleHeight}L90 ${gameBottomMiddleHeight}L90 0L30 0z`" fill="silver" />
-      <path :d="`M90 0L90 ${gameBottomMiddleHeight}L120 ${gameBottomMiddleHeight}L120 0L90 0z`" fill="#e0e0e0" />
-    </symbol>
-    <symbol id="game-bottom-middle-center">
-      <path :d="`M0 0L0 ${gameBottomMiddleHeight}L${boardWidth} ${gameBottomMiddleHeight}L${boardWidth} 0L0 0z`" fill="#e0e0e0" />
-    </symbol>
-    <symbol id="game-bottom-middle-right">
-      <path :d="`M0 0L0 ${gameBottomMiddleHeight}L30 ${gameBottomMiddleHeight}L30 0L0 0z`" fill="#e0e0e0" />
-      <path :d="`M30 0L30 ${gameBottomMiddleHeight}L90 ${gameBottomMiddleHeight}L90 0L30 0z`" fill="silver" />
-      <path :d="`M90 0L90 ${gameBottomMiddleHeight}L120 ${gameBottomMiddleHeight}L120 0L90 0z`" fill="gray" />
-    </symbol>
-    <symbol id="game-bottom-lower-left">
-      <path d="M0 0v80h10V70h10V60h10V0H0z" fill="white" />
-      <path d="M30 0v60H20v10H10v10H0v10h10V80h10V70h10V60h90V0H30z" fill="silver" />
-      <path d="M30 60v10H20v10H10v10h110V60H30z" fill="gray" />
-    </symbol>
-    <symbol id="game-bottom-lower-center">
-      <path :d="`M0 0L0 60L${boardWidth} 60L${boardWidth} 0L0 0z`" fill="silver" />
-      <path :d="`M0 60L0 90L${boardWidth} 90L${boardWidth} 60L0 60z`" fill="gray" />
-    </symbol>
-    <symbol id="game-bottom-lower-right">
-      <path d="M0 0v60h90V0H0z" fill="silver" />
-      <path d="M90 0v60H0v30h120V0H90z" fill="gray" />
-    </symbol>
-
     <symbol id="cell-flag">
       <path :d="`M${pathChromeFix}0 0v150h10v-10h10V20h120V10h10V0H0z`" fill="white" />
       <path :d="`M${pathChromeFix}150 0v10h-10v10H20v120H10v10H0v10h10v-10h10v-10h120V20h10V10h10V0h-10z`" fill="silver" />
@@ -389,9 +273,6 @@
       <path d="M60 210v10h10v-10H60m20 0v10h10v-10H80m110 0v10h10v-10h-10m20 0v10h10v-10h-10m110 0v10h10v-10h-10m20 0v10h10v-10h-10z" />
       <path d="M0 240v10h10v-10H0z" fill="silver" />
     </symbol>
-    <symbol id="background-top">
-      <path :d="`M0 0L0 ${countTopHeight}L${boardWidth} ${countTopHeight}L${boardWidth} 0L0 0z`" fill="silver" />
-    </symbol>
     <symbol id="cursor-arrow">
       <polygon points="119.72,127.46 70.38,127.46 90.64,168.68 61.19,183.61 38.59,137.28 5.00,170.04 5.00,12.12 " stroke-width="10" style="fill:#7BCEF7;stroke:#424A52;"></polygon>
     </symbol>
@@ -400,25 +281,10 @@
 
 <script lang="ts">
 
-import { computed, defineComponent } from 'vue'
-import { store } from '@/store'
-import { CELL_SIDE_LENGTH, GAME_BOTTOM_MIDDLE, GAME_TOP_MIDDLE, SVG_SCALE } from '@/game/constants'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   setup () {
-    // 游戏棋盘宽度
-    const boardWidth = computed(() => {
-      return store.state.width * CELL_SIDE_LENGTH * SVG_SCALE
-    })
-    // 游戏棋盘高度
-    const boardHeight = computed(() => {
-      return store.state.height * CELL_SIDE_LENGTH * SVG_SCALE
-    })
-    // 顶部计数器高度
-    const countTopHeight = GAME_TOP_MIDDLE.height * SVG_SCALE
-    // 游戏底部中间部分的高度信息
-    const gameBottomMiddleHeight = GAME_BOTTOM_MIDDLE.height * SVG_SCALE
-
     // 修复 Windows 平台 Google Chrome 94.0.4606.61 浏览器在特定情况下复用 SVG 时渲染错误的问题，Edge、Firefox 等浏览器均未发现此问题...Google 还是你牛逼呀 （；´д｀）ゞ
     // 渲染错误的具体表现就是一些使用 <symbol> 和 <use> 标签进行复用的 SVG 图片，在特定情况下会有部分图片出现颠倒、错位的情况，如：Windows 缩放比例为 200%、Chrome 缩放比例为 110% 时
     // 调整 SVG 的 viewBox 大小、宽度、高度等都会影响到渲染结果，但是效果并不是太好，最后发现在 path 中添加一个点也会影响到最终渲染的结果，可以比较完美地解决渲染错误的问题 ( •̀ ω •́ )✧
@@ -427,7 +293,7 @@ export default defineComponent({
     // 有一部分图片不用添加以下代码也可以正常显示，但是为了代码统一、降低维护成本，而且加上这个点也没什么太大影响，所以游戏区域内用到的所有图片就全都给加上了，即：id 为 cell-* 的图片
     const pathChromeFix = '10000 0L'
 
-    return { boardWidth, boardHeight, countTopHeight, gameBottomMiddleHeight, pathChromeFix }
+    return { pathChromeFix }
   }
 })
 </script>

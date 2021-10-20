@@ -1,5 +1,4 @@
 <template>
-  <skin-symbol :translate-x="0" :translate-y="translateY" name="border-vertical-left-lower" />
   <g :transform="`translate(${translateX} ${translateY})`">
     <template v-for="(item, height) in gameHeight" :key="item">
       <skin-symbol
@@ -11,7 +10,6 @@
       />
     </template>
   </g>
-  <skin-symbol :translate-x="rightTranslateX" :translate-y="translateY" name="border-vertical-right-lower" />
 </template>
 
 <script lang="ts">
@@ -32,10 +30,6 @@ export default defineComponent({
     const gameWidth = computed(() => store.state.width)
     // 游戏高度
     const gameHeight = computed(() => store.state.height)
-    // 右边框的 X 轴坐标偏移量
-    const rightTranslateX = computed(() => {
-      return (GAME_MIDDLE.widthLeft + store.state.width * CELL_SIDE_LENGTH) * SVG_SCALE
-    })
     // 根据横坐标和纵坐标获取方块的图片名称
     const getCellImg = (width: number, height: number): ImgCellType => {
       // 如果游戏棋盘信息为空，则返回默认值
@@ -53,7 +47,7 @@ export default defineComponent({
       return height * CELL_SIDE_LENGTH * SVG_SCALE
     }
 
-    return { translateX, translateY, gameWidth, gameHeight, rightTranslateX, getCellImg, getTranslateX, getTranslateY }
+    return { translateX, translateY, gameWidth, gameHeight, getCellImg, getTranslateX, getTranslateY }
   }
 })
 </script>

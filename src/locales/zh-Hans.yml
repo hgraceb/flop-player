@@ -21,6 +21,10 @@ menu:
   help:
     title: 帮助
 
+# 游戏区域
+game:
+  anonymous: 佚名
+
 # 录像控制条
 controlBar:
   play: 播放

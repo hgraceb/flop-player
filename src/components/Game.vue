@@ -3,13 +3,11 @@
     <skin-sprites />
   </base-svg>
   <base-svg :height="height" :width="width" class="svg-game">
-    <game-top-upper />
-    <game-top-middle />
-    <game-top-lower />
-    <game-middle />
-    <game-bottom-upper />
-    <game-bottom-middle />
-    <game-bottom-lower />
+    <game-background :height="height" :width="width" />
+    <game-border :height="height" :width="width" />
+    <game-counter />
+    <game-main />
+    <game-player-info :height="height" :width="width" />
     <!-- 将鼠标路径放在最上层显示，超出遮罩部分也正常进行渲染，谁叫你自己鬼画符的 (σ｀д′)σ -->
     <game-video-map />
     <!-- 鼠标指针需要显示在最上层，所以需要最后进行渲染 -->
@@ -23,18 +21,16 @@ import SkinSprites from '@/components/skin/SkinSprites.vue'
 import { CELL_SIDE_LENGTH, GAME_BOTTOM_LOWER, GAME_BOTTOM_MIDDLE, GAME_BOTTOM_UPPER, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
 import { store } from '@/store'
 import { computed, defineComponent } from 'vue'
-import GameMiddle from '@/components/game/GameMiddle.vue'
-import GameTopUpper from '@/components/game/GameTopUpper.vue'
-import GameTopMiddle from '@/components/game/GameTopMiddle.vue'
-import GameTopLower from '@/components/game/GameTopLower.vue'
 import GameCursor from '@/components/game/GameCursor.vue'
-import GameBottomUpper from '@/components/game/GameBottomUpper.vue'
-import GameBottomMiddle from '@/components/game/GameBottomMiddle.vue'
-import GameBottomLower from '@/components/game/GameBottomLower.vue'
 import GameVideoMap from '@/components/game/GameVideoMap.vue'
+import GameBorder from '@/components/game/GameBorder.vue'
+import GameBackground from '@/components/game/GameBackground.vue'
+import GamePlayerInfo from '@/components/game/GamePlayerInfo.vue'
+import GameMain from '@/components/game/GameMain.vue'
+import GameCounter from '@/components/game/GameCounter.vue'
 
 export default defineComponent({
-  components: { GameVideoMap, GameBottomLower, GameBottomMiddle, GameBottomUpper, GameCursor, GameTopLower, GameTopMiddle, GameTopUpper, GameMiddle, SkinSprites, BaseSvg },
+  components: { GameCounter, GameMain, GamePlayerInfo, GameBackground, GameBorder, GameVideoMap, GameCursor, SkinSprites, BaseSvg },
   setup () {
     // SVG 高度信息
     const width = computed(() => {
