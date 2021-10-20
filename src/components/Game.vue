@@ -4,10 +4,11 @@
   </base-svg>
   <base-svg :height="height" :width="width" class="svg-game">
     <game-background :height="height" :width="width" />
-    <game-border :height="height" :width="width" />
-    <game-counter />
     <game-main />
+    <game-counter />
     <game-player-info :height="height" :width="width" />
+    <!-- 将边框放在其他区域的上层 -->
+    <game-border :height="height" :width="width" />
     <!-- 将鼠标路径放在最上层显示，超出遮罩部分也正常进行渲染，谁叫你自己鬼画符的 (σ｀д′)σ -->
     <game-video-map />
     <!-- 鼠标指针需要显示在最上层，所以需要最后进行渲染 -->

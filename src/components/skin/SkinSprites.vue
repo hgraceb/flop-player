@@ -1,15 +1,71 @@
 <template>
   <g style="display:none;">
-    <symbol id="cell-flag">
+    <!-- 方块点击后显示的边框，7.89 是为了修复部分缩放比例下白边问题设置的余量，设置为 7.89 是为了方便后续查看和维护，不过不能设置太小，如：1.23 -->
+    <symbol id="base-cell-border-press">
+      <path d="M0 0v167.89h10V10h157.89V0H0z" fill="gray" />
+    </symbol>
+    <!-- 默认方块图片，7.89 余量 -->
+    <symbol id="cell-normal">
       <path d="M0 0v150h10v-10h10V20h120V10h10V0H0z" fill="white" />
       <path d="M150 0v10h-10v10H20v120H10v10H0v10h10v-10h10v-10h120V20h10V10h10V0h-10z" fill="silver" />
-      <path d="M150 10v10h-10v120H20v10H10v10h150V10h-10z" fill="gray" />
-      <path d="M70 30v10H50v10H40v10h10v10h20v10h20V30H70z" fill="red" />
-      <path d="M80 80v20H60v10H40v20h80v-20h-20v-10H90V80H80z" />
+      <path d="M150 10v10h-10v120H20v10H10v17.89h157.89V10h-10z" fill="gray" />
+    </symbol>
+    <!-- 方块点击后显示的图片，可作为其他方块图片的背景 -->
+    <symbol id="cell-press">
+      <use xlink:href="#base-cell-border-press" />
+      <path d="M10 10v150h150V10H10z" fill="silver" />
+    </symbol>
+    <!-- 打开雷之后显示的图片 -->
+    <symbol id="cell-mine-bomb">
+      <use xlink:href="#base-cell-border-press" />
+      <path d="M10 10v150h150V10H10z" fill="red" />
+      <path d="M80 20v20H60v10H50V40H40v10h10v10H40v20H20v10h20v20h10v10H40v10h10v-10h10v10h20v20h10v-20h20v-10h10v10h10v-10h-10v-10h10V90h20V80h-20V60h-10V50h10V40h-10v10h-10V40H90V20H80z" />
+      <path d="M60 60v20h20V60H60z" fill="white" />
+    </symbol>
+    <!-- 可以使用方块点击后显示的图片作为背景的图片 -->
+    <symbol id="cell-number-0">
+      <use xlink:href="#cell-press" />
+    </symbol>
+    <symbol id="cell-number-1">
+      <use xlink:href="#cell-press" />
+      <path d="M80 30v10H70v10H60v10H50v10h20v40H50v20h70v-20h-20V30H80z" fill="#00f" />
+    </symbol>
+    <symbol id="cell-number-2">
+      <use xlink:href="#cell-press" />
+      <path d="M40 30v10H30v20h30V50h40v20H80v10H60v10H40v10H30v30h100v-20H70v-10h20V90h20V80h10V70h10V40h-10V30H40z" fill="green" />
+    </symbol>
+    <symbol id="cell-number-3">
+      <use xlink:href="#cell-press" />
+      <path d="M30 30v20h70v20H60v20h40v20H30v20h90v-10h10V90h-10V70h10V40h-10V30H30z" fill="red" />
+    </symbol>
+    <symbol id="cell-number-4">
+      <use xlink:href="#cell-press" />
+      <path d="M50 30v20H40v20H30v20h60v40h30V90h10V70h-10V30H90v40H70V50h10V30H50z" fill="navy" />
+    </symbol>
+    <symbol id="cell-number-5">
+      <use xlink:href="#cell-press" />
+      <path d="M30 30v60h70v20H30v20h90v-10h10V80h-10V70H60V50h70V30H30z" fill="maroon" />
+    </symbol>
+    <symbol id="cell-number-6">
+      <use xlink:href="#cell-press" />
+      <path d="M40 30v10H30v80h10v10h80v-10h10V80h-10V70H60V50h60V30H40z" fill="teal" />
+      <path d="M60 90v20h40V90H60z" fill="silver" />
+    </symbol>
+    <symbol id="cell-number-7">
+      <use xlink:href="#cell-press" />
+      <path d="M30 30v20h70v20H90v20H80v20H70v20h30v-20h10V90h10V70h10V30H30z" />
+    </symbol>
+    <symbol id="cell-number-8">
+      <use xlink:href="#cell-press" />
+      <path d="M40 30v10H30v30h10v20H30v30h10v10h80v-10h10V90h-10V70h10V40h-10V30H40z" fill="gray" />
+      <path d="M60 50v20h40V50H60m0 40v20h40V90H60z" fill="silver" />
+    </symbol>
+    <symbol id="cell-question-press">
+      <use xlink:href="#cell-press" />
+      <path d="M70 40v10H60v20h20V50h20v30H90v10H80v20h20V90h10V80h10V50h-10V40H70m10 80v20h20v-20H80z" />
     </symbol>
     <symbol id="cell-flag-wrong">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
+      <use xlink:href="#cell-press" />
       <path d="M80 20v20H60v20h20v20h10V70h10V60h10V40H90V20H80z" />
       <path d="M20 30v10h10v10h10v10h10v10h10v10h10v20H60v10H50v10H40v10H30v10H20v10h20v-10h10v-10h10v-10h10v-10h10v-10h10v10h10v10h10v10h10v10h10v10h20v-10h-10v-10h-10v-10h-10v-10h-10v-10h-10V80h10V70h10V60h10V50h10V40h10V30h-20v10h-10v10h-10v10h-10v10H90v10H80V70H70V60H60V50H50V40H40V30H20z" fill="red" />
       <path d="M40 60v20H20v10h20v20h20v-10h10V80H60V70H50V60H40z" />
@@ -17,83 +73,21 @@
       <path d="M120 60v10h-10v10h-10v20h10v10h20V90h20V80h-20V60h-10m-40 40v10H70v10H60v10h20v20h10v-20h20v-10h-10v-10H90v-10H80z" />
     </symbol>
     <symbol id="cell-mine">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
+      <use xlink:href="#cell-press" />
       <path d="M80 20v20H60v10H50V40H40v10h10v10H40v20H20v10h20v20h10v10H40v10h10v-10h10v10h20v20h10v-20h20v-10h10v10h10v-10h-10v-10h10V90h20V80h-20V60h-10V50h10V40h-10v10h-10V40H90V20H80z" />
       <path d="M60 60v20h20V60H60z" fill="white" />
     </symbol>
-    <symbol id="cell-mine-bomb">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="red" />
-      <path d="M80 20v20H60v10H50V40H40v10h10v10H40v20H20v10h20v20h10v10H40v10h10v-10h10v10h20v20h10v-20h20v-10h10v10h10v-10h-10v-10h10V90h20V80h-20V60h-10V50h10V40h-10v10h-10V40H90V20H80z" />
-      <path d="M60 60v20h20V60H60z" fill="white" />
-    </symbol>
-    <symbol id="cell-normal">
-      <path d="M0 0v150h10v-10h10V20h120V10h10V0H0z" fill="white" />
-      <path d="M150 0v10h-10v10H20v120H10v10H0v10h10v-10h10v-10h120V20h10V10h10V0h-10z" fill="silver" />
-      <path d="M150 10v10h-10v120H20v10H10v10h150V10h-10z" fill="gray" />
-    </symbol>
-    <symbol id="cell-number-0">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-    </symbol>
-    <symbol id="cell-number-1">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-      <path d="M80 30v10H70v10H60v10H50v10h20v40H50v20h70v-20h-20V30H80z" fill="#00f" />
-    </symbol>
-    <symbol id="cell-number-2">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-      <path d="M40 30v10H30v20h30V50h40v20H80v10H60v10H40v10H30v30h100v-20H70v-10h20V90h20V80h10V70h10V40h-10V30H40z" fill="green" />
-    </symbol>
-    <symbol id="cell-number-3">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-      <path d="M30 30v20h70v20H60v20h40v20H30v20h90v-10h10V90h-10V70h10V40h-10V30H30z" fill="red" />
-    </symbol>
-    <symbol id="cell-number-4">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-      <path d="M50 30v20H40v20H30v20h60v40h30V90h10V70h-10V30H90v40H70V50h10V30H50z" fill="navy" />
-    </symbol>
-    <symbol id="cell-number-5">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-      <path d="M30 30v60h70v20H30v20h90v-10h10V80h-10V70H60V50h70V30H30z" fill="maroon" />
-    </symbol>
-    <symbol id="cell-number-6">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-      <path d="M40 30v10H30v80h10v10h80v-10h10V80h-10V70H60V50h60V30H40z" fill="teal" />
-      <path d="M60 90v20h40V90H60z" fill="silver" />
-    </symbol>
-    <symbol id="cell-number-7">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-      <path d="M30 30v20h70v20H90v20H80v20H70v20h30v-20h10V90h10V70h10V30H30z" />
-    </symbol>
-    <symbol id="cell-number-8">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-      <path d="M40 30v10H30v30h10v20H30v30h10v10h80v-10h10V90h-10V70h10V40h-10V30H40z" fill="gray" />
-      <path d="M60 50v20h40V50H60m0 40v20h40V90H60z" fill="silver" />
-    </symbol>
-    <symbol id="cell-press">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-    </symbol>
+    <!-- 可以使用默认方块图片作为背景的图片 -->
     <symbol id="cell-question">
-      <path d="M0 0v150h10v-10h10V20h120V10h10V0H0z" fill="white" />
-      <path d="M150 0v10h-10v10H20v120H10v10H0v10h10v-10h10v-10h120V20h10V10h10V0h-10z" fill="silver" />
-      <path d="M150 10v10h-10v120H20v10H10v10h150V10h-10z" fill="gray" />
+      <use xlink:href="#cell-normal" />
       <path d="M60 30v10H50v20h20V40h20v30H80v10H70v20h20V80h10V70h10V40h-10V30H60m10 80v20h20v-20H70z" />
     </symbol>
-    <symbol id="cell-question-press">
-      <path d="M0 0v160h10V10h150V0H0z" fill="gray" />
-      <path d="M10 10v150h150V10H10z" fill="silver" />
-      <path d="M70 40v10H60v20h20V50h20v30H90v10H80v20h20V90h10V80h10V50h-10V40H70m10 80v20h20v-20H80z" />
+    <symbol id="cell-flag">
+      <use xlink:href="#cell-normal" />
+      <path d="M70 30v10H50v10H40v10h10v10h20v10h20V30H70z" fill="red" />
+      <path d="M80 80v20H60v10H40v20h80v-20h-20v-10H90V80H80z" />
     </symbol>
+
     <symbol id="count-0">
       <path d="M0 0v10h10v10h10v10h10v50H20v10H10v10H0v10h10v10h10v10h10v50H20v10H10v10H0v10h10v-10h10v-10h10v-10h50v10h10v10h10v10h10v-10h-10v-10H90v-10H80v-50h10v-10h10v-10h10v-10h-10V90H90V80H80V30h10V20h10V10h10V0h-10v10H90v10H80v10H30V20H20V10H10V0H0z" />
       <path d="M10 0v10h10v10h10v10h50V20h10V10h10V0H10M0 10v90h10V90h10V80h10V30H20V20H10V10H0m100 0v10H90v10H80v50h10v10h10v10h10V10h-10z" fill="red" />
@@ -273,6 +267,8 @@
       <path d="M60 210v10h10v-10H60m20 0v10h10v-10H80m110 0v10h10v-10h-10m20 0v10h10v-10h-10m110 0v10h10v-10h-10m20 0v10h10v-10h-10z" />
       <path d="M0 240v10h10v-10H0z" fill="silver" />
     </symbol>
+
+    <!-- 鼠标指针 -->
     <symbol id="cursor-arrow">
       <polygon points="119.72,127.46 70.38,127.46 90.64,168.68 61.19,183.61 38.59,137.28 5.00,170.04 5.00,12.12 " stroke-width="10" style="fill:#7BCEF7;stroke:#424A52;"></polygon>
     </symbol>
