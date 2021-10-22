@@ -1,12 +1,10 @@
 <template>
-  <a-table
-    :columns="columns"
-    :data-source="data"
-    :pagination="false"
-    :show-header="false"
-    bordered
-    class="table-counters"
-  />
+  <table>
+    <tr v-for="item in data" :key="item.key">
+      <td :title="item.key">{{ item.key }}</td>
+      <td :title="item.value">{{ item.value }}</td>
+    </tr>
+  </table>
 </template>
 
 <script lang="ts">
@@ -15,7 +13,7 @@ import { store } from '@/store'
 import { round } from 'number-precision'
 
 export default defineComponent({
-  setup: function () {
+  setup () {
     interface TypeStat {
       [key: string]: string | number
     }
@@ -54,21 +52,6 @@ export default defineComponent({
 
     // 是否使用默认值
     const isDefault = computed(() => time.value <= 0)
-
-    // 表格定义
-    const columns = [
-      {
-        // 数据列表中每个数据都需要唯一的 key，否则控制台会报错，这里直接用 key 作为普通的数据索引
-        dataIndex: 'key',
-        width: 45
-      },
-      {
-        dataIndex: 'value',
-        width: 55,
-        // 让单元格内容根据宽度自动省略
-        ellipsis: true
-      }
-    ]
 
     // 扫雷网和（新）国际网对二次计算的值都是四舍五入进行显示，此处也对所有经过二次计算的值都进行四舍五入处理，如：3BV/s
     // 可能与 Arbiter 规则有所不同，如：时间为 20.16 秒、3BV 为 112 时，Arbiter 0.52.3 的 3BV/s 计算结果为 5.55，而四舍五入后为 5.56（使用 toFixed 进行四舍五入可能会不符合预期）
@@ -236,26 +219,34 @@ export default defineComponent({
       }
     ])
 
-    return { columns, data }
+    return { data }
   }
 })
 </script>
 
 <style scoped>
 /* 表格整体样式 */
-.table-counters {
-  width: 160px;
+table {
+  /* 使用分割模式实现共享边框的效果，避免 Chrome 部分缩放比例下边框粗细不一致的问题 */
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
-/* 表格数据单元格样式 */
-.table-counters ::v-deep(td) {
-  padding: 1px !important;
-  font-size: 12px;
+/* 表格数据单元行样式 */
+tr {
   background-color: rgb(192, 192, 192);
 }
 
-/* 表格数据单元格悬浮样式 */
-.table-counters ::v-deep(tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected)) > td {
-  background: rgba(192, 192, 192, .5) !important;
+/* 表格数据单元行悬浮样式 */
+tr:hover {
+  background-color: rgba(192, 192, 192, .5);
+}
+
+/* 表格数据单元格样式 */
+td {
+  width: 80px;
+  font-size: 12px;
+  border-bottom: 1px solid rgb(240, 240, 240);
+  border-right: 1px solid rgb(240, 240, 240);
 }
 </style>
