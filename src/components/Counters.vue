@@ -244,8 +244,15 @@ tr:hover {
 
 /* 表格数据单元格样式 */
 td {
-  width: 80px;
   font-size: 12px;
+  /* 限制单元格宽度 */
+  min-width: 80px;
+  max-width: 80px;
+  /* 用省略号表示被截断的文本 */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  /* 单元格边框 */
   border-bottom: 1px solid rgb(240, 240, 240);
   border-right: 1px solid rgb(240, 240, 240);
 }
