@@ -227,6 +227,13 @@ export default defineComponent({
 <style scoped>
 /* 表格整体样式 */
 table {
+  /* 表格背景颜色，与底部和右侧边框颜色一样，避免部分缩放比例下显示白边 */
+  /* 表格背景颜色，与底部和右侧边框颜色一样，避免部分缩放比例下显示白边 */
+  background-color: rgb(160, 160, 160);
+  /* 表格边框 */
+  border: 3px solid rgb(255, 255, 255);
+  border-right-color: rgb(160, 160, 160);
+  border-bottom-color: rgb(160, 160, 160);
   /* 使用分割模式实现共享边框的效果，避免 Chrome 部分缩放比例下边框粗细不一致的问题 */
   border-collapse: separate;
   border-spacing: 0;
@@ -245,15 +252,28 @@ tr:hover {
 /* 表格数据单元格样式 */
 td {
   font-size: 12px;
-  /* 限制单元格宽度 */
-  min-width: 80px;
-  max-width: 80px;
   /* 用省略号表示被截断的文本 */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  /* 单元格边框 */
-  border-bottom: 1px solid rgb(240, 240, 240);
-  border-right: 1px solid rgb(240, 240, 240);
+}
+
+td:first-child {
+  /* 限制单元格宽度 */
+  min-width: 70px;
+  max-width: 70px;
+  /* 单元格右侧边框 */
+  border-right: 1px solid gray;
+}
+
+td:last-child {
+  /* 限制单元格宽度 */
+  min-width: 80px;
+  max-width: 80px;
+}
+
+tr:not(:last-child) td {
+  /* 单元格底部边框 */
+  border-bottom: 1px solid gray;
 }
 </style>
