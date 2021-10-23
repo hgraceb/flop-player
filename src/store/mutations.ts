@@ -79,10 +79,6 @@ export const mutations = {
       }
     }
   },
-  /** 设置游戏录像是否暂停播放，cancelAnimationFrame 方法没有效果，采用标识位的方式进行暂停处理，TODO 完善游戏录像暂停逻辑，进行函数节流处理 */
-  setVideoPaused: (state: State, videoPaused: boolean): void => {
-    state.gameVideoPaused = videoPaused
-  },
   /** 初始化游戏 */
   initGame: (state: State, {
     width,
@@ -123,6 +119,10 @@ export const mutations = {
     } catch (e) {
       console.log(e)
     }
+  },
+  /** 暂停录像播放 */
+  setVideoPaused: (state: State): void => {
+    state.videoAnimationId = 0
   },
   /** 模拟上一个游戏事件 */
   performPreviousEvent: (state: State): void => {
@@ -258,13 +258,12 @@ export const mutations = {
   },
   /** 播放游戏录像，TODO 进行函数节流处理 */
   playVideo: (state: State): void => {
-    // 重置变量
-    state.gameVideoPaused = false
+    // 重置游戏开始时间
     state.gameStartTime = 0.0
     // 直接使用 requestAnimationFrame 回调的时间戳，可能会有较大误差，包括回调时间戳本身的误差和小数计算产生的误差，特别是在 Vuex 开启严格模式的时候
-    requestAnimationFrame(function performEvent () {
+    const animationId = requestAnimationFrame(function performEvent () {
       const timestamp = Date.now()
-      if (state.gameVideoPaused || state.gameEventIndex >= state.gameEvents.length) {
+      if (store.getters.isVideoPaused || state.gameEventIndex >= state.gameEvents.length || state.videoAnimationId !== animationId) {
         return
       }
       // 更新游戏经过的时间（毫秒）,首次时间为 0 ms
@@ -274,6 +273,8 @@ export const mutations = {
       store.commit('setGameStartTime', timestamp)
       window.requestAnimationFrame(performEvent)
     })
+    // 更新动画ID，取消其他动画
+    state.videoAnimationId = animationId
   },
   /** 检查录像是否播放结束，TODO 处理录像意外结尾的情况，即没有雷被打开并且时间没有超时 */
   checkVideoFinished: (state: State): void => {
@@ -282,7 +283,7 @@ export const mutations = {
       return
     }
     // 设置游戏播放暂停，如果不设置的话，在游戏播放结束之后会误以为游戏还处于正常播放的状态
-    state.gameVideoPaused = true
+    store.commit('setVideoPaused')
     // 最后一个游戏事件
     const event = state.gameEvents[state.gameEvents.length - 1]
     // 游戏胜利
@@ -298,6 +299,7 @@ export const mutations = {
 
 /** payload 参数可以为空的函数名称集合 */
 const EmptyPayloadFunction = [
+  'setVideoPaused',
   'performPreviousEvent',
   'performNextEvent',
   'replayVideo',

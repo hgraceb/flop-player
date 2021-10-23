@@ -43,19 +43,19 @@ export default defineComponent({
     const replayVideo = () => store.commit('replayVideo')
     // 录像是否处于暂停状态（录像播放结束也认为处于暂停状态）
     const isVideoPaused = computed(() => {
-      return store.state.gameVideoPaused || store.state.gameEventIndex >= store.state.gameEvents.length
+      return store.getters.isVideoPaused || store.state.gameEventIndex >= store.state.gameEvents.length
     })
     // 切换录像播放状态
     const toggleVideoPlay = () => {
       if (store.state.gameEventIndex >= store.state.gameEvents.length) {
         // 重新播放录像
         store.commit('replayVideo')
-      } else if (store.state.gameVideoPaused) {
+      } else if (store.getters.isVideoPaused) {
         // 继续播放录像
         store.commit('playVideo')
       } else {
         // 暂停录像播放
-        store.commit('setVideoPaused', true)
+        store.commit('setVideoPaused')
       }
     }
 

@@ -9,6 +9,8 @@ export type State = typeof storageDefault & {
   mines: number
   // 玩家名称原始数据
   playerArray: Uint8Array
+  // 录像动画ID，同一时间只播放一个录像，重置为 0 后其他录像动画全部取消，录像播放处于暂停状态
+  videoAnimationId: number
   // BBBV
   bbbv: number
   openings: number
@@ -33,8 +35,6 @@ export type State = typeof storageDefault & {
   gameStartTime: number,
   // 游戏经过的时间（毫秒）
   gameElapsedTime: number,
-  // 游戏录像是否处于暂停状态
-  gameVideoPaused: boolean
   // 游戏路径点坐标数组，x：精确的横坐标，y：精确的纵坐标
   gameMousePoints: { x: number, y: number }[]
   // 游戏左键点坐标数组，x：精确的横坐标，y：精确的纵坐标
@@ -63,6 +63,7 @@ export const state: State = {
   height: 8,
   mines: 10,
   playerArray: new Uint8Array(),
+  videoAnimationId: 0,
   bbbv: 0,
   openings: 0,
   islands: 0,
@@ -77,7 +78,6 @@ export const state: State = {
   gameImgBoard: [],
   gameStartTime: 0.0,
   gameElapsedTime: 0.0,
-  gameVideoPaused: true,
   gameMousePoints: [],
   gameLeftPoints: [],
   gameRightPoints: [],
