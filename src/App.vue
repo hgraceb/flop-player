@@ -1,5 +1,5 @@
 <template>
-  <!-- 如果当前页面被放在 iframe 内则需要添加退出按钮 -->
+  <!-- TODO 如果当前页面被放在 iframe 内则需要添加退出按钮 -->
   <screen-center v-show="loading">
     <a-spin :tip="$t('common.loading')" />
   </screen-center>
@@ -15,6 +15,8 @@
       </div>
     </div>
     <control-bar style="margin-left: auto;margin-right: auto" />
+    <!-- 将文件拖动处理控件放到主布局当中，页面正在加载的时候不对文件拖动事件进行处理 -->
+    <file-drag />
   </div>
 </template>
 
@@ -26,9 +28,10 @@ import Game from '@/components/Game.vue'
 import Counters from '@/components/Counters.vue'
 import GameMenu from '@/components/GameMenu.vue'
 import ScreenCenter from '@/components/common/ScreenCenter.vue'
+import FileDrag from '@/components/FileDrag.vue'
 
 export default defineComponent({
-  components: { ScreenCenter, GameMenu, Counters, Game, ControlBar },
+  components: { FileDrag, ScreenCenter, GameMenu, Counters, Game, ControlBar },
   setup () {
     const loading = computed(() => store.state.loading)
     // 用户设置的缩放比例
