@@ -26,3 +26,6 @@ controlBar:
   displayVideoMap: Display video map
   hideVideoMap: Hide video map
   reset: Reset
+
+common:
+  loading: Loading...

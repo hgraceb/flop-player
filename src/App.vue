@@ -1,6 +1,10 @@
 <template>
+  <!-- 如果当前页面被放在 iframe 内则需要添加退出按钮 -->
+  <screen-center v-show="loading">
+    <a-spin :tip="$t('common.loading')" />
+  </screen-center>
   <!-- TODO 解决缩放后没有影响到游戏菜单弹出的窗体内容、 Flex 布局左右边距错误跟随缩放导致有白边的问题 -->
-  <div style="width: fit-content;margin-left: auto;margin-right: auto">
+  <div v-show="!loading" style="width: fit-content;margin-left: auto;margin-right: auto">
     <div :style="{transformOrigin: '0 0 0', transform: `scale(${scale})`}" style="display: flex;align-items: flex-end">
       <div style="margin-left: auto">
         <counters />
@@ -21,10 +25,12 @@ import { store } from '@/store'
 import Game from '@/components/Game.vue'
 import Counters from '@/components/Counters.vue'
 import GameMenu from '@/components/GameMenu.vue'
+import ScreenCenter from '@/components/common/ScreenCenter.vue'
 
 export default defineComponent({
-  components: { GameMenu, Counters, Game, ControlBar },
+  components: { ScreenCenter, GameMenu, Counters, Game, ControlBar },
   setup () {
+    const loading = computed(() => store.state.loading)
     // 用户设置的缩放比例
     const scale = computed(() => store.state.scale)
 
@@ -40,7 +46,7 @@ export default defineComponent({
       // store.dispatch('fetchVideo', 'videos/double-openging.rawvf')
     })
 
-    return { scale }
+    return { loading, scale }
   }
 })
 </script>

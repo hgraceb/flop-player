@@ -117,8 +117,17 @@ export const mutations = {
       parse(state, payload)
       store.commit('replayVideo')
     } catch (e) {
+      // 录像解析失败则将录像事件清空，让页面可以正常显示，但不能播放解析失败的录像数据
+      state.gameEvents = []
+      // TODO 处理录像解析的场景，提示用户相关错误信息
       console.log(e)
     }
+    // 录像解析结束后取消页面的加载状态
+    state.loading = false
+  },
+  /** 将页面加载状态设置为加载中 */
+  setLoading: (state: State): void => {
+    state.loading = true
   },
   /** 暂停录像播放 */
   setVideoPaused: (state: State): void => {
@@ -299,6 +308,7 @@ export const mutations = {
 
 /** payload 参数可以为空的函数名称集合 */
 const EmptyPayloadFunction = [
+  'setLoading',
   'setVideoPaused',
   'performPreviousEvent',
   'performNextEvent',

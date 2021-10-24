@@ -26,3 +26,6 @@ controlBar:
   displayVideoMap: 顯示錄像地圖
   hideVideoMap: 隱藏錄像地圖
   reset: 重置
+
+common:
+  loading: 加載中...
