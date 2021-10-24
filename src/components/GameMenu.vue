@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO 如果当前页面被放在 iframe 内则需要添加退出按钮 -->
   <!-- 设置 triggerSubMenuAction="click" 可以将菜单展开方式切换为点击后展开（源代码中查看的属性，不同版本可能会有差异） -->
   <a-menu v-model:selectedKeys="selected" :style="`width: ${width}px`" class="game-menu" mode="horizontal">
     <a-sub-menu :title="$t('menu.game.title')">
