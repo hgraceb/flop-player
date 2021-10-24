@@ -32,6 +32,7 @@ export default defineComponent({
       }
     }
 
+    // TODO 不依靠 window 的拖动事件处理，因为进度条的区域也会触发 dragenter 事件，可能会导致遮罩无法关闭的情况，通过控制遮罩的 pointer-events 进行拖动事件处理
     // 检测到有元素被拖动进当前窗口时触发遮罩显示，其他事件由遮罩内部自行处理和判断
     const dragenter = () => {
       show.value = true
@@ -50,7 +51,7 @@ export default defineComponent({
 .mask {
   /* Ant Design Vue 的控件有的堆叠层级会达到 1000+，遮罩使用 9999 是为了保证显示在顶层 */
   z-index: 9999;
-  background: rgba(0, 0, 0, .5);
+  background: rgba(0, 0, 0, .7);
 }
 
 .mask * {
