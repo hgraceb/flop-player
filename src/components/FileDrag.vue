@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO 翻译文件拖拽处理可能展示的所有提示和错误信息 -->
   <!-- stop 是为了兼容 Firefox 93.0 (64 位)，否则文件还是会在新窗口被打开预览 -->
   <screen-center v-if="show" class="mask" @dragover.prevent.stop @drop.prevent.stop="onDrop" @dragleave.prevent.stop="show = false">
     <h1>拖拽到这里上传</h1>
@@ -31,17 +32,13 @@ export default defineComponent({
       }
     }
 
+    // 检测到有元素被拖动进当前窗口时触发遮罩显示，其他事件由遮罩内部自行处理和判断
     const dragenter = () => {
       show.value = true
     }
-
-    onMounted(() => {
-      window.addEventListener('dragenter', dragenter)
-    })
-
-    onUnmounted(() => {
-      window.removeEventListener('dragenter', dragenter)
-    })
+    // 向当前窗口注册和删除监听器
+    onMounted(() => window.addEventListener('dragenter', dragenter))
+    onUnmounted(() => window.removeEventListener('dragenter', dragenter))
 
     return { show, onDrop }
   }
