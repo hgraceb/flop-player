@@ -1,8 +1,8 @@
 <template>
-  <!-- TODO 翻译文件拖拽处理可能展示的所有提示和错误信息 -->
+  <!-- TODO 翻译文件拖放处理可能展示的所有提示和错误信息 -->
   <!-- stop 是为了兼容 Firefox 93.0 (64 位)，否则文件还是会在新窗口被打开预览 -->
   <screen-center v-if="show" class="mask" @dragover.prevent.stop @drop.prevent.stop="drop" @dragleave.prevent.stop="dragleave">
-    <h1>拖拽到这里上传</h1>
+    <h1>拖放到这里上传</h1>
   </screen-center>
 </template>
 
@@ -39,9 +39,9 @@ export default defineComponent({
       }
     }
 
-    // 检测到有元素被拖动进当前窗口时触发遮罩显示，其他事件由遮罩内部自行处理和判断
+    // 检测到有元素被拖放进当前窗口时触发遮罩显示，其他事件由遮罩内部自行处理和判断
     const dragenter = () => {
-      // 不显示滚动条，避免元素拖动到滚动条上，导致可能没有触发 dragleave 事件或者页面内元素进行滚动
+      // 不显示滚动条，避免元素拖放到滚动条上，导致可能没有触发 dragleave 事件或者页面内元素进行滚动
       document.body.classList.add(classHidden)
       show.value = true
     }
@@ -63,7 +63,7 @@ export default defineComponent({
 }
 
 .mask * {
-  /* 不作为鼠标事件的目标，避免拖动事件判断出错 */
+  /* 不作为鼠标事件的目标，避免拖放事件判断出错 */
   pointer-events: none;
 }
 

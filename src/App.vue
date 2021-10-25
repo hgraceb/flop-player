@@ -15,7 +15,7 @@
       </div>
     </div>
     <control-bar style="margin-left: auto;margin-right: auto" />
-    <!-- 将文件拖动处理控件放到主布局当中，页面正在加载的时候不对文件拖动事件进行处理 -->
+    <!-- 将文件拖放处理控件放到主布局当中，页面正在加载的时候不对文件拖动事件进行处理 -->
     <file-drag />
   </div>
 </template>
