@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 /* 全屏容器 */
 .fullscreen {
   top: 0;
