@@ -125,9 +125,9 @@ export const mutations = {
     // 录像解析结束后取消页面的加载状态
     state.loading = false
   },
-  /** 将页面加载状态设置为加载中 */
-  setLoading: (state: State): void => {
-    state.loading = true
+  /** 设置页面加载状态 */
+  setLoading: (state: State, loading: boolean): void => {
+    state.loading = loading
   },
   /** 暂停录像播放 */
   setVideoPaused: (state: State): void => {
@@ -308,7 +308,6 @@ export const mutations = {
 
 /** payload 参数可以为空的函数名称集合 */
 const EmptyPayloadFunction = [
-  'setLoading',
   'setVideoPaused',
   'performPreviousEvent',
   'performNextEvent',

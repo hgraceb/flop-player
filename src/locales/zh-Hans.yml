@@ -37,3 +37,15 @@ controlBar:
 # 通用
 common:
   loading: 加载中...
+  # 一般录像文件的大小都不会超过 5MB，可以先不用提示，我就不信你还真有这么大个录像 (っ °Д °;)っ
+  fileSelect: '请选择一个 {0} 文件'
+
+# 错误信息
+error:
+  fileNotPresent: 文件不存在
+  fileNotSelect: 未选择任何文件
+  fileTooMany: '文件数量过多：{0}'
+  fileEmpty: '文件内容为空：{0}'
+  fileTypeIncorrect: '文件类型错误：{0}'
+  fileTooLarge: '文件大小超过 5 MB：{0}'
+  fileReadError: '文件读取出错：{0}'

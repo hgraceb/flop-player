@@ -2,14 +2,15 @@
   <!-- TODO 翻译文件拖放处理可能展示的所有提示和错误信息 -->
   <!-- stop 是为了兼容 Firefox 93.0 (64 位)，否则文件还是会在新窗口被打开预览 -->
   <screen-center v-if="show" class="mask" @dragover.prevent.stop @drop.prevent.stop="drop" @dragleave.prevent.stop="dragleave">
-    <h1>拖放到这里上传</h1>
+    <!-- TODO 添加其他类型文件的选择说明 -->
+    <h2>{{ $t('common.fileSelect', ['rawvf']) }}</h2>
   </screen-center>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, onUnmounted, ref } from 'vue'
-import { message } from 'ant-design-vue'
 import ScreenCenter from '@/components/common/ScreenCenter.vue'
+import { store } from '@/store'
 
 export default defineComponent({
   components: { ScreenCenter },
@@ -25,18 +26,7 @@ export default defineComponent({
     const drop = (e: DragEvent) => {
       // 模拟 dragleave 事件
       dragleave()
-      if (e.dataTransfer?.files.length !== 1) {
-        message.error('请选择一个 .rawvf 文件')
-        return
-      }
-      const file = e.dataTransfer.files[0]
-      // 获取文件扩展名，连小数点一起获取是为了避免文件全名与扩展名一样导致判断错误
-      const extension = file.name.substring(file.name.lastIndexOf('.'))
-      if (extension === '.rawvf') {
-        message.info(`type = ${extension}`)
-      } else {
-        message.error('文件扩展名错误')
-      }
+      store.dispatch('fetchFiles', e.dataTransfer?.files)
     }
 
     // 检测到有元素被拖放进当前窗口时触发遮罩显示，其他事件由遮罩内部自行处理和判断
@@ -68,7 +58,7 @@ export default defineComponent({
 }
 
 /* 提示文本的一级标题 */
-h1 {
+h2 {
   position: absolute;
   /* 覆盖外边距 */
   margin: 0 !important;

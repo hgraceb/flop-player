@@ -29,3 +29,13 @@ controlBar:
 
 common:
   loading: 加載中...
+  fileSelect: '請選擇一個 {0} 文件'
+
+error:
+  fileNotPresent: 文件不存在
+  fileNotSelect: 未選擇任何文件
+  fileTooMany: '文件數量過多：{0}'
+  fileEmpty: '文件內容為空：{0}'
+  fileTypeIncorrect: '文件類型錯誤：{0}'
+  fileTooLarge: '文件大小超過 5 MB：{0}'
+  fileReadError: '文件讀取出錯：{0}'

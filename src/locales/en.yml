@@ -29,3 +29,13 @@ controlBar:
 
 common:
   loading: Loading...
+  fileSelect: 'Please select a {0} file'
+
+error:
+  fileNotPresent: File does not exist
+  fileNotSelect: No file selected
+  fileTooMany: 'Too many files: {0}'
+  fileEmpty: 'File content is empty: {0}'
+  fileTypeIncorrect: 'Incorrect file type: {0}'
+  fileTooLarge: 'File size exceeds 5 MB: {0}'
+  fileReadError: 'File read out error: {0}'
