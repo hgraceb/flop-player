@@ -5,7 +5,7 @@
       <EyeOutlined />
     </template>
     <template v-for="(item, index) in menuVideoMap" :key="index">
-      <a-menu-item @click="item.click">
+      <a-menu-item :disabled="item.disable" @click="item.click">
         <CheckOutlined v-if="item.checked" />
         <a-icon-empty v-else />
         <div style="display: inline-block">
@@ -45,7 +45,7 @@ export default defineComponent({
     const { t } = useI18n()
     // 鼠标路径菜单信息
     const menuVideoMap = computed(() => {
-      const result: { title: string, checked: boolean, click: () => void, divider?: boolean, color?: string, bgColor?: string }[] = [
+      const result: { title: string, checked: boolean, click: () => void, disable?: boolean, divider?: boolean, color?: string, bgColor?: string }[] = [
         {
           title: t('menu.options.videoMap.title'),
           checked: store.state.isVideoMap,
@@ -57,24 +57,28 @@ export default defineComponent({
           checked: store.state.isMousePathMove,
           color: '#ffffff',
           bgColor: '#888888',
+          disable: !store.state.isVideoMap,
           click: () => store.commit('setMousePathMove', !store.state.isMousePathMove)
         },
         {
           title: t('menu.options.videoMap.left'),
           checked: store.state.isMousePathLeft,
           color: '#00ffff',
+          disable: !store.state.isVideoMap,
           click: () => store.commit('setMousePathLeft', !store.state.isMousePathLeft)
         },
         {
           title: t('menu.options.videoMap.right'),
           checked: store.state.isMousePathRight,
           color: '#00ff00',
+          disable: !store.state.isVideoMap,
           click: () => store.commit('setMousePathRight', !store.state.isMousePathRight)
         },
         {
           title: t('menu.options.videoMap.double'),
           checked: store.state.isMousePathDouble,
           color: '#ff00ff',
+          disable: !store.state.isVideoMap,
           click: () => store.commit('setMousePathDouble', !store.state.isMousePathDouble),
           divider: true
         },
@@ -83,6 +87,7 @@ export default defineComponent({
           checked: store.state.isShowOpening,
           color: '#ffff00',
           bgColor: '#888888',
+          disable: !store.state.isVideoMap,
           click: () => store.commit('setShowOpening', !store.state.isShowOpening)
         }
       ]
