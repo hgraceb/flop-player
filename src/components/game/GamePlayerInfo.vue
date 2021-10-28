@@ -58,7 +58,9 @@ export default defineComponent({
 <style scoped>
 .player-name {
   overflow: hidden;
-  font-size: 100px;
+  font-size: 120px;
+  /* 控制文本垂直居中 */
+  line-height: 140px;
   text-align: center;
   /* 设置 white-space 属性，避免文本换行 */
   white-space: nowrap;
