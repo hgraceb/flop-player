@@ -10,7 +10,8 @@
         <counters />
       </div>
       <div style="margin-right: auto">
-        <game-menu />
+        <!-- 使用 v-show 切换显示状态后菜单会出现无法展开的问题，重新渲染即可 -->
+        <game-menu :key="!loading" />
         <game />
       </div>
     </div>

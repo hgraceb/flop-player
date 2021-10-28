@@ -82,6 +82,7 @@ export const mutations = {
   /**
    * 重置录像参数
    *
+   * @param state  参数列表
    * @param replay 是否需要保留重放录像需要的参数
    */
   resetVideo: (state: State, replay: boolean): void => {
