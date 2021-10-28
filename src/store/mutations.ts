@@ -79,6 +79,26 @@ export const mutations = {
       }
     }
   },
+  /**
+   * 重置录像参数
+   *
+   * @param replay 是否需要保留重放录像需要的参数
+   */
+  resetVideo: (state: State, replay: boolean): void => {
+    state.gameImgBoard = Array.from(Array(state.width * state.height), () => 'cell-normal')
+    state.gameElapsedTime = 0.0
+    state.gameEventIndex = 0
+    state.faceStatus = 'face-normal'
+    state.gameMousePoints = []
+    state.gameLeftPoints = []
+    state.gameRightPoints = []
+    state.gameDoublePoints = []
+    // 不需要重放录像，清除所有录像数据
+    if (!replay) {
+      state.gameEvents = []
+      state.gameCellBoard = []
+    }
+  },
   /** 初始化游戏 */
   initGame: (state: State, {
     width,
@@ -118,7 +138,7 @@ export const mutations = {
       store.commit('replayVideo')
     } catch (e) {
       // 录像解析失败则将录像事件清空，让页面可以正常显示，但不能播放解析失败的录像数据
-      state.gameEvents = []
+      store.commit('resetVideo', false)
       // TODO 处理录像解析的场景，提示用户相关错误信息
       console.log(e)
     }
@@ -255,14 +275,8 @@ export const mutations = {
   /** 重新播放游戏录像，TODO 进行函数节流处理 */
   replayVideo: (state: State): void => {
     // 重置变量
-    state.gameImgBoard = Array.from(Array(state.width * state.height), () => 'cell-normal')
-    state.gameElapsedTime = 0.0
-    state.gameEventIndex = 0
-    state.faceStatus = 'face-normal'
-    state.gameMousePoints = []
-    state.gameLeftPoints = []
-    state.gameRightPoints = []
-    state.gameDoublePoints = []
+    store.commit('resetVideo', true)
+    // 播放录像
     store.commit('playVideo')
   },
   /** 播放游戏录像，TODO 进行函数节流处理 */

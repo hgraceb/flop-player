@@ -140,6 +140,8 @@ export default defineComponent({
     })
     // Openings 的编号文本信息
     const openingsNumber = computed(() => {
+      // 没有 Openings 信息
+      if (store.state.gameCellBoard.length === 0) return []
       const result = new Array<{ x: number, y: number }>(store.state.openings)
       const points: { x: number, y: number }[][] = Array.from(Array(result.length), () => [])
       // 方块实际边长
@@ -167,6 +169,8 @@ export default defineComponent({
     })
     // Openings 的非零数字边框路径，没有绘制 Islands 是因为显示效果不好，就算了绘制了也还是分不太清楚各个 Island
     const openingsPath = computed(() => {
+      // 没有 Openings 信息
+      if (store.state.gameCellBoard.length === 0) return ''
       let path = ''
       for (let i = 0; i < store.state.gameCellBoard.length; i++) {
         // 当前索引对应的方块
