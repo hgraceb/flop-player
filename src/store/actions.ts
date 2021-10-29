@@ -3,6 +3,7 @@ import { message } from 'ant-design-vue'
 import { i18n } from '@/plugins/i18n'
 
 export const actions = {
+  /** 从 Uri 获取录像数据 */
   fetchUri: ({ commit }: { commit: Commit }, url: string): void => {
     // 将页面加载状态设置为加载中
     commit('setLoading', true)
@@ -19,15 +20,16 @@ export const actions = {
     request.responseType = 'arraybuffer'
     request.send()
   },
-  fetchFiles: ({ commit }: { commit: Commit }, fileList: FileList | undefined): void => {
+  /** 从文件列表获取录像数据 */
+  fetchFiles: ({ commit }: { commit: Commit }, fileList: FileList | undefined | null): void => {
     const { t } = i18n.global
-    if (fileList === undefined) {
+    if (!fileList) {
       // 文件不存在
       message.error(t('error.fileNotPresent'))
       return
     }
     if (fileList.length <= 0) {
-      // 未选择任何文件
+      // 未选择任何文件，文件无法直接访问时也会导致文件列表为空，如：直接拖放移动设备中的录像文件
       message.error(t('error.fileNotSelect'))
       return
     }

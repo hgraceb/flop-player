@@ -1,6 +1,7 @@
 menu:
   game:
     title: Game
+    localVideo: Local Video
   options:
     title: Options
     language: English
@@ -33,7 +34,7 @@ common:
 
 error:
   fileNotPresent: File does not exist
-  fileNotSelect: No file selected
+  fileNotSelect: No file selected or file not accessible
   fileTooMany: 'Too many files: {0}'
   fileEmpty: 'File content is empty: {0}'
   fileTypeIncorrect: 'Incorrect file type: {0}'

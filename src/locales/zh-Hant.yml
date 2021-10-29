@@ -1,6 +1,7 @@
 menu:
   game:
     title: 遊戲
+    localVideo: 本地錄像
   options:
     title: 選項
     language: 繁體中文
@@ -33,7 +34,7 @@ common:
 
 error:
   fileNotPresent: 文件不存在
-  fileNotSelect: 未選擇任何文件
+  fileNotSelect: 未選擇任何文件或者文件無法訪問
   fileTooMany: '文件數量過多：{0}'
   fileEmpty: '文件內容為空：{0}'
   fileTypeIncorrect: '文件類型錯誤：{0}'
