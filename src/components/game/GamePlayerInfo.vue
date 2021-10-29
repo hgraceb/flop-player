@@ -2,7 +2,8 @@
   <g :transform="`translate(90 ${height - 250})`">
     <path :d="`M 0 0 h ${width - 180} v 160 h ${180 - width} Z`" fill="#e0e0e0" />
     <foreignObject :width="width - 180" height="160">
-      <div :style="`opacity: ${opacityPlayer}`" :title="player" class="player-name">{{ player }}</div>
+      <!-- 直接使用 opacity 属性修改文本透明度的话，在 Safari 无法正常显示 -->
+      <div :style="`color: rgba(0, 0, 0, ${opacityPlayer})`" :title="player" class="player-name">{{ player }}</div>
     </foreignObject>
   </g>
 </template>
@@ -48,7 +49,7 @@ export default defineComponent({
     // 玩家名称的文本不透明度
     const opacityPlayer = computed(() => {
       // 没有玩家姓名信息则置灰显示
-      return playerDecoded.value.length > 0 ? 1 : 0.25
+      return playerDecoded.value.length > 0 ? 1 : 0.2
     })
     return { player, opacityPlayer }
   }
