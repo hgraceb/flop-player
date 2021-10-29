@@ -29,7 +29,7 @@ export const actions = {
       return
     }
     if (fileList.length <= 0) {
-      // 未选择任何文件，文件无法直接访问时也会导致文件列表为空，如：直接拖放移动设备中的录像文件
+      // 未选择文件，或者文件无法直接访问时也会导致文件列表为空，如：直接拖放移动设备中的录像文件
       message.error(t('error.fileNotSelect'))
       return
     }
