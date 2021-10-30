@@ -149,6 +149,8 @@ export const mutations = {
   /** 设置页面加载状态 */
   setLoading: (state: State, loading: boolean): void => {
     state.loading = loading
+    // 如果页面处于加载状态则暂停录像播放
+    if (state.loading) store.commit('setVideoPaused')
   },
   /** 暂停录像播放 */
   setVideoPaused: (state: State): void => {
