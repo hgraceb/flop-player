@@ -7,11 +7,27 @@ const { t } = i18n.global
 
 /**
  * 报错提示并取消页面加载状态
+ *
+ * @param msg 错误提示信息
  */
-function messageError (key: string, list: unknown[] = []) {
-  message.error(t(key, list))
+function messageError (msg: string) {
+  message.error(msg)
   // 取消页面加载状态，避免卡在加载页面
   store.commit('setLoading', false)
+}
+
+/**
+ * 检查是否只有一个文件正在处理
+ *
+ * @return 是否只有一个文件正在处理
+ */
+function checkUnique (): boolean {
+  if (store.state.loading === true) {
+    // 还有其他文件正在处理
+    messageError(t('error.fileDuplicate'))
+    return false
+  }
+  return true
 }
 
 /**
@@ -23,17 +39,17 @@ function messageError (key: string, list: unknown[] = []) {
 function checkFileNumber (fileList: FileList | undefined | null): boolean {
   if (!fileList) {
     // 文件不存在
-    messageError('error.fileNotPresent')
+    messageError(t('error.fileNotPresent'))
     return false
   }
   if (fileList.length <= 0) {
     // 未选择文件，或者文件无法直接访问时也会导致文件列表为空，如：直接拖放移动设备中的录像文件
-    messageError('error.fileNotSelect')
+    messageError(t('error.fileNotSelect'))
     return false
   }
   if (fileList.length > 1) {
     // 文件数量过多
-    messageError('error.fileTooMany', [fileList.length])
+    messageError(t('error.fileTooMany', [fileList.length]))
     return false
   }
   return true
@@ -50,7 +66,7 @@ function checkFileType (name: string): boolean {
   const extension = name.indexOf('.') !== -1 ? name.substring(name.lastIndexOf('.') + 1) : ''
   if (extension !== 'rawvf') {
     // 文件类型错误
-    messageError('error.fileTypeIncorrect', [name])
+    messageError(t('error.fileTypeIncorrect', [name]))
     return false
   }
   return true
@@ -66,12 +82,12 @@ function checkFileType (name: string): boolean {
 function checkFileSize (size: number, name: string): boolean {
   if (size <= 0) {
     // 文件内容为空
-    messageError('error.fileEmpty', [name])
+    messageError(t('error.fileEmpty', [name]))
     return false
   }
   if (size / 1024 / 1024 > 5) {
     // 文件大小超过 5 MB
-    messageError('error.fileTooLarge', [name])
+    messageError(t('error.fileTooLarge', [name]))
     return false
   }
   return true
@@ -80,7 +96,7 @@ function checkFileSize (size: number, name: string): boolean {
 export const actions = {
   /** 从 Uri 获取录像数据 */
   fetchUri: ({ commit }: { commit: Commit }, uri: string): void => {
-    if (!checkFileType(uri)) return
+    if (!checkUnique() || !checkFileType(uri)) return
     // 将页面加载状态设置为加载中并暂停录像播放
     commit('setLoading', true)
     // 请求录像数据
@@ -96,7 +112,7 @@ export const actions = {
   },
   /** 从文件列表获取录像数据 */
   fetchFiles: ({ commit }: { commit: Commit }, fileList: FileList | undefined | null): void => {
-    if (!checkFileNumber(fileList) || !fileList) return
+    if (!checkUnique() || !checkFileNumber(fileList) || !fileList) return
     const file = fileList[0]
     if (!checkFileType(file.name) || !checkFileSize(file.size, file.name)) return
     // 将页面加载状态设置为加载中并暂停录像播放
@@ -109,7 +125,7 @@ export const actions = {
     }
     reader.onerror = function () {
       // 文件读取出错
-      messageError('error.fileReadError', [reader.error])
+      messageError(t('error.fileReadError', [reader.error]))
     }
     reader.readAsArrayBuffer(file)
   }

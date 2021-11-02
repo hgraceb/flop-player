@@ -33,6 +33,7 @@ common:
   fileSelect: '請選擇一個 {0} 文件'
 
 error:
+  fileDuplicate: 請等待其他文件解析完成
   fileNotPresent: 文件不存在
   fileNotSelect: 未選擇文件或者文件無法訪問
   fileTooMany: '文件數量過多：{0}'

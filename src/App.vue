@@ -34,7 +34,7 @@ import FileDrag from '@/components/FileDrag.vue'
 export default defineComponent({
   components: { FileDrag, ScreenCenter, GameMenu, Counters, Game, ControlBar },
   setup () {
-    const loading = computed(() => store.state.loading)
+    const loading = computed(() => store.state.loading !== false)
     // 用户设置的缩放比例
     const scale = computed(() => store.state.scale)
 

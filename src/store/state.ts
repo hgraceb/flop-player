@@ -45,8 +45,8 @@ export type State = typeof storageDefault & {
   gameDoublePoints: { x: number, y: number }[]
   // 是否打印录像解析相关日志
   enableParserLog: boolean
-  // 页面加载中
-  loading: boolean
+  // 页面加载中，null 表示页面处于初始加载状态，但是没有正在加载的内容
+  loading: boolean | null
 }
 
 export const state: State = {
@@ -85,5 +85,5 @@ export const state: State = {
   gameRightPoints: [],
   gameDoublePoints: [],
   enableParserLog: false,
-  loading: true
+  loading: null
 }
