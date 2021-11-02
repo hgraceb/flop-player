@@ -1260,11 +1260,12 @@ function middleClick (x: number, y: number, precX: number, precY: number): void 
 }
 
 export function parse (state: State, data: ArrayBuffer): void {
+  init(data)
+
   // 打印原始录像数据
   if (store.state.enableParserLog) {
     console.log(input)
   }
-  init(data)
 
   // Initialise local variables
   let i: number
@@ -1518,62 +1519,61 @@ export function parse (state: State, data: ArrayBuffer): void {
     }
   }
 
-  // Set some local variables
-  if (!endTime) endTime = curTime
-  const clicks = leftClicks + rightClicks + doubleClicks
-  const wastedClicks = wastedLeftClicks + wastedRightClicks + wastedDoubleClicks
-  const eClicks = clicks - wastedClicks
-  const coeff = solvedBbbv / bbbv // (double)
-  const rawTime = endTime / 1000
-
-  // Calculate all remaining stats
-  const raw = {
-    RAW_Time: round(rawTime, 3).toFixed(3),
-    RAW_3BV: bbbv,
-    RAW_Solved3BV: solvedBbbv,
-    'RAW_3BV/s': round(solvedBbbv / rawTime, 3).toFixed(3),
-    RAW_ZiNi: gzini,
-    'RAW_ZiNi/s': round(gzini / rawTime, 3).toFixed(3),
-    RAW_HZiNi: hzini,
-    'RAW_HZiNi/s': round(hzini / rawTime, 3).toFixed(3),
-    RAW_Clicks: clicks,
-    'RAW_Clicks/s': round(clicks / rawTime, 3).toFixed(3),
-    RAW_LeftClicks: leftClicks,
-    'RAW_LeftClicks/s': round(leftClicks / rawTime, 3).toFixed(3),
-    RAW_RightClicks: rightClicks,
-    'RAW_RightClicks/s': round(rightClicks / rawTime, 3).toFixed(3),
-    RAW_DoubleClicks: doubleClicks,
-    'RAW_DoubleClicks/s': round(doubleClicks / rawTime, 3).toFixed(3),
-    RAW_WastedClicks: wastedClicks,
-    'RAW_WastedClicks/s': round(wastedClicks / rawTime, 3).toFixed(3),
-    RAW_WastedLeftClicks: wastedLeftClicks,
-    'RAW_WastedLeftClicks/s': round(wastedLeftClicks / rawTime, 3).toFixed(3),
-    RAW_WastedRightClicks: wastedRightClicks,
-    'RAW_WastedRightClicks/s': round(wastedRightClicks / rawTime, 3).toFixed(3),
-    RAW_WastedDoubleClicks: wastedDoubleClicks,
-    'RAW_WastedDoubleClicks/s': round(wastedDoubleClicks / rawTime, 3).toFixed(3),
-    'RAW_1.5Clicks': clicks15,
-    'RAW_1.5Clicks/s': round(clicks15 / rawTime, 3).toFixed(3),
-    RAW_IOE: round(solvedBbbv / clicks, 3).toFixed(3),
-    RAW_Correctness: round(eClicks / clicks, 3).toFixed(3),
-    RAW_Throughput: round(solvedBbbv / eClicks, 3).toFixed(3),
-    RAW_ZNE: round(gzini * coeff / clicks, 3).toFixed(3),
-    RAW_ZNT: round(gzini * coeff / eClicks, 3).toFixed(3),
-    RAW_HZNE: round(hzini * coeff / clicks, 3).toFixed(3),
-    RAW_HZNT: round(hzini * coeff / eClicks, 3).toFixed(3),
-    RAW_Openings: openings,
-    RAW_Islands: islands,
-    RAW_Flags: flags,
-    RAW_WastedFlags: wastedFlags,
-    RAW_Unflags: unFlags,
-    RAW_Misflags: misFlags,
-    RAW_Misunflags: misUnFlags,
-    RAW_RilianClicks: rilianClicks,
-    'RAW_RilianClicks/s': round(rilianClicks / rawTime, 3).toFixed(3)
-  }
-
   // 打印计数器信息
   if (store.state.enableParserLog) {
+    // Set some local variables
+    if (!endTime) endTime = curTime
+    const clicks = leftClicks + rightClicks + doubleClicks
+    const wastedClicks = wastedLeftClicks + wastedRightClicks + wastedDoubleClicks
+    const eClicks = clicks - wastedClicks
+    const coeff = solvedBbbv / bbbv // (double)
+    const rawTime = endTime / 1000
+
+    // Calculate all remaining stats
+    const raw = {
+      RAW_Time: round(rawTime, 3).toFixed(3),
+      RAW_3BV: bbbv,
+      RAW_Solved3BV: solvedBbbv,
+      'RAW_3BV/s': round(solvedBbbv / rawTime, 3).toFixed(3),
+      RAW_ZiNi: gzini,
+      'RAW_ZiNi/s': round(gzini / rawTime, 3).toFixed(3),
+      RAW_HZiNi: hzini,
+      'RAW_HZiNi/s': round(hzini / rawTime, 3).toFixed(3),
+      RAW_Clicks: clicks,
+      'RAW_Clicks/s': round(clicks / rawTime, 3).toFixed(3),
+      RAW_LeftClicks: leftClicks,
+      'RAW_LeftClicks/s': round(leftClicks / rawTime, 3).toFixed(3),
+      RAW_RightClicks: rightClicks,
+      'RAW_RightClicks/s': round(rightClicks / rawTime, 3).toFixed(3),
+      RAW_DoubleClicks: doubleClicks,
+      'RAW_DoubleClicks/s': round(doubleClicks / rawTime, 3).toFixed(3),
+      RAW_WastedClicks: wastedClicks,
+      'RAW_WastedClicks/s': round(wastedClicks / rawTime, 3).toFixed(3),
+      RAW_WastedLeftClicks: wastedLeftClicks,
+      'RAW_WastedLeftClicks/s': round(wastedLeftClicks / rawTime, 3).toFixed(3),
+      RAW_WastedRightClicks: wastedRightClicks,
+      'RAW_WastedRightClicks/s': round(wastedRightClicks / rawTime, 3).toFixed(3),
+      RAW_WastedDoubleClicks: wastedDoubleClicks,
+      'RAW_WastedDoubleClicks/s': round(wastedDoubleClicks / rawTime, 3).toFixed(3),
+      'RAW_1.5Clicks': clicks15,
+      'RAW_1.5Clicks/s': round(clicks15 / rawTime, 3).toFixed(3),
+      RAW_IOE: round(solvedBbbv / clicks, 3).toFixed(3),
+      RAW_Correctness: round(eClicks / clicks, 3).toFixed(3),
+      RAW_Throughput: round(solvedBbbv / eClicks, 3).toFixed(3),
+      RAW_ZNE: round(gzini * coeff / clicks, 3).toFixed(3),
+      RAW_ZNT: round(gzini * coeff / eClicks, 3).toFixed(3),
+      RAW_HZNE: round(hzini * coeff / clicks, 3).toFixed(3),
+      RAW_HZNT: round(hzini * coeff / eClicks, 3).toFixed(3),
+      RAW_Openings: openings,
+      RAW_Islands: islands,
+      RAW_Flags: flags,
+      RAW_WastedFlags: wastedFlags,
+      RAW_Unflags: unFlags,
+      RAW_Misflags: misFlags,
+      RAW_Misunflags: misUnFlags,
+      RAW_RilianClicks: rilianClicks,
+      'RAW_RilianClicks/s': round(rilianClicks / rawTime, 3).toFixed(3)
+    }
     console.log('\n')
     Object.keys(raw).forEach((key) => {
       console.log(key + ': ' + raw[key as keyof typeof raw])
