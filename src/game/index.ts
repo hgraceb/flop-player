@@ -97,3 +97,31 @@ export type GameEvent = ({
     flags: number
   }
 }
+
+/**
+ * 游戏信息
+ */
+export type GameInfo = {
+  // 游戏事件
+  gameEvents: GameEvent[]
+  // 列数
+  width: number
+  // 行数
+  height: number
+  // 雷数
+  mines: number
+  // 玩家名称原始数据
+  playerArray: Uint8Array
+  // 最少左键点击数
+  bbbv: number
+  // 开空数量
+  openings: number
+  // 岛屿数量
+  islands: number
+  // Greedy ZiNi
+  gZiNi: number
+  // Human ZiNi
+  hZiNi: number
+  // 方块棋盘信息
+  board: Cell[]
+}

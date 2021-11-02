@@ -3,7 +3,9 @@ import { ImgCellType, ImgFaceType } from '@/util/image'
 import { storage, storageDefault } from '@/store/plugins'
 
 export type State = typeof storageDefault & {
+  // 列数
   width: number
+  // 行数
   height: number
   // 游戏雷数
   mines: number
@@ -11,11 +13,15 @@ export type State = typeof storageDefault & {
   playerArray: Uint8Array
   // 录像动画ID，同一时间只播放一个录像，重置为 0 后其他录像动画全部取消，录像播放处于暂停状态
   videoAnimationId: number
-  // BBBV
+  // 最少左键点击数
   bbbv: number
+  // 开空数量
   openings: number
+  // 岛屿数量
   islands: number
+  // Greedy ZiNi
   gZiNi: number
+  // Human ZiNi
   hZiNi: number
   // 笑脸状态
   faceStatus: ImgFaceType
