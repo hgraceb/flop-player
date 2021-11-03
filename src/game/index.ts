@@ -99,29 +99,29 @@ export type GameEvent = ({
 }
 
 /**
- * 游戏信息
+ * 游戏原始信息
  */
-export type GameInfo = {
+export class GameRaw {
   // 游戏事件
-  gameEvents: GameEvent[]
+  events: GameEvent[] = []
   // 列数
-  width: number
+  width = 8
   // 行数
-  height: number
+  height = 8
   // 雷数
-  mines: number
+  mines = 10
   // 玩家名称原始数据
-  playerArray: Uint8Array
+  playerArray = new Uint8Array()
   // 最少左键点击数
-  bbbv: number
+  bbbv = 0
   // 开空数量
-  openings: number
+  openings = 0
   // 岛屿数量
-  islands: number
+  islands = 0
   // Greedy ZiNi
-  gZiNi: number
+  gZiNi = 0
   // Human ZiNi
-  hZiNi: number
+  hZiNi = 0
   // 方块棋盘信息
-  board: Cell[]
+  board: Cell[] = []
 }
