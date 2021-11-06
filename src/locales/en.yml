@@ -33,6 +33,7 @@ common:
   fileSelect: 'Please select a {0} file'
 
 error:
+  videoParse: 'Video parsing error: '
   fileDuplicate: Please wait for other file to finish parsing
   fileNotPresent: File does not exist
   fileNotSelect: No file selected or file not accessible

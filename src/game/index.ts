@@ -151,3 +151,19 @@ export class GameRaw {
     this.board = board
   }
 }
+
+/**
+ * 录像解析错误
+ */
+class ParseError extends Error {
+  constructor (message: string) {
+    super(message)
+    this.name = this.constructor.name
+  }
+}
+
+/**
+ * RawVF 录像解析错误
+ */
+export class RawvfParseError extends ParseError {
+}

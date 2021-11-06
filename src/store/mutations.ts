@@ -6,6 +6,7 @@ import { plus, times } from 'number-precision'
 import { ImgCellType, ImgFaceType } from '@/util/image'
 import { SCALE_ARRAY, SPEED_ARRAY } from '@/game/constants'
 import { i18n } from '@/plugins/i18n'
+import { message } from 'ant-design-vue'
 
 /**
  * Mutations 函数定义，使用类型推断的方式，可以快速找到函数的所有 Usages
@@ -79,27 +80,6 @@ export const mutations = {
       }
     }
   },
-  /**
-   * 重置录像参数
-   *
-   * @param state  参数列表
-   * @param replay 是否需要保留重放录像需要的参数
-   */
-  resetVideo: (state: State, replay: boolean): void => {
-    state.gameImgBoard = Array.from(Array(state.width * state.height), () => 'cell-normal')
-    state.gameElapsedTime = 0.0
-    state.gameEventIndex = 0
-    state.faceStatus = 'face-normal'
-    state.gameMousePoints = []
-    state.gameLeftPoints = []
-    state.gameRightPoints = []
-    state.gameDoublePoints = []
-    // 不需要重放录像，清除所有录像数据
-    if (!replay) {
-      state.gameEvents = []
-      state.gameCellBoard = []
-    }
-  },
   /** 初始化游戏 */
   initGame: (state: State, gameRow: GameRaw): void => {
     state.width = gameRow.width
@@ -115,19 +95,20 @@ export const mutations = {
     state.gameCellBoard = gameRow.board
   },
   /** 接收并处理录像数据 */
-  receiveVideo: (state: State, payload: ArrayBuffer): void => {
+  receiveVideo: (state: State, data: ArrayBuffer): void => {
+    let gameRaw
     try {
-      const gameRaw = parse(state, payload)
-      store.commit('initGame', gameRaw)
-      store.commit('replayVideo')
+      gameRaw = parse(state, data)
     } catch (e) {
-      // 录像解析失败则将录像事件清空，让页面可以正常显示，但不能播放解析失败的录像数据
-      store.commit('resetVideo', false)
-      // TODO 处理录像解析的场景，提示用户相关错误信息
-      console.log(e)
+      // 展示录像解析失败的相关信息
+      message.error(`${i18n.global.t('error.videoParse')}${e.name} - ${e.message}`, 5)
+      return
+    } finally {
+      // 录像解析结束后取消页面的加载状态
+      state.loading = false
     }
-    // 录像解析结束后取消页面的加载状态
-    state.loading = false
+    store.commit('initGame', gameRaw)
+    store.commit('replayVideo')
   },
   /** 设置页面加载状态 */
   setLoading: (state: State, loading: boolean): void => {
@@ -258,10 +239,21 @@ export const mutations = {
     }
     store.commit('checkVideoFinished')
   },
+  /** 重置录像参数 */
+  resetVideo: (state: State): void => {
+    state.gameImgBoard = Array.from(Array(state.width * state.height), () => 'cell-normal')
+    state.gameElapsedTime = 0.0
+    state.gameEventIndex = 0
+    state.faceStatus = 'face-normal'
+    state.gameMousePoints = []
+    state.gameLeftPoints = []
+    state.gameRightPoints = []
+    state.gameDoublePoints = []
+  },
   /** 重新播放游戏录像，TODO 进行函数节流处理 */
   replayVideo: (): void => {
     // 重置变量
-    store.commit('resetVideo', true)
+    store.commit('resetVideo')
     // 播放录像
     store.commit('playVideo')
   },
@@ -311,6 +303,7 @@ const EmptyPayloadFunction = [
   'setVideoPaused',
   'performPreviousEvent',
   'performNextEvent',
+  'resetVideo',
   'replayVideo',
   'playVideo',
   'pauseVideo',

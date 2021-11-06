@@ -43,6 +43,7 @@ common:
 
 # 错误信息
 error:
+  videoParse: '录像解析出错：'
   fileDuplicate: 请等待其他文件解析完成
   fileNotPresent: 文件不存在
   fileNotSelect: 未选择文件或者文件无法访问

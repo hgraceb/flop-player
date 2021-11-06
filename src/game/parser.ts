@@ -62,7 +62,7 @@
  *****************************************************************/
 
 import { State } from '@/store/state'
-import { Cell, GameEvent, GameRaw } from '@/game/index'
+import { Cell, GameEvent, GameRaw, RawvfParseError } from '@/game/index'
 import { store } from '@/store'
 import { round } from 'number-precision'
 
@@ -229,7 +229,7 @@ function getPlayerArray (uint8Array: Uint8Array): Uint8Array {
 // Function to print error messages
 // ==============================================================================================
 function error (msg: string): void {
-  throw new Error(msg)
+  throw new RawvfParseError(msg)
 }
 
 // ==============================================================================================
@@ -250,11 +250,12 @@ function valeq (val: string, str: string): boolean {
   let i = 0
   let j = 0
   while (val[i] === ' ') i++
-  while (str[j] && val[i] !== '\n' && val[i] !== ' ' && val[i] && str[j].toLowerCase() === val[i].toLowerCase()) {
+  // 跟 C 不同，JS 读取文件时可能有回车符（\r）
+  while (str[j] && val[i] !== '\n' && val[i] !== '\r' && val[i] !== ' ' && val[i] && str[j].toLowerCase() === val[i].toLowerCase()) {
     ++i
     ++j
   }
-  return (val[i] === '\n' || val[i] === ' ') && j === str.length
+  return (val[i] === '\n' || val[i] === '\r' || val[i] === ' ') && j === str.length
 }
 
 // ==============================================================================================
