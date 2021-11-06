@@ -39,6 +39,6 @@ error:
   fileNotSelect: 未選擇文件或者文件無法訪問
   fileTooMany: '文件數量過多：{0}'
   fileEmpty: '文件內容為空：{0}'
-  fileTypeUnsupported: '不支持的文件類型：{0}'
+  fileUnsupported: '不支持的文件：{0}'
   fileTooLarge: '文件大小超過 5 MB：{0}'
   fileReadError: '文件讀取出錯：{0}'

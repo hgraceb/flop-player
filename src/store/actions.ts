@@ -65,8 +65,8 @@ function checkFileType (name: string): boolean {
   // 获取文件扩展名
   const extension = name.indexOf('.') !== -1 ? name.substring(name.lastIndexOf('.') + 1) : ''
   if (extension !== 'rawvf') {
-    // 不支持的文件类型
-    messageError(t('error.fileTypeUnsupported', [name]))
+    // 不支持的文件
+    messageError(t('error.fileUnsupported', [name]))
     return false
   }
   return true

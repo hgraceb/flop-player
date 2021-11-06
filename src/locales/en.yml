@@ -39,6 +39,6 @@ error:
   fileNotSelect: No file selected or file not accessible
   fileTooMany: 'Too many files: {0}'
   fileEmpty: 'File content is empty: {0}'
-  fileTypeUnsupported: 'Unsupported file type: {0}'
+  fileUnsupported: 'Unsupported file: {0}'
   fileTooLarge: 'File size exceeds 5 MB: {0}'
   fileReadError: 'File read out error: {0}'
