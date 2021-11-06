@@ -62,7 +62,7 @@
  *****************************************************************/
 
 import { State } from '@/store/state'
-import { Cell } from '@/game/index'
+import { Cell, GameEvent, GameRaw } from '@/game/index'
 import { store } from '@/store'
 import { round } from 'number-precision'
 
@@ -99,6 +99,7 @@ let elmar: number, nono: number, superClick: number, superFlag: number
 
 // 自定义参数
 let input: string | null
+let gameEvents: GameEvent[]
 
 function init (data: ArrayBuffer) {
   board = []
@@ -127,6 +128,7 @@ function init (data: ArrayBuffer) {
   elmar = nono = superClick = superFlag = 0
 
   input = new TextDecoder().decode(new Uint8Array(data))
+  gameEvents = []
 }
 
 // TODO 测试函数是否可用
@@ -209,7 +211,7 @@ function getPlayerArray (uint8Array: Uint8Array): Uint8Array {
   for (let i = 0; i < uint8Array.length; i++) {
     // 按行读取，如果当前字符不是换行符则继续读取下一个字符
     if (uint8Array[i] !== '\n'.charCodeAt(0)) continue
-    // 先判断首字符是否相等，再判断开头的字符串是否相等，虽然实际上影响不大，但蚊子肉也是肉嘛 ✧(๑•̀ㅂ•́)و✧
+    // 先判断首字符是否相等，再判断开头的字符串是否相等，虽然实际上影响不大，但蚊子肉也是肉嘛 ✧(๑•̀ㅂ•́)✧
     if ((playerStr.toLowerCase().charCodeAt(0) === uint8Array[start] || playerStr.toUpperCase().charCodeAt(0) === uint8Array[start]) &&
       textDecoder.decode(playerArr).toLowerCase() === textDecoder.decode(uint8Array.slice(start, start + playerArr.length)).toLowerCase()) {
       start += playerArr.length
@@ -620,10 +622,10 @@ function push (x: number, y: number): void {
     } else {
       fprintf('Cell pressed %d %d\n', x + 1, y + 1)
     }
-    store.commit('addEvent', {
+    gameEvents.push({
       name: 'Press',
       questioned: board[x * h + y].questioned,
-      time: curTime,
+      time: round(curTime, 3),
       x: x,
       y: y,
       stats: getStats()
@@ -652,10 +654,10 @@ function pop (x: number, y: number) {
     } else {
       fprintf('Cell released %d %d\n', x + 1, y + 1)
     }
-    store.commit('addEvent', {
+    gameEvents.push({
       name: 'Release',
       questioned: board[x * h + y].questioned,
-      time: curTime,
+      time: round(curTime, 3),
       x: x,
       y: y,
       stats: getStats()
@@ -690,10 +692,10 @@ function checkWin (): void {
   const fixFloated = fix / 10000
 
   fprintf('%.3f Solved 3BV: %d of %d\n', fixFloated, solvedBbbv, bbbv)
-  store.commit('addEvent', {
+  gameEvents.push({
     name: 'Solved3BV',
     solved: solvedBbbv,
-    time: curTime,
+    time: round(curTime, 3),
     stats: getStats()
   })
   if (bbbv === solvedBbbv) win()
@@ -712,10 +714,10 @@ function fail (): void {
 function show (x: number, y: number): void {
   const index = x * h + y
   fprintf('Cell opened (Number %d) %d %d\n', board[index].number, x + 1, y + 1)
-  store.commit('addEvent', {
+  gameEvents.push({
     name: 'Open',
     number: board[index].number,
-    time: curTime,
+    time: round(curTime, 3),
     x: x,
     y: y,
     stats: getStats()
@@ -757,10 +759,10 @@ function doOpen (x: number, y: number): void {
   if (board[x * h + y].mine) {
     board[x * h + y].opened = 1
     fprintf('Cell opened (it is a Mine) %d %d\n', x + 1, y + 1)
-    store.commit('addEvent', {
+    gameEvents.push({
       name: 'Open',
       number: -1,
-      time: curTime,
+      time: round(curTime, 3),
       x: x,
       y: y,
       stats: getStats()
@@ -848,9 +850,9 @@ function doSetFlag (x: number, y: number): void {
   // Note that the wastedFlag value becomes 0 after successful chord() function
   board[x * h + y].flagged = board[x * h + y].wastedFlag = 1
   fprintf('Flag %d %d\n', x + 1, y + 1)
-  store.commit('addEvent', {
+  gameEvents.push({
     name: 'Flag',
-    time: curTime,
+    time: round(curTime, 3),
     x: x,
     y: y,
     stats: getStats()
@@ -865,9 +867,9 @@ function doSetFlag (x: number, y: number): void {
 function doQuestion (x: number, y: number): void {
   board[x * h + y].questioned = 1
   fprintf('Questionmark %d %d\n', x + 1, y + 1)
-  store.commit('addEvent', {
+  gameEvents.push({
     name: 'QuestionMark',
-    time: curTime,
+    time: round(curTime, 3),
     x: x,
     y: y,
     stats: getStats()
@@ -878,9 +880,9 @@ function doQuestion (x: number, y: number): void {
 function doUnsetFlag (x: number, y: number): void {
   board[x * h + y].flagged = board[x * h + y].questioned = 0
   fprintf('Flag removed %d %d\n', x + 1, y + 1)
-  store.commit('addEvent', {
+  gameEvents.push({
     name: 'RemoveFlag',
-    time: curTime,
+    time: round(curTime, 3),
     x: x,
     y: y,
     stats: getStats()
@@ -922,9 +924,9 @@ function closedSqAround (x: number, y: number) {
 
 // Left click
 function leftClick (x: number, y: number, precX: number, precY: number): void {
-  store.commit('addEvent', {
+  gameEvents.push({
     name: 'LeftClick',
-    time: curTime,
+    time: round(curTime, 3),
     x: x,
     y: y,
     precisionX: precX,
@@ -941,9 +943,9 @@ function leftClick (x: number, y: number, precX: number, precY: number): void {
   // Chord
   if (right || shiftLeft || (superClick && board[x * h + y].opened)) {
     ++doubleClicks
-    store.commit('addEvent', {
+    gameEvents.push({
       name: 'DoubleClicksAdded',
-      time: curTime,
+      time: round(curTime, 3),
       x: x,
       y: y,
       precisionX: precX,
@@ -964,9 +966,9 @@ function leftClick (x: number, y: number, precX: number, precY: number): void {
       if (noRilianClicks) return
     }
     ++leftClicks
-    store.commit('addEvent', {
+    gameEvents.push({
       name: 'LeftClicksAdded',
-      time: curTime,
+      time: round(curTime, 3),
       x: x,
       y: y,
       precisionX: precX,
@@ -986,9 +988,9 @@ function leftClick (x: number, y: number, precX: number, precY: number): void {
 
 // Mouse movement
 function mouseMove (x: number, y: number, precX: number, precY: number): void {
-  store.commit('addEvent', {
+  gameEvents.push({
     name: 'MouseMove',
-    time: curTime,
+    time: round(curTime, 3),
     x: x,
     y: y,
     precisionX: precX,
@@ -1035,9 +1037,9 @@ function mouseMove (x: number, y: number, precX: number, precY: number): void {
 
 // Left button down
 function leftPress (x: number, y: number, precX: number, precY: number): void {
-  store.commit('addEvent', {
+  gameEvents.push({
     name: 'LeftPress',
-    time: curTime,
+    time: round(curTime, 3),
     x: x,
     y: y,
     precisionX: precX,
@@ -1063,9 +1065,9 @@ function leftPress (x: number, y: number, precX: number, precY: number): void {
 
 // Chord using Shift during LC-LR
 function leftPressWithShift (x: number, y: number, precX: number, precY: number): void {
-  store.commit('addEvent', {
+  gameEvents.push({
     name: 'LeftPressWithShift',
-    time: curTime,
+    time: round(curTime, 3),
     x: x,
     y: y,
     precisionX: precX,
@@ -1085,14 +1087,12 @@ function leftPressWithShift (x: number, y: number, precX: number, precY: number)
 }
 
 // Toggle question mark setting
-function toggleQuestionMarkSetting (x: number, y: number, precX: number, precY: number): void {
-  store.commit('addEvent', {
+function toggleQuestionMarkSetting (x: number, y: number, _precX: number, _precY: number): void {
+  gameEvents.push({
     name: 'ToggleQuestionMarkSetting',
-    time: curTime,
+    time: round(curTime, 3),
     x: x,
     y: y,
-    precisionX: precX,
-    precisionY: precY,
     stats: getStats()
   })
   qm = !qm
@@ -1100,9 +1100,9 @@ function toggleQuestionMarkSetting (x: number, y: number, precX: number, precY: 
 
 // Right button down
 function rightPress (x: number, y: number, precX: number, precY: number): void {
-  store.commit('addEvent', {
+  gameEvents.push({
     name: 'RightPress',
-    time: curTime,
+    time: round(curTime, 3),
     x: x,
     y: y,
     precisionX: precX,
@@ -1128,9 +1128,9 @@ function rightPress (x: number, y: number, precX: number, precY: number): void {
         } else {
           board[x * h + y].flagged = board[x * h + y].questioned = 0
           fprintf('Questionmark removed %d %d\n', x + 1, y + 1)
-          store.commit('addEvent', {
+          gameEvents.push({
             name: 'RemoveQuestionMark',
-            time: curTime,
+            time: round(curTime, 3),
             x: x,
             y: y,
             stats: getStats()
@@ -1138,9 +1138,9 @@ function rightPress (x: number, y: number, precX: number, precY: number): void {
         }
       }
       ++rightClicks
-      store.commit('addEvent', {
+      gameEvents.push({
         name: 'RightClicksAdded',
-        time: curTime,
+        time: round(curTime, 3),
         x: x,
         y: y,
         precisionX: precX,
@@ -1159,9 +1159,9 @@ function rightPress (x: number, y: number, precX: number, precY: number): void {
 
 // Right button up
 function rightClick (x: number, y: number, precX: number, precY: number): void {
-  store.commit('addEvent', {
+  gameEvents.push({
     name: 'RightClick',
-    time: curTime,
+    time: round(curTime, 3),
     x: x,
     y: y,
     precisionX: precX,
@@ -1180,9 +1180,9 @@ function rightClick (x: number, y: number, precX: number, precY: number): void {
     popAround(curX, curY)
     doChord(x, y, 0)
     ++doubleClicks
-    store.commit('addEvent', {
+    gameEvents.push({
       name: 'DoubleClicksAdded',
-      time: curTime,
+      time: round(curTime, 3),
       x: x,
       y: y,
       precisionX: precX,
@@ -1196,9 +1196,9 @@ function rightClick (x: number, y: number, precX: number, precY: number): void {
     // It was a RC not the beginning of a Chord
     if (!oneDotFive && !chorded) {
       ++rightClicks
-      store.commit('addEvent', {
+      gameEvents.push({
         name: 'RightClicksAdded',
-        time: curTime,
+        time: round(curTime, 3),
         x: x,
         y: y,
         precisionX: precX,
@@ -1216,9 +1216,9 @@ function rightClick (x: number, y: number, precX: number, precY: number): void {
 
 // Middle button down
 function middlePress (x: number, y: number, precX: number, precY: number): void {
-  store.commit('addEvent', {
+  gameEvents.push({
     name: 'MiddlePress',
-    time: curTime,
+    time: round(curTime, 3),
     x: x,
     y: y,
     precisionX: precX,
@@ -1234,9 +1234,9 @@ function middlePress (x: number, y: number, precX: number, precY: number): void 
 
 // Middle button up
 function middleClick (x: number, y: number, precX: number, precY: number): void {
-  store.commit('addEvent', {
+  gameEvents.push({
     name: 'MiddleClick',
-    time: curTime,
+    time: round(curTime, 3),
     x: x,
     y: y,
     precisionX: precX,
@@ -1248,9 +1248,9 @@ function middleClick (x: number, y: number, precX: number, precY: number): void 
   if (!isInsideBoard(x, y)) return
   doChord(x, y, 0)
   ++doubleClicks
-  store.commit('addEvent', {
+  gameEvents.push({
     name: 'DoubleClicksAdded',
-    time: curTime,
+    time: round(curTime, 3),
     x: x,
     y: y,
     precisionX: precX,
@@ -1259,7 +1259,7 @@ function middleClick (x: number, y: number, precX: number, precY: number): void 
   })
 }
 
-export function parse (state: State, data: ArrayBuffer): void {
+export function parse (state: State, data: ArrayBuffer): GameRaw {
   init(data)
 
   // 打印原始录像数据
@@ -1355,9 +1355,6 @@ export function parse (state: State, data: ArrayBuffer): void {
 
   // Call function to calculate ZiNi
   if (!noZini) calcZini()
-
-  // 初始化游戏数据
-  store.commit('initGame', { width: w, height: h, mines: m, playerArray: playerArray, bbbv: bbbv, openings: openings, islands: islands, gZiNi: gzini, hZiNi: hzini, board: board })
 
   // Initialise variables with default values
   solvedBbbv = distance = leftClicks = rightClicks = doubleClicks = wastedLeftClicks = wastedRightClicks = wastedDoubleClicks =
@@ -1579,4 +1576,6 @@ export function parse (state: State, data: ArrayBuffer): void {
       console.log(key + ': ' + raw[key as keyof typeof raw])
     })
   }
+
+  return new GameRaw(w, h, m, bbbv, openings, islands, gzini, hzini, playerArray, gameEvents, board)
 }

@@ -1,8 +1,8 @@
 import { State } from './state'
 import { parse } from '@/game/parser'
-import { Cell, GameEvent } from '@/game'
+import { GameRaw } from '@/game'
 import { store } from '@/store/index'
-import { plus, round, times } from 'number-precision'
+import { plus, times } from 'number-precision'
 import { ImgCellType, ImgFaceType } from '@/util/image'
 import { SCALE_ARRAY, SPEED_ARRAY } from '@/game/constants'
 import { i18n } from '@/plugins/i18n'
@@ -101,41 +101,24 @@ export const mutations = {
     }
   },
   /** 初始化游戏 */
-  initGame: (state: State, {
-    width,
-    height,
-    mines,
-    playerArray,
-    bbbv,
-    openings,
-    islands,
-    gZiNi,
-    hZiNi,
-    board
-  }: { width: number, height: number, mines: number, playerArray: Uint8Array, bbbv: number, openings: number, islands: number, gZiNi: number, hZiNi: number, board: Cell[] }): void => {
-    state.width = width
-    state.height = height
-    state.mines = mines
-    // TODO 玩家名称字符串不同编码格式解析
-    state.playerArray = playerArray
-    state.bbbv = bbbv
-    state.openings = openings
-    state.islands = islands
-    state.gZiNi = gZiNi
-    state.hZiNi = hZiNi
-    state.gameEvents = []
-    state.gameCellBoard = board
-  },
-  /** 添加游戏事件 */
-  addEvent: (state: State, event: GameEvent): void => {
-    // 时间四舍五入保留三位小数，因为游戏时间进度条是以 0.001 秒为一个单位长度，如果有更多位小数的话，可能会导致进度条的最大值比实际游戏时间来得小
-    event.time = round(event.time, 3)
-    state.gameEvents.push(event)
+  initGame: (state: State, gameRow: GameRaw): void => {
+    state.width = gameRow.width
+    state.height = gameRow.height
+    state.mines = gameRow.mines
+    state.playerArray = gameRow.playerArray
+    state.bbbv = gameRow.bbbv
+    state.openings = gameRow.openings
+    state.islands = gameRow.islands
+    state.gZiNi = gameRow.gZiNi
+    state.hZiNi = gameRow.hZiNi
+    state.gameEvents = gameRow.events
+    state.gameCellBoard = gameRow.board
   },
   /** 接收并处理录像数据 */
   receiveVideo: (state: State, payload: ArrayBuffer): void => {
     try {
-      parse(state, payload)
+      const gameRaw = parse(state, payload)
+      store.commit('initGame', gameRaw)
       store.commit('replayVideo')
     } catch (e) {
       // 录像解析失败则将录像事件清空，让页面可以正常显示，但不能播放解析失败的录像数据
@@ -276,7 +259,7 @@ export const mutations = {
     store.commit('checkVideoFinished')
   },
   /** 重新播放游戏录像，TODO 进行函数节流处理 */
-  replayVideo: (state: State): void => {
+  replayVideo: (): void => {
     // 重置变量
     store.commit('resetVideo', true)
     // 播放录像

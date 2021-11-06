@@ -49,7 +49,7 @@ export type GameEvent = ({
   // 方块对应的数字，-1代表是雷，0代表是空，1~8为其他数字
   number: number
 }) & {
-  // 时间
+  // 时间，四舍五入保留三位小数，因为游戏时间进度条是以 0.001 秒为一个单位长度，如果有更多位小数的话，可能会导致进度条的最大值比实际游戏时间来得小
   time: number
   // 第几列
   x: number
@@ -102,26 +102,52 @@ export type GameEvent = ({
  * 游戏原始信息
  */
 export class GameRaw {
-  // 游戏事件
-  events: GameEvent[] = []
   // 列数
-  width = 8
+  width
   // 行数
-  height = 8
+  height
   // 雷数
-  mines = 10
-  // 玩家名称原始数据
-  playerArray = new Uint8Array()
+  mines
   // 最少左键点击数
-  bbbv = 0
+  bbbv
   // 开空数量
-  openings = 0
+  openings
   // 岛屿数量
-  islands = 0
+  islands
   // Greedy ZiNi
-  gZiNi = 0
+  gZiNi
   // Human ZiNi
-  hZiNi = 0
+  hZiNi
+  // 玩家名称原始数据
+  playerArray
+  // 游戏事件
+  events: GameEvent[]
   // 方块棋盘信息
-  board: Cell[] = []
+  board: Cell[]
+
+  constructor (
+    width: number,
+    height: number,
+    mines: number,
+    bbbv: number,
+    openings: number,
+    islands: number,
+    gZiNi: number,
+    hZiNi: number,
+    playerArray: Uint8Array,
+    events: GameEvent[],
+    board: Cell[]
+  ) {
+    this.width = width
+    this.height = height
+    this.mines = mines
+    this.bbbv = bbbv
+    this.openings = openings
+    this.islands = islands
+    this.gZiNi = gZiNi
+    this.hZiNi = hZiNi
+    this.playerArray = playerArray
+    this.events = events
+    this.board = board
+  }
 }
