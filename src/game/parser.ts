@@ -10,7 +10,7 @@
 
  - Fixed bug where error check failed due to differences between Linux and Windows.
  - Fix bug with number events so cell co-ordinates always start from 1 instead of 0.
- - Fixed bug where check_win() prleted to screen instead of selected output method.
+ - Fixed bug where check_win() printed to screen instead of selected output method.
  - Fixed bug where check_win() was not called after openings.
  - Fixed bug where qm was checked instead of !qm.
  - Removed claims_win variable as the updated Viennasweeper parser makes this redundant.
@@ -20,10 +20,7 @@
  - Changed function order so now functions are logically grouped.
  - Added detailed comments throughout file.
 
- Program was modified by Enbin Hu (Flop) 2021-06-13. Fix the bug of not handling the
- question mark setting toggle.
-
- Modified by Enbin Hu (Flop) for a month ending 2021-08-31. Rewriting with TypeScript.
+ Modified by Enbin Hu (Flop) 2021-08-31. Rewriting with TypeScript.
 
  This is being released as Rawparser version 6.
 
