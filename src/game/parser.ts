@@ -1433,7 +1433,7 @@ export function parse (state: State, data: ArrayBuffer): GameRaw {
         } else if (event[i + 1] === 'c') {
           func = leftPress
         } else {
-          error('Unknown event')
+          error(`Unknown event: ${event}`)
         }
 
         // Right button
@@ -1443,7 +1443,7 @@ export function parse (state: State, data: ArrayBuffer): GameRaw {
         } else if (event[i + 1] === 'c') {
           func = rightPress
         } else {
-          error('Unknown event')
+          error(`Unknown event: ${event}`)
         }
 
         // Mouse movement and Middle button
@@ -1459,7 +1459,7 @@ export function parse (state: State, data: ArrayBuffer): GameRaw {
         } else if (event[i + 1] === 't') {
           func = toggleQuestionMarkSetting
         } else {
-          error('Unknown event')
+          error(`Unknown event: ${event}`)
         }
 
         // Start (implemented in Viennasweeper)
@@ -1475,7 +1475,7 @@ export function parse (state: State, data: ArrayBuffer): GameRaw {
         } else if (event[i + 1] === 'c') {
           func = leftPressWithShift
         } else {
-          error('Unknown event')
+          error(`Unknown event: ${event}`)
         }
 
         // Won (implemented in Viennasweeper)
@@ -1494,7 +1494,7 @@ export function parse (state: State, data: ArrayBuffer): GameRaw {
       } else if (event[i] === 'n' && event[i + 1] === 'o') {
         continue
       } else {
-        error('Unknown event: ' + event)
+        error(`Unknown event: ${event}`)
       }
 
       while (event[++i] !== '(' && i < len) {
