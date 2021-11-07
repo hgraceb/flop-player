@@ -66,9 +66,9 @@ import { round } from 'number-precision'
 // TODO 重新启用 ESLint 规则
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-const MAXLEN = 1000
-const MAXOPS = 1000
-const MAXISLS = 1000
+const MAX_LEN = 1000
+const MAX_OPS = 1000
+const MAX_ISLS = 1000
 
 let board: Cell[]
 
@@ -113,8 +113,8 @@ function init (data: ArrayBuffer) {
   distance = 0
   solvedBbbv = 0
   closedCells = 0
-  sizeOps = new Array(MAXOPS)
-  sizeIsls = new Array(MAXISLS)
+  sizeOps = new Array(MAX_OPS)
+  sizeIsls = new Array(MAX_ISLS)
   solvedOps = solvedIsls = 0
   left = right = middle = shiftLeft = 0
   chorded = oneDotFive = 0
@@ -128,7 +128,6 @@ function init (data: ArrayBuffer) {
   gameEvents = []
 }
 
-// TODO 测试函数是否可用
 function fgets (): void {
   if (input === '' || input === null) {
     input = null
@@ -138,10 +137,10 @@ function fgets (): void {
   let len
   // 如果没有换行符
   if (indexOf === -1) {
-    len = input.length < MAXLEN ? input.length : MAXLEN
+    len = input.length < MAX_LEN ? input.length : MAX_LEN
   } else {
     // indexOf 的返回结果是从 0 开始的
-    len = indexOf < MAXLEN ? indexOf + 1 : MAXLEN
+    len = indexOf < MAX_LEN ? indexOf + 1 : MAX_LEN
   }
   event = input.substring(0, len)
   input = input.substring(len)
@@ -159,14 +158,12 @@ function isdigit (c: string): boolean {
   return c >= '0' && c <= '9'
 }
 
-// TODO 将输出转换为具体的事件
 function fputs (str: string): void {
   if (store.state.enableParserLog) {
     console.log(str)
   }
 }
 
-// TODO 将输出转换为具体的事件
 // eslint-disable-next-line
 function fprintf (...data: any[]): void {
   if (store.state.enableParserLog) {
@@ -371,7 +368,7 @@ function initBoard (): void {
 
   for (let i = 0; i < size; ++i) {
     if (!board[i].number && !board[i].opening) {
-      if (++openings > MAXOPS) error('Too many openings')
+      if (++openings > MAX_OPS) error('Too many openings')
       sizeOps[openings] = 0
       // Send to function to determine size of Opening
       processOpening(openings, i)
@@ -380,7 +377,7 @@ function initBoard (): void {
 
   for (let i = 0; i < size; ++i) {
     if (!board[i].opening && !board[i].island && !board[i].mine) {
-      if (++islands > MAXISLS) error('Too many islands')
+      if (++islands > MAX_ISLS) error('Too many islands')
       sizeIsls[islands] = 0
       // Send to function to determine size of Island
       processIsland(islands, i)
@@ -1283,8 +1280,8 @@ export function parse (state: State, data: ArrayBuffer): GameRaw {
   let playerArray = new Uint8Array()
 
   // Clear some arrays related to board[]
-  for (i = 0; i < MAXOPS; ++i) sizeOps[i] = 0
-  for (i = 0; i < MAXISLS; ++i) sizeIsls[i] = 0
+  for (i = 0; i < MAX_OPS; ++i) sizeOps[i] = 0
+  for (i = 0; i < MAX_ISLS; ++i) sizeIsls[i] = 0
 
   // Read the input file header and extract existing stats to output file (or screen)
   while (1) {

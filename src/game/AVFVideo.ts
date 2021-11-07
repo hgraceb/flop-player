@@ -29,6 +29,71 @@
  Tested successfully on Arbiter 0.35 and later.
  *****************************************************************/
 
+class AVFVideo {
+  private readonly MAX_REP = 100000
+  private readonly MAX_NAME = 1000
+
+  // 游戏事件
+  private readonly Event = class {
+    // Seconds
+    sec = 0
+    // Hundredths
+    hun = 0
+    // Thousandths
+    ths = 0
+    x = 0
+    y = 0
+    mouse = 0
+  }
+
+  // Mode
+  private mode = 0
+  // Width
+  private w = 0
+  // Height
+  private h = 0
+  // Mines
+  private m = 0
+  // Number of game events
+  private size = 0
+  // Stores board and mine locations
+  private board: number[] = []
+  // Questionmarks
+  private qm = 0
+  // Version
+  private ver = 0
+  // Player name
+  private name = ''
+  // Skin (since version 0.47)
+  private skin = ''
+  // Program
+  private program = ''
+  // Used in getpair() function
+  private value = ''
+  // Timestamp (when game started)
+  private timestamp_a = ''
+  // Custom games have 4 extra bytes
+  private customdata = ''
+  // Game events
+  private video: Event[] = []
+  // Time in seconds
+  private score_sec = 0
+  // Time in decimals
+  private score_hun = 0
+  // The period or space before 3rd part of Version
+  private spacer = ''
+  // Substring used to fetch Version
+  private versionend = ''
+  // Substring used to fetch Version
+  private versionprint = ''
+  // 3bv
+  private bbbv = 0
+  // Realtime (since version 0.47)
+  private realtime = 0.0
+  // 3bvs
+  private bbbvs = 0.0
+}
+
 // #include <stdio.h>
 // #include <stdlib.h>
 // #include <string.h>
@@ -103,7 +168,7 @@
 //   int i=0;
 //   char c=0;
 //
-//   while(c!=':' && c!=13 && i<MAXNAME)
+//   while(c!=':' && c!=13 && i<MAX_NAME)
 //   {
 //     c=_fgetc(f);
 //     if(c=='<')
@@ -116,7 +181,7 @@
 //   }
 //   c1[--i]=0;i=0;
 //
-//   while(c!=13 && i<MAXNAME)
+//   while(c!=13 && i<MAX_NAME)
 //   {
 //     c=_fgetc(f);
 //     c2[i++]=c;
@@ -203,16 +268,16 @@
 //   if(mode==4)
 //   {
 //     i=0;
-//     while(i<MAXNAME) if((customdata[i++]=_fgetc(AVF))=='|')
+//     while(i<MAX_NAME) if((customdata[i++]=_fgetc(AVF))=='|')
 //     {customdata[--i]=0;break;}
 //     i=0;
-//     while(i<MAXNAME) if((timestamp_a[i++]=_fgetc(AVF))=='|')
+//     while(i<MAX_NAME) if((timestamp_a[i++]=_fgetc(AVF))=='|')
 //     {timestamp_a[--i]=0;break;}
 //   }
 //   else
 //   {
 //     i=0;
-//     while(i<MAXNAME) if((timestamp_a[i++]=_fgetc(AVF))=='|')
+//     while(i<MAX_NAME) if((timestamp_a[i++]=_fgetc(AVF))=='|')
 //     {timestamp_a[--i]=0;break;}
 //   }
 //
@@ -325,7 +390,7 @@
 //
 //   //Fetch Program
 //   i=0;
-//   while(i<MAXNAME)
+//   while(i<MAX_NAME)
 //     if((program[i++]=_fgetc(AVF))=='0')
 //     {
 //       program[--i]=0;
@@ -349,7 +414,7 @@
 //
 //   //Second step is transfer to a different array then parse up until the period or Copyright
 //   //Versions since 0.43 end with a period before the Copyright notice (ie, '0.43 demo3.')
-//   for(i=0;i<MAXNAME;++i)
+//   for(i=0;i<MAX_NAME;++i)
 //   {
 //     if(versionend[i]!='.' && versionend[i]!='C')
 //       versionprint[i]=versionend[i];
