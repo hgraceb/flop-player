@@ -29,6 +29,19 @@
  Tested successfully on Arbiter 0.35 and later.
  *****************************************************************/
 
+// 游戏事件
+class Event {
+  // Seconds
+  sec = 0
+  // Hundredths
+  hun = 0
+  // Thousandths
+  ths = 0
+  x = 0
+  y = 0
+  mouse = 0
+}
+
 export class AVFVideo {
   private readonly MAX_NAME = 1000
 
@@ -65,18 +78,7 @@ export class AVFVideo {
   // Custom games have 4 extra bytes
   private customdata: string[] = []
   // Game events
-  private video: {
-    // Seconds
-    sec: number
-    // Hundredths
-    hun: number
-    // Thousandths
-    ths: number
-    x: number
-    y: number
-    mouse: number
-  }[] = []
-
+  private video: Event[] = []
   // Time in seconds
   private scoreSec = 0
   // Time in decimals
@@ -96,6 +98,7 @@ export class AVFVideo {
 
   constructor (data: ArrayBuffer) {
     this.data = new Uint8Array(data)
+    this.readavf()
   }
 
   /**
@@ -113,7 +116,7 @@ export class AVFVideo {
   // ==============================================================================================
   private _fgetc () {
     const char = this.data[this.position++]
-    if (char) {
+    if (char !== undefined) {
       return String.fromCharCode(char)
     }
     // TODO 自定义错误
@@ -125,7 +128,7 @@ export class AVFVideo {
   // ==============================================================================================
   private _fgeti () {
     const char = this.data[this.position++]
-    if (char) {
+    if (char !== undefined) {
       return char
     }
     // TODO 自定义错误
@@ -277,7 +280,7 @@ export class AVFVideo {
     }
 
     // Convert array string to an integer
-    this.bbbv = AVFVideo.atoi(cr.join())
+    this.bbbv = AVFVideo.atoi(new TextDecoder().decode(new Uint8Array(cr)))
 
     // Clear the 8 byte array we are using to store data
     for (i = 0; i < 7; ++i) cr[i] = 0
@@ -291,7 +294,7 @@ export class AVFVideo {
     }
 
     // Convert array string to an integer
-    this.scoreSec = AVFVideo.atoi(cr.join()) - 1
+    this.scoreSec = AVFVideo.atoi(new TextDecoder().decode(new Uint8Array(cr))) - 1
 
     // Clear the 8 byte array we are using to store data
     for (i = 0; i < 7; ++i) cr[i] = 0
@@ -305,7 +308,7 @@ export class AVFVideo {
     }
 
     // Convert array string to an integer
-    this.scoreHun = AVFVideo.atoi(cr.join())
+    this.scoreHun = AVFVideo.atoi(new TextDecoder().decode(new Uint8Array(cr)))
 
     // Clear the 8 byte array we are using to store data
     for (i = 0; i < 7; ++i) cr[i] = 0
@@ -320,6 +323,7 @@ export class AVFVideo {
 
     // Each iteration reads one mouse event
     while (1) {
+      this.video[cur] = new Event()
       this.video[cur].mouse = cr[0]
       this.video[cur].x = cr[1] * 256 + cr[3]
       this.video[cur].y = cr[5] * 256 + cr[7]
