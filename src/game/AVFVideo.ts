@@ -29,6 +29,8 @@
  Tested successfully on Arbiter 0.35 and later.
  *****************************************************************/
 
+import { Video } from '@/game/video'
+
 // 游戏事件
 class Event {
   // Seconds
@@ -42,7 +44,7 @@ class Event {
   mouse = 0
 }
 
-export class AVFVideo {
+export class AVFVideo extends Video {
   private readonly MAX_NAME = 1000
 
   // 读取位置
@@ -97,6 +99,7 @@ export class AVFVideo {
   private bbbvs = 0.0
 
   constructor (data: ArrayBuffer) {
+    super()
     this.data = new Uint8Array(data)
     this.readavf()
   }
