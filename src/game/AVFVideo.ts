@@ -99,7 +99,7 @@ export class AVFVideo extends Video {
   private bbbvs = 0.0
 
   constructor (data: ArrayBuffer) {
-    super()
+    super(data)
     this.data = new Uint8Array(data)
     this.readavf()
   }

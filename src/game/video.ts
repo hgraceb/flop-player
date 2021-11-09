@@ -16,36 +16,68 @@ export class Video {
   private mMines = 0
   private mBoard: string[] = []
   private mEvents: VideoEvent[] = []
-  private mPlayer: Uint8Array = new Uint8Array()
+  private mPlayer = new Uint8Array()
+  private mOffset = 0
+  private readonly mData = new Uint8Array()
+
+  constructor (data: ArrayBuffer) {
+    this.mData = new Uint8Array(data)
+  }
 
   /** 设置游戏列数 */
-  setWidth (width: number) {
+  protected setWidth (width: number): void {
     this.mWidth = width
   }
 
   /** 设置游戏行数 */
-  setHeight (height: number) {
+  protected setHeight (height: number): void {
     this.mHeight = height
   }
 
   /** 设置游戏雷数 */
-  setMines (mines: number) {
+  protected setMines (mines: number): void {
     this.mMines = mines
   }
 
   /** 设置游戏布局 */
-  setBoard (board: string[]) {
+  protected setBoard (board: string[]): void {
     this.mBoard = board
   }
 
   /** 设置游戏事件 */
-  setEvents (events: VideoEvent[]) {
+  protected setEvents (events: VideoEvent[]): void {
     this.mEvents = events
   }
 
   /** 设置玩家名称原始数据 */
-  setPlayer (player: Uint8Array) {
+  protected setPlayer (player: Uint8Array): void {
     this.mPlayer = player
+  }
+
+  /** 抛出一个错误 */
+  protected throwError (msg: string): number {
+    throw new Error(`${this.constructor.name}Error: ${msg}`)
+  }
+
+  /**
+   * 获取下一个字节，并将位置标识符向后移动
+   * @throws {Error} 数据意外结尾
+   */
+  protected getNum (): number {
+    const num = this.mData[this.mOffset++]
+    // 数据意外结尾
+    if (num === undefined) {
+      this.throwError('Unexpected end of data')
+    }
+    return num
+  }
+
+  /**
+   * 获取下一个字符，并将位置标识符向后移动
+   * @throws {Error} 数据意外结尾
+   */
+  protected getChar (): string {
+    return String.fromCharCode(this.getNum())
   }
 
   /** 获取游戏列数 */
