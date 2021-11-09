@@ -102,6 +102,8 @@ export class AVFVideo extends Video {
     super(data)
     this.data = new Uint8Array(data)
     this.readavf()
+    // TODO 完善录像基本信息
+    super.setInfo({ width: this.w, height: this.h, mines: this.m, board: [], events: [], player: new Uint8Array() })
   }
 
   /**

@@ -1,5 +1,5 @@
 /**
- * 录像事件
+ * 录像事件信息
  */
 export class VideoEvent {
   x = 0
@@ -8,50 +8,32 @@ export class VideoEvent {
 }
 
 /**
+ * 录像基础信息
+ */
+export interface VideoInfo {
+  width: number
+  height: number
+  mines: number
+  board: string[]
+  events: VideoEvent[]
+  player: Uint8Array
+}
+
+/**
  * 录像信息基础类
  */
-export class Video {
-  private mWidth = 0
-  private mHeight = 0
-  private mMines = 0
-  private mBoard: string[] = []
-  private mEvents: VideoEvent[] = []
-  private mPlayer = new Uint8Array()
+export abstract class Video {
   private mOffset = 0
+  private mInfo = <VideoInfo>{}
   private readonly mData = new Uint8Array()
 
-  constructor (data: ArrayBuffer) {
+  protected constructor (data: ArrayBuffer) {
     this.mData = new Uint8Array(data)
   }
 
-  /** 设置游戏列数 */
-  protected setWidth (width: number): void {
-    this.mWidth = width
-  }
-
-  /** 设置游戏行数 */
-  protected setHeight (height: number): void {
-    this.mHeight = height
-  }
-
-  /** 设置游戏雷数 */
-  protected setMines (mines: number): void {
-    this.mMines = mines
-  }
-
-  /** 设置游戏布局 */
-  protected setBoard (board: string[]): void {
-    this.mBoard = board
-  }
-
-  /** 设置游戏事件 */
-  protected setEvents (events: VideoEvent[]): void {
-    this.mEvents = events
-  }
-
-  /** 设置玩家名称原始数据 */
-  protected setPlayer (player: Uint8Array): void {
-    this.mPlayer = player
+  /** 设置游戏基础信息 */
+  protected setInfo (info: VideoInfo) {
+    this.mInfo = info
   }
 
   /** 抛出一个错误 */
@@ -82,31 +64,31 @@ export class Video {
 
   /** 获取游戏列数 */
   getWidth (): number {
-    return this.mWidth
+    return this.mInfo.width
   }
 
   /** 获取游戏行数 */
   getHeight (): number {
-    return this.mHeight
+    return this.mInfo.height
   }
 
   /** 获取游戏雷数 */
   getMines (): number {
-    return this.mMines
+    return this.mInfo.mines
   }
 
   /** 获取游戏布局 */
   getBoard (): string[] {
-    return this.mBoard
+    return this.mInfo.board
   }
 
   /** 获取游戏事件 */
   getEvents (): VideoEvent[] {
-    return this.mEvents
+    return this.mInfo.events
   }
 
   /** 获取玩家名称原始数据 */
   getPlayer (): Uint8Array {
-    return this.mPlayer
+    return this.mInfo.player
   }
 }
