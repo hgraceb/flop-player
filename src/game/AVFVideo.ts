@@ -29,7 +29,7 @@
  Tested successfully on Arbiter 0.35 and later.
  *****************************************************************/
 
-import { Video } from '@/game/video'
+import { Video, VideoEvent } from '@/game/video'
 
 // 游戏事件
 class Event {
@@ -45,12 +45,15 @@ class Event {
 }
 
 export class AVFVideo extends Video {
-  private readonly MAX_NAME = 1000
+  // TODO 更新录像基本信息
+  protected width = 0
+  protected height = 0
+  protected mines = 0
+  protected events: VideoEvent[] = []
+  protected player: Uint8Array = new Uint8Array()
+  protected board: number[] = []
 
-  // 读取位置
-  private position = 0
-  // 原始数据
-  private readonly data: Uint8Array
+  private readonly MAX_NAME = 1000
   // Mode
   private mode = 0
   // Width
@@ -61,8 +64,6 @@ export class AVFVideo extends Video {
   private m = 0
   // Number of game events
   private size = 0
-  // Stores board and mine locations
-  private board: number[] = []
   // Questionmarks
   private qm = false
   // Version
@@ -100,10 +101,7 @@ export class AVFVideo extends Video {
 
   constructor (data: ArrayBuffer) {
     super(data)
-    this.data = new Uint8Array(data)
     this.readavf()
-    // TODO 完善录像基本信息
-    super.setInfo({ width: this.w, height: this.h, mines: this.m, board: [], events: [], player: new Uint8Array() })
   }
 
   /**
@@ -117,30 +115,6 @@ export class AVFVideo extends Video {
   }
 
   // ==============================================================================================
-  // Function is run if there is a parsing error
-  // ==============================================================================================
-  private _fgetc () {
-    const char = this.data[this.position++]
-    if (char !== undefined) {
-      return String.fromCharCode(char)
-    }
-    // TODO 自定义错误
-    throw new Error('Error 4: Unexpected end of file')
-  }
-
-  // ==============================================================================================
-  // Function is run if there is a parsing error
-  // ==============================================================================================
-  private _fgeti () {
-    const char = this.data[this.position++]
-    if (char !== undefined) {
-      return char
-    }
-    // TODO 自定义错误
-    throw new Error('Error 4: Unexpected end of file')
-  }
-
-  // ==============================================================================================
   // Function is used to read Realtime and Skin values
   // ==============================================================================================
   private getpair (c1: string[], c2: string[]) {
@@ -149,11 +123,11 @@ export class AVFVideo extends Video {
     let c = ''
 
     while (c !== ':' && c.charCodeAt(0) !== 13 && i < this.MAX_NAME) {
-      c = this._fgetc()
+      c = super.getChar()
       if (c === '<') {
         c1.length = i
         c2 = []
-        while (this._fgeti() !== 13) {
+        while (super.getNum() !== 13) {
         }
         return
       }
@@ -163,7 +137,7 @@ export class AVFVideo extends Video {
     i = 0
 
     while (c.charCodeAt(0) !== 13 && i < this.MAX_NAME) {
-      c = this._fgetc()
+      c = super.getChar()
       c2[i++] = c
     }
     c2.length = i
@@ -183,14 +157,14 @@ export class AVFVideo extends Video {
 
     // Fetch main version from byte 1
     // For example, Arbiter 0.52.2 stores 52 (Hex 34) in byte 1
-    c = this._fgeti()
+    c = super.getNum()
     this.ver = c
 
     // Throw away next 4 bytes which are not used
-    for (i = 0; i < 4; ++i) c = this._fgeti()
+    for (i = 0; i < 4; ++i) c = super.getNum()
 
     // Fetch Mode from byte 6
-    c = this._fgeti()
+    c = super.getNum()
     this.mode = c - 2
 
     if (this.mode === 1) {
@@ -204,17 +178,17 @@ export class AVFVideo extends Video {
       this.h = 16
       this.m = 99
     } else if (this.mode === 4) {
-      this.w = (c = this._fgeti()) + 1
-      this.h = (c = this._fgeti()) + 1
-      this.m = (c = this._fgeti())
-      this.m = this.m * 256 + (c = this._fgeti())
+      this.w = (c = super.getNum()) + 1
+      this.h = (c = super.getNum()) + 1
+      this.m = (c = super.getNum())
+      this.m = this.m * 256 + (c = super.getNum())
     } else return 0
 
     // Fetch board layout and put in memory
     this.board = new Array(this.w * this.h).fill(0)
     for (i = 0; i < this.m; ++i) {
-      c = this._fgeti() - 1
-      d = this._fgeti() - 1
+      c = super.getNum() - 1
+      d = super.getNum() - 1
       this.board[c * this.w + d] = 1
     }
 
@@ -227,19 +201,19 @@ export class AVFVideo extends Video {
       cr[0] = cr[1]
       cr[1] = cr[2]
       cr[2] = cr[3]
-      cr[3] = this._fgeti()
+      cr[3] = super.getNum()
     }
     cr[0] = cr[1]
     cr[1] = cr[2]
     cr[2] = cr[3]
-    cr[3] = this._fgeti()
+    cr[3] = super.getNum()
 
     // See if Questionmark option was turned on
     if (cr[0] !== 17 && cr[0] !== 127) return 0
     this.qm = (cr[0] === 17)
 
     // Throw away the next byte (the first '[' before timestamp)
-    this._fgetc()
+    super.getChar()
 
     // Fetch timestamp
     // Timestamp_a is when game starts, Timestamp_b is when game ends
@@ -247,14 +221,14 @@ export class AVFVideo extends Video {
     if (this.mode === 4) {
       i = 0
       while (i < this.MAX_NAME) {
-        if ((this.customdata[i++] = this._fgetc()) === '|') {
+        if ((this.customdata[i++] = super.getChar()) === '|') {
           this.customdata.pop()
           break
         }
       }
       i = 0
       while (i < this.MAX_NAME) {
-        if ((this.timestampA[i++] = this._fgetc()) === '|') {
+        if ((this.timestampA[i++] = super.getChar()) === '|') {
           this.timestampA.pop()
           break
         }
@@ -262,7 +236,7 @@ export class AVFVideo extends Video {
     } else {
       i = 0
       while (i < this.MAX_NAME) {
-        if ((this.timestampA[i++] = this._fgetc()) === '|') {
+        if ((this.timestampA[i++] = super.getChar()) === '|') {
           this.timestampA.pop()
           break
         }
@@ -270,7 +244,7 @@ export class AVFVideo extends Video {
     }
 
     // Throw away bytes until you find letter B which is followed by the 3bv value
-    while (this._fgetc() !== 'B') {
+    while (super.getChar() !== 'B') {
     }
 
     // Clear the 8 byte array we are using to store data
@@ -278,7 +252,7 @@ export class AVFVideo extends Video {
     i = 0
 
     // Fetch 3BV
-    while ((c = this._fgeti())) {
+    while ((c = super.getNum())) {
       if (c === 'T'.charCodeAt(0)) break
       cr[i] = c
       i++
@@ -292,7 +266,7 @@ export class AVFVideo extends Video {
     i = 0
 
     // Fetch the seconds part of time (stop at decimal) and subtract 1s for real time
-    while ((c = this._fgeti())) {
+    while ((c = super.getNum())) {
       if (c === '.'.charCodeAt(0) || c === ','.charCodeAt(0)) break
       cr[i] = c
       i++
@@ -306,7 +280,7 @@ export class AVFVideo extends Video {
     i = 0
 
     // Fetch the decimal part of Time (2 decimal places)
-    while ((c = this._fgeti())) {
+    while ((c = super.getNum())) {
       if (c === ']'.charCodeAt(0)) break
       cr[i] = c
       i++
@@ -322,9 +296,9 @@ export class AVFVideo extends Video {
     while (cr[2] !== 1 || cr[1] > 1) {
       cr[0] = cr[1]
       cr[1] = cr[2]
-      cr[2] = this._fgeti()
+      cr[2] = super.getNum()
     }
-    for (i = 3; i < 8; ++i) cr[i] = this._fgeti()
+    for (i = 3; i < 8; ++i) cr[i] = super.getNum()
 
     // Each iteration reads one mouse event
     while (1) {
@@ -337,7 +311,7 @@ export class AVFVideo extends Video {
 
       if (this.video[cur].sec < 0) break
 
-      for (i = 0; i < 8; ++i) cr[i] = this._fgeti()
+      for (i = 0; i < 8; ++i) cr[i] = super.getNum()
       ++cur
     }
 
@@ -351,11 +325,11 @@ export class AVFVideo extends Video {
     while (cr[0] !== 'c'.charCodeAt(0) || cr[1] !== 's'.charCodeAt(0) || cr[2] !== '='.charCodeAt(0)) {
       cr[0] = cr[1]
       cr[1] = cr[2]
-      cr[2] = this._fgeti()
+      cr[2] = super.getNum()
     }
 
     // Throw away the bytes after "cs=" but before "Realtime"
-    for (i = 0; i < 17; ++i) this._fgetc()
+    for (i = 0; i < 17; ++i) super.getChar()
 
     // Infinite loop until break statement is made
     // Note that Realtime and Skin do not exist before version 0.47
@@ -376,7 +350,7 @@ export class AVFVideo extends Video {
     // Fetch Program
     i = 0
     while (i < this.MAX_NAME) {
-      if ((this.program[i++] = this._fgetc()) === '0') {
+      if ((this.program[i++] = super.getChar()) === '0') {
         this.program.length = --i
         break
       }
@@ -385,15 +359,15 @@ export class AVFVideo extends Video {
     // Start the process of fetching Version, such as '0.52.3'
     // Since we print 0 later and already fetched 52 as ver, throw away the '.52'
     i = 0
-    for (i = 0; i < 3; ++i) this._fgetc()
+    for (i = 0; i < 3; ++i) super.getChar()
 
     // Store next byte which will be a period or blank space depending on version
-    this.spacer = this._fgetc()
+    this.spacer = super.getChar()
 
     // Fetch 10 more bytes (this is longer than longest known last part of version)
     // Read into an array (ie, '0.52.3. Copyright' would put '3. Copyrig' in array)
     for (i = 0; i < 10; ++i) {
-      this.versionend[i] = this._fgetc()
+      this.versionend[i] = super.getChar()
     }
 
     // Second step is transfer to a different array then parse up until the period or Copyright

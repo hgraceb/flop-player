@@ -8,32 +8,21 @@ export class VideoEvent {
 }
 
 /**
- * 录像基础信息
- */
-export interface VideoInfo {
-  width: number
-  height: number
-  mines: number
-  board: string[]
-  events: VideoEvent[]
-  player: Uint8Array
-}
-
-/**
  * 录像信息基础类
  */
 export abstract class Video {
   private mOffset = 0
-  private mInfo = <VideoInfo>{}
   private readonly mData = new Uint8Array()
+
+  protected abstract width: number
+  protected abstract height: number
+  protected abstract mines: number
+  protected abstract board: number[]
+  protected abstract events: VideoEvent[]
+  protected abstract player: Uint8Array
 
   protected constructor (data: ArrayBuffer) {
     this.mData = new Uint8Array(data)
-  }
-
-  /** 设置游戏基础信息 */
-  protected setInfo (info: VideoInfo) {
-    this.mInfo = info
   }
 
   /** 抛出一个错误 */
@@ -64,31 +53,31 @@ export abstract class Video {
 
   /** 获取游戏列数 */
   getWidth (): number {
-    return this.mInfo.width
+    return this.width
   }
 
   /** 获取游戏行数 */
   getHeight (): number {
-    return this.mInfo.height
+    return this.height
   }
 
   /** 获取游戏雷数 */
   getMines (): number {
-    return this.mInfo.mines
+    return this.mines
   }
 
   /** 获取游戏布局 */
-  getBoard (): string[] {
-    return this.mInfo.board
+  getBoard (): number[] {
+    return this.board
   }
 
   /** 获取游戏事件 */
   getEvents (): VideoEvent[] {
-    return this.mInfo.events
+    return this.events
   }
 
   /** 获取玩家名称原始数据 */
   getPlayer (): Uint8Array {
-    return this.mInfo.player
+    return this.player
   }
 }
