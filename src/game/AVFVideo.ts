@@ -46,18 +46,26 @@ class Event {
 
 export class AVFVideo extends Video {
   // TODO 更新录像基本信息
-  protected width = 0
-  protected height = 0
-  protected mines = 0
-  protected board: number[] = []
-  protected events: VideoEvent[]
-  protected player: Uint8Array
+  protected mWidth: number
+  protected mHeight: number
+  protected mMines: number
+  protected mBoard: number[]
+  protected mEvents: VideoEvent[]
+  protected mPlayer: Uint8Array
 
   private readonly MAX_NAME = 1000
   // Mode
   private mode = 0
+  // Width
+  private w = 0
+  // Height
+  private h = 0
+  // Mines
+  private m = 0
   // Number of game events
   private size = 0
+  // Stores board and mine locations
+  private board: number[] = []
   // Questionmarks
   private qm = false
   // Version
@@ -99,8 +107,13 @@ export class AVFVideo extends Video {
     if (!this.readavf()) {
       this.throwError('Invalid AVF')
     }
+    // 设置游戏基本信息
+    this.mWidth = this.w
+    this.mHeight = this.h
+    this.mMines = this.m
+    this.mBoard = this.board
     // 设置游戏事件
-    this.events = Array.from(Array(this.size), () => <VideoEvent>{})
+    this.mEvents = Array.from(Array(this.size), () => <VideoEvent>{})
     let curx = 1
     let cury = 1
     for (let i = 0; i < this.size; ++i) {
@@ -136,9 +149,9 @@ export class AVFVideo extends Video {
       // printf('%d %d (%d %d)\n', video[i].x / 16 + 1, video[i].y / 16 + 1, video[i].x, video[i].y)
     }
     // 设置玩家名称
-    this.player = new Uint8Array(this.name.length)
+    this.mPlayer = new Uint8Array(this.name.length)
     this.name.forEach((char, index) => {
-      this.player[index] = char.charCodeAt(0)
+      this.mPlayer[index] = char.charCodeAt(0)
     })
   }
 
@@ -206,28 +219,28 @@ export class AVFVideo extends Video {
     this.mode = c - 2
 
     if (this.mode === 1) {
-      this.width = this.height = 8
-      this.mines = 10
+      this.w = this.h = 8
+      this.m = 10
     } else if (this.mode === 2) {
-      this.width = this.height = 16
-      this.mines = 40
+      this.w = this.h = 16
+      this.m = 40
     } else if (this.mode === 3) {
-      this.width = 30
-      this.height = 16
-      this.mines = 99
+      this.w = 30
+      this.h = 16
+      this.m = 99
     } else if (this.mode === 4) {
-      this.width = (c = this.getNum()) + 1
-      this.height = (c = this.getNum()) + 1
-      this.mines = (c = this.getNum())
-      this.mines = this.mines * 256 + (c = this.getNum())
+      this.w = (c = this.getNum()) + 1
+      this.h = (c = this.getNum()) + 1
+      this.m = (c = this.getNum())
+      this.m = this.m * 256 + (c = this.getNum())
     } else return 0
 
     // Fetch board layout and put in memory
-    this.board = new Array(this.width * this.height).fill(0)
-    for (i = 0; i < this.mines; ++i) {
+    this.board = new Array(this.w * this.h).fill(0)
+    for (i = 0; i < this.m; ++i) {
       c = this.getNum() - 1
       d = this.getNum() - 1
-      this.board[c * this.width + d] = 1
+      this.board[c * this.w + d] = 1
     }
 
     // Clear the 8 byte array we are using to store data
