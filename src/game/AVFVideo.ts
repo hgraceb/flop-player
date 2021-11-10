@@ -50,8 +50,8 @@ export class AVFVideo extends Video {
   protected height = 0
   protected mines = 0
   protected board: number[] = []
-  protected events: VideoEvent[] = []
-  protected player: Uint8Array = new Uint8Array()
+  protected events: VideoEvent[]
+  protected player: Uint8Array
 
   private readonly MAX_NAME = 1000
   // Mode
@@ -95,9 +95,51 @@ export class AVFVideo extends Video {
 
   constructor (data: ArrayBuffer) {
     super(data)
+    // 解析 AVF 录像
     if (!this.readavf()) {
       this.throwError('Invalid AVF')
     }
+    // 设置游戏事件
+    this.events = Array.from(Array(this.size), () => <VideoEvent>{})
+    let curx = 1
+    let cury = 1
+    for (let i = 0; i < this.size; ++i) {
+      if (this.video[i].mouse === 1 && this.video[i].x === curx && this.video[i].y === cury) continue
+      curx = this.video[i].x
+      cury = this.video[i].y
+
+      // //For consistency with other programs add fake 0 as third decimal
+      // printf('%d.%02d0 ', this.video[i].sec, this.video[i].hun)
+      //
+      // if (this.video[i].mouse === 1)
+      //   printf('mv ')
+      // else if (this.video[i].mouse === 3)
+      //   printf('lc ')
+      // else if (this.video[i].mouse === 5)
+      //   printf('lr ')
+      // else if (this.video[i].mouse === 9)
+      //   printf('rc ')
+      // else if (this.video[i].mouse === 17)
+      //   printf('rr ')
+      // else if (this.video[i].mouse === 33)
+      //   printf('mc ')
+      // else if (this.video[i].mouse === 65)
+      //   printf('mr ')
+      // else if (this.video[i].mouse === 145)
+      //   printf('rr ')
+      // else if (this.video[i].mouse === 193)
+      //   printf('mr ')
+      // else if (this.video[i].mouse === 11)
+      //   printf('sc ')
+      // else if (this.video[i].mouse === 21)
+      //   printf('lr ')
+      // printf('%d %d (%d %d)\n', video[i].x / 16 + 1, video[i].y / 16 + 1, video[i].x, video[i].y)
+    }
+    // 设置玩家名称
+    this.player = new Uint8Array(this.name.length)
+    this.name.forEach((char, index) => {
+      this.player[index] = char.charCodeAt(0)
+    })
   }
 
   /**
@@ -339,11 +381,6 @@ export class AVFVideo extends Video {
           this.skin = this.value.slice(1)
         }
       } else {
-        // 设置玩家名称
-        this.player = new Uint8Array(this.name.length)
-        this.name.forEach((char, index) => {
-          this.player[index] = char.charCodeAt(0)
-        })
         break
       }
     }

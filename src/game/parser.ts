@@ -1327,7 +1327,7 @@ export function parse (state: State, data: ArrayBuffer): GameRaw {
   }
 
   // Get number of cells in the board
-  board = Array.from(Array(size = w * h), () => new Cell())
+  board = Array.from(Array(size = w * h), () => <Cell>{})
 
   // Reset any knowledge of cells
   clearBoard()
