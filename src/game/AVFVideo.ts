@@ -49,19 +49,13 @@ export class AVFVideo extends Video {
   protected width = 0
   protected height = 0
   protected mines = 0
+  protected board: number[] = []
   protected events: VideoEvent[] = []
   protected player: Uint8Array = new Uint8Array()
-  protected board: number[] = []
 
   private readonly MAX_NAME = 1000
   // Mode
   private mode = 0
-  // Width
-  private w = 0
-  // Height
-  private h = 0
-  // Mines
-  private m = 0
   // Number of game events
   private size = 0
   // Questionmarks
@@ -168,28 +162,28 @@ export class AVFVideo extends Video {
     this.mode = c - 2
 
     if (this.mode === 1) {
-      this.w = this.h = 8
-      this.m = 10
+      this.width = this.height = 8
+      this.mines = 10
     } else if (this.mode === 2) {
-      this.w = this.h = 16
-      this.m = 40
+      this.width = this.height = 16
+      this.mines = 40
     } else if (this.mode === 3) {
-      this.w = 30
-      this.h = 16
-      this.m = 99
+      this.width = 30
+      this.height = 16
+      this.mines = 99
     } else if (this.mode === 4) {
-      this.w = (c = super.getNum()) + 1
-      this.h = (c = super.getNum()) + 1
-      this.m = (c = super.getNum())
-      this.m = this.m * 256 + (c = super.getNum())
+      this.width = (c = super.getNum()) + 1
+      this.height = (c = super.getNum()) + 1
+      this.mines = (c = super.getNum())
+      this.mines = this.mines * 256 + (c = super.getNum())
     } else return 0
 
     // Fetch board layout and put in memory
-    this.board = new Array(this.w * this.h).fill(0)
-    for (i = 0; i < this.m; ++i) {
+    this.board = new Array(this.width * this.height).fill(0)
+    for (i = 0; i < this.mines; ++i) {
       c = super.getNum() - 1
       d = super.getNum() - 1
-      this.board[c * this.w + d] = 1
+      this.board[c * this.width + d] = 1
     }
 
     // Clear the 8 byte array we are using to store data
