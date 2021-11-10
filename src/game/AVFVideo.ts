@@ -334,7 +334,7 @@ export class AVFVideo extends Video {
       // Stop grabbing pairs of data once Skin has been read
       if (this.value[0]) {
         // If name is Skin then strcmp returns 0, using !strcmp returns 1
-        if (!(this.name.join('').trim() === 'Skin')) {
+        if (this.name.join('') === 'Skin') {
           // The addition of 1 removes the leading whitespace
           this.skin = this.value.slice(1)
         }
