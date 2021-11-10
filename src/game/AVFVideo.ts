@@ -96,7 +96,7 @@ export class AVFVideo extends Video {
   constructor (data: ArrayBuffer) {
     super(data)
     if (!this.readavf()) {
-      super.throwError('Invalid AVF')
+      this.throwError('Invalid AVF')
     }
   }
 
@@ -119,11 +119,11 @@ export class AVFVideo extends Video {
     let c = ''
 
     while (c !== ':' && c.charCodeAt(0) !== 13 && i < this.MAX_NAME) {
-      c = super.getChar()
+      c = this.getChar()
       if (c === '<') {
         c1.length = i
         c2 = []
-        while (super.getNum() !== 13) {
+        while (this.getNum() !== 13) {
         }
         return
       }
@@ -133,7 +133,7 @@ export class AVFVideo extends Video {
     i = 0
 
     while (c.charCodeAt(0) !== 13 && i < this.MAX_NAME) {
-      c = super.getChar()
+      c = this.getChar()
       c2[i++] = c
     }
     c2.length = i
@@ -153,14 +153,14 @@ export class AVFVideo extends Video {
 
     // Fetch main version from byte 1
     // For example, Arbiter 0.52.2 stores 52 (Hex 34) in byte 1
-    c = super.getNum()
+    c = this.getNum()
     this.ver = c
 
     // Throw away next 4 bytes which are not used
-    for (i = 0; i < 4; ++i) c = super.getNum()
+    for (i = 0; i < 4; ++i) c = this.getNum()
 
     // Fetch Mode from byte 6
-    c = super.getNum()
+    c = this.getNum()
     this.mode = c - 2
 
     if (this.mode === 1) {
@@ -174,17 +174,17 @@ export class AVFVideo extends Video {
       this.height = 16
       this.mines = 99
     } else if (this.mode === 4) {
-      this.width = (c = super.getNum()) + 1
-      this.height = (c = super.getNum()) + 1
-      this.mines = (c = super.getNum())
-      this.mines = this.mines * 256 + (c = super.getNum())
+      this.width = (c = this.getNum()) + 1
+      this.height = (c = this.getNum()) + 1
+      this.mines = (c = this.getNum())
+      this.mines = this.mines * 256 + (c = this.getNum())
     } else return 0
 
     // Fetch board layout and put in memory
     this.board = new Array(this.width * this.height).fill(0)
     for (i = 0; i < this.mines; ++i) {
-      c = super.getNum() - 1
-      d = super.getNum() - 1
+      c = this.getNum() - 1
+      d = this.getNum() - 1
       this.board[c * this.width + d] = 1
     }
 
@@ -197,19 +197,19 @@ export class AVFVideo extends Video {
       cr[0] = cr[1]
       cr[1] = cr[2]
       cr[2] = cr[3]
-      cr[3] = super.getNum()
+      cr[3] = this.getNum()
     }
     cr[0] = cr[1]
     cr[1] = cr[2]
     cr[2] = cr[3]
-    cr[3] = super.getNum()
+    cr[3] = this.getNum()
 
     // See if Questionmark option was turned on
     if (cr[0] !== 17 && cr[0] !== 127) return 0
     this.qm = (cr[0] === 17)
 
     // Throw away the next byte (the first '[' before timestamp)
-    super.getChar()
+    this.getChar()
 
     // Fetch timestamp
     // Timestamp_a is when game starts, Timestamp_b is when game ends
@@ -217,14 +217,14 @@ export class AVFVideo extends Video {
     if (this.mode === 4) {
       i = 0
       while (i < this.MAX_NAME) {
-        if ((this.customdata[i++] = super.getChar()) === '|') {
+        if ((this.customdata[i++] = this.getChar()) === '|') {
           this.customdata.pop()
           break
         }
       }
       i = 0
       while (i < this.MAX_NAME) {
-        if ((this.timestampA[i++] = super.getChar()) === '|') {
+        if ((this.timestampA[i++] = this.getChar()) === '|') {
           this.timestampA.pop()
           break
         }
@@ -232,7 +232,7 @@ export class AVFVideo extends Video {
     } else {
       i = 0
       while (i < this.MAX_NAME) {
-        if ((this.timestampA[i++] = super.getChar()) === '|') {
+        if ((this.timestampA[i++] = this.getChar()) === '|') {
           this.timestampA.pop()
           break
         }
@@ -240,7 +240,7 @@ export class AVFVideo extends Video {
     }
 
     // Throw away bytes until you find letter B which is followed by the 3bv value
-    while (super.getChar() !== 'B') {
+    while (this.getChar() !== 'B') {
     }
 
     // Clear the 8 byte array we are using to store data
@@ -248,7 +248,7 @@ export class AVFVideo extends Video {
     i = 0
 
     // Fetch 3BV
-    while ((c = super.getNum())) {
+    while ((c = this.getNum())) {
       if (c === 'T'.charCodeAt(0)) break
       cr[i] = c
       i++
@@ -262,7 +262,7 @@ export class AVFVideo extends Video {
     i = 0
 
     // Fetch the seconds part of time (stop at decimal) and subtract 1s for real time
-    while ((c = super.getNum())) {
+    while ((c = this.getNum())) {
       if (c === '.'.charCodeAt(0) || c === ','.charCodeAt(0)) break
       cr[i] = c
       i++
@@ -276,7 +276,7 @@ export class AVFVideo extends Video {
     i = 0
 
     // Fetch the decimal part of Time (2 decimal places)
-    while ((c = super.getNum())) {
+    while ((c = this.getNum())) {
       if (c === ']'.charCodeAt(0)) break
       cr[i] = c
       i++
@@ -292,9 +292,9 @@ export class AVFVideo extends Video {
     while (cr[2] !== 1 || cr[1] > 1) {
       cr[0] = cr[1]
       cr[1] = cr[2]
-      cr[2] = super.getNum()
+      cr[2] = this.getNum()
     }
-    for (i = 3; i < 8; ++i) cr[i] = super.getNum()
+    for (i = 3; i < 8; ++i) cr[i] = this.getNum()
 
     // Each iteration reads one mouse event
     while (1) {
@@ -307,7 +307,7 @@ export class AVFVideo extends Video {
 
       if (this.video[cur].sec < 0) break
 
-      for (i = 0; i < 8; ++i) cr[i] = super.getNum()
+      for (i = 0; i < 8; ++i) cr[i] = this.getNum()
       ++cur
     }
 
@@ -321,11 +321,11 @@ export class AVFVideo extends Video {
     while (cr[0] !== 'c'.charCodeAt(0) || cr[1] !== 's'.charCodeAt(0) || cr[2] !== '='.charCodeAt(0)) {
       cr[0] = cr[1]
       cr[1] = cr[2]
-      cr[2] = super.getNum()
+      cr[2] = this.getNum()
     }
 
     // Throw away the bytes after "cs=" but before "Realtime"
-    for (i = 0; i < 17; ++i) super.getChar()
+    for (i = 0; i < 17; ++i) this.getChar()
 
     // Infinite loop until break statement is made
     // Note that Realtime and Skin do not exist before version 0.47
@@ -351,7 +351,7 @@ export class AVFVideo extends Video {
     // Fetch Program
     i = 0
     while (i < this.MAX_NAME) {
-      if ((this.program[i++] = super.getChar()) === '0') {
+      if ((this.program[i++] = this.getChar()) === '0') {
         this.program.length = --i
         break
       }
@@ -360,15 +360,15 @@ export class AVFVideo extends Video {
     // Start the process of fetching Version, such as '0.52.3'
     // Since we print 0 later and already fetched 52 as ver, throw away the '.52'
     i = 0
-    for (i = 0; i < 3; ++i) super.getChar()
+    for (i = 0; i < 3; ++i) this.getChar()
 
     // Store next byte which will be a period or blank space depending on version
-    this.spacer = super.getChar()
+    this.spacer = this.getChar()
 
     // Fetch 10 more bytes (this is longer than longest known last part of version)
     // Read into an array (ie, '0.52.3. Copyright' would put '3. Copyrig' in array)
     for (i = 0; i < 10; ++i) {
-      this.versionend[i] = super.getChar()
+      this.versionend[i] = this.getChar()
     }
 
     // Second step is transfer to a different array then parse up until the period or Copyright
