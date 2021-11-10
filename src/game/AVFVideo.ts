@@ -95,7 +95,9 @@ export class AVFVideo extends Video {
 
   constructor (data: ArrayBuffer) {
     super(data)
-    this.readavf()
+    if (!this.readavf()) {
+      super.throwError('Invalid AVF')
+    }
   }
 
   /**
@@ -108,9 +110,9 @@ export class AVFVideo extends Video {
     return parseInt(str) || 0
   }
 
-  // ==============================================================================================
-  // Function is used to read Realtime and Skin values
-  // ==============================================================================================
+  /**
+   * Function is used to read Realtime and Skin values
+   */
   private getpair (c1: string[], c2: string[]) {
     // Initialise local variables
     let i = 0
@@ -137,9 +139,9 @@ export class AVFVideo extends Video {
     c2.length = i
   }
 
-  // ==============================================================================================
-  // Function is used to read video data
-  // ==============================================================================================
+  /**
+   * Function is used to read video data
+   */
   private readavf () {
     // Initialise local variables
     let i: number
@@ -332,11 +334,16 @@ export class AVFVideo extends Video {
       // Stop grabbing pairs of data once Skin has been read
       if (this.value[0]) {
         // If name is Skin then strcmp returns 0, using !strcmp returns 1
-        if (!(this.name.join().trim() === 'Skin')) {
+        if (!(this.name.join('').trim() === 'Skin')) {
           // The addition of 1 removes the leading whitespace
           this.skin = this.value.slice(1)
         }
       } else {
+        // 设置玩家名称
+        this.player = new Uint8Array(this.name.length)
+        this.name.forEach((char, index) => {
+          this.player[index] = char.charCodeAt(0)
+        })
         break
       }
     }

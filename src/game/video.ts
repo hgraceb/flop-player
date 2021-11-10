@@ -27,7 +27,7 @@ export abstract class Video {
 
   /** 抛出一个错误 */
   protected throwError (msg: string): number {
-    throw new Error(`${this.constructor.name}Error: ${msg}`)
+    throw new Error(`${this.constructor.name}Error - ${msg}`)
   }
 
   /**
