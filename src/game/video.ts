@@ -2,10 +2,13 @@
  * 录像事件信息，参考自：https://minesweepergame.com/forum/viewtopic.php?f=26&t=86
  */
 export interface VideoEvent {
-  x: number
-  y: number
+  time: number
   // <left_click> | <left_release> | <right_click> | <right_release> | <middle_click> | <middle_release> | <mouse_move> | <left_click_with_shift> | <toggle_question_mark_setting>
   mouse: 'lc' | 'lr' | 'rc' | 'rr' | 'mc' | 'mr' | 'mv' | 'sc' | 'mt'
+  column: number
+  row: number
+  x: number
+  y: number
 }
 
 /**

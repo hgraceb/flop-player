@@ -30,6 +30,7 @@
  *****************************************************************/
 
 import { Video, VideoEvent } from '@/game/video'
+import { plus } from 'number-precision'
 
 // 游戏事件
 class Event {
@@ -113,40 +114,45 @@ export class AVFVideo extends Video {
     this.mMines = this.m
     this.mBoard = this.board
     // 设置游戏事件
-    this.mEvents = Array.from(Array(this.size), () => <VideoEvent>{})
+    this.mEvents = []
     let curx = 1
     let cury = 1
     for (let i = 0; i < this.size; ++i) {
-      if (this.video[i].mouse === 1 && this.video[i].x === curx && this.video[i].y === cury) continue
-      curx = this.video[i].x
-      cury = this.video[i].y
-
-      // //For consistency with other programs add fake 0 as third decimal
-      // printf('%d.%02d0 ', this.video[i].sec, this.video[i].hun)
-      //
-      // if (this.video[i].mouse === 1)
-      //   printf('mv ')
-      // else if (this.video[i].mouse === 3)
-      //   printf('lc ')
-      // else if (this.video[i].mouse === 5)
-      //   printf('lr ')
-      // else if (this.video[i].mouse === 9)
-      //   printf('rc ')
-      // else if (this.video[i].mouse === 17)
-      //   printf('rr ')
-      // else if (this.video[i].mouse === 33)
-      //   printf('mc ')
-      // else if (this.video[i].mouse === 65)
-      //   printf('mr ')
-      // else if (this.video[i].mouse === 145)
-      //   printf('rr ')
-      // else if (this.video[i].mouse === 193)
-      //   printf('mr ')
-      // else if (this.video[i].mouse === 11)
-      //   printf('sc ')
-      // else if (this.video[i].mouse === 21)
-      //   printf('lr ')
-      // printf('%d %d (%d %d)\n', video[i].x / 16 + 1, video[i].y / 16 + 1, video[i].x, video[i].y)
+      const current = this.video[i]
+      if (current.mouse === 1 && current.x === curx && current.y === cury) continue
+      const event = <VideoEvent>{}
+      curx = current.x
+      cury = current.y
+      // 精确加法，避免加法精度问题，如：1 + 0.14 === 1.1400000000000001
+      event.time = plus(current.sec, current.hun / 100)
+      if (current.mouse === 1) {
+        event.mouse = 'mv'
+      } else if (current.mouse === 3) {
+        event.mouse = 'lc'
+      } else if (current.mouse === 5) {
+        event.mouse = 'lr'
+      } else if (current.mouse === 9) {
+        event.mouse = 'rc'
+      } else if (current.mouse === 17) {
+        event.mouse = 'rr'
+      } else if (current.mouse === 33) {
+        event.mouse = 'mc'
+      } else if (current.mouse === 65) {
+        event.mouse = 'mr'
+      } else if (current.mouse === 145) {
+        event.mouse = 'rr'
+      } else if (current.mouse === 193) {
+        event.mouse = 'mr'
+      } else if (current.mouse === 11) {
+        event.mouse = 'sc'
+      } else if (current.mouse === 21) {
+        event.mouse = 'lr'
+      }
+      event.column = Math.floor(current.x / 16) + 1
+      event.row = Math.floor(current.y / 16) + 1
+      event.x = current.x
+      event.y = current.y
+      this.mEvents.push(event)
     }
     // 设置玩家名称
     this.mPlayer = new Uint8Array(this.name.length)
