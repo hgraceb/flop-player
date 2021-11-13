@@ -221,9 +221,8 @@ export class Player {
    * Erase all information about cell states
    */
   private restartBoard () {
-    let i
     this.closedCells = this.size
-    for (i = 0; i < this.size; ++i) {
+    for (let i = 0; i < this.size; ++i) {
       this.board[i].opened = this.board[i].flagged = this.board[i].wastedFlag = this.board[i].questioned = 0
     }
   }
@@ -232,11 +231,10 @@ export class Player {
    * Function to count mines touching a cell
    */
   private getNumber (index: number): number {
-    let rr, cc
     let res = 0
     // Check neighbourhood
-    for (rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
-      for (cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
+    for (let rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
+      for (let cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
         // Increase count if cell is a mine
         res += this.board[cc * this.h + rr].mine
       }
@@ -259,12 +257,11 @@ export class Player {
    * Determine the size (number of cells) in the Opening
    */
   private processOpening (opId: number, index: number) {
-    let rr, cc
     ++this.sizeOps[opId]
     this.board[index].opening = opId
     // Check neighbourhood
-    for (rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
-      for (cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
+    for (let rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
+      for (let cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
         const i = cc * this.h + rr
         if (this.board[i].number && !this.board[i].mine) {
           if (this.board[i].opening !== opId && this.board[i].opening2 !== opId) ++this.sizeOps[opId]
@@ -280,12 +277,11 @@ export class Player {
    * Determine the size (number of cells) in the Island
    */
   private processIsland (isId: number, index: number) {
-    let rr, cc
     this.board[index].island = isId
     ++this.sizeIsls[isId]
     // Check neighbourhood
-    for (rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
-      for (cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
+    for (let rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
+      for (let cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
         const i = cc * this.h + rr
         if (!this.board[i].island && !this.board[i].mine && !this.board[i].opening) {
           this.processIsland(isId, i)
@@ -298,13 +294,11 @@ export class Player {
    * Function to read board layout and count number of Openings and Islands
    */
   private initBoard () {
-    let i
-    let r, c
     this.openings = 0
 
     // Determine the neighbourhood for each cell
-    for (r = 0; r < this.h; ++r) {
-      for (c = 0; c < this.w; ++c) {
+    for (let r = 0; r < this.h; ++r) {
+      for (let c = 0; c < this.w; ++c) {
         const index = c * this.h + r
         this.board[index].rb = r ? r - 1 : r
         this.board[index].re = r === this.h - 1 ? r : r + 1
@@ -314,7 +308,7 @@ export class Player {
     }
 
     // Set initial premium for each cell (for ZiNi calculations)
-    for (i = 0; i < this.size; ++i) {
+    for (let i = 0; i < this.size; ++i) {
       // Premium is used in ZiNi calculations
       // ZiNi attempts to determine the optimal flagging strategy
       // Premium tries to determine potential contribution of cell to optimal solve of game
@@ -326,7 +320,7 @@ export class Player {
       this.board[i].premium = -(this.board[i].number = this.getNumber(i)) - 2
     }
 
-    for (i = 0; i < this.size; ++i) {
+    for (let i = 0; i < this.size; ++i) {
       if (!this.board[i].number && !this.board[i].opening) {
         if (++this.openings > this.MAXOPS) this.error('Too many openings')
         this.sizeOps[this.openings] = 0
@@ -335,7 +329,7 @@ export class Player {
       }
     }
 
-    for (i = 0; i < this.size; ++i) {
+    for (let i = 0; i < this.size; ++i) {
       if (!this.board[i].opening && !this.board[i].island && !this.board[i].mine) {
         if (++this.islands > this.MAXISLS) this.error('Too many islands')
         this.sizeIsls[this.islands] = 0
@@ -350,11 +344,10 @@ export class Player {
    */
   private getAdj3bv (index: number) {
     let res = 0
-    let rr, cc
     if (!this.board[index].number) return 1
     // Check neighbourhood
-    for (rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
-      for (cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
+    for (let rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
+      for (let cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
         const i = cc * this.h + rr
         res += (!this.board[i].mine && !this.board[i].opening) ? 1 : 0
       }
@@ -371,10 +364,9 @@ export class Player {
    * Function to calculate 3bv
    */
   private calcBBBV () {
-    let i
     // Start by setting 3bv equal to the number of openings
     this.bbbv = this.openings
-    for (i = 0; i < this.size; ++i) {
+    for (let i = 0; i < this.size; ++i) {
       // Increase 3bv count if it is a non-edge number
       if (!this.board[i].opening && !this.board[i].mine) ++this.bbbv
       this.board[i].premium += this.getAdj3bv(i)
@@ -387,14 +379,13 @@ export class Player {
 
   // Open cell
   private open (index: number) {
-    let rr, cc
     this.board[index].opened = 1
     ++this.board[index].premium
 
     // Check cell is a number and not on the edge of an opening
     if (!this.board[index].opening) {
-      for (rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
-        for (cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
+      for (let rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
+        for (let cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
           --this.board[cc * this.h + rr].premium
         }
       }
@@ -415,8 +406,7 @@ export class Player {
       // Cell is inside an opening (not a number on the edge)
     } else {
       const op = this.board[index].opening
-      let i
-      for (i = 0; i < this.size; ++i) {
+      for (let i = 0; i < this.size; ++i) {
         if (this.board[i].opening2 === op ||
           this.board[i].opening === op) {
           // Open all numbers on the edge of the opening
@@ -431,8 +421,7 @@ export class Player {
 
   // Click inside an opening (not on the edge)
   private hitOpenings () {
-    let j
-    for (j = 0; j < this.size; ++j) {
+    for (let j = 0; j < this.size; ++j) {
       if (!this.board[j].number && !this.board[j].opened) {
         this.click(j)
       }
@@ -441,10 +430,9 @@ export class Player {
 
   // Flags neighbouring mines
   private flagAround (index: number) {
-    let rr, cc
     // Check neighbourhood
-    for (rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
-      for (cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
+    for (let rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
+      for (let cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
         const i = cc * this.h + rr
         if (this.board[i].mine) this.flag(i)
       }
@@ -453,13 +441,12 @@ export class Player {
 
   // Flag
   private flag (index: number) {
-    let rr, cc
     if (this.board[index].flagged) return
     ++this.zini
     this.board[index].flagged = 1
     // Check neighbourhood
-    for (rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
-      for (cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
+    for (let rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
+      for (let cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
         // Increase premium of neighbouring cells
         // Placing a flag makes it 1 click more likely a chord can occur
         ++this.board[cc * this.h + rr].premium
@@ -469,10 +456,9 @@ export class Player {
 
   // Chord
   private chord (index: number) {
-    let rr, cc
     ++this.zini
-    for (rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
-      for (cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
+    for (let rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
+      for (let cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
         this.reveal(cc * this.h + rr)
       }
     }
@@ -488,7 +474,6 @@ export class Player {
    * Function to calculate ZiNi and HZiNi
    */
   private calcZini () {
-    let i
     this.zini = 0
     this.restartBoard()
 
@@ -496,7 +481,7 @@ export class Player {
     while (this.closedCells > this.m) {
       let maxp = -1
       let curi = -1
-      for (i = 0; i < this.size; ++i) {
+      for (let i = 0; i < this.size; ++i) {
         if (this.board[i].premium > maxp && !this.board[i].mine) {
           maxp = this.board[i].premium
           curi = i
@@ -509,7 +494,7 @@ export class Player {
         this.flagAround(curi)
         this.chord(curi)
       } else {
-        for (i = 0; i < this.size; ++i) {
+        for (let i = 0; i < this.size; ++i) {
           if (!this.board[i].opened && !this.board[i].mine &&
             (!this.board[i].number || !this.board[i].opening)) {
             curi = i
@@ -523,7 +508,7 @@ export class Player {
     this.gzini = this.zini
 
     // Start calculating HZiNi
-    for (i = 0; i < this.size; ++i) {
+    for (let i = 0; i < this.size; ++i) {
       this.board[i].premium = -(this.board[i].number) - 2 + this.getAdj3bv(i)
     }
     this.zini = 0
@@ -534,7 +519,7 @@ export class Player {
     while (this.closedCells > this.m) {
       let maxp = -1
       let curi = -1
-      for (i = 0; i < this.size; ++i) {
+      for (let i = 0; i < this.size; ++i) {
         if (this.board[i].premium > maxp && !this.board[i].mine && this.board[i].opened) {
           maxp = this.board[i].premium
           curi = i
@@ -547,7 +532,7 @@ export class Player {
         this.flagAround(curi)
         this.chord(curi)
       } else {
-        for (i = 0; i < this.size; ++i) {
+        for (let i = 0; i < this.size; ++i) {
           if (!this.board[i].opened && !this.board[i].mine &&
             (!this.board[i].number || !this.board[i].opening)) {
             curi = i
@@ -586,9 +571,8 @@ export class Player {
 
   // Check which cells to press
   private pushAround (x: number, y: number) {
-    let i, j
-    for (i = this.board[x * this.h + y].rb; i <= this.board[x * this.h + y].re; ++i) {
-      for (j = this.board[x * this.h + y].cb; j <= this.board[x * this.h + y].ce; ++j) {
+    for (let i = this.board[x * this.h + y].rb; i <= this.board[x * this.h + y].re; ++i) {
+      for (let j = this.board[x * this.h + y].cb; j <= this.board[x * this.h + y].ce; ++j) {
         this.push(j, i)
       }
     }
@@ -611,9 +595,8 @@ export class Player {
 
   // Check which cells to unpress
   private popAround (x: number, y: number) {
-    let i, j
-    for (i = this.board[x * this.h + y].rb; i <= this.board[x * this.h + y].re; ++i) {
-      for (j = this.board[x * this.h + y].cb; j <= this.board[x * this.h + y].ce; ++j) {
+    for (let i = this.board[x * this.h + y].rb; i <= this.board[x * this.h + y].re; ++i) {
+      for (let j = this.board[x * this.h + y].cb; j <= this.board[x * this.h + y].ce; ++j) {
         this.pop(j, i)
       }
     }
@@ -673,11 +656,9 @@ export class Player {
 
   // Check how many cells to change
   private showOpening (op: number) {
-    let i
-    let j
     let k = 0
-    for (i = 0; i < this.w; ++i) {
-      for (j = 0; j < this.h; ++j, ++k) {
+    for (let i = 0; i < this.w; ++i) {
+      for (let j = 0; j < this.h; ++j, ++k) {
         if (this.board[k].opening === op || this.board[k].opening2 === op) {
           if (!this.board[k].opened && !this.board[k].flagged) {
             this.show(i, j)
@@ -719,11 +700,9 @@ export class Player {
 
   // Count number of adjacent flags
   private flagsAround (x: number, y: number) {
-    let i
-    let j
     let res = 0
-    for (i = this.board[x * this.h + y].rb; i <= this.board[x * this.h + y].re; ++i) {
-      for (j = this.board[x * this.h + y].cb; j <= this.board[x * this.h + y].ce; ++j) {
+    for (let i = this.board[x * this.h + y].rb; i <= this.board[x * this.h + y].re; ++i) {
+      for (let j = this.board[x * this.h + y].cb; j <= this.board[x * this.h + y].ce; ++j) {
         if (this.board[j * this.h + i].flagged) ++res
       }
     }
@@ -733,13 +712,11 @@ export class Player {
   // Chord
   private doChord (x: number, y: number, onedotfive: number) {
     let wasted = 1
-    let i
-    let j
     // Check cell is already open and number equals count of surrounding flags
     if (this.board[x * this.h + y].number === this.flagsAround(x, y) && this.board[x * this.h + y].opened) {
       // Check neighbourhood
-      for (i = this.board[x * this.h + y].rb; i <= this.board[x * this.h + y].re; ++i) {
-        for (j = this.board[x * this.h + y].cb; j <= this.board[x * this.h + y].ce; ++j) {
+      for (let i = this.board[x * this.h + y].rb; i <= this.board[x * this.h + y].re; ++i) {
+        for (let j = this.board[x * this.h + y].cb; j <= this.board[x * this.h + y].ce; ++j) {
           // Lose game if cell is not flagged and is a mine
           if (this.board[j * this.h + i].mine && !this.board[j * this.h + i].flagged) {
             this.fail()
@@ -747,8 +724,8 @@ export class Player {
         }
       }
       // Check neighbourhood
-      for (i = this.board[x * this.h + y].rb; i <= this.board[x * this.h + y].re; ++i) {
-        for (j = this.board[x * this.h + y].cb; j <= this.board[x * this.h + y].ce; ++j) {
+      for (let i = this.board[x * this.h + y].rb; i <= this.board[x * this.h + y].re; ++i) {
+        for (let j = this.board[x * this.h + y].cb; j <= this.board[x * this.h + y].ce; ++j) {
           // Open cell if not flagged and not already open
           if (!this.board[j * this.h + i].opened && !this.board[j * this.h + i].flagged) {
             this.doOpen(j, i)
@@ -803,10 +780,9 @@ export class Player {
 
   // Part of 'superflag' cheat function (flags neighbouring mines)
   private doFlagAround (x: number, y: number) {
-    let i, j
     // Check neighbourhood
-    for (i = this.board[x * this.h + y].rb; i <= this.board[x * this.h + y].re; ++i) {
-      for (j = this.board[x * this.h + y].cb; j <= this.board[x * this.h + y].ce; ++j) {
+    for (let i = this.board[x * this.h + y].rb; i <= this.board[x * this.h + y].re; ++i) {
+      for (let j = this.board[x * this.h + y].cb; j <= this.board[x * this.h + y].ce; ++j) {
         if (!this.board[j * this.h + i].flagged && !this.board[j * this.h + i].opened) {
           this.doSetFlag(j, i)
         }
@@ -816,12 +792,10 @@ export class Player {
 
   // Part of 'superflag' cheat function (counts unopened neighbours)
   private closedSqAround (x: number, y: number) {
-    let i
-    let j
     let res = 0
     // Check neighbourhood
-    for (i = this.board[x * this.h + y].rb; i <= this.board[x * this.h + y].re; ++i) {
-      for (j = this.board[x * this.h + y].cb; j <= this.board[x * this.h + y].ce; ++j) {
+    for (let i = this.board[x * this.h + y].rb; i <= this.board[x * this.h + y].re; ++i) {
+      for (let j = this.board[x * this.h + y].cb; j <= this.board[x * this.h + y].ce; ++j) {
         if (!this.board[j * this.h + i].opened) ++res
       }
     }
