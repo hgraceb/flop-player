@@ -58,7 +58,7 @@
 
  *****************************************************************/
 
-import { Video } from '@/game/video'
+import { Video, VideoEvent } from '@/game/video'
 
 // This defines cell attributes and sets 'board' as a pointer to 'cell'
 // For example, calling board[i].mine calls the value of mine at that cell location
@@ -167,6 +167,47 @@ export class Player {
     this.calcBBBV()
     // Call function to calculate ZiNi
     if (!this.noZini) this.calcZini()
+    // 模拟所有录像事件
+    for (let i = 0; i < video.getEvents().length; i++) {
+      this.performEvent(video.getEvents()[i])
+    }
+  }
+
+  /**
+   * 模拟录像事件
+   */
+  private performEvent (event: VideoEvent) {
+    this.curTime = event.time
+    switch (event.mouse) {
+      // 优先判断是否是鼠标移动事件
+      case 'mv':
+        this.mouseMove(event.column, event.row, event.x, event.y)
+        break
+      case 'lc':
+        this.leftPress(event.column, event.row, event.x, event.y)
+        break
+      case 'lr':
+        this.leftClick(event.column, event.row, event.x, event.y)
+        break
+      case 'rc':
+        this.rightPress(event.column, event.row)
+        break
+      case 'rr':
+        this.rightClick(event.column, event.row)
+        break
+      case 'mc':
+        this.middlePress(event.column, event.row)
+        break
+      case 'mr':
+        this.middleClick(event.column, event.row)
+        break
+      case 'sc':
+        this.leftPressWithShift(event.column, event.row, event.x, event.y)
+        break
+      case 'mt':
+        this.qm = this.qm ? 0 : 1
+        break
+    }
   }
 
   /**
@@ -518,5 +559,463 @@ export class Player {
     }
     this.hzini = this.zini
     this.restartBoard()
+  }
+
+  /**
+   * Function to check if mouse location is over the board
+   */
+  private isInsideBoard (x: number, y: number) {
+    return x >= 0 && x < this.w && y >= 0 && y < this.h
+  }
+
+  /**
+   * Functions to press cells
+   */
+
+  // Press cell
+  private push (x: number, y: number) {
+    if (this.noBoardEvents) return
+    if (!this.board[x * this.h + y].opened && !this.board[x * this.h + y].flagged) {
+      if (this.board[x * this.h + y].questioned) {
+        // fprintf(output, 'Cell pressed (it is a Questionmark) %d %d\n', x + 1, y + 1)
+      } else {
+        // fprintf(output, 'Cell pressed %d %d\n', x + 1, y + 1)
+      }
+    }
+  }
+
+  // Check which cells to press
+  private pushAround (x: number, y: number) {
+    let i, j
+    for (i = this.board[x * this.h + y].rb; i <= this.board[x * this.h + y].re; ++i) {
+      for (j = this.board[x * this.h + y].cb; j <= this.board[x * this.h + y].ce; ++j) {
+        this.push(j, i)
+      }
+    }
+  }
+
+  /**
+   * Functions to unpress cells (this does not open them)
+   */
+
+  // Unpress cell
+  private pop (x: number, y: number) {
+    if (!this.board[x * this.h + y].opened && !this.board[x * this.h + y].flagged) {
+      if (this.board[x * this.h + y].questioned) {
+        // fprintf(output, 'Cell released (it is a Questionmark) %d %d\n', x + 1, y + 1)
+      } else {
+        // fprintf(output, 'Cell released %d %d\n', x + 1, y + 1)
+      }
+    }
+  }
+
+  // Check which cells to unpress
+  private popAround (x: number, y: number) {
+    let i, j
+    for (i = this.board[x * this.h + y].rb; i <= this.board[x * this.h + y].re; ++i) {
+      for (j = this.board[x * this.h + y].cb; j <= this.board[x * this.h + y].ce; ++j) {
+        this.pop(j, i)
+      }
+    }
+  }
+
+  /**
+   * Functions to check Win or Lose status
+   */
+  private win () {
+    this.endTime = this.curTime
+    this.won = 1
+  }
+
+  // Print Solved 3bv
+  private checkWin () {
+    // TODO 删除多余代码
+    // //This fixes a rounding error. The 3f rounds to 3 decimal places.
+    // //Using 10,000 rounds the 4th decimal place first before 3f is calculated.
+    // //This has the desired effect of truncating to 3 decimals instead of rounding.
+    // let fix;
+    // float fixfloated;
+    // fix=(int)(this.curTime)*10;
+    // fixfloated=(float)fix/10000;
+    // fprintf(stdout,"%.3f Solved 3BV: %d of %d\n",fixfloated,this.solvedBbbv,this.bbbv);
+    if (this.bbbv === this.solvedBbbv) this.win()
+  }
+
+  private fail () {
+    this.endTime = this.curTime
+    this.won = 0
+  }
+
+  /**
+   * Functions for opening cells
+   */
+
+  // Change cell status to open
+  private show (x: number, y: number) {
+    const index = x * this.h + y
+    // fprintf(output,"Cell opened (Number %d) %d %d\n",this.board[index].number,x+1,y+1);
+    this.board[index].opened = 1
+    // Increment counters if cell belongs to an opening and if this iteration opens the last cell in that opening
+    if (this.board[index].opening) {
+      if (!(--this.sizeOps[this.board[index].opening])) {
+        ++this.solvedOps
+        ++this.solvedBbbv
+      }
+    }
+    // Increment counters if cell belongs to another opening and this iteration opens last cell in that opening
+    if (this.board[index].opening2) {
+      if (!(--this.sizeOps[this.board[index].opening2])) {
+        ++this.solvedOps
+        ++this.solvedBbbv
+      }
+    }
+  }
+
+  // Check how many cells to change
+  private showOpening (op: number) {
+    let i
+    let j
+    let k = 0
+    for (i = 0; i < this.w; ++i) {
+      for (j = 0; j < this.h; ++j, ++k) {
+        if (this.board[k].opening === op || this.board[k].opening2 === op) {
+          if (!this.board[k].opened && !this.board[k].flagged) {
+            this.show(i, j)
+          }
+        }
+      }
+    }
+  }
+
+  // Perform checks before changing cell status
+  private doOpen (x: number, y: number) {
+    // Lose if cell is a mine
+    if (this.board[x * this.h + y].mine) {
+      this.board[x * this.h + y].opened = 1
+      // fprintf(output,"Cell opened (it is a Mine) %d %d\n",x+1,y+1);
+      this.fail()
+    } else {
+      // Check cell is inside an opening (number zero)
+      if (!this.board[x * this.h + y].number) {
+        // Open correct number of cells
+        this.showOpening(this.board[x * this.h + y].opening)
+        this.checkWin()
+      } else {
+        // Open single cell because it is a non-zero number
+        this.show(x, y)
+        if (!this.board[x * this.h + y].opening) {
+          ++this.solvedBbbv
+          // Increment count of solved islands if this is last cell of the island to be opened
+          if (!(--this.sizeIsls[this.board[x * this.h + y].island])) ++this.solvedIsls
+          this.checkWin()
+        }
+      }
+    }
+  }
+
+  /**
+   * Functions to Flag, Mark and Chord
+   */
+
+  // Count number of adjacent flags
+  private flagsAround (x: number, y: number) {
+    let i
+    let j
+    let res = 0
+    for (i = this.board[x * this.h + y].rb; i <= this.board[x * this.h + y].re; ++i) {
+      for (j = this.board[x * this.h + y].cb; j <= this.board[x * this.h + y].ce; ++j) {
+        if (this.board[j * this.h + i].flagged) ++res
+      }
+    }
+    return res
+  }
+
+  // Chord
+  private doChord (x: number, y: number, onedotfive: number) {
+    let wasted = 1
+    let i
+    let j
+    // Check cell is already open and number equals count of surrounding flags
+    if (this.board[x * this.h + y].number === this.flagsAround(x, y) && this.board[x * this.h + y].opened) {
+      // Check neighbourhood
+      for (i = this.board[x * this.h + y].rb; i <= this.board[x * this.h + y].re; ++i) {
+        for (j = this.board[x * this.h + y].cb; j <= this.board[x * this.h + y].ce; ++j) {
+          // Lose game if cell is not flagged and is a mine
+          if (this.board[j * this.h + i].mine && !this.board[j * this.h + i].flagged) {
+            this.fail()
+          }
+        }
+      }
+      // Check neighbourhood
+      for (i = this.board[x * this.h + y].rb; i <= this.board[x * this.h + y].re; ++i) {
+        for (j = this.board[x * this.h + y].cb; j <= this.board[x * this.h + y].ce; ++j) {
+          // Open cell if not flagged and not already open
+          if (!this.board[j * this.h + i].opened && !this.board[j * this.h + i].flagged) {
+            this.doOpen(j, i)
+            wasted = 0
+            // Chord was successful so flag was not wasted
+          } else if (this.board[j * this.h + i].flagged && this.board[j * this.h + i].wastedFlag) {
+            this.board[j * this.h + i].wastedFlag = 0
+            --this.wastedFlags
+          }
+        }
+      }
+      // Chord has been wasted
+      if (wasted) {
+        ++this.wastedDClicks
+        if (onedotfive) ++this.wastedClicks15
+      }
+    } else {
+      // Unpress chorded cells without opening them
+      this.popAround(x, y)
+      ++this.wastedDClicks
+      if (onedotfive) ++this.wastedClicks15
+    }
+  }
+
+  // Flag
+  private doSetFlag (x: number, y: number) {
+    // Note that the wastedFlag value becomes 0 after successful chord() function
+    this.board[x * this.h + y].flagged = this.board[x * this.h + y].wastedFlag = 1
+    // fprintf(output,"Flag %d %d\n",x+1,y+1);
+    ++this.flags
+    ++this.wastedFlags
+    // Increase misflag count because cell is not a mine
+    if (!this.board[x * this.h + y].mine) ++this.misflags
+  }
+
+  // Questionmark
+  private doQuestion (x: number, y: number) {
+    this.board[x * this.h + y].questioned = 1
+    // fprintf(output,"Questionmark %d %d\n",x+1,y+1);
+  }
+
+  // Remove Flag or Questionmark
+  private doUnsetFlag (x: number, y: number) {
+    this.board[x * this.h + y].flagged = this.board[x * this.h + y].questioned = 0
+    // fprintf(output,"Flag removed %d %d\n",x+1,y+1);
+    // Decrease flag count, increase unflag count
+    --this.flags
+    ++this.unflags
+    // Increase misunflag count because cell is not a mine
+    if (!this.board[x * this.h + y].mine) ++this.misunflags
+  }
+
+  // Part of 'superflag' cheat function (flags neighbouring mines)
+  private doFlagAround (x: number, y: number) {
+    let i, j
+    // Check neighbourhood
+    for (i = this.board[x * this.h + y].rb; i <= this.board[x * this.h + y].re; ++i) {
+      for (j = this.board[x * this.h + y].cb; j <= this.board[x * this.h + y].ce; ++j) {
+        if (!this.board[j * this.h + i].flagged && !this.board[j * this.h + i].opened) {
+          this.doSetFlag(j, i)
+        }
+      }
+    }
+  }
+
+  // Part of 'superflag' cheat function (counts unopened neighbours)
+  private closedSqAround (x: number, y: number) {
+    let i
+    let j
+    let res = 0
+    // Check neighbourhood
+    for (i = this.board[x * this.h + y].rb; i <= this.board[x * this.h + y].re; ++i) {
+      for (j = this.board[x * this.h + y].cb; j <= this.board[x * this.h + y].ce; ++j) {
+        if (!this.board[j * this.h + i].opened) ++res
+      }
+    }
+    return res
+  }
+
+  /**
+   * Functions for clicking and moving the mouse
+   */
+
+  // Left click
+  private leftClick (x: number, y: number, precX: number, precY: number) {
+    if (!this.left) return
+    if (x !== this.curX || y !== this.curY) this.mouseMove(x, y, precX, precY)
+    this.left = 0
+    if (!this.isInsideBoard(x, y)) {
+      this.chorded = 0
+      return
+    }
+    // Chord
+    if (this.right || this.shiftLeft || (this.superclick && this.board[x * this.h + y].opened)) {
+      ++this.dClicks
+      if (this.onedotfive) ++this.clicks15
+      this.doChord(x, y, this.onedotfive)
+      this.chorded = this.right
+      this.shiftLeft = 0
+      // Left click
+    } else {
+      // Rilian click
+      if (this.chorded) {
+        this.chorded = 0
+        ++this.rilianClicks
+        if (this.noRilianClicks) return
+      }
+      ++this.lClicks
+      if (!this.board[x * this.h + y].opened && !this.board[x * this.h + y].flagged) this.doOpen(x, y)
+      else ++this.wastedLClicks
+      this.chorded = 0
+    }
+    this.curX = x
+    this.curY = y
+  }
+
+  // Mouse movement
+  private mouseMove (x: number, y: number, precX: number, precY: number) {
+    if (this.isInsideBoard(x, y)) {
+      if ((this.left && this.right) || this.middle || this.shiftLeft) {
+        if (this.curX !== x || this.curY !== y) {
+          this.popAround(this.curX, this.curY)
+          this.pushAround(x, y)
+        }
+      } else if (this.superclick && this.left && this.board[this.curX * this.h + this.curY].opened) {
+        this.popAround(this.curX, this.curY)
+        if (this.board[x * this.h + y].opened) {
+          this.pushAround(x, y)
+        } else {
+          this.push(x, y)
+        }
+      } else if (this.left && !this.chorded) {
+        if (this.curX !== x || this.curY !== y) {
+          this.pop(this.curX, this.curY)
+          this.push(x, y)
+        }
+        if (this.nono && (this.curX !== x || this.curY !== y)) {
+          const sl = this.shiftLeft
+          this.leftClick(x, y, this.curX, this.curY)
+          this.left = 1
+          this.shiftLeft = sl
+        }
+      }
+    }
+    // Distance is measured using Manhattan metric instead of Euclidean
+    // Rationale is that pixels form a grid thus are not points
+    this.distance += Math.abs(this.curPrecX - precX) + Math.abs(this.curPrecY - precY)
+    this.curPrecX = precX
+    this.curPrecY = precY
+
+    if (this.isInsideBoard(x, y)) {
+      this.curX = x
+      this.curY = y
+    }
+  }
+
+  // Left button down
+  private leftPress (x: number, y: number, precX: number, precY: number) {
+    if (this.middle) return
+    this.left = 1
+    this.shiftLeft = 0
+    if (!this.isInsideBoard(x, y)) return
+    if (!this.right && !(this.superclick && this.board[x * this.h + y].opened)) {
+      this.push(x, y)
+    } else {
+      this.pushAround(x, y)
+    }
+    if (this.elmar || this.nono) {
+      this.leftClick(x, y, precX, precY)
+      this.left = 1
+    }
+    this.curX = x
+    this.curY = y
+  }
+
+  // Chord using Shift during LC-LR
+  private leftPressWithShift (x: number, y: number, precX: number, precY: number) {
+    if (this.middle) return
+    this.left = this.shiftLeft = 1
+    if (!this.isInsideBoard(x, y)) return
+    this.pushAround(x, y)
+    if (this.elmar || this.nono) {
+      this.leftClick(x, y, precX, precY)
+      this.left = this.shiftLeft = 1
+    }
+    this.curX = x
+    this.curY = y
+  }
+
+  // Right button down
+  private rightPress (x: number, y: number) {
+    if (this.middle) return
+    this.right = 1
+    this.shiftLeft = 0
+    if (!this.isInsideBoard(x, y)) return
+    if (this.left) {
+      this.pushAround(x, y)
+    } else {
+      if (!this.board[x * this.h + y].opened) {
+        this.onedotfive = 1
+        this.chorded = 0
+        if (this.board[x * this.h + y].flagged) {
+          this.doUnsetFlag(x, y)
+          if (!this.qm) this.doQuestion(x, y)
+        } else {
+          if (!this.qm || !this.board[x * this.h + y].questioned) {
+            this.doSetFlag(x, y)
+          } else {
+            this.board[x * this.h + y].flagged = this.board[x * this.h + y].questioned = 0
+            // fprintf(output,"Questionmark removed %d %d\n",x+1,y+1);
+          }
+        }
+        ++this.rClicks
+      } else if (this.superflag && this.board[x * this.h + y].opened) {
+        if (this.board[x * this.h + y].number && this.board[x * this.h + y].number >= this.closedSqAround(x, y)) {
+          this.doFlagAround(x, y)
+        }
+      }
+    }
+    this.curX = x
+    this.curY = y
+  }
+
+  // Right button up
+  private rightClick (x: number, y: number) {
+    if (!this.right) return
+    this.right = this.shiftLeft = 0
+    if (!this.isInsideBoard(x, y)) {
+      this.chorded = this.left
+      this.onedotfive = 0
+      return
+    }
+    // Chord
+    if (this.left) {
+      this.popAround(this.curX, this.curY)
+      this.doChord(x, y, 0)
+      ++this.dClicks
+      this.chorded = 1
+      // Click did not produce a Flag or Chord
+    } else {
+      // It was a RC not the beginning of a Chord
+      if (!this.onedotfive && !this.chorded) {
+        ++this.rClicks
+        ++this.wastedRClicks
+      }
+      this.chorded = 0
+    }
+    this.onedotfive = 0
+    this.curX = x
+    this.curY = y
+  }
+
+  // Middle button down
+  private middlePress (x: number, y: number) {
+    // Middle button resets these boolean values
+    this.shiftLeft = this.left = this.right = this.onedotfive = this.chorded = 0
+    this.middle = 1
+    if (!this.isInsideBoard(x, y)) return
+    this.pushAround(x, y)
+  }
+
+  // Middle button up
+  private middleClick (x: number, y: number) {
+    if (!this.middle) return
+    this.middle = 0
+    if (!this.isInsideBoard(x, y)) return
+    this.doChord(x, y, 0)
+    ++this.dClicks
   }
 }

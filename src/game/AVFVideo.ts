@@ -148,8 +148,8 @@ export class AVFVideo extends Video {
       } else if (current.mouse === 21) {
         event.mouse = 'lr'
       }
-      event.column = Math.floor(current.x / 16) + 1
-      event.row = Math.floor(current.y / 16) + 1
+      event.column = Math.floor(current.x / 16)
+      event.row = Math.floor(current.y / 16)
       event.x = current.x
       event.y = current.y
       this.mEvents.push(event)
