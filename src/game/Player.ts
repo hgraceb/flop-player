@@ -165,6 +165,8 @@ export class Player {
     this.initBoard()
     // Call function to calculate 3bv
     this.calcBBBV()
+    // Call function to calculate ZiNi
+    if (!this.noZini) this.calcZini()
   }
 
   /**
@@ -172,6 +174,17 @@ export class Player {
    */
   private error (msg: string) {
     throw new Error(`${this.constructor.name}Error - ${msg}`)
+  }
+
+  /**
+   * Erase all information about cell states
+   */
+  private restartBoard () {
+    let i
+    this.closedCells = this.size
+    for (i = 0; i < this.size; ++i) {
+      this.board[i].opened = this.board[i].flagged = this.board[i].wastedFlag = this.board[i].questioned = 0
+    }
   }
 
   /**
@@ -325,5 +338,195 @@ export class Player {
       if (!this.board[i].opening && !this.board[i].mine) ++this.bbbv
       this.board[i].premium += this.getAdj3bv(i)
     }
+  }
+
+  /**
+   * Open cell
+   */
+  private open (index: number) {
+    let rr, cc
+    this.board[index].opened = 1
+    ++this.board[index].premium
+
+    // Check cell is a number and not on the edge of an opening
+    if (!this.board[index].opening) {
+      for (rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
+        for (cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
+          --this.board[cc * this.h + rr].premium
+        }
+      }
+    }
+    // Decrease count of unopened cells
+    --this.closedCells
+  }
+
+  /**
+   * Perform checks before opening cells
+   */
+  private reveal (index: number) {
+    // Do not open flagged or already open cells
+    if (this.board[index].opened) return
+    if (this.board[index].flagged) return
+
+    // Open if cell is a non-zero number
+    if (this.board[index].number) {
+      this.open(index)
+      // Cell is inside an opening (not a number on the edge)
+    } else {
+      const op = this.board[index].opening
+      let i
+      for (i = 0; i < this.size; ++i) {
+        if (this.board[i].opening2 === op ||
+          this.board[i].opening === op) {
+          // Open all numbers on the edge of the opening
+          if (!this.board[i].opened) this.open(i)
+          // Reduce premium of neighbouring cells
+          // Chording on neighbouring cells will no longer open this opening
+          --this.board[i].premium
+        }
+      }
+    }
+  }
+
+  /**
+   * Click inside an opening (not on the edge)
+   */
+  private hitOpenings () {
+    let j
+    for (j = 0; j < this.size; ++j) {
+      if (!this.board[j].number && !this.board[j].opened) {
+        this.click(j)
+      }
+    }
+  }
+
+  /**
+   * Flags neighbouring mines
+   */
+  private flagAround (index: number) {
+    let rr, cc
+    // Check neighbourhood
+    for (rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
+      for (cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
+        const i = cc * this.h + rr
+        if (this.board[i].mine) this.flag(i)
+      }
+    }
+  }
+
+  /**
+   * Flag
+   */
+  private flag (index: number) {
+    let rr, cc
+    if (this.board[index].flagged) return
+    ++this.zini
+    this.board[index].flagged = 1
+    // Check neighbourhood
+    for (rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
+      for (cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
+        // Increase premium of neighbouring cells
+        // Placing a flag makes it 1 click more likely a chord can occur
+        ++this.board[cc * this.h + rr].premium
+      }
+    }
+  }
+
+  /**
+   * Chord
+   */
+  private chord (index: number) {
+    let rr, cc
+    ++this.zini
+    for (rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
+      for (cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
+        this.reveal(cc * this.h + rr)
+      }
+    }
+  }
+
+  /**
+   * Click
+   */
+  private click (index: number) {
+    this.reveal(index)
+    ++this.zini
+  }
+
+  /**
+   * Function to calculate ZiNi and HZiNi
+   */
+  private calcZini () {
+    let i
+    this.zini = 0
+    this.restartBoard()
+
+    // While non-mine cells remain unopened
+    while (this.closedCells > this.m) {
+      let maxp = -1
+      let curi = -1
+      for (i = 0; i < this.size; ++i) {
+        if (this.board[i].premium > maxp && !this.board[i].mine) {
+          maxp = this.board[i].premium
+          curi = i
+        }
+      }
+
+      // Premium has climbed into positive territory
+      if (curi !== -1) {
+        if (!this.board[curi].opened) this.click(curi)
+        this.flagAround(curi)
+        this.chord(curi)
+      } else {
+        for (i = 0; i < this.size; ++i) {
+          if (!this.board[i].opened && !this.board[i].mine &&
+            (!this.board[i].number || !this.board[i].opening)) {
+            curi = i
+            break
+          }
+        }
+        this.click(curi)
+      }
+    }
+
+    this.gzini = this.zini
+
+    // Start calculating HZiNi
+    for (i = 0; i < this.size; ++i) {
+      this.board[i].premium = -(this.board[i].number) - 2 + this.getAdj3bv(i)
+    }
+    this.zini = 0
+    this.restartBoard()
+    this.hitOpenings()
+
+    // While non-mine cells remain unopened
+    while (this.closedCells > this.m) {
+      let maxp = -1
+      let curi = -1
+      for (i = 0; i < this.size; ++i) {
+        if (this.board[i].premium > maxp && !this.board[i].mine && this.board[i].opened) {
+          maxp = this.board[i].premium
+          curi = i
+        }
+      }
+
+      // Premium has climbed into positive territory
+      if (curi !== -1) {
+        if (!this.board[curi].opened) this.click(curi)
+        this.flagAround(curi)
+        this.chord(curi)
+      } else {
+        for (i = 0; i < this.size; ++i) {
+          if (!this.board[i].opened && !this.board[i].mine &&
+            (!this.board[i].number || !this.board[i].opening)) {
+            curi = i
+            break
+          }
+        }
+        this.click(curi)
+      }
+    }
+    this.hzini = this.zini
+    this.restartBoard()
   }
 }
