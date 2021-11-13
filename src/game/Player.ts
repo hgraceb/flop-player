@@ -80,9 +80,9 @@ interface Cell {
   ce: number
   // Value 1 if cell has been opened
   opened: number
-  // Value 1 for both when flagged but do_chord() function returns wasted_flag to 0
+  // Value 1 for both when flagged but do_chord() function returns wastedFlag to 0
   flagged: number
-  wasted_flag: number
+  wastedFlag: number
   // Value 1 if cell has a Questionmark
   questioned: number
   // Variable used in ZiNi calculations to assess optimal flagging style strategy
@@ -101,49 +101,49 @@ export class Player {
   private readonly m: number
   private readonly size: number
   private won = 0
-  private no_board_events = 0
-  private no_zini = 0
-  private no_rilian_clicks = 1
-  private no_check_info = 0
+  private noBoardEvents = 0
+  private noZini = 0
+  private noRilianClicks = 1
+  private noCheckInfo = 0
   private bbbv = 0
   private openings = 0
   private islands = 0
   private zini = 0
   private gzini = 0
   private hzini = 0
-  private l_clicks = 0
-  private r_clicks = 0
-  private d_clicks = 0
-  private clicks_15 = 0
-  private wasted_l_clicks = 0
-  private wasted_r_clicks = 0
-  private wasted_d_clicks = 0
-  private wasted_clicks_15 = 0
-  private rilian_clicks = 0
+  private lClicks = 0
+  private rClicks = 0
+  private dClicks = 0
+  private clicks15 = 0
+  private wastedLClicks = 0
+  private wastedRClicks = 0
+  private wastedDClicks = 0
+  private wastedClicks15 = 0
+  private rilianClicks = 0
   private flags = 0
-  private wasted_flags = 0
+  private wastedFlags = 0
   private unflags = 0
   private misflags = 0
   private misunflags = 0
   private distance = 0
-  private solved_bbbv = 0
-  private closed_cells = 0
-  private size_ops: number[] = []
-  private size_isls: number[] = []
-  private solved_ops = 0
-  private solved_isls = 0
+  private solvedBbbv = 0
+  private closedCells = 0
+  private sizeOps: number[] = []
+  private sizeIsls: number[] = []
+  private solvedOps = 0
+  private solvedIsls = 0
   private left = 0
   private right = 0
   private middle = 0
-  private shift_left = 0
+  private shiftLeft = 0
   private chorded = 0
   private onedotfive = 0
-  private cur_x = 0
-  private cur_y = 0
-  private cur_prec_x = 0
-  private cur_prec_y = 0
-  private cur_time = 0
-  private end_time = 0
+  private curX = 0
+  private curY = 0
+  private curPrecX = 0
+  private curPrecY = 0
+  private curTime = 0
+  private endTime = 0
   private event = ''
   private qm = 0
   private elmar = 0
@@ -189,30 +189,30 @@ export class Player {
   /**
    * Determine if cell belongs to 1 or 2 Openings and assign it to an Opening ID
    */
-  private set_opening_border (op_id: number, index: number) {
+  private setOpeningBorder (opId: number, index: number) {
     if (!this.board[index].opening) {
-      this.board[index].opening = op_id
-    } else if (this.board[index].opening != op_id) {
-      this.board[index].opening2 = op_id
+      this.board[index].opening = opId
+    } else if (this.board[index].opening !== opId) {
+      this.board[index].opening2 = opId
     }
   }
 
   /**
    * Determine the size (number of cells) in the Opening
    */
-  private process_opening (op_id: number, index: number) {
+  private processOpening (opId: number, index: number) {
     let rr, cc
-    ++this.size_ops[op_id]
-    this.board[index].opening = op_id
+    ++this.sizeOps[opId]
+    this.board[index].opening = opId
     // Check neighbourhood
     for (rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
       for (cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
         const i = cc * this.h + rr
         if (this.board[i].number && !this.board[i].mine) {
-          if (this.board[i].opening != op_id && this.board[i].opening2 != op_id) ++this.size_ops[op_id]
-          this.set_opening_border(op_id, i)
+          if (this.board[i].opening !== opId && this.board[i].opening2 !== opId) ++this.sizeOps[opId]
+          this.setOpeningBorder(opId, i)
         } else if (!this.board[i].opening && !this.board[i].mine) {
-          this.process_opening(op_id, i)
+          this.processOpening(opId, i)
         }
       }
     }
@@ -221,16 +221,16 @@ export class Player {
   /**
    * Determine the size (number of cells) in the Island
    */
-  private process_island (is_id: number, index: number) {
+  private processIsland (isId: number, index: number) {
     let rr, cc
-    this.board[index].island = is_id
-    ++this.size_isls[is_id]
+    this.board[index].island = isId
+    ++this.sizeIsls[isId]
     // Check neighbourhood
     for (rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
       for (cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
         const i = cc * this.h + rr
         if (!this.board[i].island && !this.board[i].mine && !this.board[i].opening) {
-          this.process_island(is_id, i)
+          this.processIsland(isId, i)
         }
       }
     }
@@ -246,9 +246,9 @@ export class Player {
       for (c = 0; c < this.w; ++c) {
         const index = c * this.h + r
         this.board[index].rb = r ? r - 1 : r
-        this.board[index].re = r == this.h - 1 ? r : r + 1
+        this.board[index].re = r === this.h - 1 ? r : r + 1
         this.board[index].cb = c ? c - 1 : c
-        this.board[index].ce = c == this.w - 1 ? c : c + 1
+        this.board[index].ce = c === this.w - 1 ? c : c + 1
       }
     }
 
@@ -268,22 +268,23 @@ export class Player {
     for (i = 0; i < this.size; ++i) {
       if (!this.board[i].number && !this.board[i].opening) {
         if (++this.openings > this.MAXOPS) this.error('Too many openings')
-        this.size_ops[this.openings] = 0
+        this.sizeOps[this.openings] = 0
         // Send to function to determine size of Opening
-        this.process_opening(this.openings, i)
+        this.processOpening(this.openings, i)
       }
     }
 
     for (i = 0; i < this.size; ++i) {
       if (!this.board[i].opening && !this.board[i].island && !this.board[i].mine) {
         if (++this.islands > this.MAXISLS) this.error('Too many islands')
-        this.size_isls[this.islands] = 0
+        this.sizeIsls[this.islands] = 0
         // Send to function to determine size of Island
-        this.process_island(this.islands, i)
+        this.processIsland(this.islands, i)
       }
     }
   }
 
   private calcBBBV () {
+    // TODO
   }
 }
