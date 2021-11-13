@@ -90,9 +90,8 @@ interface Cell {
 }
 
 export class Player {
-  private readonly MAXLEN = 1000
-  private readonly MAXOPS = 1000
-  private readonly MAXISLS = 1000
+  private readonly MAX_OPS = 1000
+  private readonly MAX_ISLS = 1000
 
   // Initiate global variables
   private readonly board: Cell[]
@@ -144,7 +143,6 @@ export class Player {
   private curPrecY = 0
   private curTime = 0
   private endTime = 0
-  private event = ''
   private qm = 0
   private elmar = 0
   private nono = 0
@@ -322,7 +320,7 @@ export class Player {
 
     for (let i = 0; i < this.size; ++i) {
       if (!this.board[i].number && !this.board[i].opening) {
-        if (++this.openings > this.MAXOPS) this.error('Too many openings')
+        if (++this.openings > this.MAX_OPS) this.error('Too many openings')
         this.sizeOps[this.openings] = 0
         // Send to function to determine size of Opening
         this.processOpening(this.openings, i)
@@ -331,7 +329,7 @@ export class Player {
 
     for (let i = 0; i < this.size; ++i) {
       if (!this.board[i].opening && !this.board[i].island && !this.board[i].mine) {
-        if (++this.islands > this.MAXISLS) this.error('Too many islands')
+        if (++this.islands > this.MAX_ISLS) this.error('Too many islands')
         this.sizeIsls[this.islands] = 0
         // Send to function to determine size of Island
         this.processIsland(this.islands, i)
