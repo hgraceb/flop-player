@@ -20,7 +20,7 @@
  - Changed function order so now functions are logically grouped.
  - Added detailed comments throughout file.
 
- Modified by Enbin Hu (Flop) 2021-08-31. Rewriting with TypeScript.
+ Modified by Enbin Hu (Flop) 2021-11-13. Rewriting with TypeScript.
 
  This is being released as Rawparser version 6.
 
@@ -341,8 +341,10 @@ export class Player {
   }
 
   /**
-   * Open cell
+   * Functions used only by the calc_zini() function
    */
+
+  // Open cell
   private open (index: number) {
     let rr, cc
     this.board[index].opened = 1
@@ -360,9 +362,7 @@ export class Player {
     --this.closedCells
   }
 
-  /**
-   * Perform checks before opening cells
-   */
+  // Perform checks before opening cells
   private reveal (index: number) {
     // Do not open flagged or already open cells
     if (this.board[index].opened) return
@@ -388,9 +388,7 @@ export class Player {
     }
   }
 
-  /**
-   * Click inside an opening (not on the edge)
-   */
+  // Click inside an opening (not on the edge)
   private hitOpenings () {
     let j
     for (j = 0; j < this.size; ++j) {
@@ -400,9 +398,7 @@ export class Player {
     }
   }
 
-  /**
-   * Flags neighbouring mines
-   */
+  // Flags neighbouring mines
   private flagAround (index: number) {
     let rr, cc
     // Check neighbourhood
@@ -414,9 +410,7 @@ export class Player {
     }
   }
 
-  /**
-   * Flag
-   */
+  // Flag
   private flag (index: number) {
     let rr, cc
     if (this.board[index].flagged) return
@@ -432,9 +426,7 @@ export class Player {
     }
   }
 
-  /**
-   * Chord
-   */
+  // Chord
   private chord (index: number) {
     let rr, cc
     ++this.zini
@@ -445,9 +437,7 @@ export class Player {
     }
   }
 
-  /**
-   * Click
-   */
+  // Click
   private click (index: number) {
     this.reveal(index)
     ++this.zini
