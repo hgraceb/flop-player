@@ -157,6 +157,10 @@ export class Player {
     this.m = video.getMines()
     // Get number of cells in the board
     this.board = Array.from(Array(this.size = this.w * this.h), () => <Cell>{})
+    // Check which cells are mines and note them with the '*' symbol
+    for (let i = 0; i < this.size; i++) {
+      this.board[i].mine = video.getBoard()[i]
+    }
     // Call function to get number of Openings and Islands
     this.initBoard()
     // Call function to calculate 3bv
