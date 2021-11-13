@@ -240,6 +240,9 @@ export class Player {
     }
   }
 
+  /**
+   * Function to read board layout and count number of Openings and Islands
+   */
   private initBoard () {
     let i
     let r, c
@@ -288,7 +291,39 @@ export class Player {
     }
   }
 
+  /**
+   * Function used by both the calc_bbbv() and calc_zini() functions
+   */
+  private getAdj3bv (index: number) {
+    let res = 0
+    let rr, cc
+    if (!this.board[index].number) return 1
+    // Check neighbourhood
+    for (rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
+      for (cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
+        const i = cc * this.h + rr
+        res += (!this.board[i].mine && !this.board[i].opening) ? 1 : 0
+      }
+    }
+    // Number belongs to the edge of an opening
+    if (this.board[index].opening) ++res
+    // Number belongs to the edge of a second opening
+    if (this.board[index].opening2) ++res
+    // Return number (0-9)
+    return res
+  }
+
+  /**
+   * Function to calculate 3bv
+   */
   private calcBBBV () {
-    // TODO
+    let i
+    // Start by setting 3bv equal to the number of openings
+    this.bbbv = this.openings
+    for (i = 0; i < this.size; ++i) {
+      // Increase 3bv count if it is a non-edge number
+      if (!this.board[i].opening && !this.board[i].mine) ++this.bbbv
+      this.board[i].premium += this.getAdj3bv(i)
+    }
   }
 }
