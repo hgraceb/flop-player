@@ -63,20 +63,30 @@ import { Video } from '@/game/video'
 // This defines cell attributes and sets 'board' as a pointer to 'cell'
 // For example, calling board[i].mine calls the value of mine at that cell location
 interface Cell {
-  mine: number					// Value 1 if cell is a mine
-  opening: number 				// Value 1 if cell belongs to an opening
-  opening2: number				// Value 1 if cell belongs to a second opening
-  island: number					// Value 1 if cell belongs to an island of numbers
-  number: number					// Value 1 if cell is a number
+  // Value 1 if cell is a mine
+  mine: number
+  // Value 1 if cell belongs to an opening
+  opening: number
+  // Value 1 if cell belongs to a second opening
+  opening2: number
+  // Value 1 if cell belongs to an island of numbers
+  island: number
+  // Value 1 if cell is a number
+  number: number
+  // See init_board() function these are used to identify cell neighbours
   rb: number
   re: number
   cb: number
-  ce: number 			// See init_board() function these are used to identify cell neighbours
-  opened: number					// Value 1 if cell has been opened
-  flagged: number,
-  wasted_flag: number	// Value 1 for both when flagged but do_chord() function returns wasted_flag to 0
-  questioned: number				// Value 1 if cell has a Questionmark
-  premium: number				// Variable used in ZiNi calculations to assess optimal flagging style strategy
+  ce: number
+  // Value 1 if cell has been opened
+  opened: number
+  // Value 1 for both when flagged but do_chord() function returns wasted_flag to 0
+  flagged: number
+  wasted_flag: number
+  // Value 1 if cell has a Questionmark
+  questioned: number
+  // Variable used in ZiNi calculations to assess optimal flagging style strategy
+  premium: number
 }
 
 export class Player {
@@ -90,56 +100,56 @@ export class Player {
   private readonly h: number
   private readonly m: number
   private readonly size: number
-  private won: number = 0
-  private no_board_events: number = 0
-  private no_zini: number = 0
-  private no_rilian_clicks: number = 1
-  private no_check_info: number = 0
-  private bbbv: number = 0
-  private openings: number = 0
-  private islands: number = 0
-  private zini: number = 0
-  private gzini: number = 0
-  private hzini: number = 0
-  private l_clicks: number = 0
-  private r_clicks: number = 0
-  private d_clicks: number = 0
-  private clicks_15: number = 0
-  private wasted_l_clicks: number = 0
-  private wasted_r_clicks: number = 0
-  private wasted_d_clicks: number = 0
-  private wasted_clicks_15: number = 0
-  private rilian_clicks: number = 0
-  private flags: number = 0
-  private wasted_flags: number = 0
-  private unflags: number = 0
-  private misflags: number = 0
-  private misunflags: number = 0
-  private distance: number = 0
-  private solved_bbbv: number = 0
-  private closed_cells: number = 0
+  private won = 0
+  private no_board_events = 0
+  private no_zini = 0
+  private no_rilian_clicks = 1
+  private no_check_info = 0
+  private bbbv = 0
+  private openings = 0
+  private islands = 0
+  private zini = 0
+  private gzini = 0
+  private hzini = 0
+  private l_clicks = 0
+  private r_clicks = 0
+  private d_clicks = 0
+  private clicks_15 = 0
+  private wasted_l_clicks = 0
+  private wasted_r_clicks = 0
+  private wasted_d_clicks = 0
+  private wasted_clicks_15 = 0
+  private rilian_clicks = 0
+  private flags = 0
+  private wasted_flags = 0
+  private unflags = 0
+  private misflags = 0
+  private misunflags = 0
+  private distance = 0
+  private solved_bbbv = 0
+  private closed_cells = 0
   private size_ops: number[] = []
   private size_isls: number[] = []
-  private solved_ops: number = 0
-  private solved_isls: number = 0
-  private left: number = 0
-  private right: number = 0
-  private middle: number = 0
-  private shift_left: number = 0
-  private chorded: number = 0
-  private onedotfive: number = 0
-  private cur_x: number = 0
-  private cur_y: number = 0
-  private cur_prec_x: number = 0
-  private cur_prec_y: number = 0
-  private cur_time: number = 0
+  private solved_ops = 0
+  private solved_isls = 0
+  private left = 0
+  private right = 0
+  private middle = 0
+  private shift_left = 0
+  private chorded = 0
+  private onedotfive = 0
+  private cur_x = 0
+  private cur_y = 0
+  private cur_prec_x = 0
+  private cur_prec_y = 0
+  private cur_time = 0
   private end_time = 0
-  private event: string = ''
-  private qm: number = 0
-  private elmar: number = 0
-  private nono: number = 0
-  private superclick: number = 0
-  private superflag: number = 0
+  private event = ''
+  private qm = 0
+  private elmar = 0
+  private nono = 0
+  private superclick = 0
+  private superflag = 0
 
   constructor (video: Video) {
     this.w = video.getWidth()
@@ -166,11 +176,13 @@ export class Player {
   private getNumber (index: number): number {
     let rr, cc
     let res = 0
-    //Check neighbourhood
-    for (rr = this.board[index].rb; rr <= this.board[index].re; ++rr)
-      for (cc = this.board[index].cb; cc <= this.board[index].ce; ++cc)
-        //Increase count if cell is a mine
+    // Check neighbourhood
+    for (rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
+      for (cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
+        // Increase count if cell is a mine
         res += this.board[cc * this.h + rr].mine
+      }
+    }
     return res
   }
 
@@ -178,10 +190,11 @@ export class Player {
    * Determine if cell belongs to 1 or 2 Openings and assign it to an Opening ID
    */
   private set_opening_border (op_id: number, index: number) {
-    if (!this.board[index].opening)
+    if (!this.board[index].opening) {
       this.board[index].opening = op_id
-    else if (this.board[index].opening != op_id)
+    } else if (this.board[index].opening != op_id) {
       this.board[index].opening2 = op_id
+    }
   }
 
   /**
@@ -191,16 +204,18 @@ export class Player {
     let rr, cc
     ++this.size_ops[op_id]
     this.board[index].opening = op_id
-    //Check neighbourhood
-    for (rr = this.board[index].rb; rr <= this.board[index].re; ++rr)
+    // Check neighbourhood
+    for (rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
       for (cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
-        let i = cc * this.h + rr
+        const i = cc * this.h + rr
         if (this.board[i].number && !this.board[i].mine) {
           if (this.board[i].opening != op_id && this.board[i].opening2 != op_id) ++this.size_ops[op_id]
           this.set_opening_border(op_id, i)
-        } else if (!this.board[i].opening && !this.board[i].mine)
+        } else if (!this.board[i].opening && !this.board[i].mine) {
           this.process_opening(op_id, i)
+        }
       }
+    }
   }
 
   /**
@@ -210,13 +225,15 @@ export class Player {
     let rr, cc
     this.board[index].island = is_id
     ++this.size_isls[is_id]
-    //Check neighbourhood
-    for (rr = this.board[index].rb; rr <= this.board[index].re; ++rr)
+    // Check neighbourhood
+    for (rr = this.board[index].rb; rr <= this.board[index].re; ++rr) {
       for (cc = this.board[index].cb; cc <= this.board[index].ce; ++cc) {
-        let i = cc * this.h + rr
-        if (!this.board[i].island && !this.board[i].mine && !this.board[i].opening)
+        const i = cc * this.h + rr
+        if (!this.board[i].island && !this.board[i].mine && !this.board[i].opening) {
           this.process_island(is_id, i)
+        }
       }
+    }
   }
 
   private initBoard () {
@@ -224,10 +241,10 @@ export class Player {
     let r, c
     this.openings = 0
 
-    //Determine the neighbourhood for each cell
+    // Determine the neighbourhood for each cell
     for (r = 0; r < this.h; ++r) {
       for (c = 0; c < this.w; ++c) {
-        let index = c * this.h + r
+        const index = c * this.h + r
         this.board[index].rb = r ? r - 1 : r
         this.board[index].re = r == this.h - 1 ? r : r + 1
         this.board[index].cb = c ? c - 1 : c
@@ -235,34 +252,36 @@ export class Player {
       }
     }
 
-    //Set initial premium for each cell (for ZiNi calculations)
+    // Set initial premium for each cell (for ZiNi calculations)
     for (i = 0; i < this.size; ++i) {
-      //Premium is used in ZiNi calculations
-      //ZiNi attempts to determine the optimal flagging strategy
-      //Premium tries to determine potential contribution of cell to optimal solve of game
-      //The fewer clicks needed to perform a useful action (like a chord) the higher the premium
-      //Mines have no premium
-      //An opened cell is more useful than a closed cell
-      //Each correct flag makes a number more useful
-      //A higher number is less useful because more flags are required
+      // Premium is used in ZiNi calculations
+      // ZiNi attempts to determine the optimal flagging strategy
+      // Premium tries to determine potential contribution of cell to optimal solve of game
+      // The fewer clicks needed to perform a useful action (like a chord) the higher the premium
+      // Mines have no premium
+      // An opened cell is more useful than a closed cell
+      // Each correct flag makes a number more useful
+      // A higher number is less useful because more flags are required
       this.board[i].premium = -(this.board[i].number = this.getNumber(i)) - 2
     }
 
-    for (i = 0; i < this.size; ++i)
+    for (i = 0; i < this.size; ++i) {
       if (!this.board[i].number && !this.board[i].opening) {
         if (++this.openings > this.MAXOPS) this.error('Too many openings')
         this.size_ops[this.openings] = 0
-        //Send to function to determine size of Opening
+        // Send to function to determine size of Opening
         this.process_opening(this.openings, i)
       }
+    }
 
-    for (i = 0; i < this.size; ++i)
+    for (i = 0; i < this.size; ++i) {
       if (!this.board[i].opening && !this.board[i].island && !this.board[i].mine) {
         if (++this.islands > this.MAXISLS) this.error('Too many islands')
         this.size_isls[this.islands] = 0
-        //Send to function to determine size of Island
+        // Send to function to determine size of Island
         this.process_island(this.islands, i)
       }
+    }
   }
 
   private calcBBBV () {
