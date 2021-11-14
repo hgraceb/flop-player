@@ -76,7 +76,7 @@ export const state: State = {
   islands: 0,
   gZiNi: 0,
   hZiNi: 0,
-  playerArray: new Uint8Array,
+  playerArray: new Uint8Array(),
   gameEvents: [],
   gameCellBoard: [],
   // 其他变量
