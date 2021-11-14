@@ -26,6 +26,7 @@ export abstract class Video {
   protected abstract mWidth: number
   protected abstract mHeight: number
   protected abstract mMines: number
+  protected abstract mMarks: number
   protected abstract mBoard: number[]
   protected abstract mEvents: VideoEvent[]
   protected abstract mPlayer: Uint8Array
@@ -73,6 +74,11 @@ export abstract class Video {
   /** 获取游戏雷数 */
   getMines (): number {
     return this.mMines
+  }
+
+  /** 获取是否标记问号 */
+  getMarks (): number {
+    return this.mMarks
   }
 
   /** 获取游戏布局 */

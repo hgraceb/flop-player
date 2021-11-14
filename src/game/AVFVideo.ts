@@ -45,10 +45,10 @@ class Event {
 }
 
 export class AVFVideo extends Video {
-  // TODO 更新录像基本信息
   protected mWidth: number
   protected mHeight: number
   protected mMines: number
+  protected mMarks: number
   protected mBoard: number[]
   protected mEvents: VideoEvent[]
   protected mPlayer: Uint8Array
@@ -67,7 +67,7 @@ export class AVFVideo extends Video {
   // Stores board and mine locations
   private board: number[] = []
   // Questionmarks
-  private qm = false
+  private qm = 0
   // Version
   private ver = 0
   // Player name
@@ -111,6 +111,7 @@ export class AVFVideo extends Video {
     this.mWidth = this.w
     this.mHeight = this.h
     this.mMines = this.m
+    this.mMarks = this.qm
     this.mBoard = this.board
     // 设置游戏事件
     this.mEvents = []
@@ -266,7 +267,7 @@ export class AVFVideo extends Video {
 
     // See if Questionmark option was turned on
     if (cr[0] !== 17 && cr[0] !== 127) return 0
-    this.qm = (cr[0] === 17)
+    this.qm = (cr[0] === 17) ? 1 : 0
 
     // Throw away the next byte (the first '[' before timestamp)
     this.getChar()

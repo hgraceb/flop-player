@@ -163,6 +163,7 @@ export class Parser {
     this.w = video.getWidth()
     this.h = video.getHeight()
     this.m = video.getMines()
+    this.qm = video.getMarks()
     // Get number of cells in the board
     this.board = Array.from(Array(this.size = this.w * this.h), () => <Cell>{})
     // Check which cells are mines and note them with the '*' symbol
