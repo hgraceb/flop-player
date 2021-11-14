@@ -58,6 +58,8 @@ export default defineComponent({
 
 <style scoped>
 .player-name {
+  /* 设置高度避免文本被部分隐藏，可能被隐藏的文本如：English，TODO 调整 height 和 line-height 属性，让电脑和手机端显示一致，目前手机端会偏上显示 */
+  height: 160px;
   overflow: hidden;
   font-size: 120px;
   /* 控制文本垂直居中 */
