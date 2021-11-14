@@ -59,6 +59,8 @@
  *****************************************************************/
 
 import { Video, VideoEvent } from '@/game/video'
+import { GameEvent } from '@/game/index'
+import { round } from 'number-precision/src/index'
 
 // This defines cell attributes and sets 'board' as a pointer to 'cell'
 // For example, calling board[i].mine calls the value of mine at that cell location
@@ -92,6 +94,9 @@ interface Cell {
 export class Player {
   private readonly MAX_OPS = 1000
   private readonly MAX_ISLS = 1000
+
+  // 游戏事件
+  private readonly gameEvents: GameEvent[] = []
 
   // Initiate global variables
   private readonly board: Cell[]
@@ -188,23 +193,42 @@ export class Player {
         this.leftClick(event.column, event.row, event.x, event.y)
         break
       case 'rc':
-        this.rightPress(event.column, event.row)
+        this.rightPress(event.column, event.row, event.x, event.y)
         break
       case 'rr':
-        this.rightClick(event.column, event.row)
+        this.rightClick(event.column, event.row, event.x, event.y)
         break
       case 'mc':
-        this.middlePress(event.column, event.row)
+        this.middlePress(event.column, event.row, event.x, event.y)
         break
       case 'mr':
-        this.middleClick(event.column, event.row)
+        this.middleClick(event.column, event.row, event.x, event.y)
         break
       case 'sc':
         this.leftPressWithShift(event.column, event.row, event.x, event.y)
         break
       case 'mt':
-        this.qm = this.qm ? 0 : 1
+        this.toggleQuestionMarkSetting(event.column, event.row)
         break
+    }
+  }
+
+  /**
+   * 获取统计数据
+   */
+  private getStats () {
+    return {
+      solvedBbbv: this.solvedBbbv,
+      solvedOps: this.solvedOps,
+      solvedIsls: this.solvedIsls,
+      leftClicks: this.lClicks,
+      rightClicks: this.rClicks,
+      doubleClicks: this.dClicks,
+      wastedLeftClicks: this.wastedLClicks,
+      wastedRightClicks: this.wastedRClicks,
+      wastedDoubleClicks: this.wastedDClicks,
+      path: this.distance,
+      flags: this.flags
     }
   }
 
@@ -559,11 +583,14 @@ export class Player {
   private push (x: number, y: number) {
     if (this.noBoardEvents) return
     if (!this.board[x * this.h + y].opened && !this.board[x * this.h + y].flagged) {
-      if (this.board[x * this.h + y].questioned) {
-        // fprintf(output, 'Cell pressed (it is a Questionmark) %d %d\n', x + 1, y + 1)
-      } else {
-        // fprintf(output, 'Cell pressed %d %d\n', x + 1, y + 1)
-      }
+      this.gameEvents.push({
+        name: 'Press',
+        questioned: this.board[x * this.h + y].questioned,
+        time: round(this.curTime, 3),
+        x: x,
+        y: y,
+        stats: this.getStats()
+      })
     }
   }
 
@@ -583,11 +610,14 @@ export class Player {
   // Unpress cell
   private pop (x: number, y: number) {
     if (!this.board[x * this.h + y].opened && !this.board[x * this.h + y].flagged) {
-      if (this.board[x * this.h + y].questioned) {
-        // fprintf(output, 'Cell released (it is a Questionmark) %d %d\n', x + 1, y + 1)
-      } else {
-        // fprintf(output, 'Cell released %d %d\n', x + 1, y + 1)
-      }
+      this.gameEvents.push({
+        name: 'Release',
+        questioned: this.board[x * this.h + y].questioned,
+        time: round(this.curTime, 3),
+        x: x,
+        y: y,
+        stats: this.getStats()
+      })
     }
   }
 
@@ -610,15 +640,12 @@ export class Player {
 
   // Print Solved 3bv
   private checkWin () {
-    // TODO 删除多余代码
-    // //This fixes a rounding error. The 3f rounds to 3 decimal places.
-    // //Using 10,000 rounds the 4th decimal place first before 3f is calculated.
-    // //This has the desired effect of truncating to 3 decimals instead of rounding.
-    // let fix;
-    // float fixfloated;
-    // fix=(int)(this.curTime)*10;
-    // fixfloated=(float)fix/10000;
-    // fprintf(stdout,"%.3f Solved 3BV: %d of %d\n",fixfloated,this.solvedBbbv,this.bbbv);
+    this.gameEvents.push({
+      name: 'Solved3BV',
+      solved: this.solvedBbbv,
+      time: round(this.curTime, 3),
+      stats: this.getStats()
+    })
     if (this.bbbv === this.solvedBbbv) this.win()
   }
 
@@ -634,7 +661,14 @@ export class Player {
   // Change cell status to open
   private show (x: number, y: number) {
     const index = x * this.h + y
-    // fprintf(output,"Cell opened (Number %d) %d %d\n",this.board[index].number,x+1,y+1);
+    this.gameEvents.push({
+      name: 'Open',
+      number: this.board[index].number,
+      time: round(this.curTime, 3),
+      x: x,
+      y: y,
+      stats: this.getStats()
+    })
     this.board[index].opened = 1
     // Increment counters if cell belongs to an opening and if this iteration opens the last cell in that opening
     if (this.board[index].opening) {
@@ -671,7 +705,14 @@ export class Player {
     // Lose if cell is a mine
     if (this.board[x * this.h + y].mine) {
       this.board[x * this.h + y].opened = 1
-      // fprintf(output,"Cell opened (it is a Mine) %d %d\n",x+1,y+1);
+      this.gameEvents.push({
+        name: 'Open',
+        number: -1,
+        time: round(this.curTime, 3),
+        x: x,
+        y: y,
+        stats: this.getStats()
+      })
       this.fail()
     } else {
       // Check cell is inside an opening (number zero)
@@ -752,23 +793,53 @@ export class Player {
   private doSetFlag (x: number, y: number) {
     // Note that the wastedFlag value becomes 0 after successful chord() function
     this.board[x * this.h + y].flagged = this.board[x * this.h + y].wastedFlag = 1
-    // fprintf(output,"Flag %d %d\n",x+1,y+1);
+    this.gameEvents.push({
+      name: 'Flag',
+      time: round(this.curTime, 3),
+      x: x,
+      y: y,
+      stats: this.getStats()
+    })
     ++this.flags
     ++this.wastedFlags
     // Increase misflag count because cell is not a mine
     if (!this.board[x * this.h + y].mine) ++this.misflags
   }
 
+  // Toggle question mark setting
+  private toggleQuestionMarkSetting (x: number, y: number) {
+    this.gameEvents.push({
+      name: 'ToggleQuestionMarkSetting',
+      time: round(this.curTime, 3),
+      x: x,
+      y: y,
+      stats: this.getStats()
+    })
+    this.qm = this.qm ? 0 : 1
+  }
+
   // Questionmark
   private doQuestion (x: number, y: number) {
     this.board[x * this.h + y].questioned = 1
-    // fprintf(output,"Questionmark %d %d\n",x+1,y+1);
+    this.gameEvents.push({
+      name: 'QuestionMark',
+      time: round(this.curTime, 3),
+      x: x,
+      y: y,
+      stats: this.getStats()
+    })
   }
 
   // Remove Flag or Questionmark
   private doUnsetFlag (x: number, y: number) {
     this.board[x * this.h + y].flagged = this.board[x * this.h + y].questioned = 0
-    // fprintf(output,"Flag removed %d %d\n",x+1,y+1);
+    this.gameEvents.push({
+      name: 'RemoveFlag',
+      time: round(this.curTime, 3),
+      x: x,
+      y: y,
+      stats: this.getStats()
+    })
     // Decrease flag count, increase unflag count
     --this.flags
     ++this.unflags
@@ -806,6 +877,16 @@ export class Player {
 
   // Left click
   private leftClick (x: number, y: number, precX: number, precY: number) {
+    // TODO 判断事件位置是否需要调整
+    this.gameEvents.push({
+      name: 'LeftClick',
+      time: round(this.curTime, 3),
+      x: x,
+      y: y,
+      precisionX: precX,
+      precisionY: precY,
+      stats: this.getStats()
+    })
     if (!this.left) return
     if (x !== this.curX || y !== this.curY) this.mouseMove(x, y, precX, precY)
     this.left = 0
@@ -816,6 +897,15 @@ export class Player {
     // Chord
     if (this.right || this.shiftLeft || (this.superclick && this.board[x * this.h + y].opened)) {
       ++this.dClicks
+      this.gameEvents.push({
+        name: 'DoubleClicksAdded',
+        time: round(this.curTime, 3),
+        x: x,
+        y: y,
+        precisionX: precX,
+        precisionY: precY,
+        stats: this.getStats()
+      })
       if (this.onedotfive) ++this.clicks15
       this.doChord(x, y, this.onedotfive)
       this.chorded = this.right
@@ -829,6 +919,15 @@ export class Player {
         if (this.noRilianClicks) return
       }
       ++this.lClicks
+      this.gameEvents.push({
+        name: 'LeftClicksAdded',
+        time: round(this.curTime, 3),
+        x: x,
+        y: y,
+        precisionX: precX,
+        precisionY: precY,
+        stats: this.getStats()
+      })
       if (!this.board[x * this.h + y].opened && !this.board[x * this.h + y].flagged) this.doOpen(x, y)
       else ++this.wastedLClicks
       this.chorded = 0
@@ -839,6 +938,16 @@ export class Player {
 
   // Mouse movement
   private mouseMove (x: number, y: number, precX: number, precY: number) {
+    // TODO 判断事件位置是否需要调整
+    this.gameEvents.push({
+      name: 'MouseMove',
+      time: round(this.curTime, 3),
+      x: x,
+      y: y,
+      precisionX: precX,
+      precisionY: precY,
+      stats: this.getStats()
+    })
     if (this.isInsideBoard(x, y)) {
       if ((this.left && this.right) || this.middle || this.shiftLeft) {
         if (this.curX !== x || this.curY !== y) {
@@ -879,6 +988,16 @@ export class Player {
 
   // Left button down
   private leftPress (x: number, y: number, precX: number, precY: number) {
+    // TODO 判断事件位置是否需要调整
+    this.gameEvents.push({
+      name: 'LeftPress',
+      time: round(this.curTime, 3),
+      x: x,
+      y: y,
+      precisionX: precX,
+      precisionY: precY,
+      stats: this.getStats()
+    })
     if (this.middle) return
     this.left = 1
     this.shiftLeft = 0
@@ -898,6 +1017,16 @@ export class Player {
 
   // Chord using Shift during LC-LR
   private leftPressWithShift (x: number, y: number, precX: number, precY: number) {
+    // TODO 判断事件位置是否需要调整
+    this.gameEvents.push({
+      name: 'LeftPressWithShift',
+      time: round(this.curTime, 3),
+      x: x,
+      y: y,
+      precisionX: precX,
+      precisionY: precY,
+      stats: this.getStats()
+    })
     if (this.middle) return
     this.left = this.shiftLeft = 1
     if (!this.isInsideBoard(x, y)) return
@@ -911,7 +1040,17 @@ export class Player {
   }
 
   // Right button down
-  private rightPress (x: number, y: number) {
+  private rightPress (x: number, y: number, precX: number, precY: number) {
+    // TODO 判断事件位置是否需要调整
+    this.gameEvents.push({
+      name: 'RightPress',
+      time: round(this.curTime, 3),
+      x: x,
+      y: y,
+      precisionX: precX,
+      precisionY: precY,
+      stats: this.getStats()
+    })
     if (this.middle) return
     this.right = 1
     this.shiftLeft = 0
@@ -930,10 +1069,25 @@ export class Player {
             this.doSetFlag(x, y)
           } else {
             this.board[x * this.h + y].flagged = this.board[x * this.h + y].questioned = 0
-            // fprintf(output,"Questionmark removed %d %d\n",x+1,y+1);
+            this.gameEvents.push({
+              name: 'RemoveQuestionMark',
+              time: round(this.curTime, 3),
+              x: x,
+              y: y,
+              stats: this.getStats()
+            })
           }
         }
         ++this.rClicks
+        this.gameEvents.push({
+          name: 'RightClicksAdded',
+          time: round(this.curTime, 3),
+          x: x,
+          y: y,
+          precisionX: precX,
+          precisionY: precY,
+          stats: this.getStats()
+        })
       } else if (this.superflag && this.board[x * this.h + y].opened) {
         if (this.board[x * this.h + y].number && this.board[x * this.h + y].number >= this.closedSqAround(x, y)) {
           this.doFlagAround(x, y)
@@ -945,7 +1099,17 @@ export class Player {
   }
 
   // Right button up
-  private rightClick (x: number, y: number) {
+  private rightClick (x: number, y: number, precX: number, precY: number) {
+    // TODO 判断事件位置是否需要调整
+    this.gameEvents.push({
+      name: 'RightClick',
+      time: round(this.curTime, 3),
+      x: x,
+      y: y,
+      precisionX: precX,
+      precisionY: precY,
+      stats: this.getStats()
+    })
     if (!this.right) return
     this.right = this.shiftLeft = 0
     if (!this.isInsideBoard(x, y)) {
@@ -958,12 +1122,30 @@ export class Player {
       this.popAround(this.curX, this.curY)
       this.doChord(x, y, 0)
       ++this.dClicks
+      this.gameEvents.push({
+        name: 'DoubleClicksAdded',
+        time: round(this.curTime, 3),
+        x: x,
+        y: y,
+        precisionX: precX,
+        precisionY: precY,
+        stats: this.getStats()
+      })
       this.chorded = 1
       // Click did not produce a Flag or Chord
     } else {
       // It was a RC not the beginning of a Chord
       if (!this.onedotfive && !this.chorded) {
         ++this.rClicks
+        this.gameEvents.push({
+          name: 'RightClicksAdded',
+          time: round(this.curTime, 3),
+          x: x,
+          y: y,
+          precisionX: precX,
+          precisionY: precY,
+          stats: this.getStats()
+        })
         ++this.wastedRClicks
       }
       this.chorded = 0
@@ -974,7 +1156,17 @@ export class Player {
   }
 
   // Middle button down
-  private middlePress (x: number, y: number) {
+  private middlePress (x: number, y: number, precX: number, precY: number) {
+    // TODO 判断事件位置是否需要调整
+    this.gameEvents.push({
+      name: 'MiddlePress',
+      time: round(this.curTime, 3),
+      x: x,
+      y: y,
+      precisionX: precX,
+      precisionY: precY,
+      stats: this.getStats()
+    })
     // Middle button resets these boolean values
     this.shiftLeft = this.left = this.right = this.onedotfive = this.chorded = 0
     this.middle = 1
@@ -983,11 +1175,30 @@ export class Player {
   }
 
   // Middle button up
-  private middleClick (x: number, y: number) {
+  private middleClick (x: number, y: number, precX: number, precY: number) {
+    // TODO 判断事件位置是否需要调整
+    this.gameEvents.push({
+      name: 'MiddleClick',
+      time: round(this.curTime, 3),
+      x: x,
+      y: y,
+      precisionX: precX,
+      precisionY: precY,
+      stats: this.getStats()
+    })
     if (!this.middle) return
     this.middle = 0
     if (!this.isInsideBoard(x, y)) return
     this.doChord(x, y, 0)
     ++this.dClicks
+    this.gameEvents.push({
+      name: 'DoubleClicksAdded',
+      time: round(this.curTime, 3),
+      x: x,
+      y: y,
+      precisionX: precX,
+      precisionY: precY,
+      stats: this.getStats()
+    })
   }
 }
