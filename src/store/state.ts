@@ -1,7 +1,7 @@
 import { GameEvent } from '@/game'
 import { ImgCellType, ImgFaceType } from '@/util/image'
 import { storage, storageDefault } from '@/store/plugins'
-import { Cell } from '@/game/Player'
+import { Cell } from '@/game/Parser'
 
 export type State = typeof storageDefault & {
   // 列数

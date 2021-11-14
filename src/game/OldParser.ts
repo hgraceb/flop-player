@@ -62,7 +62,7 @@ import { State } from '@/store/state'
 import { GameEvent } from '@/game/index'
 import { store } from '@/store'
 import { round } from 'number-precision'
-import { Cell } from '@/game/Player'
+import { Cell } from '@/game/Parser'
 
 /**
  * 游戏原始信息
