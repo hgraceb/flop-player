@@ -91,9 +91,9 @@ export interface Cell {
 }
 
 /**
- * 录像播放器
+ * 录像解析器
  */
-export class Player {
+export class Parser {
   private readonly MAX_OPS = 1000
   private readonly MAX_ISLS = 1000
 
@@ -182,7 +182,7 @@ export class Player {
   }
 
   /**
-   * 获取录像播放器基本属性
+   * 获取录像基本属性
    */
 
   public getWidth = () => this.w

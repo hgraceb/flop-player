@@ -5,7 +5,7 @@ import { ImgCellType, ImgFaceType } from '@/util/image'
 import { SCALE_ARRAY, SPEED_ARRAY } from '@/game/constants'
 import { i18n } from '@/plugins/i18n'
 import { message } from 'ant-design-vue'
-import { Player } from '@/game/Player'
+import { Parser } from '@/game/Parser'
 import { AVFVideo } from '@/game/AVFVideo'
 
 /**
@@ -81,24 +81,24 @@ export const mutations = {
     }
   },
   /** 初始化游戏 */
-  initGame: (state: State, player: Player): void => {
-    state.width = player.getWidth()
-    state.height = player.getHeight()
-    state.mines = player.getMines()
-    state.playerArray = player.getPlayerArray()
-    state.bbbv = player.getBBBV()
-    state.openings = player.getOpenings()
-    state.islands = player.getIslands()
-    state.gZiNi = player.getGZiNi()
-    state.hZiNi = player.getHZiNi()
-    state.gameEvents = player.getGameEvents()
-    state.gameCellBoard = player.getBoard()
+  initGame: (state: State, parser: Parser): void => {
+    state.width = parser.getWidth()
+    state.height = parser.getHeight()
+    state.mines = parser.getMines()
+    state.playerArray = parser.getPlayerArray()
+    state.bbbv = parser.getBBBV()
+    state.openings = parser.getOpenings()
+    state.islands = parser.getIslands()
+    state.gZiNi = parser.getGZiNi()
+    state.hZiNi = parser.getHZiNi()
+    state.gameEvents = parser.getGameEvents()
+    state.gameCellBoard = parser.getBoard()
   },
   /** 接收并处理录像数据 */
   receiveVideo: (state: State, data: ArrayBuffer): void => {
-    let player
+    let parser
     try {
-      player = new Player(new AVFVideo(data))
+      parser = new Parser(new AVFVideo(data))
     } catch (e) {
       // 展示录像解析失败的相关信息
       message.error(`${i18n.global.t('error.videoParse')}${e.message}`, 5)
@@ -107,7 +107,7 @@ export const mutations = {
       // 录像解析结束后取消页面的加载状态
       state.loading = false
     }
-    store.commit('initGame', player)
+    store.commit('initGame', parser)
     store.commit('replayVideo')
   },
   /** 设置页面加载状态 */
