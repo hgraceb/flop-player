@@ -185,17 +185,17 @@ export class Parser {
    * 获取录像基本属性
    */
 
-  public getWidth = () => this.w
-  public getMines = () => this.m
-  public getHeight = () => this.h
-  public getBBBV = () => this.bbbv
-  public getIslands = () => this.islands
-  public getOpenings = () => this.openings
-  public getGZiNi = () => this.gzini
-  public getHZiNi = () => this.hzini
-  public getBoard = () => this.board
-  public getGameEvents = () => this.gameEvents
-  public getPlayerArray = () => this.playerArray
+  public getWidth = (): number => this.w
+  public getMines = (): number => this.m
+  public getHeight = (): number => this.h
+  public getBBBV = (): number => this.bbbv
+  public getBoard = (): Cell[] => this.board
+  public getGZiNi = (): number => this.gzini
+  public getHZiNi = (): number => this.hzini
+  public getIslands = (): number => this.islands
+  public getOpenings = (): number => this.openings
+  public getGameEvents = (): GameEvent[] => this.gameEvents
+  public getPlayerArray = (): Uint8Array => this.playerArray
 
   /**
    * 模拟录像事件
