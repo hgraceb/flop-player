@@ -61,6 +61,25 @@ export abstract class Video {
     return String.fromCharCode(this.getNum())
   }
 
+  /**
+   * 获取下一行字符，并将位置标识符向后移动
+   * @param {number} max 读取的最大字符数，默认为 1000
+   * @return {Uint8Array|null} 下一行字符
+   */
+  protected getLine (max = 1000) {
+    // 没有下一行字符
+    if (this.mOffset >= this.mData.length) return null
+    // 获取下一行字符
+    const line: Uint8Array = new Uint8Array(max)
+    let num
+    let i = 0
+    while ((num = this.getNum()) !== 10 && i < max && this.mOffset < this.mData.length) {
+      line[i++] = num
+    }
+    // 只保留有效字符（不包括换行符）
+    return line.slice(0, i)
+  }
+
   /** 获取游戏列数 */
   getWidth (): number {
     return this.mWidth
