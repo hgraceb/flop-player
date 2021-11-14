@@ -30,7 +30,6 @@
  *****************************************************************/
 
 import { Video, VideoEvent } from '@/game/video'
-import { plus } from 'number-precision'
 
 // 游戏事件
 class Event {
@@ -120,11 +119,11 @@ export class AVFVideo extends Video {
     for (let i = 0; i < this.size; ++i) {
       const current = this.video[i]
       if (current.mouse === 1 && current.x === curx && current.y === cury) continue
-      const event = <VideoEvent>{}
       curx = current.x
       cury = current.y
-      // 精确加法，避免加法精度问题，如：1 + 0.14 === 1.1400000000000001
-      event.time = plus(current.sec, current.hun / 100)
+      // 保存录像事件
+      const event = <VideoEvent>{}
+      event.time = current.sec * 1000 + current.hun * 10
       if (current.mouse === 1) {
         event.mouse = 'mv'
       } else if (current.mouse === 3) {

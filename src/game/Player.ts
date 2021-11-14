@@ -60,7 +60,6 @@
 
 import { Video, VideoEvent } from '@/game/video'
 import { GameEvent } from '@/game/index'
-import { round } from 'number-precision/src/index'
 
 // This defines cell attributes and sets 'board' as a pointer to 'cell'
 // For example, calling board[i].mine calls the value of mine at that cell location
@@ -91,12 +90,17 @@ interface Cell {
   premium: number
 }
 
+/**
+ * 录像播放器
+ */
 export class Player {
   private readonly MAX_OPS = 1000
   private readonly MAX_ISLS = 1000
 
   // 游戏事件
   private readonly gameEvents: GameEvent[] = []
+  // 玩家姓名原始数据
+  private readonly playerArray: Uint8Array
 
   // Initiate global variables
   private readonly board: Cell[]
@@ -155,6 +159,7 @@ export class Player {
   private superflag = 0
 
   constructor (video: Video) {
+    this.playerArray = video.getPlayer()
     this.w = video.getWidth()
     this.h = video.getHeight()
     this.m = video.getMines()
@@ -175,6 +180,22 @@ export class Player {
       this.performEvent(video.getEvents()[i])
     }
   }
+
+  /**
+   * 获取录像播放器基本属性
+   */
+
+  public getWidth = () => this.w
+  public getMines = () => this.m
+  public getHeight = () => this.h
+  public getBBBV = () => this.bbbv
+  public getIslands = () => this.islands
+  public getOpenings = () => this.openings
+  public getGzini = () => this.gzini
+  public getHzini = () => this.hzini
+  public getBoard = () => this.board
+  public getGameEvents = () => this.gameEvents
+  public getPlayerArray = () => this.playerArray
 
   /**
    * 模拟录像事件
@@ -586,7 +607,7 @@ export class Player {
       this.gameEvents.push({
         name: 'Press',
         questioned: this.board[x * this.h + y].questioned,
-        time: round(this.curTime, 3),
+        time: this.curTime,
         x: x,
         y: y,
         stats: this.getStats()
@@ -613,7 +634,7 @@ export class Player {
       this.gameEvents.push({
         name: 'Release',
         questioned: this.board[x * this.h + y].questioned,
-        time: round(this.curTime, 3),
+        time: this.curTime,
         x: x,
         y: y,
         stats: this.getStats()
@@ -643,7 +664,7 @@ export class Player {
     this.gameEvents.push({
       name: 'Solved3BV',
       solved: this.solvedBbbv,
-      time: round(this.curTime, 3),
+      time: this.curTime,
       stats: this.getStats()
     })
     if (this.bbbv === this.solvedBbbv) this.win()
@@ -664,7 +685,7 @@ export class Player {
     this.gameEvents.push({
       name: 'Open',
       number: this.board[index].number,
-      time: round(this.curTime, 3),
+      time: this.curTime,
       x: x,
       y: y,
       stats: this.getStats()
@@ -708,7 +729,7 @@ export class Player {
       this.gameEvents.push({
         name: 'Open',
         number: -1,
-        time: round(this.curTime, 3),
+        time: this.curTime,
         x: x,
         y: y,
         stats: this.getStats()
@@ -795,7 +816,7 @@ export class Player {
     this.board[x * this.h + y].flagged = this.board[x * this.h + y].wastedFlag = 1
     this.gameEvents.push({
       name: 'Flag',
-      time: round(this.curTime, 3),
+      time: this.curTime,
       x: x,
       y: y,
       stats: this.getStats()
@@ -810,7 +831,7 @@ export class Player {
   private toggleQuestionMarkSetting (x: number, y: number) {
     this.gameEvents.push({
       name: 'ToggleQuestionMarkSetting',
-      time: round(this.curTime, 3),
+      time: this.curTime,
       x: x,
       y: y,
       stats: this.getStats()
@@ -823,7 +844,7 @@ export class Player {
     this.board[x * this.h + y].questioned = 1
     this.gameEvents.push({
       name: 'QuestionMark',
-      time: round(this.curTime, 3),
+      time: this.curTime,
       x: x,
       y: y,
       stats: this.getStats()
@@ -835,7 +856,7 @@ export class Player {
     this.board[x * this.h + y].flagged = this.board[x * this.h + y].questioned = 0
     this.gameEvents.push({
       name: 'RemoveFlag',
-      time: round(this.curTime, 3),
+      time: this.curTime,
       x: x,
       y: y,
       stats: this.getStats()
@@ -880,7 +901,7 @@ export class Player {
     // TODO 判断事件位置是否需要调整
     this.gameEvents.push({
       name: 'LeftClick',
-      time: round(this.curTime, 3),
+      time: this.curTime,
       x: x,
       y: y,
       precisionX: precX,
@@ -899,7 +920,7 @@ export class Player {
       ++this.dClicks
       this.gameEvents.push({
         name: 'DoubleClicksAdded',
-        time: round(this.curTime, 3),
+        time: this.curTime,
         x: x,
         y: y,
         precisionX: precX,
@@ -921,7 +942,7 @@ export class Player {
       ++this.lClicks
       this.gameEvents.push({
         name: 'LeftClicksAdded',
-        time: round(this.curTime, 3),
+        time: this.curTime,
         x: x,
         y: y,
         precisionX: precX,
@@ -941,7 +962,7 @@ export class Player {
     // TODO 判断事件位置是否需要调整
     this.gameEvents.push({
       name: 'MouseMove',
-      time: round(this.curTime, 3),
+      time: this.curTime,
       x: x,
       y: y,
       precisionX: precX,
@@ -991,7 +1012,7 @@ export class Player {
     // TODO 判断事件位置是否需要调整
     this.gameEvents.push({
       name: 'LeftPress',
-      time: round(this.curTime, 3),
+      time: this.curTime,
       x: x,
       y: y,
       precisionX: precX,
@@ -1020,7 +1041,7 @@ export class Player {
     // TODO 判断事件位置是否需要调整
     this.gameEvents.push({
       name: 'LeftPressWithShift',
-      time: round(this.curTime, 3),
+      time: this.curTime,
       x: x,
       y: y,
       precisionX: precX,
@@ -1044,7 +1065,7 @@ export class Player {
     // TODO 判断事件位置是否需要调整
     this.gameEvents.push({
       name: 'RightPress',
-      time: round(this.curTime, 3),
+      time: this.curTime,
       x: x,
       y: y,
       precisionX: precX,
@@ -1071,7 +1092,7 @@ export class Player {
             this.board[x * this.h + y].flagged = this.board[x * this.h + y].questioned = 0
             this.gameEvents.push({
               name: 'RemoveQuestionMark',
-              time: round(this.curTime, 3),
+              time: this.curTime,
               x: x,
               y: y,
               stats: this.getStats()
@@ -1081,7 +1102,7 @@ export class Player {
         ++this.rClicks
         this.gameEvents.push({
           name: 'RightClicksAdded',
-          time: round(this.curTime, 3),
+          time: this.curTime,
           x: x,
           y: y,
           precisionX: precX,
@@ -1103,7 +1124,7 @@ export class Player {
     // TODO 判断事件位置是否需要调整
     this.gameEvents.push({
       name: 'RightClick',
-      time: round(this.curTime, 3),
+      time: this.curTime,
       x: x,
       y: y,
       precisionX: precX,
@@ -1124,7 +1145,7 @@ export class Player {
       ++this.dClicks
       this.gameEvents.push({
         name: 'DoubleClicksAdded',
-        time: round(this.curTime, 3),
+        time: this.curTime,
         x: x,
         y: y,
         precisionX: precX,
@@ -1139,7 +1160,7 @@ export class Player {
         ++this.rClicks
         this.gameEvents.push({
           name: 'RightClicksAdded',
-          time: round(this.curTime, 3),
+          time: this.curTime,
           x: x,
           y: y,
           precisionX: precX,
@@ -1160,7 +1181,7 @@ export class Player {
     // TODO 判断事件位置是否需要调整
     this.gameEvents.push({
       name: 'MiddlePress',
-      time: round(this.curTime, 3),
+      time: this.curTime,
       x: x,
       y: y,
       precisionX: precX,
@@ -1179,7 +1200,7 @@ export class Player {
     // TODO 判断事件位置是否需要调整
     this.gameEvents.push({
       name: 'MiddleClick',
-      time: round(this.curTime, 3),
+      time: this.curTime,
       x: x,
       y: y,
       precisionX: precX,
@@ -1193,7 +1214,7 @@ export class Player {
     ++this.dClicks
     this.gameEvents.push({
       name: 'DoubleClicksAdded',
-      time: round(this.curTime, 3),
+      time: this.curTime,
       x: x,
       y: y,
       precisionX: precX,
