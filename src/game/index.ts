@@ -4,14 +4,22 @@ import { ImgCellType, ImgFaceType } from '@/util/image'
  * 游戏事件
  */
 export type GameEvent = ({
-  name: 'LeftClick' | 'LeftPress' | 'RightClick' | 'RightPress' | 'MouseMove' | 'MiddleClick' | 'MiddlePress' | 'LeftPressWithShift'
+  // 点击和释放事件，用于切换笑脸状态和绘制路径图
+  name: 'LeftClick' | 'LeftPress' | 'RightClick' | 'RightPress' | 'MiddleClick' | 'MiddlePress' | 'LeftPressWithShift'
   // 精确的横坐标
   precisionX: number
   // 精确的纵坐标
   precisionY: number
 } | {
-  // 点击数增加事件，用于绘制路径图
+  // 点击数增加事件，用于绘制点击事件路径图
   name: 'LeftClicksAdded' | 'RightClicksAdded' | 'DoubleClicksAdded'
+  // 精确的横坐标
+  precisionX: number
+  // 精确的纵坐标
+  precisionY: number
+} | {
+  // 鼠标移动事件，用于绘制鼠标路径图
+  name: 'MouseMove'
   // 精确的横坐标
   precisionX: number
   // 精确的纵坐标

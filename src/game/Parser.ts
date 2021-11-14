@@ -898,7 +898,6 @@ export class Parser {
 
   // Left click
   private leftClick (x: number, y: number, precX: number, precY: number) {
-    // TODO 判断事件位置是否需要调整
     this.gameEvents.push({
       name: 'LeftClick',
       time: this.curTime,
@@ -959,7 +958,6 @@ export class Parser {
 
   // Mouse movement
   private mouseMove (x: number, y: number, precX: number, precY: number) {
-    // TODO 判断事件位置是否需要调整
     this.gameEvents.push({
       name: 'MouseMove',
       time: this.curTime,
@@ -1009,7 +1007,6 @@ export class Parser {
 
   // Left button down
   private leftPress (x: number, y: number, precX: number, precY: number) {
-    // TODO 判断事件位置是否需要调整
     this.gameEvents.push({
       name: 'LeftPress',
       time: this.curTime,
@@ -1038,7 +1035,6 @@ export class Parser {
 
   // Chord using Shift during LC-LR
   private leftPressWithShift (x: number, y: number, precX: number, precY: number) {
-    // TODO 判断事件位置是否需要调整
     this.gameEvents.push({
       name: 'LeftPressWithShift',
       time: this.curTime,
@@ -1062,7 +1058,6 @@ export class Parser {
 
   // Right button down
   private rightPress (x: number, y: number, precX: number, precY: number) {
-    // TODO 判断事件位置是否需要调整
     this.gameEvents.push({
       name: 'RightPress',
       time: this.curTime,
@@ -1121,7 +1116,6 @@ export class Parser {
 
   // Right button up
   private rightClick (x: number, y: number, precX: number, precY: number) {
-    // TODO 判断事件位置是否需要调整
     this.gameEvents.push({
       name: 'RightClick',
       time: this.curTime,
@@ -1178,7 +1172,6 @@ export class Parser {
 
   // Middle button down
   private middlePress (x: number, y: number, precX: number, precY: number) {
-    // TODO 判断事件位置是否需要调整
     this.gameEvents.push({
       name: 'MiddlePress',
       time: this.curTime,
@@ -1197,7 +1190,6 @@ export class Parser {
 
   // Middle button up
   private middleClick (x: number, y: number, precX: number, precY: number) {
-    // TODO 判断事件位置是否需要调整
     this.gameEvents.push({
       name: 'MiddleClick',
       time: this.curTime,
