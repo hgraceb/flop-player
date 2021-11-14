@@ -30,7 +30,7 @@ controlBar:
 
 common:
   loading: 加載中...
-  fileSelect: '請選擇一個 {0} 文件'
+  fileSelect: '請選擇一個 avf 文件'
 
 error:
   videoParse: '錄像解析出錯：'
@@ -39,6 +39,6 @@ error:
   fileNotSelect: 未選擇文件或者文件無法訪問
   fileTooMany: '文件數量過多：{0}'
   fileEmpty: '文件內容為空：{0}'
-  fileUnsupported: '不支持的文件：{0}'
+  fileUnsupported: '@:common.fileSelect'
   fileTooLarge: '文件大小超過 5 MB：{0}'
   fileReadError: '文件讀取出錯：{0}'

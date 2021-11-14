@@ -40,9 +40,12 @@ export default defineComponent({
 
     onMounted(() => {
       // TODO 删除测试代码和对应的文件（最后不参与打包或者在 README 文件中说明需要手动删除对应的测试录像文件）
+      // store.dispatch('fetchUri', 'videos/arbiter_beg.avf')
       // store.dispatch('fetchUri', 'videos/arbiter_beg.rawvf')
+      // store.dispatch('fetchUri', 'videos/arbiter_int.avf')
       // store.dispatch('fetchUri', 'videos/arbiter_int.rawvf')
-      store.dispatch('fetchUri', 'videos/arbiter_exp.rawvf')
+      store.dispatch('fetchUri', 'videos/arbiter_exp.avf')
+      // store.dispatch('fetchUri', 'videos/arbiter_exp.rawvf')
       // store.dispatch('fetchUri', 'videos/Cus_20x20_20mines.rawvf')
       // store.dispatch('fetchUri', 'videos/Cus_8x30_30mines.rawvf')
       // store.dispatch('fetchUri', 'videos/Cus_30x8_30mines.rawvf')

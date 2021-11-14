@@ -1,12 +1,12 @@
 import { State } from './state'
-import { parse } from '@/game/parser'
-import { GameRaw } from '@/game'
 import { store } from '@/store/index'
 import { plus, times } from 'number-precision'
 import { ImgCellType, ImgFaceType } from '@/util/image'
 import { SCALE_ARRAY, SPEED_ARRAY } from '@/game/constants'
 import { i18n } from '@/plugins/i18n'
 import { message } from 'ant-design-vue'
+import { Player } from '@/game/Player'
+import { AVFVideo } from '@/game/AVFVideo'
 
 /**
  * Mutations 函数定义，使用类型推断的方式，可以快速找到函数的所有 Usages
@@ -81,33 +81,33 @@ export const mutations = {
     }
   },
   /** 初始化游戏 */
-  initGame: (state: State, gameRow: GameRaw): void => {
-    state.width = gameRow.width
-    state.height = gameRow.height
-    state.mines = gameRow.mines
-    state.playerArray = gameRow.playerArray
-    state.bbbv = gameRow.bbbv
-    state.openings = gameRow.openings
-    state.islands = gameRow.islands
-    state.gZiNi = gameRow.gZiNi
-    state.hZiNi = gameRow.hZiNi
-    state.gameEvents = gameRow.events
-    state.gameCellBoard = gameRow.board
+  initGame: (state: State, player: Player): void => {
+    state.width = player.getWidth()
+    state.height = player.getHeight()
+    state.mines = player.getMines()
+    state.playerArray = player.getPlayerArray()
+    state.bbbv = player.getBBBV()
+    state.openings = player.getOpenings()
+    state.islands = player.getIslands()
+    state.gZiNi = player.getGZiNi()
+    state.hZiNi = player.getHZiNi()
+    state.gameEvents = player.getGameEvents()
+    state.gameCellBoard = player.getBoard()
   },
   /** 接收并处理录像数据 */
   receiveVideo: (state: State, data: ArrayBuffer): void => {
-    let gameRaw
+    let player
     try {
-      gameRaw = parse(state, data)
+      player = new Player(new AVFVideo(data))
     } catch (e) {
       // 展示录像解析失败的相关信息
-      message.error(`${i18n.global.t('error.videoParse')}${e.name} - ${e.message}`, 5)
+      message.error(`${i18n.global.t('error.videoParse')}${e.message}`, 5)
       return
     } finally {
       // 录像解析结束后取消页面的加载状态
       state.loading = false
     }
-    store.commit('initGame', gameRaw)
+    store.commit('initGame', player)
     store.commit('replayVideo')
   },
   /** 设置页面加载状态 */

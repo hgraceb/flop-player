@@ -1,9 +1,7 @@
 <template>
-  <!-- TODO 翻译文件拖放处理可能展示的所有提示和错误信息 -->
   <!-- stop 是为了兼容 Firefox 93.0 (64 位)，否则文件还是会在新窗口被打开预览 -->
   <screen-center v-if="show" class="mask" @dragover.prevent.stop @drop.prevent.stop="drop" @dragleave.prevent.stop="dragleave">
-    <!-- TODO 添加其他类型文件的选择说明 -->
-    <h2>{{ $t('common.fileSelect', ['rawvf']) }}</h2>
+    <h2>{{ $t('common.fileSelect') }}</h2>
   </screen-center>
 </template>
 

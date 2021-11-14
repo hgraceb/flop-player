@@ -63,7 +63,7 @@ import { GameEvent } from '@/game/index'
 
 // This defines cell attributes and sets 'board' as a pointer to 'cell'
 // For example, calling board[i].mine calls the value of mine at that cell location
-interface Cell {
+export interface Cell {
   // Value 1 if cell is a mine
   mine: number
   // Value 1 if cell belongs to an opening
@@ -191,8 +191,8 @@ export class Player {
   public getBBBV = () => this.bbbv
   public getIslands = () => this.islands
   public getOpenings = () => this.openings
-  public getGzini = () => this.gzini
-  public getHzini = () => this.hzini
+  public getGZiNi = () => this.gzini
+  public getHZiNi = () => this.hzini
   public getBoard = () => this.board
   public getGameEvents = () => this.gameEvents
   public getPlayerArray = () => this.playerArray

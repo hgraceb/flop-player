@@ -59,9 +59,80 @@
  *****************************************************************/
 
 import { State } from '@/store/state'
-import { Cell, GameEvent, GameRaw, RawvfParseError } from '@/game/index'
+import { GameEvent } from '@/game/index'
 import { store } from '@/store'
 import { round } from 'number-precision'
+import { Cell } from '@/game/Player'
+
+/**
+ * 游戏原始信息
+ */
+export class GameRaw {
+  // 列数
+  width
+  // 行数
+  height
+  // 雷数
+  mines
+  // 最少左键点击数
+  bbbv
+  // 开空数量
+  openings
+  // 岛屿数量
+  islands
+  // Greedy ZiNi
+  gZiNi
+  // Human ZiNi
+  hZiNi
+  // 玩家名称原始数据
+  playerArray
+  // 游戏事件
+  events: GameEvent[]
+  // 方块棋盘信息
+  board: Cell[]
+
+  constructor (
+    width: number,
+    height: number,
+    mines: number,
+    bbbv: number,
+    openings: number,
+    islands: number,
+    gZiNi: number,
+    hZiNi: number,
+    playerArray: Uint8Array,
+    events: GameEvent[],
+    board: Cell[]
+  ) {
+    this.width = width
+    this.height = height
+    this.mines = mines
+    this.bbbv = bbbv
+    this.openings = openings
+    this.islands = islands
+    this.gZiNi = gZiNi
+    this.hZiNi = hZiNi
+    this.playerArray = playerArray
+    this.events = events
+    this.board = board
+  }
+}
+
+/**
+ * 录像解析错误
+ */
+class ParseError extends Error {
+  constructor (message: string) {
+    super(message)
+    this.name = this.constructor.name
+  }
+}
+
+/**
+ * RawVF 录像解析错误
+ */
+export class RawvfParseError extends ParseError {
+}
 
 // TODO 重新启用 ESLint 规则
 /* eslint-disable @typescript-eslint/no-unused-vars */
