@@ -1,8 +1,8 @@
 <template>
   <a-sub-menu :title="$t('menu.game.title')">
-    <a-menu-item @click="fileSelect">
+    <a-menu-item :title="$t('common.fileSelect')" @click="fileSelect">
       <FileSearchOutlined />
-      <span :title="$t('common.fileSelect')">{{ $t('menu.game.localVideo') }}</span>
+      <span>{{ $t('menu.game.localVideo') }}</span>
       <!-- 使用 accept 属性对文件进行筛选可能会导致部分浏览器无法正常获取文件，如：Quark 5.3.8.193 (Android) -->
       <input ref="fileInputElement" style="display: none" type="file" @change="fileChange" />
     </a-menu-item>
