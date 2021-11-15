@@ -98,7 +98,7 @@ export class RawVideo extends Video {
       // 获取时间
       for (let i = 0; i < temp.length; i++) {
         if (temp[i] === ' ') {
-          // 事件时间是小数格式，需要进行精确运算
+          // 事件时间是小数格式，需要进行精确运算，否则可能会出现精度问题，如：1.001 * 1000 === 1000.9999999999999
           event.time = times(Number(temp.slice(0, i)), 1000)
           temp = temp.slice(i).trim()
           break
