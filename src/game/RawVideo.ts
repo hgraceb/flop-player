@@ -11,7 +11,14 @@ export class RawVideo extends Video {
 
   constructor (data: ArrayBuffer) {
     super(data)
-    // 获取基本参数
+    this.readOptions()
+  }
+
+  /**
+   * 读取游戏选项
+   */
+  private readOptions () {
+    // 读取基本参数
     const textDecoder = new TextDecoder()
     while (true) {
       const lineArr = this.getLine()
@@ -25,13 +32,7 @@ export class RawVideo extends Video {
       if (index <= 0) continue
       const option = lineStr.substring(0, index)
       const value = lineStr.substring(index + 1).trim()
-      if (option === 'board') {
-        // 检查是否有必要参数
-        if (this.mWidth < 0) this.throwError('No width')
-        if (this.mHeight < 0) this.throwError('No height')
-        if (this.mMines < 0) this.throwError('No mines')
-        break
-      } else if (option === 'player') {
+      if (option === 'player') {
         this.mPlayer = lineArr.slice(index + 1)
       } else if (option === 'width') {
         this.mWidth = Number(value)
@@ -46,7 +47,13 @@ export class RawVideo extends Video {
       } else if (option === 'marks' || option === 'QuestionMarks'.toLowerCase()) {
         if (value !== 'on' && value !== 'off') this.throwError(`Invalid question marks: "${value}"`)
         this.mMarks = value === 'on' ? 1 : 0
+      } else if (option === 'board') {
+        break
       }
     }
+    // 检查是否有必要参数
+    if (this.mWidth < 0) this.throwError('No width')
+    if (this.mHeight < 0) this.throwError('No height')
+    if (this.mMines < 0) this.throwError('No mines')
   }
 }
