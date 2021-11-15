@@ -132,8 +132,8 @@ export class RawVideo extends Video {
           break
         }
       }
-      // 判断录像事件是否成功获取，TODO 判断 X 坐标和 Y 轴坐标是否可以超出游戏范围
-      if (Number.isNaN(event.time) || event.mouse === undefined || !Number.isInteger(event.x) || !Number.isInteger(event.y)) {
+      // 判断录像事件是否成功获取，其中事件时间是整数（单位：毫秒），TODO 判断 X 坐标和 Y 轴坐标是否可以超出游戏范围
+      if (!Number.isInteger(event.time) || event.mouse === undefined || !Number.isInteger(event.x) || !Number.isInteger(event.y)) {
         this.throwError(`Invalid mouse event: "${lineStr}"`)
       }
       event.column = Math.floor(event.x / 16)
