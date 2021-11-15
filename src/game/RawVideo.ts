@@ -12,10 +12,11 @@ export class RawVideo extends Video {
   constructor (data: ArrayBuffer) {
     super(data)
     this.readOptions()
+    this.readBoard()
   }
 
   /**
-   * 读取游戏选项
+   * 读取录像选项
    */
   private readOptions () {
     // 读取基本参数
@@ -55,5 +56,24 @@ export class RawVideo extends Video {
     if (this.mWidth < 0) this.throwError('No width')
     if (this.mHeight < 0) this.throwError('No height')
     if (this.mMines < 0) this.throwError('No mines')
+  }
+
+  /**
+   * 读取录像布局
+   */
+  private readBoard () {
+    // TODO 单个字符读取、调整行和列的位置、限制只能是 0 或 *
+    for (let i = 0; i < this.mHeight; i++) {
+      const line = this.getLine()
+      if (line === null) {
+        this.throwError('Unexpected end of board')
+        return
+      }
+      for (let j = 0; j < this.mWidth; j++) {
+        console.log(j * this.mHeight + i)
+        // '*'.charCodeAt(0) = 42
+        this.mBoard[j * this.mHeight + i] = line[j] === 42 ? 1 : 0
+      }
+    }
   }
 }
