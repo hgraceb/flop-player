@@ -64,14 +64,14 @@ export class RawVideo extends Video {
    * 读取录像布局
    */
   private readBoard () {
-    // TODO 单个字符读取、调整行和列的位置、限制只能是 0 或 *，修复录像布局读取错误导致的播放问题
-    for (let i = 0; i < this.mWidth; i++) {
+    // TODO 单个字符读取、调整行和列的位置、限制只能是 0 或 *
+    for (let i = 0; i < this.mHeight; i++) {
       const line = this.getLine()
       if (line === null) {
         this.throwError('Unexpected end of board')
         return
       }
-      for (let j = 0; j < this.mHeight; j++) {
+      for (let j = 0; j < this.mWidth; j++) {
         // '*'.charCodeAt(0) = 42
         this.mBoard[i * this.mWidth + j] = line[j] === 42 ? 1 : 0
       }
@@ -98,6 +98,7 @@ export class RawVideo extends Video {
       // 获取时间
       for (let i = 0; i < temp.length; i++) {
         if (temp[i] === ' ') {
+          // 事件时间是小数格式，需要进行精确运算
           event.time = times(Number(temp.slice(0, i)), 1000)
           temp = temp.slice(i).trim()
           break
