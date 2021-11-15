@@ -66,7 +66,7 @@ export abstract class Video {
    * @param {number} max 读取的最大字符数，默认为 1000
    * @return {Uint8Array|null} 下一行字符
    */
-  protected getLine (max = 1000) {
+  protected getLine (max = 1000): Uint8Array | null {
     // 没有下一行字符
     if (this.mOffset >= this.mData.length) return null
     // 获取下一行字符
