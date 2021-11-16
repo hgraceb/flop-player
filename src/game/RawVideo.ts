@@ -82,17 +82,15 @@ export class RawVideo extends Video {
    * 读取录像事件
    */
   private readEvents () {
-    // TODO 优化代码，将相似的处理提取为方法，如：修改 temp、判断数字是否正整数
+    // TODO 优化代码，将相似的处理提取为方法，如：修改 temp
     const textDecoder = new TextDecoder()
-    // 判断字符是否是数字
-    const isDigit = (c: string) => c >= '0' && c <= '9'
     // 循环读取录像事件
     while (true) {
       const lineArr = this.getLine()
       if (lineArr === null) break
       const lineStr = textDecoder.decode(lineArr).trim()
-      // 如果首字符不是数字或者减号，则认为不是鼠标事件
-      if (!isDigit(lineStr[0]) && lineStr[0] !== '-') continue
+      // 如果首字符不是数字或者负号，则认为不是鼠标事件
+      if (!(lineStr[0] >= '0' && lineStr[0] <= '9') && lineStr[0] !== '-') continue
       let temp = lineStr
       const event = <VideoEvent>{}
       // 获取时间
@@ -107,15 +105,18 @@ export class RawVideo extends Video {
       // 获取鼠标事件
       for (let i = 0; i < temp.length; i++) {
         if (temp[i] === ' ') {
-          const m = temp.slice(0, i)
-          if (m === 'lc' || m === 'lr' || m === 'rc' || m === 'rr' || m === 'mc' || m === 'mr' || m === 'mv' || m === 'sc' || m === 'mt') {
-            event.mouse = m
+          // 获取事件名称
+          const e = temp.slice(0, i)
+          if (e === 'lc' || e === 'lr' || e === 'rc' || e === 'rr' || e === 'mc' || e === 'mr' || e === 'mv' || e === 'sc' || e === 'mt') {
+            event.mouse = e
           }
-          // 鼠标事件获取完成后，直接将字符串截取到 '(' 所在的位置，因为可能没有记录 column 和 row 的数据，直接跳过，后面统一通过重新计算的方式获取
-          temp = temp.slice(temp.indexOf('(') + 1).trim()
           break
         }
       }
+      // 鼠标事件获取完成后，直接将字符串截取到 '(' 所在的位置，因为可能没有记录 column 和 row 的数据，直接跳过，后面统一通过重新计算的方式获取
+      temp = temp.indexOf('(') !== -1 ? temp.slice(temp.indexOf('(') + 1).trim() : ''
+      // 如果后续没有待处理字符，则认为当前行记录的是其他事件，如：游戏事件（start、boom、won、nonstandard）、滚动事件（sx、sy）
+      if (temp.length === 0) continue
       // 获取 X 轴精确坐标
       for (let i = 0; i < temp.length; i++) {
         if (temp[i] === ' ') {
@@ -132,7 +133,7 @@ export class RawVideo extends Video {
           break
         }
       }
-      // 判断录像事件是否成功获取，其中事件时间是整数（单位：毫秒），TODO 判断 X 坐标和 Y 轴坐标是否可以超出游戏范围
+      // 判断录像事件是否成功获取，其中事件时间是整数（单位：毫秒）；X 坐标和 Y 坐标可以超出游戏区域，如：-1
       if (!Number.isInteger(event.time) || event.mouse === undefined || !Number.isInteger(event.x) || !Number.isInteger(event.y)) {
         this.throwError(`Invalid mouse event: "${lineStr}"`)
       }
