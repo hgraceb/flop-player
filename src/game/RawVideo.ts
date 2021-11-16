@@ -64,7 +64,6 @@ export class RawVideo extends Video {
    * 读取录像布局
    */
   private readBoard () {
-    // TODO 单个字符读取、调整行和列的位置、限制只能是 0 或 *
     for (let i = 0; i < this.mHeight; i++) {
       const line = this.getLine()
       if (line === null) {
@@ -82,8 +81,20 @@ export class RawVideo extends Video {
    * 读取录像事件
    */
   private readEvents () {
-    // TODO 优化代码，将相似的处理提取为方法，如：修改 temp
     const textDecoder = new TextDecoder()
+    // 待处理字符串
+    let str = ''
+    // 以指定字符作为分隔符获取下一个子字符串，并丢弃已处理的字符串
+    const getNext = (split: string): string => {
+      const index = str.indexOf(split)
+      // 如果字符串不包含指定分隔符，则丢弃所有字符
+      if (index === -1) return (str = '')
+      // 获取符合条件的子字符串
+      const value = str.slice(0, index)
+      // 丢弃已处理的字符串
+      str = str.slice(index + 1).trim()
+      return value
+    }
     // 循环读取录像事件
     while (true) {
       const lineArr = this.getLine()
@@ -91,53 +102,31 @@ export class RawVideo extends Video {
       const lineStr = textDecoder.decode(lineArr).trim()
       // 如果首字符不是数字或者负号，则认为不是鼠标事件
       if (!(lineStr[0] >= '0' && lineStr[0] <= '9') && lineStr[0] !== '-') continue
-      let temp = lineStr
+      str = lineStr
       const event = <VideoEvent>{}
-      // 获取时间
-      for (let i = 0; i < temp.length; i++) {
-        if (temp[i] === ' ') {
-          // 事件时间是小数格式，需要进行精确运算，否则可能会出现精度问题，如：1.001 * 1000 === 1000.9999999999999
-          event.time = times(Number(temp.slice(0, i)), 1000)
-          temp = temp.slice(i).trim()
-          break
-        }
-      }
-      // 获取鼠标事件
-      for (let i = 0; i < temp.length; i++) {
-        if (temp[i] === ' ') {
-          // 获取事件名称
-          const e = temp.slice(0, i)
-          if (e === 'lc' || e === 'lr' || e === 'rc' || e === 'rr' || e === 'mc' || e === 'mr' || e === 'mv' || e === 'sc' || e === 'mt') {
-            event.mouse = e
-          }
-          break
-        }
+      // 事件时间是小数格式，需要进行精确运算，否则可能会出现精度问题，如：1.001 * 1000 === 1000.9999999999999
+      event.time = times(Number(getNext(' ')), 1000)
+      // 获取事件名称
+      const e = getNext(' ')
+      // 判断鼠标事件
+      if (e === 'lc' || e === 'lr' || e === 'rc' || e === 'rr' || e === 'mc' || e === 'mr' || e === 'mv' || e === 'sc' || e === 'mt') {
+        event.mouse = e
       }
       // 鼠标事件获取完成后，直接将字符串截取到 '(' 所在的位置，因为可能没有记录 column 和 row 的数据，直接跳过，后面统一通过重新计算的方式获取
-      temp = temp.indexOf('(') !== -1 ? temp.slice(temp.indexOf('(') + 1).trim() : ''
+      str = str.indexOf('(') !== -1 ? str.slice(str.indexOf('(') + 1).trim() : ''
       // 如果后续没有待处理字符，则认为当前行记录的是其他事件，如：游戏事件（start、boom、won、nonstandard）、滚动事件（sx、sy）
-      if (temp.length === 0) continue
+      if (str.length === 0) continue
       // 获取 X 轴精确坐标
-      for (let i = 0; i < temp.length; i++) {
-        if (temp[i] === ' ') {
-          event.x = Number(temp.slice(0, i))
-          temp = temp.slice(i).trim()
-          break
-        }
-      }
+      event.x = Number(getNext(' '))
       // 获取 Y 轴精确坐标
-      for (let i = 0; i < temp.length; i++) {
-        if (temp[i] === ')') {
-          event.y = Number(temp.slice(0, i))
-          temp = temp.slice(i).trim()
-          break
-        }
-      }
+      event.y = Number(getNext(')'))
       // 判断录像事件是否成功获取，其中事件时间是整数（单位：毫秒）；X 坐标和 Y 坐标可以超出游戏区域，如：-1
       if (!Number.isInteger(event.time) || event.mouse === undefined || !Number.isInteger(event.x) || !Number.isInteger(event.y)) {
         this.throwError(`Invalid mouse event: "${lineStr}"`)
       }
+      // 计算得到当前列
       event.column = Math.floor(event.x / 16)
+      // 计算得到当前行
       event.row = Math.floor(event.y / 16)
       this.mEvents.push(event)
     }
