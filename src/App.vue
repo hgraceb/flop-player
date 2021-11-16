@@ -46,7 +46,7 @@ export default defineComponent({
       // store.dispatch('fetchUri', 'videos/Cus_8x30_30mines.avf')
       // store.dispatch('fetchUri', 'videos/Cus_20x20_20mines.avf')
       // store.dispatch('fetchUri', 'videos/Cus_30x8_30mines.avf')
-      // store.dispatch('fetchUri', 'videos/double-openging.rawvf')
+      // store.dispatch('fetchUri', 'videos/nested-openging.rawvf')
     })
 
     return { loading, scale }
