@@ -43,6 +43,7 @@ export class MVFVideo extends Video {
   protected mEvents: VideoEvent[] = []
   protected mPlayer: Uint8Array = new Uint8Array()
 
+  private readonly MAX_NAME = 1000
   // Mode
   private mode = 0
   // Level
@@ -82,7 +83,7 @@ export class MVFVideo extends Video {
   private scoreSec = 0
   private scoreThs = 0
   // Player name
-  private name: string[] = []
+  private name: number[] = []
   // Program defined here instead of reading from video
   private readonly program = 'Minesweeper Clone'
   // Version
@@ -99,6 +100,53 @@ export class MVFVideo extends Video {
     // 解析 MVF 录像
     if (!this.readmvf()) {
       this.throwError('Invalid MVF')
+    }
+  }
+
+  private getInt2 () {
+    const c = []
+    c[0] = this.getNum()
+    c[1] = this.getNum()
+    // This code reads 2 bytes and puts them in a 4 byte int
+    // You cannot "add" bytes in the normal sense, instead you perform shift operations
+    // Multiplying by 256 is the same as shifting left by 1 byte (8 bits)
+    // The result is c[0] is moved to int byte 3 while c[1] stayes in int byte 4
+    return c[1] + c[0] * 256
+  }
+
+  private getInt3 () {
+    const c = []
+    c[0] = this.getNum()
+    c[1] = this.getNum()
+    c[2] = this.getNum()
+    return c[2] + c[1] * 256 + c[0] * 65536
+  }
+
+  /**
+   * Function to read board layout into memory
+   */
+  private readBoard (add: number) {
+    let c
+    let i, pos
+    this.w = this.getNum()
+    this.h = this.getNum()
+
+    const boardSize = this.w * this.h
+    for (i = 0; i < boardSize; ++i) this.board[i] = 0
+
+    // Get number of Mines
+    c = this.getNum()
+    this.m = c << 8
+    c = this.getNum()
+    this.m += c
+
+    for (i = 0; i < this.m; ++i) {
+      c = this.getNum()
+      pos = c + add
+      c = this.getNum()
+      pos += (c + add) * this.w
+      if (pos >= boardSize || pos < 0) this.throwError('Invalid mine position')
+      this.board[pos] = 1
     }
   }
 
@@ -146,7 +194,7 @@ export class MVFVideo extends Video {
     // qm=_fgetc(MVF);
     //
     // // Function gets Width, Height and Mines then reads board layout into memory
-    // read_board(-1);
+    // readBoard(-1);
     //
     // // Byte before Player gives length of name
     // len=_fgetc(MVF);
@@ -202,11 +250,10 @@ export class MVFVideo extends Video {
    * Function to read Clone 2006 and 2007 videos
    */
   private read2007 () {
-    // // Initialise local variables
-    // unsigned char c;
-    // int len,i,j,cur;
-    // int leading;
-    // double num1,num2,num3,num4;
+    // Initialise local variables
+    let c
+    let len, i // , j, cur
+    // let num1, num2, num3, num4
     // char s[49];
     // int byte[48];
     // unsigned char bit[48];
@@ -215,42 +262,41 @@ export class MVFVideo extends Video {
     //
     // // Clone 2006 and 2007 have Date (Timestamp)
     // has_date=1;has_info=0;
-    //
-    // // Read Date (Timestamp)
-    // month=(c=_fgetc(MVF));
-    // day=(c=_fgetc(MVF));
-    // year=getint2(MVF);
-    // hour=_fgetc(MVF);
-    // minute=_fgetc(MVF);
-    // second=_fgetc(MVF);
-    //
-    // // Next 2 bytes are Level and Mode
-    // level=_fgetc(MVF);
-    // mode=_fgetc(MVF);
-    //
-    // // Next 3 bytes are Time
-    // score_ths=getint3(MVF);
-    // score_sec=score_ths/1000;
-    // score_ths%=1000;
-    //
-    // // Check if Questionmark option was turned on
-    // qm=_fgetc(MVF);
-    //
-    // // Function gets Width, Height and Mines then reads board layout into memory
-    // read_board(-1);
-    //
-    // // Byte before Player gives length of name
-    // len=_fgetc(MVF);
-    // if(len>=MAXNAME) len=MAXNAME-1;
-    // for(i=0;i<len;++i) name[i]=_fgetc(MVF);
-    // name[len]=0;
-    //
-    // // First 2 bytes determine the file permutation
-    // leading=getint2(MVF);
-    // num1=sqrt(leading);
-    // num2=sqrt(leading+1000.0);
-    // num3=sqrt(num1+1000.0);
-    // num4=sqrt(num2+1000.0);
+
+    // Read Date (Timestamp)
+    this.month = (c = this.getNum())
+    this.day = (c = this.getNum())
+    this.year = this.getInt2()
+    this.hour = this.getNum()
+    this.minute = this.getNum()
+    this.second = this.getNum()
+
+    // Next 2 bytes are Level and Mode
+    this.level = this.getNum()
+    this.mode = this.getNum()
+
+    // Next 3 bytes are Time
+    this.scoreThs = this.getInt3()
+    this.scoreSec = Math.floor(this.scoreThs / 1000)
+    this.scoreThs %= 1000
+
+    // Check if Questionmark option was turned on
+    this.qm = this.getNum()
+
+    // Function gets Width, Height and Mines then reads board layout into memory
+    this.readBoard(-1)
+
+    // Byte before Player gives length of name
+    len = this.getNum()
+    if (len >= this.MAX_NAME) len = this.MAX_NAME - 1
+    for (i = 0; i < len; ++i) this.name[i] = this.getNum()
+
+    // First 2 bytes determine the file permutation
+    const leading = this.getInt2()
+    const num1 = Math.sqrt(leading)
+    const num2 = Math.sqrt(leading + 1000.0)
+    const num3 = Math.sqrt(num1 + 1000.0)
+    const num4 = Math.sqrt(num2 + 1000.0)
     // sprintf(s,"%08d",(int)(lrint(fabs(cos(num3+1000.0)*mult))));
     // sprintf(s+8,"%08d",(int)(lrint(fabs(sin(sqrt(num2))*mult))));
     // sprintf(s+16,"%08d",(int)(lrint(fabs(cos(num3)*mult))));
