@@ -104,9 +104,8 @@ export const mutations = {
       } else if (type === 'rawvf') {
         parser = new Parser(new RawVideo(data))
       } else {
-        ((msg: string) => {
-          throw new Error(msg)
-        })(i18n.global.t('error.fileUnsupported'))
+        // 不支持的录像类型
+        message.error(`${i18n.global.t('error.videoParse')}${i18n.global.t('error.fileUnsupported')}`, 5)
         return
       }
     } catch (e) {
