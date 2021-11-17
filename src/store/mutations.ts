@@ -98,16 +98,15 @@ export const mutations = {
   /** 接收并处理录像数据 */
   receiveVideo: (state: State, { type, data }: { type: string, data: ArrayBuffer }): void => {
     let parser
-    const throwError = (msg: string) => {
-      throw new Error(msg)
-    }
     try {
       if (type === 'avf') {
         parser = new Parser(new AVFVideo(data))
       } else if (type === 'rawvf') {
         parser = new Parser(new RawVideo(data))
       } else {
-        throwError(i18n.global.t('error.fileUnsupported'))
+        ((msg: string) => {
+          throw new Error(msg)
+        })(i18n.global.t('error.fileUnsupported'))
         return
       }
     } catch (e) {
