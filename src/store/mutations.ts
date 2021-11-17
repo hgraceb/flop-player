@@ -6,6 +6,7 @@ import { SCALE_ARRAY, SPEED_ARRAY } from '@/game/constants'
 import { i18n } from '@/plugins/i18n'
 import { message } from 'ant-design-vue'
 import { Parser } from '@/game/Parser'
+import { RawVideo } from '@/game/RawVideo'
 import { AVFVideo } from '@/game/AVFVideo'
 
 /**
@@ -95,10 +96,16 @@ export const mutations = {
     state.gameCellBoard = parser.getBoard()
   },
   /** 接收并处理录像数据 */
-  receiveVideo: (state: State, data: ArrayBuffer): void => {
+  receiveVideo: (state: State, { type, data }: { type: string, data: ArrayBuffer }): void => {
     let parser
     try {
-      parser = new Parser(new AVFVideo(data))
+      if (type === 'avf') {
+        parser = new Parser(new AVFVideo(data))
+      } else if (type === 'rawvf') {
+        parser = new Parser(new RawVideo(data))
+      } else {
+        throw new Error(i18n.global.t('error.fileUnsupported'))
+      }
     } catch (e) {
       // 展示录像解析失败的相关信息
       message.error(`${i18n.global.t('error.videoParse')}${e.message}`, 5)

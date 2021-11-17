@@ -17,6 +17,15 @@ function messageError (msg: string) {
 }
 
 /**
+ * 获取文件扩展名
+ *
+ * @param name 文件名称
+ */
+function getExtension (name: string) {
+  return name.indexOf('.') !== -1 ? name.substring(name.lastIndexOf('.') + 1) : ''
+}
+
+/**
  * 检查是否只有一个文件正在处理
  *
  * @return 是否只有一个文件正在处理
@@ -63,8 +72,8 @@ function checkFileNumber (fileList: FileList | undefined | null): boolean {
  */
 function checkFileType (name: string): boolean {
   // 获取文件扩展名
-  const extension = name.indexOf('.') !== -1 ? name.substring(name.lastIndexOf('.') + 1) : ''
-  if (extension !== 'avf') {
+  const extension = getExtension(name)
+  if (extension !== 'avf' && extension !== 'rawvf') {
     // 不支持的文件
     messageError(t('error.fileUnsupported'))
     return false
@@ -104,7 +113,7 @@ export const actions = {
     request.onload = () => {
       if (!checkFileSize(request.response.byteLength, uri)) return
       // 接收并处理录像数据
-      commit('receiveVideo', request.response)
+      commit('receiveVideo', { type: getExtension(uri), data: request.response })
     }
     request.open('GET', uri)
     request.responseType = 'arraybuffer'
@@ -121,7 +130,7 @@ export const actions = {
     const reader = new FileReader()
     reader.onload = function () {
       // 接收并处理录像数据
-      commit('receiveVideo', reader.result)
+      commit('receiveVideo', { type: getExtension(file.name), data: reader.result })
     }
     reader.onerror = function () {
       // 文件读取出错
