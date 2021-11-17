@@ -31,7 +31,7 @@ class Event {
   rb = 0
   mb = 0
   // Versions before 0.97 have an extra byte in each event
-  weirdness_bit = 0
+  weirdnessBit = 0
 }
 
 export class MVFVideo extends Video {
@@ -60,7 +60,7 @@ export class MVFVideo extends Video {
   // Questionmarks
   private qm = 0
   // TRUE if Clone 0.97, 2006, 2007
-  private has_date = 0
+  private hasDate = 0
   // Timestamp
   private timestamp: string[] = []
   // Date variables taken from Timestamp
@@ -71,16 +71,16 @@ export class MVFVideo extends Video {
   private minute = 0
   private second = 0
   // TRUE if Clone 0.97
-  private has_info = 0
+  private hasInfo = 0
   // Stats only available in Clone 0.97 videos
   private bbbv = 0
   private lcl = 0
   private rcl = 0
   private dcl = 0
-  private solved_bbbv = 0
+  private solvedBBBV = 0
   // Time in seconds and decimals
-  private score_sec = 0
-  private score_ths = 0
+  private scoreSec = 0
+  private scoreThs = 0
   // Player name
   private name: string[] = []
   // Program defined here instead of reading from video
@@ -90,7 +90,7 @@ export class MVFVideo extends Video {
   // Game events
   private video: Event[] = []
   // Cell size used in mouse movement calculations
-  private readonly square_size = 16
+  private readonly squareSize = 16
   // 3bvs
   private bbbvs = 0.0
 
@@ -103,12 +103,238 @@ export class MVFVideo extends Video {
   }
 
   /**
+   * Function to read Clone 0.97 videos
+   */
+  private read097 () {
+    // // Initialise local variables
+    // unsigned char c;
+    // int len,i,j,cur;
+    // double leading;
+    // double num1,num2,num3;
+    // char s[41];
+    // int byte[40];
+    // unsigned char bit[40];
+    // const int mult=100000000;
+    // unsigned char e[5];
+    //
+    // // Clone 0.97 has Date (Timestamp)
+    // has_date=has_info=1;
+    //
+    // // Read Date (Timestamp)
+    // month=(c=_fgetc(MVF));
+    // day=(c=_fgetc(MVF));
+    // year=getint2(MVF);
+    // hour=_fgetc(MVF);
+    // minute=_fgetc(MVF);
+    // second=_fgetc(MVF);
+    //
+    // // Next 2 bytes are Level and Mode
+    // level=_fgetc(MVF);
+    // mode=_fgetc(MVF);
+    //
+    // // Next 3 bytes are Time
+    // read_score();
+    //
+    // // Next 11 bytes provide stats only available to Clone 0.97
+    // bbbv=getint2(MVF); // 3bv
+    // solved_bbbv=getint2(MVF); // Solved 3bv
+    // lcl=getint2(MVF); // Left clicks
+    // dcl=getint2(MVF); // Double clicks
+    // rcl=getint2(MVF); // Right clicks
+    //
+    // // Check if Questionmark option was turned on
+    // qm=_fgetc(MVF);
+    //
+    // // Function gets Width, Height and Mines then reads board layout into memory
+    // read_board(-1);
+    //
+    // // Byte before Player gives length of name
+    // len=_fgetc(MVF);
+    // for(i=0;i<len;++i) name[i]=_fgetc(MVF);
+    // name[len]=0;
+    //
+    // // First 2 bytes determine the file permutation
+    // leading=getint2(MVF);
+    // num1=sqrt(leading);
+    // num2=sqrt(leading+1000.0);
+    // num3=sqrt(num1+1000.0);
+    // sprintf(s,"%08d",(int)(lrint(fabs(cos(num3+1000.0)*mult))));
+    // sprintf(s+8,"%08d",(int)(lrint(fabs(sin(sqrt(num2))*mult))));
+    // sprintf(s+16,"%08d",(int)(lrint(fabs(cos(num3)*mult))));
+    // sprintf(s+24,"%08d",(int)(lrint(fabs(sin(sqrt(num1)+1000.0)*mult))));
+    // sprintf(s+32,"%08d",(int)(lrint(fabs(cos(sqrt(num2+1000.0))*mult))));
+    // s[40]=0;
+    // cur=0;
+    // for(i='0';i<='9';++i)
+    //   for(j=0;j<40;++j)
+    //     if(s[j]==i)
+    //     {
+    //       byte[cur]=j/8;
+    //       bit[cur++]=1<<(j%8);
+    //     }
+    //
+    // // Get number of bytes that store mouse events
+    // size=getint3(MVF);
+    // if(size>=MAXREP) error("Too large video");
+    //
+    // // Read mouse events
+    // for(i=0;i<size;++i)
+    // {
+    //   read_event(5,e);
+    //
+    //   video[i].rb=apply_perm(0,byte,bit,e);
+    //   video[i].mb=apply_perm(1,byte,bit,e);
+    //   video[i].lb=apply_perm(2,byte,bit,e);
+    //   video[i].x=video[i].y=video[i].ths=video[i].sec=0;
+    //   for(j=0;j<9;++j)
+    //   {
+    //     video[i].x|=(apply_perm(12+j,byte,bit,e)<<j);
+    //     video[i].y|=(apply_perm(3+j,byte,bit,e)<<j);
+    //   }
+    //   for(j=0;j<7;++j) video[i].ths|=(apply_perm(21+j,byte,bit,e)<<j);
+    //   video[i].ths*=10;
+    //   for(j=0;j<10;++j) video[i].sec|=(apply_perm(28+j,byte,bit,e)<<j);
+    // }
+    return 1
+  }
+
+  /**
+   * Function to read Clone 2006 and 2007 videos
+   */
+  private read2007 () {
+    // // Initialise local variables
+    // unsigned char c;
+    // int len,i,j,cur;
+    // int leading;
+    // double num1,num2,num3,num4;
+    // char s[49];
+    // int byte[48];
+    // unsigned char bit[48];
+    // const int mult=100000000;
+    // unsigned char e[6];
+    //
+    // // Clone 2006 and 2007 have Date (Timestamp)
+    // has_date=1;has_info=0;
+    //
+    // // Read Date (Timestamp)
+    // month=(c=_fgetc(MVF));
+    // day=(c=_fgetc(MVF));
+    // year=getint2(MVF);
+    // hour=_fgetc(MVF);
+    // minute=_fgetc(MVF);
+    // second=_fgetc(MVF);
+    //
+    // // Next 2 bytes are Level and Mode
+    // level=_fgetc(MVF);
+    // mode=_fgetc(MVF);
+    //
+    // // Next 3 bytes are Time
+    // score_ths=getint3(MVF);
+    // score_sec=score_ths/1000;
+    // score_ths%=1000;
+    //
+    // // Check if Questionmark option was turned on
+    // qm=_fgetc(MVF);
+    //
+    // // Function gets Width, Height and Mines then reads board layout into memory
+    // read_board(-1);
+    //
+    // // Byte before Player gives length of name
+    // len=_fgetc(MVF);
+    // if(len>=MAXNAME) len=MAXNAME-1;
+    // for(i=0;i<len;++i) name[i]=_fgetc(MVF);
+    // name[len]=0;
+    //
+    // // First 2 bytes determine the file permutation
+    // leading=getint2(MVF);
+    // num1=sqrt(leading);
+    // num2=sqrt(leading+1000.0);
+    // num3=sqrt(num1+1000.0);
+    // num4=sqrt(num2+1000.0);
+    // sprintf(s,"%08d",(int)(lrint(fabs(cos(num3+1000.0)*mult))));
+    // sprintf(s+8,"%08d",(int)(lrint(fabs(sin(sqrt(num2))*mult))));
+    // sprintf(s+16,"%08d",(int)(lrint(fabs(cos(num3)*mult))));
+    // sprintf(s+24,"%08d",(int)(lrint(fabs(sin(sqrt(num1)+1000.0)*mult))));
+    // sprintf(s+32,"%08d",(int)(lrint(fabs(cos(num4)*mult))));
+    // sprintf(s+40,"%08d",(int)(lrint(fabs(sin(num4)*mult))));
+    // s[48]=0;
+    // cur=0;
+    // for(i='0';i<='9';++i)
+    //   for(j=0;j<48;++j)
+    //     if(s[j]==i)
+    //     {
+    //       byte[cur]=j/8;
+    //       bit[cur++]=1<<(j%8);
+    //     }
+    //
+    // // Get number of bytes that store mouse events
+    // size=getint3(MVF);
+    // if(size>=MAXREP) error("Too large video");
+    //
+    // // Read mouse events
+    // for(i=0;i<size;++i)
+    // {
+    //   read_event(6,e);
+    //
+    //   video[i].rb=apply_perm(0,byte,bit,e);
+    //   video[i].mb=apply_perm(1,byte,bit,e);
+    //   video[i].lb=apply_perm(2,byte,bit,e);
+    //   video[i].x=video[i].y=video[i].ths=video[i].sec=0;
+    //   for(j=0;j<11;++j)
+    //   {
+    //     video[i].x|=(apply_perm(14+j,byte,bit,e)<<j);
+    //     video[i].y|=(apply_perm(3+j,byte,bit,e)<<j);
+    //   }
+    //   for(j=0;j<22;++j) video[i].ths|=(apply_perm(25+j,byte,bit,e)<<j);
+    //   video[i].sec=video[i].ths/1000;
+    //   video[i].ths%=1000;
+    //   video[i].x-=32;
+    //   video[i].y-=32;
+    // }
+    return 1
+  }
+
+  /**
    * Function to check version and parse if not standard Clone 0.97, 2006 or 2007
    */
   private readmvf () {
     // Initialise local variables
-    let c = this.getChar()
-    let d = this.getChar()
+    let c: number | string = this.getNum()
+    let d = this.getNum()
+
+    // Perform version checks
+    // Prior to Clone 0.97 first 2 bytes were Width and Height (so 08,10,1E)
+    // Early versions also did not allow Custom videos to be saved in Legal Mode
+    if (c === 0x11 && d === 0x4D) {
+      // The byte after offset 27 in "new" versions is last digit of year
+      this.seek(27, 'SEEK_SET')
+      c = this.getChar()
+
+      // Clone 0.97
+      if (c === '5') {
+        // Relevant data starts from offset 74
+        this.seek(74, 'SEEK_SET')
+        this.version = '0.97 beta'
+        return this.read097()
+        // Clone 2006 or 2007
+      } else if (c === '6' || c === '7') {
+        this.seek(53, 'SEEK_SET')
+        c = this.getNum()
+        for (d = 0; d < c; ++d) this.version += this.getChar()
+        // Relevant data starts from offset 71
+        this.seek(71, 'SEEK_SET')
+        return this.read2007()
+        // Clone 0.97 Funny Mode hack by Abiu in June 2008
+      } else if (c === '8') {
+        // Relevant data starts from offset 74
+        this.seek(74, 'SEEK_SET')
+        this.version = '0.97 Funny Mode Hack'
+        c = this.read097()
+        // All Funny Mode videos are UPK
+        this.mode = 3
+        return c
+      }
+    }
     return 0
   }
 }
