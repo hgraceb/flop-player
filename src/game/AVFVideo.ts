@@ -31,7 +31,7 @@
 
 import { Video, VideoEvent } from '@/game/video'
 
-// 游戏事件
+// 录像事件
 class Event {
   // Seconds
   sec = 0
