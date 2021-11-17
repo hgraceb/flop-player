@@ -80,6 +80,26 @@ export abstract class Video {
     return line.slice(0, i)
   }
 
+  /**
+   * 移动二进制数据的读写位置
+   *
+   * @param offset 相对 whence 的偏移量，以字节为单位
+   * @param whence 开始添加偏移 offset 的位置
+   */
+  protected seek (offset: number, whence: 'SEEK_SET' | 'SEEK_CUR' | 'SEEK_END') {
+    switch (whence) {
+      case 'SEEK_SET':
+        this.mOffset = offset
+        break
+      case 'SEEK_CUR':
+        this.mOffset += offset
+        break
+      case 'SEEK_END':
+        this.mOffset = this.mData.length - offset
+        break
+    }
+  }
+
   /** 获取游戏列数 */
   getWidth (): number {
     return this.mWidth
