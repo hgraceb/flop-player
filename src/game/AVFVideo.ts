@@ -19,7 +19,7 @@
  Updated 2021-05-26 by Damien to remove legacy Freesweeper code and remove Arbiter cheat
  code as Arbiter does not allow cheat mode videos.
 
- Modified by Enbin Hu (Flop) 2021-11-07. Rewriting with TypeScript.
+ Modified by Enbin Hu (Flop) 2021-11-07. Rewrote with TypeScript.
 
  Note Arbiter internals operate to 2 decimal places. You cannot get 3 decimal places
  by subtracting timestamp_a from timestamp_b because these timestamps do not perfectly

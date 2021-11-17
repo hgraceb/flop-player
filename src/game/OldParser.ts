@@ -20,7 +20,7 @@
  - Changed function order so now functions are logically grouped.
  - Added detailed comments throughout file.
 
- Modified by Enbin Hu (Flop) 2021-08-31. Rewriting with TypeScript.
+ Modified by Enbin Hu (Flop) 2021-08-31. Rewrote with TypeScript.
 
  This is being released as Rawparser version 6.
 
