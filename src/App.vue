@@ -42,11 +42,17 @@ export default defineComponent({
       // TODO 删除测试代码和对应的文件（最后不参与打包或者在 README 文件中说明需要手动删除对应的测试录像文件）
       // store.dispatch('fetchUri', 'videos/arbiter_beg.avf')
       // store.dispatch('fetchUri', 'videos/arbiter_int.avf')
-      store.dispatch('fetchUri', 'videos/arbiter_exp.avf')
+      // store.dispatch('fetchUri', 'videos/arbiter_exp.avf')
       // store.dispatch('fetchUri', 'videos/Cus_8x30_30mines.avf')
       // store.dispatch('fetchUri', 'videos/Cus_20x20_20mines.avf')
       // store.dispatch('fetchUri', 'videos/Cus_30x8_30mines.avf')
       // store.dispatch('fetchUri', 'videos/nested-openging.rawvf')
+      // store.dispatch('fetchUri', 'videos/mvf/0.96_beta_or_earlier.mvf')
+      // store.dispatch('fetchUri', 'videos/mvf/0.97_beta.mvf')
+      // store.dispatch('fetchUri', 'videos/mvf/2006_release_1.mvf')
+      // store.dispatch('fetchUri', 'videos/mvf/2006_release_2.mvf')
+      // store.dispatch('fetchUri', 'videos/mvf/2007_release_1.mvf')
+      store.dispatch('fetchUri', 'videos/mvf/2007_release_2.mvf')
     })
 
     return { loading, scale }
