@@ -434,10 +434,10 @@ export class MVFVideo extends BaseVideo {
       this.readBoard(0)
 
       // Check if Questionmark option was turned on
-      this.qm = c = this.getNum()
+      this.qm = this.getNum()
 
       // Throw away byte
-      c = this.getNum()
+      this.getNum()
 
       // Store current byte position for later when reading mouse events
       let current = this.getOffset()
