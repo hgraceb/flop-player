@@ -50,8 +50,6 @@ export type State = typeof storageDefault & {
   gameRightPoints: { x: number, y: number }[]
   // 游戏双击点坐标数组，x：精确的横坐标，y：精确的纵坐标
   gameDoublePoints: { x: number, y: number }[]
-  // 是否打印录像解析相关日志
-  enableParserLog: boolean
   // 页面加载中，null 表示页面处于初始加载状态，但是没有正在加载的内容
   loading: boolean | null
 }
@@ -93,6 +91,5 @@ export const state: State = {
   gameLeftPoints: [],
   gameRightPoints: [],
   gameDoublePoints: [],
-  enableParserLog: false,
   loading: null
 }
