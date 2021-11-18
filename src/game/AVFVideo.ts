@@ -50,8 +50,8 @@ export class AVFVideo extends Video {
   protected mMines: number
   protected mMarks: number
   protected mBoard: number[]
-  protected mEvents: VideoEvent[]
   protected mPlayer: Uint8Array
+  protected mEvents: VideoEvent[]
 
   private readonly MAX_NAME = 1000
   // Mode
@@ -113,6 +113,11 @@ export class AVFVideo extends Video {
     this.mMines = this.m
     this.mMarks = this.qm
     this.mBoard = this.board
+    // 设置玩家名称
+    this.mPlayer = new Uint8Array(this.name.length)
+    this.name.forEach((char, index) => {
+      this.mPlayer[index] = char.charCodeAt(0)
+    })
     // 设置游戏事件
     this.mEvents = []
     let curx = 1
@@ -154,11 +159,6 @@ export class AVFVideo extends Video {
       event.y = current.y
       this.mEvents.push(event)
     }
-    // 设置玩家名称
-    this.mPlayer = new Uint8Array(this.name.length)
-    this.name.forEach((char, index) => {
-      this.mPlayer[index] = char.charCodeAt(0)
-    })
   }
 
   /**
@@ -359,7 +359,7 @@ export class AVFVideo extends Video {
 
     // Each iteration reads one mouse event
     while (1) {
-      this.video[cur] = new Event()
+      this.video[cur] = <Event>{}
       this.video[cur].mouse = cr[0]
       this.video[cur].x = cr[1] * 256 + cr[3]
       this.video[cur].y = cr[5] * 256 + cr[7]

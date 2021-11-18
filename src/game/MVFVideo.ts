@@ -35,14 +35,15 @@ class Event {
 }
 
 export class MVFVideo extends Video {
-  protected mWidth = -1
-  protected mHeight = -1
-  protected mMines = -1
-  protected mMarks = 0
-  protected mBoard: number[] = []
+  protected mWidth: number
+  protected mHeight: number
+  protected mMines: number
+  protected mMarks: number
+  protected mBoard: number[]
+  protected mPlayer: Uint8Array
   protected mEvents: VideoEvent[] = []
-  protected mPlayer: Uint8Array = new Uint8Array()
 
+  private readonly MAX_REP = 100000
   private readonly MAX_NAME = 1000
   // Mode
   private mode = 0
@@ -101,6 +102,15 @@ export class MVFVideo extends Video {
     if (!this.readmvf()) {
       this.throwError('Invalid MVF')
     }
+    // 设置游戏基本信息
+    this.mWidth = this.w
+    this.mHeight = this.h
+    this.mMines = this.m
+    this.mMarks = this.qm
+    this.mBoard = this.board
+    // 设置玩家名称
+    this.mPlayer = new Uint8Array(this.name)
+    // TODO 设置游戏事件
   }
 
   private getInt2 () {
@@ -148,6 +158,20 @@ export class MVFVideo extends Video {
       if (pos >= boardSize || pos < 0) this.throwError('Invalid mine position')
       this.board[pos] = 1
     }
+  }
+
+  /**
+   * Functions to read mouse events
+   */
+
+  // Put event bytes into e variable
+  private readEvent (size: number, e: number[]) {
+    for (let i = 0; i < size; ++i) e[i] = this.getNum()
+  }
+
+  // Decode event
+  private applyPerm (num: number, byte: number[], bit: number[], event: number[]) {
+    return (event[byte[num]] & bit[num]) ? 1 : 0
   }
 
   /**
@@ -230,18 +254,18 @@ export class MVFVideo extends Video {
     // {
     //   read_event(5,e);
     //
-    //   video[i].rb=apply_perm(0,byte,bit,e);
-    //   video[i].mb=apply_perm(1,byte,bit,e);
-    //   video[i].lb=apply_perm(2,byte,bit,e);
+    //   video[i].rb=applyPerm(0,byte,bit,e);
+    //   video[i].mb=applyPerm(1,byte,bit,e);
+    //   video[i].lb=applyPerm(2,byte,bit,e);
     //   video[i].x=video[i].y=video[i].ths=video[i].sec=0;
     //   for(j=0;j<9;++j)
     //   {
-    //     video[i].x|=(apply_perm(12+j,byte,bit,e)<<j);
-    //     video[i].y|=(apply_perm(3+j,byte,bit,e)<<j);
+    //     video[i].x|=(applyPerm(12+j,byte,bit,e)<<j);
+    //     video[i].y|=(applyPerm(3+j,byte,bit,e)<<j);
     //   }
-    //   for(j=0;j<7;++j) video[i].ths|=(apply_perm(21+j,byte,bit,e)<<j);
+    //   for(j=0;j<7;++j) video[i].ths|=(applyPerm(21+j,byte,bit,e)<<j);
     //   video[i].ths*=10;
-    //   for(j=0;j<10;++j) video[i].sec|=(apply_perm(28+j,byte,bit,e)<<j);
+    //   for(j=0;j<10;++j) video[i].sec|=(applyPerm(28+j,byte,bit,e)<<j);
     // }
     return 1
   }
@@ -251,21 +275,19 @@ export class MVFVideo extends Video {
    */
   private read2007 () {
     // Initialise local variables
-    let c
-    let len, i // , j, cur
-    // let num1, num2, num3, num4
-    // char s[49];
-    // int byte[48];
-    // unsigned char bit[48];
-    // const int mult=100000000;
-    // unsigned char e[6];
-    //
-    // // Clone 2006 and 2007 have Date (Timestamp)
-    // has_date=1;has_info=0;
+    let s = ''
+    const byte: number[] = []
+    const bit: number[] = []
+    const mult = 100000000
+    const e: number[] = []
+
+    // Clone 2006 and 2007 have Date (Timestamp)
+    this.hasDate = 1
+    this.hasInfo = 0
 
     // Read Date (Timestamp)
-    this.month = (c = this.getNum())
-    this.day = (c = this.getNum())
+    this.month = this.getNum()
+    this.day = this.getNum()
     this.year = this.getInt2()
     this.hour = this.getNum()
     this.minute = this.getNum()
@@ -277,6 +299,7 @@ export class MVFVideo extends Video {
 
     // Next 3 bytes are Time
     this.scoreThs = this.getInt3()
+    // 向下取整
     this.scoreSec = Math.floor(this.scoreThs / 1000)
     this.scoreThs %= 1000
 
@@ -287,9 +310,9 @@ export class MVFVideo extends Video {
     this.readBoard(-1)
 
     // Byte before Player gives length of name
-    len = this.getNum()
+    let len = this.getNum()
     if (len >= this.MAX_NAME) len = this.MAX_NAME - 1
-    for (i = 0; i < len; ++i) this.name[i] = this.getNum()
+    for (let i = 0; i < len; ++i) this.name[i] = this.getNum()
 
     // First 2 bytes determine the file permutation
     const leading = this.getInt2()
@@ -297,46 +320,47 @@ export class MVFVideo extends Video {
     const num2 = Math.sqrt(leading + 1000.0)
     const num3 = Math.sqrt(num1 + 1000.0)
     const num4 = Math.sqrt(num2 + 1000.0)
-    // sprintf(s,"%08d",(int)(lrint(fabs(cos(num3+1000.0)*mult))));
-    // sprintf(s+8,"%08d",(int)(lrint(fabs(sin(sqrt(num2))*mult))));
-    // sprintf(s+16,"%08d",(int)(lrint(fabs(cos(num3)*mult))));
-    // sprintf(s+24,"%08d",(int)(lrint(fabs(sin(sqrt(num1)+1000.0)*mult))));
-    // sprintf(s+32,"%08d",(int)(lrint(fabs(cos(num4)*mult))));
-    // sprintf(s+40,"%08d",(int)(lrint(fabs(sin(num4)*mult))));
-    // s[48]=0;
-    // cur=0;
-    // for(i='0';i<='9';++i)
-    //   for(j=0;j<48;++j)
-    //     if(s[j]==i)
-    //     {
-    //       byte[cur]=j/8;
-    //       bit[cur++]=1<<(j%8);
-    //     }
-    //
-    // // Get number of bytes that store mouse events
-    // size=getint3(MVF);
-    // if(size>=MAXREP) error("Too large video");
-    //
-    // // Read mouse events
-    // for(i=0;i<size;++i)
-    // {
-    //   read_event(6,e);
-    //
-    //   video[i].rb=apply_perm(0,byte,bit,e);
-    //   video[i].mb=apply_perm(1,byte,bit,e);
-    //   video[i].lb=apply_perm(2,byte,bit,e);
-    //   video[i].x=video[i].y=video[i].ths=video[i].sec=0;
-    //   for(j=0;j<11;++j)
-    //   {
-    //     video[i].x|=(apply_perm(14+j,byte,bit,e)<<j);
-    //     video[i].y|=(apply_perm(3+j,byte,bit,e)<<j);
-    //   }
-    //   for(j=0;j<22;++j) video[i].ths|=(apply_perm(25+j,byte,bit,e)<<j);
-    //   video[i].sec=video[i].ths/1000;
-    //   video[i].ths%=1000;
-    //   video[i].x-=32;
-    //   video[i].y-=32;
-    // }
+    s += ('00000000' + (Math.round(Math.abs(Math.cos(num3 + 1000.0) * mult)))).slice(-8)
+    s += ('00000000' + (Math.round(Math.abs(Math.sin(Math.sqrt(num2)) * mult)))).slice(-8)
+    s += ('00000000' + (Math.round(Math.abs(Math.cos(num3) * mult)))).slice(-8)
+    s += ('00000000' + (Math.round(Math.abs(Math.sin(Math.sqrt(num1) + 1000.0) * mult)))).slice(-8)
+    s += ('00000000' + (Math.round(Math.abs(Math.cos(num4) * mult)))).slice(-8)
+    s += ('00000000' + (Math.round(Math.abs(Math.sin(num4) * mult)))).slice(-8)
+    let cur = 0
+    for (let i = '0'.charCodeAt(0); i <= '9'.charCodeAt(0); ++i) {
+      for (let j = 0; j < 48; ++j) {
+        if (s.charCodeAt(j) === i) {
+          // 向下取整
+          byte[cur] = Math.floor(j / 8)
+          bit[cur++] = 1 << (j % 8)
+        }
+      }
+    }
+
+    // Get number of bytes that store mouse events
+    this.size = this.getInt3()
+    if (this.size >= this.MAX_REP) this.throwError('Too large video')
+
+    // Read mouse events
+    for (let i = 0; i < this.size; ++i) {
+      this.readEvent(6, e)
+
+      this.video[i] = <Event>{}
+      this.video[i].rb = this.applyPerm(0, byte, bit, e)
+      this.video[i].mb = this.applyPerm(1, byte, bit, e)
+      this.video[i].lb = this.applyPerm(2, byte, bit, e)
+      this.video[i].x = this.video[i].y = this.video[i].ths = this.video[i].sec = 0
+      for (let j = 0; j < 11; ++j) {
+        this.video[i].x |= (this.applyPerm(14 + j, byte, bit, e) << j)
+        this.video[i].y |= (this.applyPerm(3 + j, byte, bit, e) << j)
+      }
+      for (let j = 0; j < 22; ++j) this.video[i].ths |= (this.applyPerm(25 + j, byte, bit, e) << j)
+      // 向下取整
+      this.video[i].sec = Math.floor(this.video[i].ths / 1000)
+      this.video[i].ths %= 1000
+      this.video[i].x -= 32
+      this.video[i].y -= 32
+    }
     return 1
   }
 
