@@ -120,8 +120,8 @@ export class AVFVideo extends Video {
     })
     // 设置游戏事件
     this.mEvents = []
-    let curx = 1
-    let cury = 1
+    let curx = -1
+    let cury = -1
     for (let i = 0; i < this.size; ++i) {
       const current = this.video[i]
       if (current.mouse === 1 && current.x === curx && current.y === cury) continue
