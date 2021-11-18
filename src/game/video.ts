@@ -36,7 +36,7 @@ export abstract class Video {
   }
 
   /** 抛出一个错误 */
-  protected throwError (msg: string): number {
+  protected error (msg: string): number {
     throw new Error(`${this.constructor.name}Error - ${msg}`)
   }
 
@@ -48,7 +48,7 @@ export abstract class Video {
     const num = this.mData[this.mOffset++]
     // 数据意外结尾
     if (num === undefined) {
-      this.throwError('Unexpected end of data')
+      this.error('Unexpected end of data')
     }
     return num
   }
@@ -98,6 +98,13 @@ export abstract class Video {
         this.mOffset = this.mData.length - offset
         break
     }
+  }
+
+  /**
+   * 返回位置标识符的当前值
+   */
+  protected getOffset () {
+    return this.mOffset
   }
 
   /** 获取游戏列数 */

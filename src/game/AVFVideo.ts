@@ -105,7 +105,7 @@ export class AVFVideo extends Video {
     super(data)
     // 解析 AVF 录像
     if (!this.readavf()) {
-      this.throwError('Invalid AVF')
+      this.error('Invalid AVF')
     }
     // 设置游戏基本信息
     this.mWidth = this.w

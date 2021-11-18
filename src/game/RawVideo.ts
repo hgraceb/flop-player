@@ -26,7 +26,7 @@ export class RawVideo extends Video {
     while (true) {
       const lineArr = this.getLine()
       if (lineArr == null) {
-        this.throwError('No board')
+        this.error('No board')
         return
       }
       const lineStr = textDecoder.decode(lineArr).toLowerCase().trim()
@@ -39,25 +39,25 @@ export class RawVideo extends Video {
         this.mPlayer = lineArr.slice(index + 1)
       } else if (option === 'width') {
         this.mWidth = Number(value)
-        if (!Number.isInteger(this.mWidth) || this.mWidth <= 0) this.throwError(`Invalid board width: "${value}"`)
+        if (!Number.isInteger(this.mWidth) || this.mWidth <= 0) this.error(`Invalid board width: "${value}"`)
       } else if (option === 'height') {
         this.mHeight = Number(value)
-        if (!Number.isInteger(this.mHeight) || this.mHeight <= 0) this.throwError(`Invalid board height: "${value}"`)
+        if (!Number.isInteger(this.mHeight) || this.mHeight <= 0) this.error(`Invalid board height: "${value}"`)
       } else if (option === 'mines') {
         this.mMines = Number(value)
-        if (!Number.isInteger(this.mMines) || this.mMines <= 0) this.throwError(`Invalid number of mines: "${value}"`)
+        if (!Number.isInteger(this.mMines) || this.mMines <= 0) this.error(`Invalid number of mines: "${value}"`)
         // QuestionMarks 是为了兼容部分旧版本录像，如：FreeSweeper release 10 保存的录像
       } else if (option === 'marks' || option === 'QuestionMarks'.toLowerCase()) {
-        if (value !== 'on' && value !== 'off') this.throwError(`Invalid question marks: "${value}"`)
+        if (value !== 'on' && value !== 'off') this.error(`Invalid question marks: "${value}"`)
         this.mMarks = value === 'on' ? 1 : 0
       } else if (option === 'board') {
         break
       }
     }
     // 检查是否有必要参数
-    if (this.mWidth < 0) this.throwError('No width')
-    if (this.mHeight < 0) this.throwError('No height')
-    if (this.mMines < 0) this.throwError('No mines')
+    if (this.mWidth < 0) this.error('No width')
+    if (this.mHeight < 0) this.error('No height')
+    if (this.mMines < 0) this.error('No mines')
   }
 
   /**
@@ -67,7 +67,7 @@ export class RawVideo extends Video {
     for (let i = 0; i < this.mHeight; i++) {
       const line = this.getLine()
       if (line === null) {
-        this.throwError('Unexpected end of board')
+        this.error('Unexpected end of board')
         return
       }
       for (let j = 0; j < this.mWidth; j++) {
@@ -122,7 +122,7 @@ export class RawVideo extends Video {
       event.y = Number(getNext(')'))
       // 判断录像事件是否成功获取，其中事件时间是整数（单位：毫秒）；X 坐标和 Y 坐标可以超出游戏区域，如：-1
       if (!Number.isInteger(event.time) || event.mouse === undefined || !Number.isInteger(event.x) || !Number.isInteger(event.y)) {
-        this.throwError(`Invalid mouse event: "${lineStr}"`)
+        this.error(`Invalid mouse event: "${lineStr}"`)
       }
       // 计算得到当前列
       event.column = Math.floor(event.x / 16)

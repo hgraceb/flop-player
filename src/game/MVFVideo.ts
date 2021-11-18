@@ -100,7 +100,7 @@ export class MVFVideo extends Video {
     super(data)
     // 解析 MVF 录像
     if (!this.readmvf()) {
-      this.throwError('Invalid MVF')
+      this.error('Invalid MVF')
     }
     // 设置游戏基本信息
     this.mWidth = this.w
@@ -159,7 +159,7 @@ export class MVFVideo extends Video {
       pos = c + add
       c = this.getNum()
       pos += (c + add) * this.w
-      if (pos >= boardSize || pos < 0) this.throwError('Invalid mine position')
+      if (pos >= boardSize || pos < 0) this.error('Invalid mine position')
       this.board[pos] = 1
     }
   }
@@ -256,7 +256,7 @@ export class MVFVideo extends Video {
 
     // Get number of bytes that store mouse events
     this.size = this.getInt3()
-    if (this.size >= this.MAX_REP) this.throwError('Too large video')
+    if (this.size >= this.MAX_REP) this.error('Too large video')
 
     // Read mouse events
     for (let i = 0; i < this.size; ++i) {
@@ -347,7 +347,7 @@ export class MVFVideo extends Video {
 
     // Get number of bytes that store mouse events
     this.size = this.getInt3()
-    if (this.size >= this.MAX_REP) this.throwError('Too large video')
+    if (this.size >= this.MAX_REP) this.error('Too large video')
 
     // Read mouse events
     for (let i = 0; i < this.size; ++i) {
@@ -412,6 +412,130 @@ export class MVFVideo extends Video {
         this.mode = 3
         return c
       }
+      // Clone 0.97 hack by an unknown person
+    } else if (c === 0x00 && d === 0x00) {
+      this.seek(7, 'SEEK_SET')
+      this.version = '0.97 Unknown Hack'
+      return this.read097()
+      // Clone 0.96 and earlier versions do not have a header
+      // Clone 0.76 introduced 100 bytes for the Player name (default is 'Minesweeper Clone')
+      // Clone 0.76 and earlier end with 10 bytes containing a numeric Checksum
+      // Clone 0.8 replaced 10 byte checksum with 22 bytes (00, 20 byte Checksum, 00)
+      // The 3 bytes before Player name and Checksum are the Time
+    } else {
+      // Initialise local variables
+      const e: number[] = []
+      let afterEvents
+
+      // There is no header so read from start of file
+      this.seek(0, 'SEEK_SET')
+
+      // Function reads Width, Height, Mines and the X,Y for each Mine
+      this.readBoard(0)
+
+      // Check if Questionmark option was turned on
+      this.qm = c = this.getNum()
+
+      // Throw away byte
+      c = this.getNum()
+
+      // Store current byte position for later when reading mouse events
+      let current = this.getOffset()
+
+      // Get number of bytes in file
+      this.seek(0, 'SEEK_END')
+      const filesize = this.getOffset()
+
+      // Check if 20 byte checksum is bookended by zero
+      this.seek(filesize - 1, 'SEEK_SET')
+      const checksumA = this.getNum()
+      this.seek(filesize - 22, 'SEEK_SET')
+      const checksumB = this.getNum()
+
+      if ((checksumA < '0'.charCodeAt(0) || checksumA > '9'.charCodeAt(0)) && (checksumB < '0'.charCodeAt(0) || checksumB > '9'.charCodeAt(0))) {
+        this.version = '0.96 beta (or earlier)'
+
+        // Set pointer to get Time later
+        afterEvents = filesize - 125
+
+        // Get Player name
+        this.seek(filesize - 122, 'SEEK_SET')
+        for (let i = 0; i < 100; ++i) this.name[i] = this.getNum()
+      } else {
+        // Assumption is last 3 bytes of 100 byte of Player name are blank
+        this.seek(filesize - 13, 'SEEK_SET')
+
+        if (this.getChar() === ' ' && this.getChar() === ' ' && this.getChar() === ' ') {
+          this.version = '0.76 beta'
+
+          // Set pointer to get Time later
+          afterEvents = filesize - 113
+
+          // Get Player name
+          this.seek(filesize - 110, 'SEEK_SET')
+          for (let i = 0; i < 100; ++i) this.name[i] = this.getNum()
+        } else {
+          this.version = '0.75 beta (or earlier)'
+
+          // Set pointer to get Time later
+          afterEvents = filesize - 13
+        }
+      }
+
+      // Early versions did not have Date (Timestamp)
+      this.hasInfo = 0
+      this.hasDate = 0
+
+      // Early versions only have Classic Mode
+      this.mode = 1
+
+      // Get Width and Height
+      if (this.w === 8 && this.h === 8) this.level = 1
+      else if (this.w === 16 && this.h === 16) this.level = 2
+      else if (this.w === 30 && this.h === 16) this.level = 3
+      else this.error('Invalid board size')
+
+      // Get Time (3 bytes)
+      this.seek(afterEvents, 'SEEK_SET')
+      this.readScore()
+
+      // Read mouse events
+      this.seek(current, 'SEEK_SET')
+      while (current <= afterEvents) {
+        this.readEvent(8, e)
+
+        this.video[this.size] = <Event>{}
+        this.video[this.size].sec = e[0]
+        this.video[this.size].ths = e[1] * 10
+
+        if (this.size > 0 &&
+          (this.video[this.size].sec < this.video[this.size - 1].sec ||
+            (this.video[this.size].sec === this.video[this.size - 1].sec && this.video[this.size].ths < this.video[this.size - 1].ths))) {
+          break
+        }
+        if (this.video[this.size].sec > this.scoreSec ||
+          (this.video[this.size].sec === this.scoreSec && this.video[this.size].ths > this.scoreThs)) {
+          break
+        }
+
+        this.video[this.size].lb = e[2] & 0x01
+        this.video[this.size].mb = e[2] & 0x02
+        this.video[this.size].rb = e[2] & 0x04
+        this.video[this.size].x = e[3] * 256 + e[4]
+        this.video[this.size].y = e[5] * 256 + e[6]
+        this.video[this.size++].weirdnessBit = e[7]
+        current += 8
+        if (this.size >= this.MAX_REP) this.error('Too large video')
+      }
+
+      this.video[this.size].lb = this.video[this.size].mb = this.video[this.size].rb = 0
+      this.video[this.size].x = this.video[this.size - 1].x
+      this.video[this.size].y = this.video[this.size - 1].y
+      this.video[this.size].sec = this.video[this.size - 1].sec
+      this.video[this.size].ths = this.video[this.size - 1].ths
+      ++this.size
+      if (this.size >= this.MAX_REP) this.error('Too large video')
+      return 1
     }
     return 0
   }
