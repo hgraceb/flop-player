@@ -30,7 +30,7 @@ controlBar:
 
 common:
   loading: 加載中...
-  fileSelect: '請選擇一個 avf/rawvf 文件'
+  fileSelect: '請選擇一個 avf/mvf/rawvf 文件'
 
 error:
   videoParse: '錄像解析出錯：'

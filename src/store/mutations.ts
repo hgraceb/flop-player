@@ -8,6 +8,7 @@ import { message } from 'ant-design-vue'
 import { Parser } from '@/game/Parser'
 import { RawVideo } from '@/game/RawVideo'
 import { AVFVideo } from '@/game/AVFVideo'
+import { MVFVideo } from '@/game/MVFVideo'
 
 /**
  * Mutations 函数定义，使用类型推断的方式，可以快速找到函数的所有 Usages
@@ -101,6 +102,8 @@ export const mutations = {
     try {
       if (type === 'avf') {
         parser = new Parser(new AVFVideo(data))
+      } else if (type === 'mvf') {
+        parser = new Parser(new MVFVideo(data))
       } else if (type === 'rawvf') {
         parser = new Parser(new RawVideo(data))
       } else {

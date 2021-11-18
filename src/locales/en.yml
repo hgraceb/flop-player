@@ -30,7 +30,7 @@ controlBar:
 
 common:
   loading: Loading...
-  fileSelect: 'Please select a avf/rawvf file'
+  fileSelect: 'Please select a avf/mvf/rawvf file'
 
 error:
   videoParse: 'Video parsing error: '

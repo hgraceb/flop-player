@@ -73,7 +73,7 @@ function checkFileNumber (fileList: FileList | undefined | null): boolean {
 function checkFileType (name: string): boolean {
   // 获取文件扩展名
   const extension = getExtension(name)
-  if (extension !== 'avf' && extension !== 'rawvf') {
+  if (extension !== 'avf' && extension !== 'mvf' && extension !== 'rawvf') {
     // 不支持的文件
     messageError(t('error.fileUnsupported'))
     return false
