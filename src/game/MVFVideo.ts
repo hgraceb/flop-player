@@ -110,7 +110,11 @@ export class MVFVideo extends Video {
     this.mBoard = this.board
     // 设置玩家名称
     this.mPlayer = new Uint8Array(this.name)
-    // TODO 设置游戏事件
+    // 设置游戏事件
+    this.dumpFirstEvent(this.video[0])
+    for (let i = 1; i < this.size; i++) {
+      this.dumpEvent(this.video[i], this.video[i - 1])
+    }
   }
 
   private getInt2 () {
@@ -320,12 +324,12 @@ export class MVFVideo extends Video {
     const num2 = Math.sqrt(leading + 1000.0)
     const num3 = Math.sqrt(num1 + 1000.0)
     const num4 = Math.sqrt(num2 + 1000.0)
-    s += ('00000000' + (Math.round(Math.abs(Math.cos(num3 + 1000.0) * mult)))).slice(-8)
-    s += ('00000000' + (Math.round(Math.abs(Math.sin(Math.sqrt(num2)) * mult)))).slice(-8)
-    s += ('00000000' + (Math.round(Math.abs(Math.cos(num3) * mult)))).slice(-8)
-    s += ('00000000' + (Math.round(Math.abs(Math.sin(Math.sqrt(num1) + 1000.0) * mult)))).slice(-8)
-    s += ('00000000' + (Math.round(Math.abs(Math.cos(num4) * mult)))).slice(-8)
-    s += ('00000000' + (Math.round(Math.abs(Math.sin(num4) * mult)))).slice(-8)
+    s += ('00000000' + Math.round(Math.abs(Math.cos(num3 + 1000.0) * mult))).slice(-8)
+    s += ('00000000' + Math.round(Math.abs(Math.sin(Math.sqrt(num2)) * mult))).slice(-8)
+    s += ('00000000' + Math.round(Math.abs(Math.cos(num3) * mult))).slice(-8)
+    s += ('00000000' + Math.round(Math.abs(Math.sin(Math.sqrt(num1) + 1000.0) * mult))).slice(-8)
+    s += ('00000000' + Math.round(Math.abs(Math.cos(num4) * mult))).slice(-8)
+    s += ('00000000' + Math.round(Math.abs(Math.sin(num4) * mult))).slice(-8)
     let cur = 0
     for (let i = '0'.charCodeAt(0); i <= '9'.charCodeAt(0); ++i) {
       for (let j = 0; j < 48; ++j) {
@@ -406,5 +410,56 @@ export class MVFVideo extends Video {
       }
     }
     return 0
+  }
+
+  /**
+   * Function to dump first mouse event
+   *
+   * Clone does not save mouse events before timer starts (on button release)
+   * This creates the missing button press by cloning details from the first event
+   */
+  private dumpFirstEvent (e: Event) {
+    const event = <VideoEvent>{}
+    let ev: 'lc' | 'rc' | 'mc' | 'mv' | undefined
+    event.time = e.sec * 1000 + e.ths
+    if (e.lb) ev = 'lc'
+    if (e.rb) ev = 'rc'
+    if (e.mb) ev = 'mc'
+    if (!ev) ev = 'mv'
+    this.mEvents.push({
+      time: e.sec * 1000 + e.ths,
+      mouse: ev,
+      column: Math.floor(e.x / 16),
+      row: Math.floor(e.y / 16),
+      x: e.x,
+      y: e.y
+    })
+  }
+
+  /**
+   * Function to dump rest of mouse events
+   */
+  private dumpEvent (e: Event, prevE: Event) {
+    let numEvents = 0
+    const evs: ('mv' | 'lc' | 'rc' | 'mc' | 'lr' | 'rr' | 'mr')[] = []
+
+    if (e.x !== prevE.x || e.y !== prevE.y) evs[numEvents++] = 'mv'
+    if (e.lb && !prevE.lb) evs[numEvents++] = 'lc'
+    if (e.rb && !prevE.rb) evs[numEvents++] = 'rc'
+    if (e.mb && !prevE.mb) evs[numEvents++] = 'mc'
+    if (!e.lb && prevE.lb) evs[numEvents++] = 'lr'
+    if (!e.rb && prevE.rb) evs[numEvents++] = 'rr'
+    if (!e.mb && prevE.mb) evs[numEvents++] = 'mr'
+
+    for (let i = 0; i < numEvents; ++i) {
+      this.mEvents.push({
+        time: e.sec * 1000 + e.ths,
+        mouse: evs[i],
+        column: Math.floor(e.x / 16),
+        row: Math.floor(e.y / 16),
+        x: e.x,
+        y: e.y
+      })
+    }
   }
 }
