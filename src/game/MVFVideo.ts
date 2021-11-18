@@ -419,9 +419,7 @@ export class MVFVideo extends Video {
    * This creates the missing button press by cloning details from the first event
    */
   private dumpFirstEvent (e: Event) {
-    const event = <VideoEvent>{}
     let ev: 'lc' | 'rc' | 'mc' | 'mv' | undefined
-    event.time = e.sec * 1000 + e.ths
     if (e.lb) ev = 'lc'
     if (e.rb) ev = 'rc'
     if (e.mb) ev = 'mc'
