@@ -58,7 +58,7 @@
 
  *****************************************************************/
 
-import { Video, VideoEvent } from '@/game/video'
+import { BaseVideo, VideoEvent } from '@/game/BaseVideo'
 import { GameEvent } from '@/game/index'
 
 // This defines cell attributes and sets 'board' as a pointer to 'cell'
@@ -158,7 +158,7 @@ export class Parser {
   private superclick = 0
   private superflag = 0
 
-  constructor (video: Video) {
+  constructor (video: BaseVideo) {
     this.playerArray = video.getPlayer()
     this.w = video.getWidth()
     this.h = video.getHeight()

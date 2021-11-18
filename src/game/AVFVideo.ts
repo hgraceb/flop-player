@@ -29,7 +29,7 @@
  Tested successfully on Arbiter 0.35 and later.
  *****************************************************************/
 
-import { Video, VideoEvent } from '@/game/video'
+import { BaseVideo, VideoEvent } from '@/game/BaseVideo'
 
 // 录像事件
 class Event {
@@ -44,7 +44,7 @@ class Event {
   mouse = 0
 }
 
-export class AVFVideo extends Video {
+export class AVFVideo extends BaseVideo {
   protected mWidth: number
   protected mHeight: number
   protected mMines: number

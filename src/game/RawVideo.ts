@@ -1,7 +1,7 @@
-import { Video, VideoEvent } from '@/game/video'
+import { BaseVideo, VideoEvent } from '@/game/BaseVideo'
 import { times } from 'number-precision'
 
-export class RawVideo extends Video {
+export class RawVideo extends BaseVideo {
   protected mWidth = -1
   protected mHeight = -1
   protected mMines = -1

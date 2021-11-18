@@ -19,7 +19,7 @@ export interface VideoEvent {
 /**
  * 录像信息基础类
  */
-export abstract class Video {
+export abstract class BaseVideo {
   private mOffset = 0
   private readonly mData = new Uint8Array()
 

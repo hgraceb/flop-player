@@ -19,7 +19,7 @@
  saves the time 0.01s different than the actual end time per last mouse event.
  *****************************************************************/
 
-import { Video, VideoEvent } from '@/game/video'
+import { BaseVideo, VideoEvent } from '@/game/BaseVideo'
 
 // 录像事件
 class Event {
@@ -34,7 +34,7 @@ class Event {
   weirdnessBit = 0
 }
 
-export class MVFVideo extends Video {
+export class MVFVideo extends BaseVideo {
   protected mWidth: number
   protected mHeight: number
   protected mMines: number
