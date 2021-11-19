@@ -47,8 +47,8 @@ export class RMVVideo extends BaseVideo {
   private readrmv () {
     // Initialise local variables
     // int i,j,cur=0;
-    // unsigned char c,d;
-    // const char* header_1="*rmv";
+    let c, d
+    const header1 = '*rmv'
     // int fs;
     // int result_string_size; // Value gives string length starting at LEVEL in header
     // int version_info_size; // Value gives string length starting at Viennasweeper in header
@@ -65,26 +65,26 @@ export class RMVVideo extends BaseVideo {
     // int token_length;
     // int num_preflags;
     // int is_first_event=1;
-    //
-    // // Check first 4 bytes of header is *rmv
-    // for(i=0;i<4;++i) if(c=_fgetc(RMV)!=header_1[i]) error("No RMV header");
-    //
-    // // The getint2 function reads 2 bytes at a time
-    // // In legitimate videos byte 4=0 and byte 5=1, getint2 sum is thus 1
-    // if(getint2(RMV)!=1) error("Invalid video type");
-    //
-    // // The getint functions reads 4 bytes at a time
-    // fs=getint(RMV); // Gets byte 6-9
-    // result_string_size=getint2(RMV); // Gets bytes 10-11
-    // version_info_size=getint2(RMV); // Gets bytes 12-13
-    // player_info_size=getint2(RMV); // Gets bytes 14-15
-    // board_size=getint2(RMV); // Gets bytes 16-17
-    // preflags_size=getint2(RMV); // Gets bytes 18-19
-    // properties_size=getint2(RMV); // Gets bytes 20-21
-    // vid_size=getint(RMV); // Gets bytes 22-25
-    // cs_size=getint2(RMV); // Gets bytes 26-27
-    // _fgetc(RMV); // Gets byte 28 which is a newline
-    //
+
+    // Check first 4 bytes of header is *rmv
+    for (let i = 0; i < 4; ++i) if ((c = this.getChar()) !== header1[i]) this.error('No RMV header')
+
+    // The getint2 function reads 2 bytes at a time
+    // In legitimate videos byte 4=0 and byte 5=1, getint2 sum is thus 1
+    if (this.getInt2() !== 1) this.error('Invalid video type')
+
+    // The getint functions reads 4 bytes at a time
+    const fs = this.getInt() // Gets byte 6-9
+    const resultStringSize = this.getInt2() // Gets bytes 10-11
+    const versionInfoSize = this.getInt2() // Gets bytes 12-13
+    const playerInfoSize = this.getInt2() // Gets bytes 14-15
+    const boardSize = this.getInt2() // Gets bytes 16-17
+    const preflagsSize = this.getInt2() // Gets bytes 18-19
+    const propertiesSize = this.getInt2() // Gets bytes 20-21
+    const vidSize = this.getInt() // Gets bytes 22-25
+    const csSize = this.getInt2() // Gets bytes 26-27
+    this.getNum() // Gets byte 28 which is a newline
+
     // // Length of result_string_size starts 3 bytes before 'LEVEL' and ends on the '#' before Version
     // // Version 2.2 was first to have a full length header
     // // Earlier versions could have maximum header length of 35 bytes if Intermediate and 9999.99
@@ -137,7 +137,7 @@ export class RMVVideo extends BaseVideo {
     // _fgetc(RMV);
     //
     // // Check next two bytes to see if player entered Name
-    // num_player_info=getint2(RMV);
+    // num_player_info=this.getInt2();
     //
     // // Fetch Player fields (name, nick, country, token) if they exist
     // // These last 3 fields were defined in Viennasweeper 3.1 RC1
@@ -167,12 +167,12 @@ export class RMVVideo extends BaseVideo {
     // }
     //
     // // Throw away next 4 bytes
-    // getint(RMV);
+    // this.getInt();
     //
     // // Get board size and Mine details
     // w=_fgetc(RMV); // Next byte is w so 8, 9 or 1E
     // h=_fgetc(RMV); // Next byte is h so 8, 9 or 10
-    // m=getint2(RMV); // Next two bytes are number of mines
+    // m=this.getInt2(); // Next two bytes are number of mines
     //
     // // Fetch board layout and put in memory
     // board=(int*)malloc(sizeof(int)*w*h);
@@ -189,7 +189,7 @@ export class RMVVideo extends BaseVideo {
     // // Check number of flags placed before game started
     // if(preflags_size)
     // {
-    //   num_preflags=getint2(RMV);
+    //   num_preflags=this.getInt2();
     //   for(i=0;i<num_preflags;++i)
     //   {
     //     c=_fgetc(RMV);d=_fgetc(RMV);
@@ -225,7 +225,7 @@ export class RMVVideo extends BaseVideo {
     //   // Get next 4 bytes containing time of event
     //   if(!c)
     //   {
-    //     getint(RMV);i+=4;
+    //     this.getInt();i+=4;
     //   }
     //   // Get mouse event (3 bytes time, 1 wasted, 2 width, 2 height)
     //   else if(c<=7)
@@ -233,8 +233,8 @@ export class RMVVideo extends BaseVideo {
     //     i+=8;
     //     video[cur].time=getint3(RMV);
     //     _fgetc(RMV);
-    //     video[cur].x=getint2(RMV)-12;
-    //     video[cur].y=getint2(RMV)-56;
+    //     video[cur].x=this.getInt2()-12;
+    //     video[cur].y=this.getInt2()-56;
     //     cur++;
     //
     //     // Viennasweeper does not record clicks before timer starts

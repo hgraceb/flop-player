@@ -54,6 +54,30 @@ export abstract class BaseVideo {
   }
 
   /**
+   * 同时获取两个字节，并将位置标识符向后移动
+   * @throws {Error} 数据意外结尾
+   */
+  protected getInt2 () {
+    return this.getNum() * 256 + this.getNum()
+  }
+
+  /**
+   * 同时获取三个字节，并将位置标识符向后移动
+   * @throws {Error} 数据意外结尾
+   */
+  protected getInt3 () {
+    return this.getNum() * 65536 + this.getNum() * 256 + this.getNum()
+  }
+
+  /**
+   * 同时获取四个字节，并将位置标识符向后移动
+   * @throws {Error} 数据意外结尾
+   */
+  protected getInt () {
+    return this.getNum() * 65536 + this.getNum() * 16777216 + this.getNum() + this.getNum() * 256
+  }
+
+  /**
    * 获取下一个字符，并将位置标识符向后移动
    * @throws {Error} 数据意外结尾
    */

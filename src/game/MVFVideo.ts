@@ -117,25 +117,6 @@ export class MVFVideo extends BaseVideo {
     }
   }
 
-  private getInt2 () {
-    const c = []
-    c[0] = this.getNum()
-    c[1] = this.getNum()
-    // This code reads 2 bytes and puts them in a 4 byte int
-    // You cannot "add" bytes in the normal sense, instead you perform shift operations
-    // Multiplying by 256 is the same as shifting left by 1 byte (8 bits)
-    // The result is c[0] is moved to int byte 3 while c[1] stayes in int byte 4
-    return c[1] + c[0] * 256
-  }
-
-  private getInt3 () {
-    const c = []
-    c[0] = this.getNum()
-    c[1] = this.getNum()
-    c[2] = this.getNum()
-    return c[2] + c[1] * 256 + c[0] * 65536
-  }
-
   /**
    * Function to read board layout into memory
    */
