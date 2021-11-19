@@ -131,6 +131,13 @@ export abstract class BaseVideo {
     return this.mOffset
   }
 
+  /**
+   * 判断字符是否是十进制数字字符
+   */
+  protected isDigit (char: string) {
+    return char >= '0' && char <= '9'
+  }
+
   /** 获取游戏列数 */
   getWidth (): number {
     return this.mWidth
