@@ -39,7 +39,7 @@ controlBar:
 common:
   loading: 加载中...
   # 一般录像文件的大小都不会超过 5MB，可以先不用提示，我就不信你还真有这么大个录像 (っ °Д °;)っ
-  fileSelect: '请选择一个 avf/mvf/rawvf 文件'
+  fileSelect: '请选择一个 avf/mvf/rmv/rawvf 文件'
 
 # 错误信息
 error:

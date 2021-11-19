@@ -9,6 +9,7 @@ import { Parser } from '@/game/Parser'
 import { RawVideo } from '@/game/RawVideo'
 import { AVFVideo } from '@/game/AVFVideo'
 import { MVFVideo } from '@/game/MVFVideo'
+import { RMVVideo } from '@/game/RMVVideo'
 
 /**
  * Mutations 函数定义，使用类型推断的方式，可以快速找到函数的所有 Usages
@@ -104,6 +105,8 @@ export const mutations = {
         parser = new Parser(new AVFVideo(data))
       } else if (type === 'mvf') {
         parser = new Parser(new MVFVideo(data))
+      } else if (type === 'rmv') {
+        parser = new Parser(new RMVVideo(data))
       } else if (type === 'rawvf') {
         parser = new Parser(new RawVideo(data))
       } else {

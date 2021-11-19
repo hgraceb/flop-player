@@ -52,7 +52,10 @@ export default defineComponent({
       // store.dispatch('fetchUri', 'videos/mvf/2006_release_1.mvf')
       // store.dispatch('fetchUri', 'videos/mvf/2006_release_2.mvf')
       // store.dispatch('fetchUri', 'videos/mvf/2007_release_1.mvf')
-      store.dispatch('fetchUri', 'videos/mvf/2007_release_2.mvf')
+      // store.dispatch('fetchUri', 'videos/mvf/2007_release_2.mvf')
+      // store.dispatch('fetchUri', 'videos/rmv/beg.rmv')
+      // store.dispatch('fetchUri', 'videos/rmv/int.rmv')
+      store.dispatch('fetchUri', 'videos/rmv/exp.rmv')
     })
 
     return { loading, scale }
