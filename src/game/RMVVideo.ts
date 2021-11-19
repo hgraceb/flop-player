@@ -32,13 +32,13 @@ interface Event {
 }
 
 export class RMVVideo extends BaseVideo {
-  protected mWidth = -1
-  protected mHeight = -1
-  protected mMines = -1
-  protected mMarks = 0
-  protected mBoard: number[] = []
+  protected mWidth: number
+  protected mHeight: number
+  protected mMines: number
+  protected mMarks: number
+  protected mBoard: number[]
+  protected mPlayer: Uint8Array
   protected mEvents: VideoEvent[] = []
-  protected mPlayer: Uint8Array = new Uint8Array()
 
   // Mode
   private mode = 0
@@ -98,6 +98,30 @@ export class RMVVideo extends BaseVideo {
     // 解析 RMV 录像
     if (!this.readrmv()) {
       this.error('Invalid RMV')
+    }
+    // 设置游戏基本信息
+    this.mWidth = this.w
+    this.mHeight = this.h
+    this.mMines = this.m
+    this.mMarks = this.qm
+    this.mBoard = this.board
+    // 设置玩家名称
+    this.mPlayer = new Uint8Array(this.name)
+    // 设置游戏事件
+    const eventNames: ('mv' | 'lc' | 'lr' | 'rc' | 'rr' | 'mc' | 'mr')[] = ['mv', 'lc', 'lr', 'rc', 'rr', 'mc', 'mr']
+    for (let i = 0; i < this.size; ++i) {
+      const e = this.video[i]
+      // Mouse event
+      if (e.event >= 1 && e.event <= 7) {
+        this.mEvents.push({
+          time: e.time,
+          mouse: eventNames[e.event - 1],
+          column: Math.floor(e.x / this.squareSize),
+          row: Math.floor(e.y / this.squareSize),
+          x: e.x,
+          y: e.y
+        })
+      }
     }
   }
 
