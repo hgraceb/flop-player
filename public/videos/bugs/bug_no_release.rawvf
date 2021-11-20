@@ -1,0 +1,675 @@
+RawVF_Version: Rev3
+Program: FreeSweeper
+Version: R10
+Player: 在游戏区域外释放按键没有还原方块样式
+Timestamp: 2021-11-20T22:42:35
+Level: beginner
+Width: 8
+Height: 8
+Mines: 10
+Skin: default
+SquareSize: 16
+Mode: upk
+Board:
+0*0*0*0*
+000*0*0*
+00000*0*
+0000000*
+00000000
+00000000
+00000000
+00000000
+0.000 start
+0.000 lc (10 7)
+0.000 lr (10 7)
+number1 1 1
+0.037 mv (10 8)
+0.040 mv (11 8)
+0.064 mv (12 8)
+0.068 mv (13 8)
+0.074 mv (14 8)
+0.077 mv (15 8)
+0.082 mv (16 8)
+0.087 mv (17 8)
+0.092 mv (18 8)
+0.097 mv (19 8)
+0.098 mv (19 9)
+0.099 mv (20 9)
+0.105 mv (21 9)
+0.113 mv (22 9)
+0.121 mv (23 9)
+0.126 mv (24 9)
+0.138 mv (25 9)
+0.238 lc (25 9)
+pressed 2 1
+0.311 mv (25 8)
+0.339 mv (25 7)
+0.346 mv (26 7)
+0.347 mv (26 6)
+0.351 mv (26 5)
+0.357 mv (26 4)
+0.363 mv (26 3)
+0.370 mv (26 2)
+0.373 mv (26 1)
+0.380 mv (26 0)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.387 mv (26 -1)
+closed 2 1
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.395 mv (26 -2)
+closed 2 1
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.398 mv (26 -3)
+closed 2 1
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.404 mv (25 -4)
+closed 2 1
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.409 mv (25 -5)
+closed 2 1
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.415 mv (25 -6)
+closed 2 1
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.417 mv (25 -7)
+closed 2 1
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.422 mv (25 -8)
+closed 2 1
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.427 mv (25 -9)
+closed 2 1
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.436 mv (25 -10)
+closed 2 1
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.447 mv (25 -11)
+closed 2 1
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.578 mv (25 -10)
+closed 2 1
+0.657 mv (25 -10)
+closed 2 1
+0.657 lr (25 -10)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.717 mv (25 -9)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.733 mv (26 -9)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.736 mv (26 -8)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.738 mv (27 -8)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.741 mv (28 -8)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.745 mv (29 -8)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.746 mv (29 -7)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.749 mv (30 -7)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.753 mv (31 -7)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.754 mv (31 -6)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.755 mv (32 -6)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.758 mv (32 -5)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.760 mv (33 -5)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.765 mv (34 -5)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.766 mv (34 -4)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.771 mv (35 -4)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.774 mv (36 -4)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.775 mv (36 -3)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.780 mv (37 -3)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.784 mv (37 -2)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.787 mv (38 -2)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.789 mv (38 -1)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.794 mv (39 -1)
+closed 1 2
+closed 2 1
+closed 2 2
+closed 3 1
+closed 3 2
+0.798 mv (40 -1)
+0.802 mv (40 0)
+0.811 mv (41 0)
+0.825 mv (41 1)
+0.873 mv (41 2)
+0.898 mv (41 3)
+0.986 mv (41 4)
+1.013 mv (41 5)
+1.033 lc (41 5)
+pressed 3 1
+1.090 lr (41 5)
+number3 3 1
+1.104 mv (41 6)
+1.111 mv (41 7)
+1.117 mv (41 8)
+1.120 mv (40 8)
+1.122 mv (40 9)
+1.127 mv (40 10)
+1.129 mv (40 11)
+1.135 mv (40 12)
+1.138 mv (39 12)
+1.139 mv (39 13)
+1.143 mv (38 13)
+1.144 mv (38 14)
+1.146 mv (38 15)
+1.152 mv (38 16)
+1.154 mv (37 16)
+1.158 mv (37 17)
+1.166 mv (37 18)
+1.168 mv (36 18)
+1.175 mv (36 19)
+1.182 mv (36 20)
+1.201 mv (36 21)
+1.226 lc (36 21)
+pressed 3 2
+1.292 mv (36 22)
+1.297 lr (36 22)
+number3 3 2
+1.312 mv (36 23)
+1.316 mv (36 24)
+1.325 mv (36 25)
+1.338 mv (36 26)
+1.348 mv (36 27)
+1.354 mv (36 28)
+1.370 mv (36 29)
+1.382 mv (36 30)
+1.386 mv (37 30)
+1.394 mv (38 30)
+1.397 mv (38 31)
+1.400 mv (39 31)
+1.402 mv (40 31)
+1.406 mv (40 32)
+1.408 mv (41 32)
+1.416 mv (42 32)
+1.424 mv (42 31)
+1.431 mv (42 30)
+1.434 mv (43 30)
+1.439 mv (43 29)
+1.443 mv (44 29)
+1.445 mv (44 28)
+1.448 mv (44 27)
+1.450 mv (44 26)
+1.455 mv (45 25)
+1.461 mv (45 24)
+1.467 mv (45 23)
+1.469 mv (46 23)
+1.472 mv (46 22)
+1.480 mv (47 21)
+1.485 mv (48 21)
+1.489 mv (48 20)
+1.495 mv (49 20)
+1.497 mv (49 19)
+1.502 mv (49 18)
+1.504 mv (50 18)
+1.512 mv (51 18)
+1.514 mv (51 17)
+1.519 mv (52 17)
+1.524 mv (53 16)
+1.535 mv (54 16)
+1.538 mv (54 15)
+1.552 mv (55 15)
+1.562 mv (55 14)
+1.567 mv (56 14)
+1.572 mv (57 14)
+1.580 mv (57 13)
+1.581 mv (58 13)
+1.592 mv (59 13)
+1.597 mv (59 12)
+1.600 mv (60 12)
+1.604 mv (61 12)
+1.613 mv (61 11)
+1.614 mv (62 11)
+1.622 mv (63 11)
+1.627 mv (63 10)
+1.630 mv (64 10)
+1.633 mv (65 10)
+1.635 mv (65 9)
+1.641 mv (66 9)
+1.649 mv (67 8)
+1.658 mv (68 8)
+1.662 mv (69 7)
+1.673 mv (70 7)
+1.687 mv (70 6)
+1.709 lc (70 6)
+pressed 5 1
+1.778 lr (70 6)
+number4 5 1
+1.803 mv (70 7)
+1.810 mv (70 8)
+1.816 mv (70 9)
+1.820 mv (70 10)
+1.822 mv (70 11)
+1.826 mv (70 12)
+1.831 mv (70 13)
+1.835 mv (70 14)
+1.836 mv (70 15)
+1.837 mv (71 15)
+1.839 mv (71 16)
+1.842 mv (71 17)
+1.846 mv (71 18)
+1.852 mv (71 19)
+1.854 mv (71 20)
+1.861 mv (71 21)
+1.870 mv (71 22)
+1.880 mv (71 23)
+1.886 mv (71 24)
+1.898 mv (71 25)
+1.901 lc (71 25)
+pressed 5 2
+1.978 lr (71 25)
+number5 5 2
+2.004 mv (71 26)
+2.011 mv (71 27)
+2.014 mv (71 28)
+2.020 mv (71 29)
+2.026 mv (71 30)
+2.032 mv (71 31)
+2.035 mv (71 32)
+2.043 mv (71 33)
+2.052 mv (71 34)
+2.062 mv (71 35)
+2.067 mv (71 36)
+2.077 mv (71 37)
+2.088 mv (71 38)
+2.097 mv (71 39)
+2.103 mv (71 40)
+2.122 mv (71 41)
+2.138 lc (71 41)
+pressed 5 3
+2.197 mv (71 42)
+2.209 lr (71 42)
+number3 5 3
+2.216 mv (71 43)
+2.221 mv (71 44)
+2.228 mv (72 44)
+2.229 mv (72 45)
+2.235 mv (73 45)
+2.237 mv (73 46)
+2.244 mv (74 46)
+2.247 mv (74 47)
+2.252 mv (75 47)
+2.260 mv (76 47)
+2.264 mv (77 47)
+2.266 mv (77 48)
+2.274 mv (78 48)
+2.288 mv (79 48)
+2.293 mv (79 47)
+2.295 mv (80 47)
+2.298 mv (81 46)
+2.304 mv (82 46)
+2.306 mv (82 45)
+2.310 mv (83 45)
+2.312 mv (83 44)
+2.315 mv (84 44)
+2.317 mv (84 43)
+2.319 mv (84 42)
+2.321 mv (85 42)
+2.322 mv (86 42)
+2.324 mv (86 41)
+2.327 mv (87 41)
+2.329 mv (87 40)
+2.332 mv (88 40)
+2.335 mv (88 39)
+2.335 mv (88 38)
+2.336 mv (89 38)
+2.339 mv (90 38)
+2.340 mv (90 37)
+2.344 mv (91 37)
+2.345 mv (91 36)
+2.350 mv (92 35)
+2.351 mv (92 34)
+2.356 mv (93 34)
+2.357 mv (93 33)
+2.359 mv (94 33)
+2.364 mv (94 32)
+2.369 mv (95 32)
+2.371 mv (95 31)
+2.376 mv (95 30)
+2.377 mv (96 30)
+2.383 mv (96 29)
+2.387 mv (97 29)
+2.391 mv (98 28)
+2.399 mv (98 27)
+2.403 mv (99 27)
+2.404 mv (99 26)
+2.414 mv (99 25)
+2.418 mv (100 25)
+2.425 mv (100 24)
+2.434 mv (101 24)
+2.436 mv (101 23)
+2.441 mv (102 23)
+2.442 mv (102 22)
+2.450 mv (102 21)
+2.455 mv (103 21)
+2.458 mv (103 20)
+2.465 mv (103 19)
+2.468 mv (103 18)
+2.469 mv (104 18)
+2.475 mv (104 17)
+2.479 mv (104 16)
+2.483 mv (105 15)
+2.489 mv (105 14)
+2.492 mv (105 13)
+2.494 mv (106 13)
+2.496 mv (106 12)
+2.502 mv (106 11)
+2.508 mv (106 10)
+2.511 mv (106 9)
+2.554 lc (106 9)
+pressed 7 1
+2.563 mv (106 8)
+2.624 lr (106 8)
+number4 7 1
+2.634 mv (106 9)
+2.649 mv (106 10)
+2.653 mv (106 11)
+2.658 mv (106 12)
+2.662 mv (106 13)
+2.663 mv (107 13)
+2.666 mv (107 14)
+2.668 mv (107 15)
+2.672 mv (107 16)
+2.676 mv (107 17)
+2.679 mv (107 18)
+2.683 mv (107 19)
+2.685 mv (107 20)
+2.688 mv (107 21)
+2.692 mv (107 22)
+2.696 mv (107 23)
+2.699 mv (107 24)
+2.704 mv (107 25)
+2.710 mv (108 26)
+2.717 mv (108 27)
+2.723 mv (108 28)
+2.742 lc (108 28)
+pressed 7 2
+2.752 mv (108 29)
+2.816 lr (108 29)
+number6 7 2
+2.834 mv (108 30)
+2.842 mv (108 31)
+2.846 mv (108 32)
+2.854 mv (108 33)
+2.861 mv (108 34)
+2.868 mv (108 35)
+2.872 mv (108 36)
+2.880 mv (108 37)
+2.891 mv (108 38)
+2.912 mv (108 39)
+2.913 lc (108 39)
+pressed 7 3
+2.920 mv (108 40)
+2.975 lr (108 40)
+number5 7 3
+2.976 mv (108 41)
+2.988 mv (108 42)
+2.995 mv (108 43)
+2.998 mv (108 44)
+3.004 mv (108 45)
+3.009 mv (108 46)
+3.013 mv (108 47)
+3.015 mv (108 48)
+3.018 mv (108 49)
+3.021 mv (108 50)
+3.024 mv (107 50)
+3.026 mv (107 51)
+3.030 mv (107 52)
+3.032 mv (107 53)
+3.034 mv (107 54)
+3.040 mv (107 55)
+3.046 mv (107 56)
+3.051 mv (107 57)
+3.057 mv (107 58)
+3.060 lc (107 58)
+pressed 7 4
+3.064 mv (107 59)
+3.076 mv (107 60)
+3.089 mv (107 61)
+3.117 mv (107 62)
+3.130 lr (107 62)
+number3 7 4
+3.133 mv (107 63)
+3.141 mv (107 64)
+3.148 mv (107 65)
+3.158 mv (107 66)
+3.168 mv (107 67)
+3.176 mv (107 68)
+3.179 mv (107 69)
+3.187 mv (107 70)
+3.194 mv (107 71)
+3.200 mv (107 72)
+3.204 mv (107 73)
+3.212 mv (107 74)
+3.214 lc (107 74)
+pressed 7 5
+3.219 mv (107 75)
+3.234 mv (107 76)
+3.243 mv (107 77)
+3.273 mv (107 78)
+3.285 lr (107 78)
+number1 7 5
+3.297 mv (107 79)
+3.310 mv (107 80)
+3.315 mv (107 81)
+3.324 mv (107 82)
+3.331 mv (107 83)
+3.337 mv (107 84)
+3.343 mv (107 85)
+3.346 mv (107 86)
+3.354 mv (107 87)
+3.358 lc (107 87)
+pressed 7 6
+3.360 mv (107 88)
+3.369 mv (107 89)
+3.375 mv (107 90)
+3.410 mv (107 91)
+3.424 lr (107 91)
+number0 7 6
+number0 6 5
+number0 6 6
+number0 6 7
+number0 7 7
+number1 8 5
+number0 8 6
+number0 8 7
+number1 5 4
+number0 5 5
+number0 5 6
+number1 6 4
+number0 5 7
+number0 5 8
+number0 6 8
+number0 7 8
+number0 8 8
+number0 4 4
+number0 4 5
+number0 4 6
+number0 4 7
+number0 4 8
+number1 3 3
+number0 3 4
+number0 3 5
+number1 4 3
+number0 3 6
+number0 3 7
+number0 3 8
+number0 2 3
+number0 2 4
+number0 2 5
+number0 2 6
+number0 2 7
+number0 2 8
+number1 1 2
+number0 1 3
+number0 1 4
+number1 2 2
+number0 1 5
+number0 1 6
+number0 1 7
+number0 1 8
+3.424 won
+flag 2 1
+flag 4 1
+flag 4 2
+flag 6 1
+flag 6 2
+flag 6 3
+flag 8 1
+flag 8 2
+flag 8 3
+flag 8 4
