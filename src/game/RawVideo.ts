@@ -50,6 +50,9 @@ export class RawVideo extends BaseVideo {
       } else if (option === 'marks' || option === 'QuestionMarks'.toLowerCase()) {
         if (value !== 'on' && value !== 'off') this.error(`Invalid question marks: "${value}"`)
         this.mMarks = value === 'on' ? 1 : 0
+      } else if (option === 'level') {
+        // Marathon is a Viennasweeper mode used in some tournaments
+        if (value === 'marathon') this.error('This program doesn\'t support marathon RawVF')
       } else if (option === 'board') {
         break
       }
