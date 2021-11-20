@@ -57,7 +57,7 @@ export abstract class BaseVideo {
    * 同时获取两个字节，并将位置标识符向后移动
    * @throws {Error} 数据意外结尾
    */
-  protected getInt2 () {
+  protected getInt2 (): number {
     return this.getNum() * 256 + this.getNum()
   }
 
@@ -65,7 +65,7 @@ export abstract class BaseVideo {
    * 同时获取三个字节，并将位置标识符向后移动
    * @throws {Error} 数据意外结尾
    */
-  protected getInt3 () {
+  protected getInt3 (): number {
     return this.getNum() * 65536 + this.getNum() * 256 + this.getNum()
   }
 
@@ -73,7 +73,7 @@ export abstract class BaseVideo {
    * 同时获取四个字节，并将位置标识符向后移动
    * @throws {Error} 数据意外结尾
    */
-  protected getInt () {
+  protected getInt (): number {
     return this.getNum() * 65536 + this.getNum() * 16777216 + this.getNum() + this.getNum() * 256
   }
 
@@ -110,7 +110,7 @@ export abstract class BaseVideo {
    * @param offset 相对 whence 的偏移量，以字节为单位
    * @param whence 开始添加偏移 offset 的位置
    */
-  protected seek (offset: number, whence: 'SEEK_SET' | 'SEEK_CUR' | 'SEEK_END') {
+  protected seek (offset: number, whence: 'SEEK_SET' | 'SEEK_CUR' | 'SEEK_END'): void {
     switch (whence) {
       case 'SEEK_SET':
         this.mOffset = offset
@@ -127,14 +127,14 @@ export abstract class BaseVideo {
   /**
    * 返回位置标识符的当前值
    */
-  protected getOffset () {
+  protected getOffset (): number {
     return this.mOffset
   }
 
   /**
    * 判断字符是否是十进制数字字符
    */
-  protected isDigit (char: string) {
+  protected isDigit (char: string): boolean {
     return char >= '0' && char <= '9'
   }
 

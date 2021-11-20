@@ -101,7 +101,7 @@ export class RawVideo extends BaseVideo {
       if (lineArr === null) break
       const lineStr = textDecoder.decode(lineArr).trim()
       // 如果首字符不是数字或者负号，则认为不是鼠标事件
-      if (!(lineStr[0] >= '0' && lineStr[0] <= '9') && lineStr[0] !== '-') continue
+      if (!this.isDigit(lineStr[0]) && lineStr[0] !== '-') continue
       str = lineStr
       const event = <VideoEvent>{}
       // 事件时间是小数格式，需要进行精确运算，否则可能会出现精度问题，如：1.001 * 1000 === 1000.9999999999999

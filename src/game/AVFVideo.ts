@@ -31,17 +31,16 @@
 
 import { BaseVideo, VideoEvent } from '@/game/BaseVideo'
 
-// 录像事件
-class Event {
+interface Event {
   // Seconds
-  sec = 0
+  sec: number
   // Hundredths
-  hun = 0
+  hun: number
   // Thousandths
-  ths = 0
-  x = 0
-  y = 0
-  mouse = 0
+  ths: number
+  x: number
+  y: number
+  mouse: number
 }
 
 export class AVFVideo extends BaseVideo {

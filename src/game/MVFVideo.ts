@@ -21,17 +21,16 @@
 
 import { BaseVideo, VideoEvent } from '@/game/BaseVideo'
 
-// 录像事件
-class Event {
-  sec = 0
-  ths = 0
-  x = 0
-  y = 0
-  lb = 0
-  rb = 0
-  mb = 0
+interface Event {
+  sec: number
+  ths: number
+  x: number
+  y: number
+  lb: number
+  rb: number
+  mb: number
   // Versions before 0.97 have an extra byte in each event
-  weirdnessBit = 0
+  weirdnessBit: number
 }
 
 export class MVFVideo extends BaseVideo {
@@ -429,11 +428,11 @@ export class MVFVideo extends BaseVideo {
 
       // Check if 20 byte checksum is bookended by zero
       this.seek(filesize - 1, 'SEEK_SET')
-      const checksumA = this.getNum()
+      const checksumA = this.getChar()
       this.seek(filesize - 22, 'SEEK_SET')
-      const checksumB = this.getNum()
+      const checksumB = this.getChar()
 
-      if ((checksumA < '0'.charCodeAt(0) || checksumA > '9'.charCodeAt(0)) && (checksumB < '0'.charCodeAt(0) || checksumB > '9'.charCodeAt(0))) {
+      if (!this.isDigit(checksumA) && !this.isDigit(checksumB)) {
         this.version = '0.96 beta (or earlier)'
 
         // Set pointer to get Time later
