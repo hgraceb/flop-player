@@ -99,16 +99,15 @@ export const mutations = {
   },
   /** 接收并处理录像数据 */
   receiveVideo: (state: State, { type, data }: { type: string, data: ArrayBuffer }): void => {
-    let parser
     try {
       if (type === 'avf') {
-        parser = new Parser(new AVFVideo(data))
+        state.videoParser = new Parser(new AVFVideo(data))
       } else if (type === 'mvf') {
-        parser = new Parser(new MVFVideo(data))
+        state.videoParser = new Parser(new MVFVideo(data))
       } else if (type === 'rmv') {
-        parser = new Parser(new RMVVideo(data))
+        state.videoParser = new Parser(new RMVVideo(data))
       } else if (type === 'rawvf') {
-        parser = new Parser(new RawVideo(data))
+        state.videoParser = new Parser(new RawVideo(data))
       } else {
         // 不支持的录像类型
         message.error(`${i18n.global.t('error.videoParse')}${i18n.global.t('error.fileUnsupported')}`, 5)
@@ -122,7 +121,7 @@ export const mutations = {
       // 录像解析结束后取消页面的加载状态
       state.loading = false
     }
-    store.commit('initGame', parser)
+    store.commit('initGame', state.videoParser)
     store.commit('replayVideo')
   },
   /** 设置页面加载状态 */
