@@ -1,9 +1,13 @@
 import { GameEvent } from '@/game'
 import { ImgCellType, ImgFaceType } from '@/util/image'
 import { storage, storageDefault } from '@/store/plugins'
-import { Cell } from '@/game/Parser'
+import { Cell, Parser } from '@/game/Parser'
 
 export type State = typeof storageDefault & {
+  // 录像文件解析结果
+  videoParser: Parser | undefined
+  // 玩家操作解析结果
+  userParser: Parser | undefined
   // 列数
   width: number
   // 行数
@@ -32,10 +36,6 @@ export type State = typeof storageDefault & {
   videoAnimationId: number
   // 笑脸状态
   faceStatus: ImgFaceType
-  // 是否游戏结束
-  isGameOver: boolean
-  // 游戏级别，1-初级，2-中级，3-高级，4-自定义
-  gameLevel: 1 | 2 | 3 | 4
   // 游戏事件索引
   gameEventIndex: number
   // 游戏开始的时间（毫秒）, 值为负数时表示还未开始
@@ -67,6 +67,8 @@ export const state: State = {
   isShowOpening: storage.value.isShowOpening ?? storageDefault.isShowOpening,
   /** 不进行本地缓存的变量 */
   // 游戏原始信息
+  videoParser: undefined,
+  userParser: undefined,
   width: 8,
   height: 8,
   mines: 10,
@@ -82,8 +84,6 @@ export const state: State = {
   gameImgBoard: [],
   videoAnimationId: 0,
   faceStatus: 'face-normal',
-  isGameOver: false,
-  gameLevel: 1,
   gameEventIndex: 0,
   gameStartTime: 0.0,
   gameElapsedTime: 0.0,
