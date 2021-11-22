@@ -6,8 +6,8 @@ import { Cell, Parser } from '@/game/Parser'
 export type State = typeof storageDefault & {
   // 游戏类型：Video = 播放录像，UPK = 重开
   gameType: 'Video' | 'UPK'
-  // 游戏是否已经开始，此状态位只针对 UPK 模式下玩家进行了标雷之类的操作但是还没有打开任何方块的情况
-  gameStarted: boolean
+  // 第一个打开方块游戏事件对应的索引，用于判断是否需要开始计时，值为负数则代表当前还没有方块打开事件
+  firstOpenIndex: number
   // 录像文件解析结果
   videoParser: Parser | undefined
   // 玩家操作解析结果
@@ -72,7 +72,7 @@ export const state: State = {
   /** 不进行本地缓存的变量 */
   // 游戏原始信息
   gameType: 'Video',
-  gameStarted: false,
+  firstOpenIndex: -1,
   videoParser: undefined,
   userParser: undefined,
   width: 8,

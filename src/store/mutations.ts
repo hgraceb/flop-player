@@ -57,8 +57,8 @@ export const mutations = {
   },
   /** 设置游戏开始的时间（毫秒） */
   setGameStartTime: (state: State, time: number): void => {
-    // 游戏还没开始则不进行计时，只模拟游戏事件，如：Flag
-    if (state.gameStarted) {
+    // 还没有方块被打开时不进行计时，只模拟游戏事件，如：Flag
+    if (state.firstOpenIndex >= 0) {
       state.gameStartTime = time
     }
   },
@@ -140,18 +140,24 @@ export const mutations = {
   },
   /** 模拟上一个游戏事件 */
   performPreviousEvent: (state: State): void => {
-    // 根据事件索引获取游戏事件，并更新事件索引
-    const event = state.gameEvents[--state.gameEventIndex]
+    // 保存并更新当前事件索引
+    const eventIndex = --state.gameEventIndex
+    // 根据事件索引获取游戏事件
+    const event = state.gameEvents[eventIndex]
     if (event.name === 'Solved3BV') {
       return
     }
-    // 根据坐标获取索引
-    const index = event.x + event.y * state.width
+    // 根据坐标获取图片索引
+    const imgIndex = event.x + event.y * state.width
     // 根据快照还原图片状态
-    state.gameImgBoard[index] = event.snapshot!.cellType
+    state.gameImgBoard[imgIndex] = event.snapshot!.cellType
     // 根据快照还原笑脸状态
     state.faceStatus = event.snapshot!.faceStatus
     switch (event.name) {
+      case 'Open':
+        // 重置第一个打开方块游戏事件对应的索引，如果不重置的话其实问题也不大，因为只有录像才会回放，而录像是可以直接进行计时的
+        state.firstOpenIndex = state.firstOpenIndex !== eventIndex ? state.firstOpenIndex : -1
+        break
       case 'LeftClicksAdded':
         state.gameLeftPoints.pop()
         break
@@ -174,43 +180,45 @@ export const mutations = {
   },
   /** 模拟下一个游戏事件 */
   performNextEvent: (state: State): void => {
-    // 根据事件索引获取游戏事件，并更新事件索引
-    const event = state.gameEvents[state.gameEventIndex++]
+    // 保存并更新当前事件索引
+    const eventIndex = state.gameEventIndex++
+    // 根据事件索引获取游戏事件
+    const event = state.gameEvents[eventIndex]
     if (event.name === 'Solved3BV') {
       store.commit('checkVideoFinished')
       return
     }
-    // 根据坐标获取索引
-    const index = event.x + event.y * state.width
+    // 根据坐标获取图片索引
+    const imgIndex = event.x + event.y * state.width
     // 在更新前保存快照
     event.snapshot = {
-      cellType: state.gameImgBoard[index],
+      cellType: state.gameImgBoard[imgIndex],
       faceStatus: state.faceStatus
     }
     switch (event.name) {
       case 'Flag':
-        state.gameImgBoard[index] = 'cell-flag'
+        state.gameImgBoard[imgIndex] = 'cell-flag'
         break
       case 'QuestionMark':
-        state.gameImgBoard[index] = 'cell-question'
+        state.gameImgBoard[imgIndex] = 'cell-question'
         break
       case 'RemoveQuestionMark':
-        state.gameImgBoard[index] = 'cell-normal'
+        state.gameImgBoard[imgIndex] = 'cell-normal'
         break
       case 'RemoveFlag':
-        state.gameImgBoard[index] = 'cell-normal'
+        state.gameImgBoard[imgIndex] = 'cell-normal'
         break
       case 'Press':
-        state.gameImgBoard[index] = 'cell-press'
+        state.gameImgBoard[imgIndex] = 'cell-press'
         break
       case 'Release':
-        state.gameImgBoard[index] = 'cell-normal'
+        state.gameImgBoard[imgIndex] = 'cell-normal'
         break
       case 'Open':
-        // 直到有方块被打开才开始游戏计时
-        state.gameStarted = true
+        // 记录第一个打开方块游戏事件对应的索引
+        state.firstOpenIndex = state.firstOpenIndex >= 0 ? state.firstOpenIndex : eventIndex
         // event.number === -1 不能作为游戏结束的标识，因为可能有多个雷被打开的情况
-        state.gameImgBoard[index] = event.number !== -1 ? ('cell-number-' + event.number) as ImgCellType : 'cell-mine-bomb'
+        state.gameImgBoard[imgIndex] = event.number !== -1 ? ('cell-number-' + event.number) as ImgCellType : 'cell-mine-bomb'
         break
       case 'ToggleQuestionMarkSetting':
         break
@@ -269,9 +277,7 @@ export const mutations = {
     state.gameLeftPoints = []
     state.gameRightPoints = []
     state.gameDoublePoints = []
-    // 重置录像参数的时候重置游戏开始状态
-    // TODO 虽然可以不考虑录像回放的情况，但以防万一还是可以加个事件类型用于判断是否是第一个打开的方块，如：FirstOpen，在录像回放时还原游戏开始状态
-    state.gameStarted = false
+    state.firstOpenIndex = -1
   },
   /** 重新播放游戏录像，TODO 进行函数节流处理 */
   replayVideo: (): void => {
