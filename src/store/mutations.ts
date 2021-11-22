@@ -269,7 +269,8 @@ export const mutations = {
     state.gameLeftPoints = []
     state.gameRightPoints = []
     state.gameDoublePoints = []
-    // 重置录像参数的时候重置游戏开始状态即可，不需要考虑调整录像进度的情况
+    // 重置录像参数的时候重置游戏开始状态
+    // TODO 虽然可以不考虑录像回放的情况，但以防万一还是可以加个事件类型用于判断是否是第一个打开的方块，如：FirstOpen，在录像回放时还原游戏开始状态
     state.gameStarted = false
   },
   /** 重新播放游戏录像，TODO 进行函数节流处理 */
