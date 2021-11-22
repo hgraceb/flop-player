@@ -134,24 +134,6 @@ export const mutations = {
     // 如果页面处于加载状态则暂停录像播放
     if (state.loading) store.commit('setVideoPaused')
   },
-  /** 重开游戏，TODO 删除测试代码 */
-  upk: (state: State): void => {
-    if (state.videoParser) {
-      state.gameType = 'UPK'
-      state.userParser = state.videoParser
-      store.commit('initGame', state.userParser)
-      state.gameEvents = []
-      const interval = setInterval(() => {
-        if (state.videoParser) {
-          state.gameEvents.push(state.videoParser.getGameEvents()[state.gameEvents.length])
-          if (state.gameEvents.length === state.videoParser.getGameEvents().length) {
-            clearInterval(interval)
-          }
-        }
-      }, 100)
-      store.commit('replayVideo')
-    }
-  },
   /** 暂停录像播放 */
   setVideoPaused: (state: State): void => {
     state.videoAnimationId = 0
@@ -290,8 +272,8 @@ export const mutations = {
       }
     }
   },
-  /** 重置录像参数 */
-  resetVideo: (state: State): void => {
+  /** 重置游戏参数 */
+  resetGame: (state: State): void => {
     state.gameImgBoard = Array.from(Array(state.width * state.height), () => 'cell-normal')
     state.gameElapsedTime = 0.0
     state.gameEventIndex = 0
@@ -302,10 +284,36 @@ export const mutations = {
     state.gameDoublePoints = []
     state.firstOpenIndex = -1
   },
+  /** 重开游戏，TODO 删除测试代码 */
+  upk: (state: State): void => {
+    if (state.videoParser) {
+      state.userParser = state.videoParser
+      store.commit('initGame', state.userParser)
+      state.gameEvents = []
+      const interval = setInterval(() => {
+        if (state.videoParser) {
+          state.gameEvents.push(state.videoParser.getGameEvents()[state.gameEvents.length])
+          if (state.gameEvents.length === state.videoParser.getGameEvents().length) {
+            clearInterval(interval)
+          }
+        }
+      }, 100)
+      // 设置游戏类型
+      state.gameType = 'UPK'
+      // 重置变量
+      store.commit('resetGame')
+      // 播放录像
+      store.commit('playVideo')
+    }
+  },
   /** 重新播放游戏录像，TODO 进行函数节流处理 */
-  replayVideo: (): void => {
+  replayVideo: (state: State): void => {
+    if (!state.videoParser) return
+    state.gameEvents = state.videoParser.getGameEvents()
+    // 设置游戏类型
+    state.gameType = 'Video'
     // 重置变量
-    store.commit('resetVideo')
+    store.commit('resetGame')
     // 播放录像
     store.commit('playVideo')
   },
@@ -339,7 +347,7 @@ const EmptyPayloadFunction = [
   'setVideoPaused',
   'performPreviousEvent',
   'performNextEvent',
-  'resetVideo',
+  'resetGame',
   'replayVideo',
   'playVideo',
   'pauseVideo'

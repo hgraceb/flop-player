@@ -8,7 +8,7 @@ export type State = typeof storageDefault & {
   gameType: 'Video' | 'UPK'
   // 第一个打开方块游戏事件对应的索引，用于判断是否需要开始计时，值为负数则代表当前还没有方块打开事件
   firstOpenIndex: number
-  // 录像文件解析结果
+  // 录像文件解析结果，TODO 添加默认实现，避免需要一直判空
   videoParser: Parser | undefined
   // 玩家操作解析结果
   userParser: Parser | undefined
