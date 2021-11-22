@@ -57,7 +57,10 @@ export const mutations = {
   },
   /** 设置游戏开始的时间（毫秒） */
   setGameStartTime: (state: State, time: number): void => {
-    state.gameStartTime = time
+    // 游戏还没开始则不进行计时，只模拟游戏事件，如：Flag
+    if (state.gameStarted) {
+      state.gameStartTime = time
+    }
   },
   /** 设置游戏速度 */
   setGameSpeed: (state: State, speed: number): void => {
@@ -68,7 +71,8 @@ export const mutations = {
   },
   /** 设置游戏经过的时间（毫秒），拖动控制条调用此处时要进行节流处理 */
   setGameElapsedTime: (state: State, time: number): void => {
-    if (state.gameElapsedTime < time) {
+    // 当游戏经过的时间小于等于设置的时间时，遍历模拟下一个游戏事件，要判断等于的情况是因为游戏经过的时间可能是 0 ms，如：UPK 模式下还没有方块被打开，即游戏还未正式开始时
+    if (state.gameElapsedTime <= time) {
       state.gameElapsedTime = time
       while (state.gameEventIndex < state.gameEvents.length && state.gameElapsedTime >= state.gameEvents[state.gameEventIndex].time) {
         store.commit('performNextEvent')
@@ -203,6 +207,8 @@ export const mutations = {
         state.gameImgBoard[index] = 'cell-normal'
         break
       case 'Open':
+        // 直到有方块被打开才开始游戏计时
+        state.gameStarted = true
         // event.number === -1 不能作为游戏结束的标识，因为可能有多个雷被打开的情况
         state.gameImgBoard[index] = event.number !== -1 ? ('cell-number-' + event.number) as ImgCellType : 'cell-mine-bomb'
         break
@@ -263,6 +269,8 @@ export const mutations = {
     state.gameLeftPoints = []
     state.gameRightPoints = []
     state.gameDoublePoints = []
+    // 重置录像参数的时候重置游戏开始状态即可，不需要考虑调整录像进度的情况
+    state.gameStarted = false
   },
   /** 重新播放游戏录像，TODO 进行函数节流处理 */
   replayVideo: (): void => {
