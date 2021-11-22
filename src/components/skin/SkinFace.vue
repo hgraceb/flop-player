@@ -3,6 +3,7 @@
     :name="faceStatus"
     :translate-x="translateX"
     :translate-y="translateY"
+    @click="handlerClick"
   />
 </template>
 
@@ -23,7 +24,11 @@ export default defineComponent({
     const translateY = (GAME_TOP_UPPER.height + 4) * SVG_SCALE
     // 笑脸状态
     const faceStatus = computed(() => store.state.faceStatus)
-    return { translateX, translateY, faceStatus }
+    // 笑脸点击事件处理，TODO 笑脸点击动画处理、点击顶部横条相当于点击笑脸
+    const handlerClick = () => {
+      store.commit('upk')
+    }
+    return { translateX, translateY, faceStatus, handlerClick }
   }
 })
 </script>

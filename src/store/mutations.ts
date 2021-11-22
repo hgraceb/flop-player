@@ -134,6 +134,24 @@ export const mutations = {
     // 如果页面处于加载状态则暂停录像播放
     if (state.loading) store.commit('setVideoPaused')
   },
+  /** 重开游戏，TODO 删除测试代码 */
+  upk: (state: State): void => {
+    if (state.videoParser) {
+      state.gameType = 'UPK'
+      state.userParser = state.videoParser
+      store.commit('initGame', state.userParser)
+      state.gameEvents = []
+      const interval = setInterval(() => {
+        if (state.videoParser) {
+          state.gameEvents.push(state.videoParser.getGameEvents()[state.gameEvents.length])
+          if (state.gameEvents.length === state.videoParser.getGameEvents().length) {
+            clearInterval(interval)
+          }
+        }
+      }, 100)
+      store.commit('replayVideo')
+    }
+  },
   /** 暂停录像播放 */
   setVideoPaused: (state: State): void => {
     state.videoAnimationId = 0
@@ -304,7 +322,8 @@ export const mutations = {
       }
       // 更新游戏经过的时间（毫秒）,首次时间为 0 ms
       const elapsedTime = state.gameStartTime <= 0 ? 0 : timestamp - state.gameStartTime
-      store.commit('setGameElapsedTime', plus(state.gameElapsedTime, times(elapsedTime, state.gameSpeed)))
+      // 非录像播放时速度始终为一倍速
+      store.commit('setGameElapsedTime', plus(state.gameElapsedTime, times(elapsedTime, state.gameType === 'Video' ? state.gameSpeed : 1)))
       // 重置游戏开始时间（毫秒）
       store.commit('setGameStartTime', timestamp)
       window.requestAnimationFrame(performEvent)
@@ -316,6 +335,7 @@ export const mutations = {
 
 /** payload 参数可以为空的函数名称集合 */
 const EmptyPayloadFunction = [
+  'upk',
   'setVideoPaused',
   'performPreviousEvent',
   'performNextEvent',

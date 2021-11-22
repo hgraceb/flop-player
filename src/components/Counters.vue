@@ -26,7 +26,13 @@ export default defineComponent({
     const hZiNi = computed(() => store.state.hZiNi)
 
     // 动态统计数据
-    const time = computed(() => Math.min(store.state.gameEvents[store.state.gameEvents.length - 1]?.time || 0, store.state.gameElapsedTime) / 1000)
+    const time = computed(() => {
+      // 如果当前是播放录像，则计数器时间最大为最后一个游戏事件的时间
+      if (store.state.gameType === 'Video') {
+        return Math.min(store.state.gameEvents[store.state.gameEvents.length - 1]?.time || 0, store.state.gameElapsedTime) / 1000
+      }
+      return store.state.gameElapsedTime / 1000
+    })
     // 可能出现 solvedBbbv 为 0 的情况，比如标雷之后开空
     const estRTime = computed(() => solvedBbbv.value > 0 ? time.value * (bbbv.value / solvedBbbv.value) : null)
     const stats = computed(() => {
