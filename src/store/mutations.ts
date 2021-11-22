@@ -144,7 +144,7 @@ export const mutations = {
     const eventIndex = --state.gameEventIndex
     // 根据事件索引获取游戏事件
     const event = state.gameEvents[eventIndex]
-    if (event.name === 'Solved3BV') {
+    if (event.name === 'Won' || event.name === 'Lose' || event.name === 'Solved3BV') {
       return
     }
     // 根据坐标获取图片索引
@@ -185,7 +185,13 @@ export const mutations = {
     // 根据事件索引获取游戏事件
     const event = state.gameEvents[eventIndex]
     if (event.name === 'Solved3BV') {
-      store.commit('checkVideoFinished')
+      return
+    }
+    // TODO 处理录像意外结尾的情况，即没有雷被打开并且时间没有超时
+    if (event.name === 'Won' || event.name === 'Lose') {
+      // 设置游戏播放暂停，如果不设置的话，在游戏播放结束之后会误以为游戏还处于正常播放的状态
+      store.commit('setVideoPaused')
+      state.faceStatus = event.name === 'Won' ? 'face-win' : 'face-lose'
       return
     }
     // 根据坐标获取图片索引
@@ -265,7 +271,6 @@ export const mutations = {
         state.gameMousePoints.push({ x: event.precisionX, y: event.precisionY })
       }
     }
-    store.commit('checkVideoFinished')
   },
   /** 重置录像参数 */
   resetVideo: (state: State): void => {
@@ -293,7 +298,8 @@ export const mutations = {
     // 直接使用 requestAnimationFrame 回调的时间戳，可能会有较大误差，包括回调时间戳本身的误差和小数计算产生的误差，特别是在 Vuex 开启严格模式的时候
     const animationId = requestAnimationFrame(function performEvent () {
       const timestamp = Date.now()
-      if (store.getters.isVideoPaused || state.gameEventIndex >= state.gameEvents.length || state.videoAnimationId !== animationId) {
+      // 此处不判断当前游戏事件索引是否大于游戏事件数量，因为非录像模式下两者是相等的，如：UPK
+      if (store.getters.isVideoPaused || state.videoAnimationId !== animationId) {
         return
       }
       // 更新游戏经过的时间（毫秒）,首次时间为 0 ms
@@ -305,25 +311,6 @@ export const mutations = {
     })
     // 更新动画ID，取消其他动画
     state.videoAnimationId = animationId
-  },
-  /** 检查录像是否播放结束，TODO 处理录像意外结尾的情况，即没有雷被打开并且时间没有超时 */
-  checkVideoFinished: (state: State): void => {
-    // 如果不是最后一个游戏事件，则认为录像还未播放完成
-    if (state.gameEventIndex < state.gameEvents.length) {
-      return
-    }
-    // 设置游戏播放暂停，如果不设置的话，在游戏播放结束之后会误以为游戏还处于正常播放的状态
-    store.commit('setVideoPaused')
-    // 最后一个游戏事件
-    const event = state.gameEvents[state.gameEvents.length - 1]
-    // 游戏胜利
-    if (state.bbbv === event.stats.solvedBbbv) {
-      state.faceStatus = 'face-win'
-
-      // 所有游戏事件模拟结束后，如果游戏没有胜利，则认为游戏失败
-    } else {
-      state.faceStatus = 'face-lose'
-    }
   }
 }
 
@@ -335,8 +322,7 @@ const EmptyPayloadFunction = [
   'resetVideo',
   'replayVideo',
   'playVideo',
-  'pauseVideo',
-  'checkVideoFinished'
+  'pauseVideo'
 ] as const
 
 /** payload 参数不能为空的函数类型集合 */

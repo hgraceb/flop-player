@@ -27,6 +27,9 @@ export type GameEvent = ({
 } | {
   name: 'Flag' | 'RemoveFlag' | 'QuestionMark' | 'RemoveQuestionMark' | 'ToggleQuestionMarkSetting'
 } | {
+  // TODO 修改胜利和失败事件的定义，去除多余的属性
+  name: 'Won' | 'Lose'
+} | {
   name: 'Press' | 'Release'
   // 是否已经被标记为问号
   questioned: number
@@ -64,8 +67,6 @@ export type GameEvent = ({
   }
 } | {
   name: 'Solved3BV'
-  // 已处理的BBBV
-  solved: number
   // 时间
   time: number
   // 基础统计数据

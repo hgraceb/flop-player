@@ -664,14 +664,29 @@ export class Parser {
   private checkWin () {
     this.gameEvents.push({
       name: 'Solved3BV',
-      solved: this.solvedBbbv,
       time: this.curTime,
       stats: this.getStats()
     })
-    if (this.bbbv === this.solvedBbbv) this.win()
+    if (this.bbbv === this.solvedBbbv) {
+      this.gameEvents.push({
+        name: 'Won',
+        time: this.curTime,
+        x: this.curPrecX,
+        y: this.curPrecY,
+        stats: this.getStats()
+      })
+      this.win()
+    }
   }
 
   private fail () {
+    this.gameEvents.push({
+      name: 'Lose',
+      time: this.curTime,
+      x: this.curPrecX,
+      y: this.curPrecY,
+      stats: this.getStats()
+    })
     this.endTime = this.curTime
     this.won = 0
   }
