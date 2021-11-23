@@ -1,7 +1,7 @@
 import { ImgCellType, ImgFaceType } from '@/util/image'
 
 // 基础事件
-type Base = 'leftClick' | 'leftRelease' | 'rightClick' | 'rightRelease' | 'middleClick' | 'middleRelease' | 'mouseMove' | 'leftClickWithShift' | 'toggleQuestionMarkSetting'
+type Base = 'LeftClick' | 'LeftRelease' | 'RightClick' | 'RightRelease' | 'MiddleClick' | 'MiddleRelease' | 'MouseMove' | 'LeftClickWithShift' | 'ToggleQuestionMarkSetting'
 
 /**
  * 游戏事件
@@ -51,10 +51,10 @@ export abstract class BaseParser {
   protected abstract mMines: number
   // 最少左键点击数
   protected abstract mBBBV: number
-  // 开空数量
-  protected abstract mOpenings: number
   // 岛屿数量
   protected abstract mIslands: number
+  // 开空数量
+  protected abstract mOpenings: number
   // Greedy ZiNi
   protected abstract mGZiNi: number
   // Human ZiNi
@@ -85,14 +85,14 @@ export abstract class BaseParser {
   getBBBV = () => this.mBBBV
 
   /**
-   * 获取开空数量
-   */
-  getOpenings = () => this.mOpenings
-
-  /**
    * 获取岛屿数量
    */
   getIslands = () => this.mIslands
+
+  /**
+   * 获取开空数量
+   */
+  getOpenings = () => this.mOpenings
 
   /**
    * 获取 Greedy ZiNi
