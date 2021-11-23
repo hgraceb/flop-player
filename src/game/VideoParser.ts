@@ -92,9 +92,11 @@ export class VideoParser extends BaseParser {
   private performEvent (event: VideoEvent) {
     this.curEvent = event
     switch (this.curEvent.mouse) {
-      // 鼠标移动事件最多，优先进行模拟
       // 不能直接在此处添加游戏事件，因为模拟录像事件的具体实现方法内部可能会相互有引用
+      // 可以在方法执行最开始处将录像事件转换为游戏事件并添加，此游戏事件的统计数据可能有问题，因为还没真的开始模拟录像事件
+      // 后续根据模拟录像事件得到的多个新游戏事件，因为时间和上一个游戏事件一样，实际播放时统计数据会显示为模拟完成后的数据
       case 'mv':
+        // 鼠标移动事件最多，优先进行模拟
         this.mouseMove()
         break
       case 'lc':
