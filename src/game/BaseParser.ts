@@ -1,21 +1,24 @@
 import { ImgCellType, ImgFaceType } from '@/util/image'
 
-// 基础事件
+// 基础游戏事件名称
 type Base = 'LeftClick' | 'LeftRelease' | 'RightClick' | 'RightRelease' | 'MiddleClick' | 'MiddleRelease' | 'MouseMove' | 'LeftClickWithShift' | 'ToggleQuestionMarkSetting'
+
+// 游戏事件名称
+export type GameEventName = Base
 
 /**
  * 游戏事件
  */
 export interface GameEvent {
-  name: Base
+  name: GameEventName
   // 当前列，从 0 开始
   row: number
   // 当前行，从 0 开始
   column: number
   // 精确的横坐标
-  precisionX: number
+  x: number
   // 精确的纵坐标
-  precisionY: number
+  y: number
   // 基础统计数据
   stats: {
     path: number
@@ -26,9 +29,6 @@ export interface GameEvent {
     leftClicks: number
     rightClicks: number
     doubleClicks: number
-    wastedLeftClicks: number
-    wastedRightClicks: number
-    wastedDoubleClicks: number
   }
   // 快照
   snapshot?: {
