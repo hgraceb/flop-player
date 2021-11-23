@@ -49,6 +49,16 @@ export abstract class BaseParser {
   protected abstract mHeight: number
   // 游戏雷数
   protected abstract mMines: number
+  // 最少左键点击数
+  protected abstract mBBBV: number
+  // 开空数量
+  protected abstract mOpenings: number
+  // 岛屿数量
+  protected abstract mIslands: number
+  // Greedy ZiNi
+  protected abstract mGZiNi: number
+  // Human ZiNi
+  protected abstract mHZiNi: number
   // 当前游戏事件
   protected abstract mGameEvents: GameEvent[]
   // 玩家姓名原始数据
@@ -68,6 +78,31 @@ export abstract class BaseParser {
    * 获取游戏雷数
    */
   getMines = () => this.mMines
+
+  /**
+   * 获取最少左键点击数
+   */
+  getBBBV = () => this.mBBBV
+
+  /**
+   * 获取开空数量
+   */
+  getOpenings = () => this.mOpenings
+
+  /**
+   * 获取岛屿数量
+   */
+  getIslands = () => this.mIslands
+
+  /**
+   * 获取 Greedy ZiNi
+   */
+  getGZiNi = () => this.mGZiNi
+
+  /**
+   * 获取 Human ZiNi
+   */
+  getHZiNi = () => this.mHZiNi
 
   /**
    * 获取当前游戏事件
