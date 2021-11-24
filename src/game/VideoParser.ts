@@ -88,7 +88,9 @@ export class VideoParser extends BaseParser {
   }
 
   /**
-   * 模拟指定录像事件
+   * 模拟指定录像事件，对于一些特殊的组合事件，因为很多软件的处理不一致，而且每个软件还都有很多不同的版本，模拟时基本靠个人偏好来处理，有小概率导致最后的游戏结果和统计数据有误
+   * 如：Minesweeper X 1.15 和 Minesweeper Arbiter 0.52.3 支持在中键点击之后点击左键或者右键，而 Vienna Minesweeper 3.0 不支持
+   * 如：Minesweeper X 1.15 在点击中键之后点击左键后接着释放左键，此时释放中不算双击，而 Minesweeper Arbiter 0.52.3 只要释放中键都算作双击
    * @param event 录像事件
    */
   private performEvent (event: VideoEvent) {
