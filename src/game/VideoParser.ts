@@ -1,9 +1,23 @@
 import { BaseParser, GameEvent, GameEventName } from '@/game/BaseParser'
 import { BaseVideo, VideoEvent } from '@/game/BaseVideo'
 
-interface Cell {
+class Cell {
   // 是否为雷
-  mine: boolean
+  mine = false
+  // 是雷的邻居数量
+  number: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 = 0
+  // 是否已经被打开
+  opened = false
+  // 是否被旗子标记
+  flagged = false
+  // 是否被问号标记
+  questioned = false
+  // 所在岛屿编号，为 0 则不属于任何岛屿
+  island = 0
+  // 所在开空编号，为 0 则不属于任何开空
+  opening = 0
+  // 所在第二个开空编号，为 0 则不属于任何开空，一个方块可能同时属于两个开空
+  opening2 = 0
 }
 
 /**
@@ -31,6 +45,8 @@ export class VideoParser extends BaseParser {
   private readonly size: number
   // 游戏布雷
   private readonly board: Cell[]
+  // 方块边长
+  private readonly squareSize = 16
   // 当前是否可以标记问号，TODO 将类型改为 boolean
   private marks: number
   // 当前录像事件
@@ -77,7 +93,7 @@ export class VideoParser extends BaseParser {
     // 保存其他视频信息
     this.appendable = appendable
     this.marks = video.getMarks()
-    this.board = Array.from(Array(this.size = this.mWidth * this.mHeight), () => <Cell>{})
+    this.board = Array.from(Array(this.size = this.mWidth * this.mHeight), () => new Cell())
     for (let i = 0; i < this.size; ++i) {
       this.board[i].mine = video.getBoard()[i] === 1
     }
@@ -85,6 +101,29 @@ export class VideoParser extends BaseParser {
     for (let i = 0; i < video.getEvents().length; i++) {
       this.performEvent(video.getEvents()[i])
     }
+  }
+
+  /**
+   * 添加游戏事件
+   */
+  private pushGameEvent (name: GameEventName, x: number, y: number, row: number, column: number) {
+    this.mGameEvents.push({
+      name: name,
+      x: x,
+      y: y,
+      row: row,
+      column: column,
+      stats: {
+        path: this.path,
+        flags: this.flags,
+        solvedOps: this.solvedOps,
+        solvedIsls: this.solvedIsls,
+        solvedBBBV: this.solvedBBBV,
+        leftClicks: this.leftClicks,
+        rightClicks: this.rightClicks,
+        doubleClicks: this.doubleClicks
+      }
+    })
   }
 
   /**
@@ -101,126 +140,116 @@ export class VideoParser extends BaseParser {
       // 后续根据模拟录像事件得到的多个新游戏事件，因为时间和上一个游戏事件一样，实际播放时统计数据会显示为模拟完成后的数据
       case 'mv':
         // 鼠标移动事件最多，优先进行模拟
-        this.mouseMove()
+        this.mouseMove(event.x, event.y, event.row, event.column)
         break
       case 'lc':
-        this.leftClick()
+        this.leftClick(event.x, event.y, event.row, event.column)
         break
       case 'lr':
-        this.leftRelease()
+        this.leftRelease(event.x, event.y, event.row, event.column)
         break
       case 'rc':
-        this.rightClick()
+        this.rightClick(event.x, event.y, event.row, event.column)
         break
       case 'rr':
-        this.rightRelease()
+        this.rightRelease(event.x, event.y, event.row, event.column)
         break
       case 'mc':
-        this.middleClick()
+        this.middleClick(event.x, event.y, event.row, event.column)
         break
       case 'mr':
-        this.middleRelease()
+        this.middleRelease(event.x, event.y, event.row, event.column)
         break
       case 'sc':
-        this.leftClickWithShift()
+        this.leftClickWithShift(event.x, event.y, event.row, event.column)
         break
       case 'mt':
-        this.toggleQuestionMarkSetting()
+        this.toggleQuestionMarkSetting(event.x, event.y, event.row, event.column)
         break
     }
   }
 
   /**
-   * 添加游戏事件
-   * @param name 游戏事件名称
-   */
-  private pushGameEvent (name: GameEventName) {
-    this.mGameEvents.push({
-      name: name,
-      x: this.curEvent.x,
-      y: this.curEvent.y,
-      row: this.curEvent.row,
-      column: this.curEvent.column,
-      stats: {
-        path: this.path,
-        flags: this.flags,
-        solvedOps: this.solvedOps,
-        solvedIsls: this.solvedIsls,
-        solvedBBBV: this.solvedBBBV,
-        leftClicks: this.leftClicks,
-        rightClicks: this.rightClicks,
-        doubleClicks: this.doubleClicks
-      }
-    })
-  }
-
-  /**
    * 模拟鼠标移动事件
    */
-  private mouseMove () {
-    this.pushGameEvent('MouseMove')
+  private mouseMove (x: number, y: number, row: number, column: number) {
+    this.pushGameEvent('MouseMove', x, y, row, column)
   }
 
   /**
    * 模拟左键点击事件
    */
-  private leftClick () {
-    this.pushGameEvent('LeftClick')
+  private leftClick (x: number, y: number, row: number, column: number) {
+    this.pushGameEvent('LeftClick', x, y, row, column)
     this.leftPressed = true
+    if (this.rightPressed) {
+      // TODO 处理双击事件
+    } else {
+      this.press(row, column, x, y)
+    }
   }
 
   /**
    * 模拟同时点击 shift 按钮的左键点击事件
    */
-  private leftClickWithShift () {
-    this.pushGameEvent('LeftClickWithShift')
+  private leftClickWithShift (x: number, y: number, row: number, column: number) {
+    this.pushGameEvent('LeftClickWithShift', x, y, row, column)
     this.leftPressed = true
   }
 
   /**
    * 模拟左键释放事件
    */
-  private leftRelease () {
-    this.pushGameEvent('LeftRelease')
+  private leftRelease (x: number, y: number, row: number, column: number) {
+    this.pushGameEvent('LeftRelease', x, y, row, column)
     this.leftPressed = false
   }
 
   /**
    * 模拟右键点击事件
    */
-  private rightClick () {
-    this.pushGameEvent('RightClick')
+  private rightClick (x: number, y: number, row: number, column: number) {
+    this.pushGameEvent('RightClick', x, y, row, column)
     this.rightPressed = true
   }
 
   /**
    * 模拟右键释放事件
    */
-  private rightRelease () {
-    this.pushGameEvent('RightRelease')
+  private rightRelease (x: number, y: number, row: number, column: number) {
+    this.pushGameEvent('RightRelease', x, y, row, column)
     this.rightPressed = false
   }
 
   /**
    * 模拟中键点击事件
    */
-  private middleClick () {
-    this.pushGameEvent('MiddleClick')
+  private middleClick (x: number, y: number, row: number, column: number) {
+    this.pushGameEvent('MiddleClick', x, y, row, column)
     this.middlePressed = true
   }
 
   /**
    * 模拟中键释放事件
    */
-  private middleRelease () {
-    this.pushGameEvent('MiddleRelease')
+  private middleRelease (x: number, y: number, row: number, column: number) {
+    this.pushGameEvent('MiddleRelease', x, y, row, column)
     this.middlePressed = false
   }
 
   /**
    * 模拟切换是否可以标记问号的录像事件
    */
-  private toggleQuestionMarkSetting () {
-    this.pushGameEvent('ToggleQuestionMarkSetting')
+  private toggleQuestionMarkSetting (x: number, y: number, row: number, column: number) {
+    this.pushGameEvent('ToggleQuestionMarkSetting', x, y, row, column)
+  }
+
+  /**
+   * 点击方块
+   */
+  private press (x: number, y: number, row: number, column: number) {
+    // 如果方块已经打开或者被旗子标记，则不进行操作
+    if (this.board[column * this.mWidth + row].opened || this.board[column * this.mWidth + row].flagged) return
+    this.pushGameEvent('Press', x, y, row, column)
   }
 }
