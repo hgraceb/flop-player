@@ -57,8 +57,6 @@ export class VideoParser extends BaseParser {
   private rightPressed = false
   // 中键是否处于点击状态
   private middlePressed = false
-  // Shift键是否处于点击状态
-  private shiftPressed = false
 
   /**
    * 构建录像事件解析器
@@ -162,41 +160,7 @@ export class VideoParser extends BaseParser {
    */
   private leftClick () {
     this.pushGameEvent('LeftClick')
-  }
-
-  /**
-   * 模拟左键释放事件
-   */
-  private leftRelease () {
-    this.pushGameEvent('LeftRelease')
-  }
-
-  /**
-   * 模拟右键点击事件
-   */
-  private rightClick () {
-    this.pushGameEvent('RightClick')
-  }
-
-  /**
-   * 模拟右键释放事件
-   */
-  private rightRelease () {
-    this.pushGameEvent('RightRelease')
-  }
-
-  /**
-   * 模拟中键点击事件
-   */
-  private middleClick () {
-    this.pushGameEvent('MiddleClick')
-  }
-
-  /**
-   * 模拟中键释放事件
-   */
-  private middleRelease () {
-    this.pushGameEvent('MiddleRelease')
+    this.leftPressed = true
   }
 
   /**
@@ -204,6 +168,47 @@ export class VideoParser extends BaseParser {
    */
   private leftClickWithShift () {
     this.pushGameEvent('LeftClickWithShift')
+    this.leftPressed = true
+  }
+
+  /**
+   * 模拟左键释放事件
+   */
+  private leftRelease () {
+    this.pushGameEvent('LeftRelease')
+    this.leftPressed = false
+  }
+
+  /**
+   * 模拟右键点击事件
+   */
+  private rightClick () {
+    this.pushGameEvent('RightClick')
+    this.rightPressed = true
+  }
+
+  /**
+   * 模拟右键释放事件
+   */
+  private rightRelease () {
+    this.pushGameEvent('RightRelease')
+    this.rightPressed = false
+  }
+
+  /**
+   * 模拟中键点击事件
+   */
+  private middleClick () {
+    this.pushGameEvent('MiddleClick')
+    this.middlePressed = true
+  }
+
+  /**
+   * 模拟中键释放事件
+   */
+  private middleRelease () {
+    this.pushGameEvent('MiddleRelease')
+    this.middlePressed = false
   }
 
   /**
