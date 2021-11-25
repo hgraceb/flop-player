@@ -2,10 +2,8 @@ import { BaseParser, GameEvent, GameEventName } from '@/game/BaseParser'
 import { BaseVideo, VideoEvent } from '@/game/BaseVideo'
 
 class Cell {
-  // 是否为雷
-  mine = false
-  // 周围是雷的方块数量
-  number: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 = 0
+  // 周围是雷的方块数量，-1 代表方块本身是雷
+  number = 0
   // 是否已经被打开
   opened = false
   // 是否被旗子标记
@@ -99,15 +97,19 @@ export class VideoParser extends BaseParser {
     // 保存其他视频信息
     this.appendable = appendable
     this.marks = video.getMarks() === 1
+    // TODO 新建初始化布局的方法，并将这句赋值语句移动到其中
     this.board = Array.from(Array(this.size = this.mWidth * this.mHeight), () => new Cell())
-    for (let i = 0; i < this.size; ++i) {
-      this.board[i].mine = video.getBoard()[i] === 1
-    }
     // 模拟当前所有录像事件
     for (let i = 0; i < video.getEvents().length; i++) {
       this.performEvent(video.getEvents()[i])
       // 如果游戏已经胜利或者失败，则不再模拟后续录像事件
-      if (this.gameState === 'Win' || this.gameState === 'Lose') break
+      if (this.gameState === 'Win' || this.gameState === 'Lose') {
+        // 打开未处理方块，要在事件模拟结束后调用，因为可能连续有多个方块爆炸，第一个方块爆炸后立即打开未处理方块会导致后续哑雷
+        this.openUnprocessed()
+        // 在所有方块处理完成后再添加游戏结束事件，避免重复添加或者在游戏结束事件之后还有其他游戏事件
+        this.pushGameEvent(this.gameState)
+        break
+      }
     }
   }
 
@@ -117,6 +119,7 @@ export class VideoParser extends BaseParser {
   private pushGameEvent (name: GameEventName, row: number = this.curEvent.row, column: number = this.curEvent.column) {
     this.mGameEvents.push({
       name: name,
+      number: this.board[column * this.mWidth + row].number,
       x: this.curEvent.x,
       y: this.curEvent.y,
       row: row,
@@ -218,7 +221,14 @@ export class VideoParser extends BaseParser {
    */
   private leftRelease () {
     this.pushGameEvent('LeftRelease')
-    this.leftPressed = false
+    if (this.rightPressed || this.shiftValid) {
+      this.doubleClicks++
+      this.openAround(this.curEvent.row, this.curEvent.column)
+    } else {
+      this.leftClicks++
+      this.open(this.curEvent.row, this.curEvent.column)
+    }
+    this.leftPressed = this.shiftValid = false
   }
 
   /**
@@ -262,7 +272,7 @@ export class VideoParser extends BaseParser {
   }
 
   /**
-   * 根据行数和列数判断方块是否在游戏区域内
+   * 判断指定方块是否在游戏区域内
    */
   private isInside (row: number, column: number) {
     return row >= 0 && row < this.mWidth && column >= 0 && column < this.mHeight
@@ -291,18 +301,40 @@ export class VideoParser extends BaseParser {
   }
 
   /**
-   * 游戏胜利
+   * 打开方块
    */
-  private win () {
-    this.gameState = 'Win'
-    this.pushGameEvent('Win')
+  private open (row: number, column: number) {
+    const cell = this.board[column * this.mWidth + row]
+    // 如果方块超出游戏区域、已经被打开或者已经被旗子标记，则不进行操作
+    if (!this.isInside(row, column) || cell.opened || cell.flagged) return
+    // 来都来了，就把你给开了吧 (づ￣ 3￣)づ
+    cell.opened = true
+    // 如果方块不是雷，游戏事件为正常打开方块；如果方块是雷，游戏事件为方块爆炸
+    this.pushGameEvent(cell.number >= 0 ? 'Open' : 'Blast', row, column)
+    if (cell.number === 0) {
+      // 如果当前方块属于开空，则自动打开周围方块
+      this.openAround(row, column)
+    } else if (cell.number < 0) {
+      // 打开的方块是雷，游戏结束
+      this.gameState = 'Lose'
+    }
   }
 
   /**
-   * 游戏失败
+   * 打开周围方块
    */
-  private lose () {
-    this.gameState = 'Lose'
-    this.pushGameEvent('Lose')
+  private openAround (row: number, column: number) {
+    for (let i = row - 1; i <= row + 1; i++) {
+      for (let j = column - 1; j <= column + 1; j++) {
+        this.open(i, j)
+      }
+    }
+  }
+
+  /**
+   * 打开未处理方块
+   */
+  private openUnprocessed () {
+    // TODO
   }
 }

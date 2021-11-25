@@ -3,7 +3,7 @@ import { ImgCellType, ImgFaceType } from '@/util/image'
 // 基础游戏事件名称
 type Base = 'LeftClick' | 'LeftRelease' | 'RightClick' | 'RightRelease' | 'MiddleClick' | 'MiddleRelease' | 'MouseMove' | 'LeftClickWithShift' | 'ToggleQuestionMarkSetting'
 // 自定义游戏事件名称
-type Custom = 'Press' | 'PressQuestionMark' | 'Win' | 'Lose'
+type Custom = 'Press' | 'PressQuestionMark' | 'Open' | 'Blast' | 'Win' | 'Lose'
 
 // 游戏事件名称
 export type GameEventName = Base | Custom
@@ -17,6 +17,8 @@ export interface GameEvent {
   row: number
   // 游戏事件所在行，从 0 开始
   column: number
+  // 游戏事件所在方块对应的数字，即周围雷的数量
+  number: number
   // 鼠标指针精确横坐标，和 row 不一定是对应关系
   x: number
   // 鼠标指针精确纵坐标，和 column 不一定是对应关系
