@@ -47,8 +47,8 @@ export class VideoParser extends BaseParser {
   private readonly board: Cell[]
   // 方块边长
   private readonly squareSize = 16
-  // 当前是否可以标记问号，TODO 将类型改为 boolean
-  private marks: number
+  // 当前是否可以标记问号
+  private marks: boolean
   // 上一个录像事件，使用的时候要注意各个属性值可能是 undefined
   private preEvent: VideoEvent = <VideoEvent>{}
   // 当前录像事件
@@ -98,7 +98,7 @@ export class VideoParser extends BaseParser {
     this.mPlayerArray = video.getPlayer()
     // 保存其他视频信息
     this.appendable = appendable
-    this.marks = video.getMarks()
+    this.marks = video.getMarks() === 1
     this.board = Array.from(Array(this.size = this.mWidth * this.mHeight), () => new Cell())
     for (let i = 0; i < this.size; ++i) {
       this.board[i].mine = video.getBoard()[i] === 1
@@ -209,7 +209,8 @@ export class VideoParser extends BaseParser {
    */
   private leftClickWithShift () {
     this.pushGameEvent('LeftClickWithShift')
-    this.leftPressed = true
+    this.leftPressed = this.shiftValid = true
+    this.pressAround(this.curEvent.row, this.curEvent.column)
   }
 
   /**
@@ -257,6 +258,7 @@ export class VideoParser extends BaseParser {
    */
   private toggleQuestionMarkSetting () {
     this.pushGameEvent('ToggleQuestionMarkSetting')
+    this.marks = !this.marks
   }
 
   /**

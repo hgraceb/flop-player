@@ -26,6 +26,7 @@ export abstract class BaseVideo {
   protected abstract mWidth: number
   protected abstract mHeight: number
   protected abstract mMines: number
+  // TODO 将类型改为 boolean
   protected abstract mMarks: number
   protected abstract mBoard: number[]
   protected abstract mEvents: VideoEvent[]
