@@ -51,6 +51,8 @@ export class VideoParser extends BaseParser {
   private marks: number
   // 当前录像事件
   private curEvent: VideoEvent = <VideoEvent>{}
+  // 游戏状态，begin = 游戏从头开始，start = 游戏开始计时（有方块被打开），win = 游戏胜利，lose = 游戏失败
+  private gameState: 'Begin' | 'Start' | 'Win' | 'Lose' = 'Begin'
   // 鼠标路径距离
   private path = 0
   // 标雷数量
@@ -102,6 +104,8 @@ export class VideoParser extends BaseParser {
     // 模拟当前所有录像事件
     for (let i = 0; i < video.getEvents().length; i++) {
       this.performEvent(video.getEvents()[i])
+      // 如果游戏已经胜利或者失败，则不再模拟后续录像事件
+      if (this.gameState === 'Win' || this.gameState === 'Lose') break
     }
   }
 
@@ -259,9 +263,11 @@ export class VideoParser extends BaseParser {
    * 点击方块
    */
   private press (row: number, column: number) {
+    const cell = this.board[column * this.mWidth + row]
     // 如果方块超出游戏区域、已经被打开或者已经被旗子标记，则不进行操作
-    if (!this.isInside(row, column) || this.board[column * this.mWidth + row].opened || this.board[column * this.mWidth + row].flagged) return
-    this.pushGameEvent('Press', row, column)
+    if (!this.isInside(row, column) || cell.opened || cell.flagged) return
+    // 点击方块时需要先判断方块是否已经被问号标记
+    this.pushGameEvent(cell.questioned ? 'PressQuestionMark' : 'Press', row, column)
   }
 
   /**
@@ -273,5 +279,21 @@ export class VideoParser extends BaseParser {
         this.press(i, j)
       }
     }
+  }
+
+  /**
+   * 游戏胜利
+   */
+  private win () {
+    this.gameState = 'Win'
+    this.pushGameEvent('Win')
+  }
+
+  /**
+   * 游戏失败
+   */
+  private lose () {
+    this.gameState = 'Lose'
+    this.pushGameEvent('Lose')
   }
 }

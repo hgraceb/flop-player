@@ -3,7 +3,7 @@ import { ImgCellType, ImgFaceType } from '@/util/image'
 // 基础游戏事件名称
 type Base = 'LeftClick' | 'LeftRelease' | 'RightClick' | 'RightRelease' | 'MiddleClick' | 'MiddleRelease' | 'MouseMove' | 'LeftClickWithShift' | 'ToggleQuestionMarkSetting'
 // 自定义游戏事件名称
-type Custom = 'Press'
+type Custom = 'Press' | 'PressQuestionMark' | 'Win' | 'Lose'
 
 // 游戏事件名称
 export type GameEventName = Base | Custom
