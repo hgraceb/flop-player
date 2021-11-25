@@ -4,7 +4,7 @@ import { storage, storageDefault } from '@/store/plugins'
 import { Cell, Parser } from '@/game/Parser'
 
 export type State = typeof storageDefault & {
-  // 游戏类型：Video = 播放录像，UPK = 重开
+  // 游戏类型：Video = 播放录像，UPK = 重开，UPK 模式最大的作用是可以实时验证录像解析器的功能
   gameType: 'Video' | 'UPK'
   // 第一个打开方块游戏事件对应的索引，用于判断是否需要开始计时，值为负数则代表当前还没有方块打开事件
   firstOpenIndex: number

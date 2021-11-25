@@ -77,6 +77,8 @@ export class VideoParser extends BaseParser {
   private leftValid = true
   // 右键是否处于有效状态，因为左键事件会影响右键事件，如：lc -> rc -> lr，此时执行 rr 事件不增加右键点击数
   private rightValid = true
+  // Shift键是否处于有效状态，因为部分软件支持左键和Shift键同时按下，相当于中键的效果
+  private shiftValid = false
 
   /**
    * 构建录像事件解析器
@@ -128,7 +130,7 @@ export class VideoParser extends BaseParser {
 
   /**
    * 模拟指定录像事件，对于一些特殊情况，因为很多软件的处理不一致，而且每个软件还都有很多不同的版本，模拟时基本靠个人偏好来处理，有小概率导致最后的游戏结果和统计数据有误
-   * 如：Minesweeper X 1.15 和 Minesweeper Arbiter 0.52.3 支持在中键点击之后点击左键或者右键，而 Vienna Minesweeper 3.0 不支持
+   * 如：Minesweeper X 1.15 和 Minesweeper Arbiter 0.52.3 支持在中键点击之后点击左键或者右键，而 Vienna Minesweeper 3.0 和 Minesweeper Clone 2007 都不支持
    * 如：Minesweeper X 1.15 在点击中键之后点击左键后接着释放左键，此时释放中不算双击，而 Minesweeper Arbiter 0.52.3 只要释放中键都算作双击
    * 如：Minesweeper X 1.15 和 Vienna Minesweeper 3.0 在游戏时长达到 999.00 秒后可以继续进行，而 Minesweeper Arbiter 0.52.3 会按超时处理，自动判负
    * 求求你们饶了我吧...我还只是个一百多斤的孩子啊 (。﹏。*)

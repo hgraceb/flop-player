@@ -13,13 +13,13 @@ export type GameEventName = Base | Custom
  */
 export interface GameEvent {
   name: GameEventName
-  // 当前列，从 0 开始
+  // 游戏事件所在列，从 0 开始
   row: number
-  // 当前行，从 0 开始
+  // 游戏事件所在行，从 0 开始
   column: number
-  // 精确的横坐标
+  // 鼠标指针精确横坐标，和 row 不一定是对应关系
   x: number
-  // 精确的纵坐标
+  // 鼠标指针精确纵坐标，和 column 不一定是对应关系
   y: number
   // 基础统计数据
   stats: {
