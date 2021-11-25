@@ -108,11 +108,11 @@ export class VideoParser extends BaseParser {
   /**
    * 添加游戏事件
    */
-  private pushGameEvent (name: GameEventName, x: number, y: number, row: number, column: number) {
+  private pushGameEvent (name: GameEventName, row: number = this.curEvent.row, column: number = this.curEvent.column) {
     this.mGameEvents.push({
       name: name,
-      x: x,
-      y: y,
+      x: this.curEvent.x,
+      y: this.curEvent.y,
       row: row,
       column: column,
       stats: {
@@ -144,31 +144,31 @@ export class VideoParser extends BaseParser {
       // 后续根据模拟录像事件得到的多个新游戏事件，因为时间和上一个游戏事件一样，实际播放时统计数据会显示为模拟完成后的数据
       case 'mv':
         // 鼠标移动事件最多，优先进行模拟
-        this.mouseMove(event.x, event.y, event.row, event.column)
+        this.mouseMove()
         break
       case 'lc':
-        this.leftClick(event.x, event.y, event.row, event.column)
+        this.leftClick()
         break
       case 'lr':
-        this.leftRelease(event.x, event.y, event.row, event.column)
+        this.leftRelease()
         break
       case 'rc':
-        this.rightClick(event.x, event.y, event.row, event.column)
+        this.rightClick()
         break
       case 'rr':
-        this.rightRelease(event.x, event.y, event.row, event.column)
+        this.rightRelease()
         break
       case 'mc':
-        this.middleClick(event.x, event.y, event.row, event.column)
+        this.middleClick()
         break
       case 'mr':
-        this.middleRelease(event.x, event.y, event.row, event.column)
+        this.middleRelease()
         break
       case 'sc':
-        this.leftClickWithShift(event.x, event.y, event.row, event.column)
+        this.leftClickWithShift()
         break
       case 'mt':
-        this.toggleQuestionMarkSetting(event.x, event.y, event.row, event.column)
+        this.toggleQuestionMarkSetting()
         break
     }
   }
@@ -176,84 +176,84 @@ export class VideoParser extends BaseParser {
   /**
    * 模拟鼠标移动事件
    */
-  private mouseMove (x: number, y: number, row: number, column: number) {
-    this.pushGameEvent('MouseMove', x, y, row, column)
+  private mouseMove () {
+    this.pushGameEvent('MouseMove')
   }
 
   /**
    * 模拟左键点击事件
    */
-  private leftClick (x: number, y: number, row: number, column: number) {
-    this.pushGameEvent('LeftClick', x, y, row, column)
+  private leftClick () {
+    this.pushGameEvent('LeftClick')
     this.leftPressed = true
     if (this.rightPressed) {
       // TODO 处理双击事件
     } else {
-      this.press(row, column, x, y)
+      this.press(this.curEvent.row, this.curEvent.column)
     }
   }
 
   /**
    * 模拟同时点击 shift 按钮的左键点击事件
    */
-  private leftClickWithShift (x: number, y: number, row: number, column: number) {
-    this.pushGameEvent('LeftClickWithShift', x, y, row, column)
+  private leftClickWithShift () {
+    this.pushGameEvent('LeftClickWithShift')
     this.leftPressed = true
   }
 
   /**
    * 模拟左键释放事件
    */
-  private leftRelease (x: number, y: number, row: number, column: number) {
-    this.pushGameEvent('LeftRelease', x, y, row, column)
+  private leftRelease () {
+    this.pushGameEvent('LeftRelease')
     this.leftPressed = false
   }
 
   /**
    * 模拟右键点击事件
    */
-  private rightClick (x: number, y: number, row: number, column: number) {
-    this.pushGameEvent('RightClick', x, y, row, column)
+  private rightClick () {
+    this.pushGameEvent('RightClick')
     this.rightPressed = true
   }
 
   /**
    * 模拟右键释放事件
    */
-  private rightRelease (x: number, y: number, row: number, column: number) {
-    this.pushGameEvent('RightRelease', x, y, row, column)
+  private rightRelease () {
+    this.pushGameEvent('RightRelease')
     this.rightPressed = false
   }
 
   /**
    * 模拟中键点击事件
    */
-  private middleClick (x: number, y: number, row: number, column: number) {
-    this.pushGameEvent('MiddleClick', x, y, row, column)
+  private middleClick () {
+    this.pushGameEvent('MiddleClick')
     this.middlePressed = true
   }
 
   /**
    * 模拟中键释放事件
    */
-  private middleRelease (x: number, y: number, row: number, column: number) {
-    this.pushGameEvent('MiddleRelease', x, y, row, column)
+  private middleRelease () {
+    this.pushGameEvent('MiddleRelease')
     this.middlePressed = false
   }
 
   /**
    * 模拟切换是否可以标记问号的录像事件
    */
-  private toggleQuestionMarkSetting (x: number, y: number, row: number, column: number) {
-    this.pushGameEvent('ToggleQuestionMarkSetting', x, y, row, column)
+  private toggleQuestionMarkSetting () {
+    this.pushGameEvent('ToggleQuestionMarkSetting')
   }
 
   /**
    * 点击方块
    */
-  private press (x: number, y: number, row: number, column: number) {
+  private press (row: number, column: number) {
     // 如果方块已经打开或者被旗子标记，则不进行操作
     if (this.board[column * this.mWidth + row].opened || this.board[column * this.mWidth + row].flagged) return
-    this.pushGameEvent('Press', x, y, row, column)
+    this.pushGameEvent('Press', row, column)
   }
 }
