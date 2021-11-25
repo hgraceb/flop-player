@@ -4,7 +4,7 @@ import { BaseVideo, VideoEvent } from '@/game/BaseVideo'
 class Cell {
   // 是否为雷
   mine = false
-  // 是雷的邻居数量
+  // 周围是雷的方块数量
   number: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 = 0
   // 是否已经被打开
   opened = false
@@ -187,7 +187,7 @@ export class VideoParser extends BaseParser {
     this.pushGameEvent('LeftClick')
     this.leftPressed = true
     if (this.rightPressed) {
-      // TODO 处理双击事件
+      this.pressAround(this.curEvent.row, this.curEvent.column)
     } else {
       this.press(this.curEvent.row, this.curEvent.column)
     }
@@ -249,11 +249,29 @@ export class VideoParser extends BaseParser {
   }
 
   /**
+   * 根据行数和列数判断方块是否在游戏区域内
+   */
+  private isInside (row: number, column: number) {
+    return row >= 0 && row < this.mWidth && column >= 0 && column < this.mHeight
+  }
+
+  /**
    * 点击方块
    */
   private press (row: number, column: number) {
-    // 如果方块已经打开或者被旗子标记，则不进行操作
-    if (this.board[column * this.mWidth + row].opened || this.board[column * this.mWidth + row].flagged) return
+    // 如果方块超出游戏区域、已经被打开或者已经被旗子标记，则不进行操作
+    if (!this.isInside(row, column) || this.board[column * this.mWidth + row].opened || this.board[column * this.mWidth + row].flagged) return
     this.pushGameEvent('Press', row, column)
+  }
+
+  /**
+   * 点击本身和周围方块
+   */
+  private pressAround (row: number, column: number) {
+    for (let i = row - 1; i <= row + 1; i++) {
+      for (let j = column - 1; j <= column + 1; j++) {
+        this.press(i, j)
+      }
+    }
   }
 }
