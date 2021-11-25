@@ -49,11 +49,13 @@ export class VideoParser extends BaseParser {
   private readonly squareSize = 16
   // 当前是否可以标记问号，TODO 将类型改为 boolean
   private marks: number
+  // 上一个录像事件，使用的时候要注意各个属性值可能是 undefined
+  private preEvent: VideoEvent = <VideoEvent>{}
   // 当前录像事件
   private curEvent: VideoEvent = <VideoEvent>{}
   // 游戏状态，begin = 游戏从头开始，start = 游戏开始计时（有方块被打开），win = 游戏胜利，lose = 游戏失败
   private gameState: 'Begin' | 'Start' | 'Win' | 'Lose' = 'Begin'
-  // 鼠标路径距离
+  // 鼠标移动距离（欧几里得距离）
   private path = 0
   // 标雷数量
   private flags = 0
@@ -137,19 +139,18 @@ export class VideoParser extends BaseParser {
    * 如：Minesweeper X 1.15 和 Minesweeper Arbiter 0.52.3 支持在中键点击之后点击左键或者右键，而 Vienna Minesweeper 3.0 和 Minesweeper Clone 2007 都不支持
    * 如：Minesweeper X 1.15 在点击中键之后点击左键后接着释放左键，此时释放中不算双击，而 Minesweeper Arbiter 0.52.3 只要释放中键都算作双击
    * 如：Minesweeper X 1.15、Vienna Minesweeper 3.0 和 Minesweeper Clone 2007 在游戏时长达到 999.00 秒后可以继续进行，而 Minesweeper Arbiter 0.52.3 会按超时处理，自动判负
+   * 如：Minesweeper Arbiter 0.52.3 使用的是欧几里得距离，而 FreeSweeper 10 使用的是曼哈顿距离
    * 求求你们饶了我吧...我还只是个一百多斤的孩子啊 (。﹏。*)
    * @param event 录像事件
    */
   private performEvent (event: VideoEvent) {
     this.curEvent = event
+    // 录像事件的坐标改变时，中间不一定会有对应的 mv 事件，坐标位置改变时则认为有鼠标移动事件发生
+    this.mouseMove()
     switch (this.curEvent.mouse) {
       // 不能直接在此处添加游戏事件，因为模拟录像事件的具体实现方法内部可能会相互有引用
       // 可以在方法执行最开始处将录像事件转换为游戏事件并添加，此游戏事件的统计数据可能有问题，因为还没真的开始模拟录像事件
       // 后续根据模拟录像事件得到的多个新游戏事件，因为时间和上一个游戏事件一样，实际播放时统计数据会显示为模拟完成后的数据
-      case 'mv':
-        // 鼠标移动事件最多，优先进行模拟
-        this.mouseMove()
-        break
       case 'lc':
         this.leftClick()
         break
@@ -175,13 +176,19 @@ export class VideoParser extends BaseParser {
         this.toggleQuestionMarkSetting()
         break
     }
+    this.preEvent = this.curEvent
   }
 
   /**
    * 模拟鼠标移动事件
    */
   private mouseMove () {
+    // 如果鼠标坐标没有发生改变则不处理鼠标移动事件
+    if (this.curEvent.x === this.preEvent.x && this.curEvent.y === this.preEvent.y) return
     this.pushGameEvent('MouseMove')
+    // 计算的是欧几里得距离，因为通过 Minesweeper Arbiter 0.52.3 很容易就可以进行验证
+    // 而 FreeSweeper 计算得到的曼哈顿距离就一言难尽了，可能打开 avf 录像计算得到的是一个值，另存为 rawvf 录像文件后重新打开又得到了一个新的值...
+    this.path += Math.pow(Math.pow(this.curEvent.x - this.preEvent.x || 0, 2) + Math.pow(this.curEvent.y - this.preEvent.y || 0, 2), 0.5)
   }
 
   /**
