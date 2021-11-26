@@ -294,6 +294,13 @@ export class VideoParser extends BaseParser {
   private rightClick (): void {
     this.pushGameEvent('RightClick')
     this.rightPressed = true
+    if (this.leftPressed) {
+      this.pressAround(this.curEvent.column, this.curEvent.row)
+    } else if (this.marks) {
+      this.toggleQuestionMark(this.curEvent.column, this.curEvent.row)
+    } else {
+      this.toggleFlag(this.curEvent.column, this.curEvent.row)
+    }
   }
 
   /**
@@ -342,7 +349,7 @@ export class VideoParser extends BaseParser {
     const cell = this.board[column + row * this.mWidth]
     // 如果方块超出游戏区域、已经被打开或者已经被旗子标记，则不进行操作
     if (!this.isInside(column, row) || cell.opened || cell.flagged) return
-    // 点击方块时需要先判断方块是否已经被问号标记
+    // 根据方块当前问号标记状态添加游戏事件
     this.pushGameEvent(cell.questioned ? 'PressQuestionMark' : 'Press', column, row)
   }
 
@@ -355,6 +362,34 @@ export class VideoParser extends BaseParser {
         this.press(i, j)
       }
     }
+  }
+
+  /**
+   * 切换方块问号标记状态
+   */
+  private toggleQuestionMark (column: number, row: number): void {
+    const cell = this.board[column + row * this.mWidth]
+    // 如果方块超出游戏区域或者已经被打开则不进行操作
+    if (!this.isInside(column, row) || cell.opened) return
+    // 切换方块的标记状态
+    cell.questioned = cell.flagged
+    cell.flagged = !cell.flagged
+    // 根据方块当前问号标记状态添加游戏事件
+    this.pushGameEvent(cell.questioned ? 'QuestionMark' : 'RemoveQuestionMark', column, row)
+  }
+
+  /**
+   * 切换方块旗子标记状态
+   */
+  private toggleFlag (column: number, row: number): void {
+    const cell = this.board[column + row * this.mWidth]
+    // 如果方块超出游戏区域或者已经被打开则不进行操作
+    if (!this.isInside(column, row) || cell.opened) return
+    // 切换方块的标记状态
+    cell.flagged = !cell.flagged
+    cell.questioned = false
+    // 根据方块当前问号标记状态添加游戏事件
+    this.pushGameEvent(cell.flagged ? 'Flag' : 'RemoveFlag', column, row)
   }
 
   /**
