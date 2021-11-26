@@ -360,9 +360,9 @@ export class VideoParser extends BaseParser {
   private toggleLabel (column: number, row: number): void {
     const cell = this.board[column + row * this.mWidth]
     if (!this.isInside(column, row) || cell.opened) {
-      // 如果在游戏区域外（理论情况，暂时没有软件可以辅助验证）或者在已经被打开的方块上单击右键，将右键置为有效状态
+      // 如果在游戏区域外（理论情况，暂时没有软件可以辅助验证，因为 Minesweeper Arbiter 0.52.3 只在游戏区域内点击有效）或者在已经被打开的方块上单击右键，将右键设置为有效状态
       // 此时右键点击数已经增加一次，等到之后的第一次左键或右键释放事件，将右键点击数扣除一次并将右键状态重置为无效状态，双击点击数正常计算
-      // 如果一直没有等到左键或右键释放事件游戏就结束了，则无需扣除右键点击数，以上右键点击数计算逻辑主要参考自：Minesweeper Arbiter 0.52.3
+      // 如果一直没有等到左键或右键释放事件游戏就结束了，则无需扣除右键点击数，以上右键点击数计算逻辑主要通过测试和参考自：Minesweeper Arbiter 0.52.3
       this.rightValid = true
     } else if (this.marks && cell.flagged) {
       // 如果启用了问号标记设置，移除旗子状态实际上的表现是标记问号
@@ -432,8 +432,8 @@ export class VideoParser extends BaseParser {
    */
   private openAround (column: number, row: number): void {
     const cell = this.board[column + row * this.mWidth]
-    // 只对已经打开过的方块执行操作，并且方块属于开空或者方块周围雷的数量与方块周围被旗子标记的方块数量相等
-    if (cell.opened && (cell.number === 0 || cell.number === this.getAroundFlags(column, row))) {
+    // 只对游戏区域内已经打开过的方块执行操作，并且方块属于开空或者方块周围雷的数量与方块周围被旗子标记的方块数量相等
+    if (this.isInside(column, row) && cell.opened && (cell.number === 0 || cell.number === this.getAroundFlags(column, row))) {
       for (let i = column - 1; i <= column + 1; i++) {
         for (let j = row - 1; j <= row + 1; j++) {
           this.open(i, j)
