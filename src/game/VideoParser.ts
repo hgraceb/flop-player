@@ -75,12 +75,10 @@ export class VideoParser extends BaseParser {
   private leftPressed = false
   // 右键是否处于点击状态
   private rightPressed = false
-  // 中键是否处于点击状态，左键和右键不会影响到中键，所以不必判断中键是否处于有效状态
+  // 中键是否处于点击状态，中键和左右键相对独立，所以不必判断中键是否处于有效状态
   private middlePressed = false
   // 左键是否处于有效状态，因为右键事件会影响左键事件，如：lc -> rc -> rr，此时执行 lr 事件不增加左键点击数、执行 mv 事件不更改方块样式
   private leftValid = false
-  // 右键是否处于有效状态，因为左键事件会影响右键事件，如：lc -> rc -> lr，此时执行 rr 事件不增加右键点击数
-  private rightValid = false
   // Shift键是否处于有效状态，因为部分软件支持左键和Shift键同时按下，相当于中键的效果
   private shiftValid = false
 
