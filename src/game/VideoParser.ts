@@ -296,10 +296,9 @@ export class VideoParser extends BaseParser {
     this.rightPressed = true
     if (this.leftPressed) {
       this.pressAround(this.curEvent.column, this.curEvent.row)
-    } else if (this.marks) {
-      this.toggleQuestionMark(this.curEvent.column, this.curEvent.row)
     } else {
-      this.toggleFlag(this.curEvent.column, this.curEvent.row)
+      this.rightClicks++
+      this.toggleLabel(this.curEvent.column, this.curEvent.row)
     }
   }
 
@@ -343,6 +342,34 @@ export class VideoParser extends BaseParser {
   }
 
   /**
+   * 切换方块标记状态
+   */
+  private toggleLabel (column: number, row: number): void {
+    const cell = this.board[column + row * this.mWidth]
+    // 如果方块超出游戏区域或者已经被打开则不进行操作
+    if (!this.isInside(column, row) || cell.opened) return
+    if (this.marks && cell.flagged) {
+      // 如果启用了问号标记设置，移除旗子状态实际上的表现是标记问号
+      cell.flagged = false
+      cell.questioned = true
+      this.pushGameEvent('QuestionMark', column, row)
+    } else if (cell.flagged) {
+      // 如果没有启用问号标记设置，则统一移除旗子和问号状态
+      cell.flagged = cell.questioned = false
+      this.pushGameEvent('RemoveFlag', column, row)
+    } else if (cell.questioned) {
+      // 启用又禁用问号标记设置后，可能有的旗子还是问号标记的状态，统一移除旗子和问号状态
+      cell.flagged = cell.questioned = false
+      this.pushGameEvent('RemoveQuestionMark', column, row)
+    } else {
+      // 没有任何标记状态，直接标雷
+      cell.flagged = true
+      cell.questioned = false
+      this.pushGameEvent('Flag', column, row)
+    }
+  }
+
+  /**
    * 点击方块
    */
   private press (column: number, row: number): void {
@@ -362,34 +389,6 @@ export class VideoParser extends BaseParser {
         this.press(i, j)
       }
     }
-  }
-
-  /**
-   * 切换方块问号标记状态
-   */
-  private toggleQuestionMark (column: number, row: number): void {
-    const cell = this.board[column + row * this.mWidth]
-    // 如果方块超出游戏区域或者已经被打开则不进行操作
-    if (!this.isInside(column, row) || cell.opened) return
-    // 切换方块的标记状态
-    cell.questioned = cell.flagged
-    cell.flagged = !cell.flagged
-    // 根据方块当前问号标记状态添加游戏事件
-    this.pushGameEvent(cell.questioned ? 'QuestionMark' : 'RemoveQuestionMark', column, row)
-  }
-
-  /**
-   * 切换方块旗子标记状态
-   */
-  private toggleFlag (column: number, row: number): void {
-    const cell = this.board[column + row * this.mWidth]
-    // 如果方块超出游戏区域或者已经被打开则不进行操作
-    if (!this.isInside(column, row) || cell.opened) return
-    // 切换方块的标记状态
-    cell.flagged = !cell.flagged
-    cell.questioned = false
-    // 根据方块当前问号标记状态添加游戏事件
-    this.pushGameEvent(cell.flagged ? 'Flag' : 'RemoveFlag', column, row)
   }
 
   /**
