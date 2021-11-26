@@ -78,9 +78,9 @@ export class VideoParser extends BaseParser {
   // 中键是否处于点击状态，左键和右键不会影响到中键，所以不必判断中键是否处于有效状态
   private middlePressed = false
   // 左键是否处于有效状态，因为右键事件会影响左键事件，如：lc -> rc -> rr，此时执行 lr 事件不增加左键点击数、执行 mv 事件不更改方块样式
-  private leftValid = true
+  private leftValid = false
   // 右键是否处于有效状态，因为左键事件会影响右键事件，如：lc -> rc -> lr，此时执行 rr 事件不增加右键点击数
-  private rightValid = true
+  private rightValid = false
   // Shift键是否处于有效状态，因为部分软件支持左键和Shift键同时按下，相当于中键的效果
   private shiftValid = false
 
@@ -119,7 +119,7 @@ export class VideoParser extends BaseParser {
   /**
    * 添加游戏事件
    */
-  private pushGameEvent (name: GameEventName, column: number = this.curEvent.column, row: number = this.curEvent.row) {
+  private pushGameEvent (name: GameEventName, column: number = this.curEvent.column, row: number = this.curEvent.row): void {
     this.mGameEvents.push({
       name: name,
       number: this.board[column + row * this.mWidth].number,
@@ -143,30 +143,50 @@ export class VideoParser extends BaseParser {
   /**
    * 初始化游戏布局
    */
-  private initBoard (board: number[]) {
+  private initBoard (board: number[]): void {
     // 先初始化所有方块
     this.board = Array.from(Array(this.mWidth * this.mHeight), (_, index) => new Cell(board[index] === 1))
     // 计算每个方块对应的数字
     for (let i = 0; i < this.mWidth; i++) {
       for (let j = 0; j < this.mHeight; j++) {
-        this.setNumber(i, j)
+        this.board[i + j * this.mWidth].number = this.getAroundMines(i, j)
       }
     }
   }
 
   /**
-   * 计算并设置指定方块对应的数字
+   * 获取指定方块周围是雷的方块数量
    */
-  private setNumber (column: number, row: number) {
+  private getAroundMines (column: number, row: number): number {
     const cell = this.board[column + row * this.mWidth]
     // 如果方块超出游戏区域或者方块本身是雷则不计算周围雷的数量
-    if (!this.isInside(column, row) || cell.number < 0) return
+    if (!this.isInside(column, row) || cell.number === -1) return cell.number
+    // 周围是雷的方块数量
+    let mines = 0
     for (let i = column - 1; i <= column + 1; i++) {
       for (let j = row - 1; j <= row + 1; j++) {
-        // 如果遍历到的方块在游戏区域内并且是雷，则更新指定方块对应的数字
-        cell.number += (this.isInside(i, j) && this.board[i + j * this.mWidth].number < 0) ? 1 : 0
+        // 如果遍历到的方块在游戏区域内并且是雷
+        mines += (this.isInside(i, j) && this.board[i + j * this.mWidth].number === -1) ? 1 : 0
       }
     }
+    return mines
+  }
+
+  /**
+   * 获取指定方块周围被旗子标记的方块数量
+   */
+  private getAroundFlags (column: number, row: number): number {
+    // 周围被旗子标记的方块数量
+    let flags = 0
+    // 如果方块超出游戏区域则直接返回
+    if (!this.isInside(column, row)) return flags
+    for (let i = column - 1; i <= column + 1; i++) {
+      for (let j = row - 1; j <= row + 1; j++) {
+        // 如果遍历到的方块在游戏区域内并且被旗子标记
+        flags += (this.isInside(i, j) && this.board[i + j * this.mWidth].flagged) ? 1 : 0
+      }
+    }
+    return flags
   }
 
   /**
@@ -179,7 +199,7 @@ export class VideoParser extends BaseParser {
    *
    * @param event 录像事件
    */
-  private performEvent (event: VideoEvent) {
+  private performEvent (event: VideoEvent): void {
     this.curEvent = event
     // 录像事件的坐标改变时，中间不一定会有对应的 mv 事件，坐标位置改变时则认为有鼠标移动事件发生
     this.mouseMove()
@@ -218,7 +238,7 @@ export class VideoParser extends BaseParser {
   /**
    * 模拟鼠标移动事件
    */
-  private mouseMove () {
+  private mouseMove (): void {
     // 如果鼠标坐标没有发生改变则不处理鼠标移动事件
     if (this.curEvent.x === this.preEvent.x && this.curEvent.y === this.preEvent.y) return
     this.pushGameEvent('MouseMove')
@@ -230,9 +250,10 @@ export class VideoParser extends BaseParser {
   /**
    * 模拟左键点击事件
    */
-  private leftClick () {
+  private leftClick (): void {
     this.pushGameEvent('LeftClick')
-    this.leftPressed = true
+    // 左键按下时将左键置为有效状态
+    this.leftPressed = this.leftValid = true
     if (this.rightPressed) {
       this.pressAround(this.curEvent.column, this.curEvent.row)
     } else {
@@ -241,33 +262,36 @@ export class VideoParser extends BaseParser {
   }
 
   /**
-   * 模拟同时点击 shift 按钮的左键点击事件
+   * 模拟同时按住Shift键的左键点击事件
    */
-  private leftClickWithShift () {
+  private leftClickWithShift (): void {
     this.pushGameEvent('LeftClickWithShift')
-    this.leftPressed = this.shiftValid = true
+    // 左键和Shift同时按下时将左键和Shift键都设为有效状态
+    this.leftPressed = this.leftValid = this.shiftValid = true
     this.pressAround(this.curEvent.column, this.curEvent.row)
   }
 
   /**
    * 模拟左键释放事件
    */
-  private leftRelease () {
+  private leftRelease (): void {
     this.pushGameEvent('LeftRelease')
-    if (this.rightPressed || this.shiftValid) {
-      this.doubleClicks++
-      this.openAround(this.curEvent.column, this.curEvent.row)
-    } else {
-      this.leftClicks++
-      this.open(this.curEvent.column, this.curEvent.row)
+    if (this.leftValid) {
+      if (this.rightPressed || this.shiftValid) {
+        this.doubleClicks++
+        this.openAround(this.curEvent.column, this.curEvent.row)
+      } else {
+        this.leftClicks++
+        this.open(this.curEvent.column, this.curEvent.row)
+      }
     }
-    this.leftPressed = this.shiftValid = false
+    this.leftPressed = this.leftValid = this.shiftValid = false
   }
 
   /**
    * 模拟右键点击事件
    */
-  private rightClick () {
+  private rightClick (): void {
     this.pushGameEvent('RightClick')
     this.rightPressed = true
   }
@@ -275,7 +299,7 @@ export class VideoParser extends BaseParser {
   /**
    * 模拟右键释放事件
    */
-  private rightRelease () {
+  private rightRelease (): void {
     this.pushGameEvent('RightRelease')
     this.rightPressed = false
   }
@@ -283,7 +307,7 @@ export class VideoParser extends BaseParser {
   /**
    * 模拟中键点击事件
    */
-  private middleClick () {
+  private middleClick (): void {
     this.pushGameEvent('MiddleClick')
     this.middlePressed = true
   }
@@ -291,7 +315,7 @@ export class VideoParser extends BaseParser {
   /**
    * 模拟中键释放事件
    */
-  private middleRelease () {
+  private middleRelease (): void {
     this.pushGameEvent('MiddleRelease')
     this.middlePressed = false
   }
@@ -299,7 +323,7 @@ export class VideoParser extends BaseParser {
   /**
    * 模拟切换是否可以标记问号的录像事件
    */
-  private toggleQuestionMarkSetting () {
+  private toggleQuestionMarkSetting (): void {
     this.pushGameEvent('ToggleQuestionMarkSetting')
     this.marks = !this.marks
   }
@@ -307,14 +331,14 @@ export class VideoParser extends BaseParser {
   /**
    * 判断指定方块是否在游戏区域内
    */
-  private isInside (column: number, row: number) {
+  private isInside (column: number, row: number): boolean {
     return column >= 0 && column < this.mWidth && row >= 0 && row < this.mHeight
   }
 
   /**
    * 点击方块
    */
-  private press (column: number, row: number) {
+  private press (column: number, row: number): void {
     const cell = this.board[column + row * this.mWidth]
     // 如果方块超出游戏区域、已经被打开或者已经被旗子标记，则不进行操作
     if (!this.isInside(column, row) || cell.opened || cell.flagged) return
@@ -325,7 +349,7 @@ export class VideoParser extends BaseParser {
   /**
    * 点击本身和周围方块
    */
-  private pressAround (column: number, row: number) {
+  private pressAround (column: number, row: number): void {
     for (let i = column - 1; i <= column + 1; i++) {
       for (let j = row - 1; j <= row + 1; j++) {
         this.press(i, j)
@@ -336,7 +360,7 @@ export class VideoParser extends BaseParser {
   /**
    * 打开方块
    */
-  private open (column: number, row: number) {
+  private open (column: number, row: number): void {
     const cell = this.board[column + row * this.mWidth]
     // 如果方块超出游戏区域、已经被打开或者已经被旗子标记，则不进行操作
     if (!this.isInside(column, row) || cell.opened || cell.flagged) return
@@ -347,7 +371,7 @@ export class VideoParser extends BaseParser {
     if (cell.number === 0) {
       // 如果当前方块属于开空，则自动打开周围方块
       this.openAround(column, row)
-    } else if (cell.number < 0) {
+    } else if (cell.number === -1) {
       // 打开的方块是雷，游戏结束
       this.gameState = 'Lose'
     }
@@ -356,10 +380,14 @@ export class VideoParser extends BaseParser {
   /**
    * 打开周围方块
    */
-  private openAround (column: number, row: number) {
-    for (let i = column - 1; i <= column + 1; i++) {
-      for (let j = row - 1; j <= row + 1; j++) {
-        this.open(i, j)
+  private openAround (column: number, row: number): void {
+    const cell = this.board[column + row * this.mWidth]
+    // 只对已经打开过的方块执行操作，并且方块属于开空或者方块周围雷的数量与方块周围被旗子标记的方块数量相等
+    if (cell.opened && (cell.number === 0 || cell.number === this.getAroundFlags(column, row))) {
+      for (let i = column - 1; i <= column + 1; i++) {
+        for (let j = row - 1; j <= row + 1; j++) {
+          this.open(i, j)
+        }
       }
     }
   }
@@ -367,7 +395,7 @@ export class VideoParser extends BaseParser {
   /**
    * 打开未处理方块
    */
-  private openUnprocessed () {
+  private openUnprocessed (): void {
     // TODO
   }
 }
