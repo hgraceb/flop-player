@@ -88,6 +88,7 @@ export abstract class BaseVideo {
 
   /**
    * 获取下一行字符，并将位置标识符向后移动
+   *
    * @param {number} max 读取的最大字符数，默认为 1000
    * @return {Uint8Array|null} 下一行字符
    */

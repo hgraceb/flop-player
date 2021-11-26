@@ -84,6 +84,7 @@ export class VideoParser extends BaseParser {
 
   /**
    * 构建录像事件解析器
+   *
    * @param video 录像信息
    * @param appendable 是否允许追加事件，不允许则所有游戏事件都模拟完成后还没胜利自动判负
    */
@@ -144,6 +145,7 @@ export class VideoParser extends BaseParser {
    * 如：Minesweeper X 1.15、Vienna Minesweeper 3.0 和 Minesweeper Clone 2007 在游戏时长达到 999.00 秒后可以继续进行，而 Minesweeper Arbiter 0.52.3 会按超时处理，自动判负
    * 如：Minesweeper Arbiter 0.52.3 使用的是欧几里得距离，而 FreeSweeper 10 使用的是曼哈顿距离
    * 求求你们饶了我吧...我还只是个一百多斤的孩子啊 (。﹏。*)
+   *
    * @param event 录像事件
    */
   private performEvent (event: VideoEvent) {
