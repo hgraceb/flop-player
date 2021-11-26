@@ -293,13 +293,13 @@ export class VideoParser extends BaseParser {
    */
   private rightClick (): void {
     this.pushGameEvent('RightClick')
-    this.rightPressed = true
     if (this.leftPressed) {
       this.pressAround(this.curEvent.column, this.curEvent.row)
     } else {
       this.rightClicks++
       this.toggleLabel(this.curEvent.column, this.curEvent.row)
     }
+    this.rightPressed = true
   }
 
   /**
@@ -307,7 +307,12 @@ export class VideoParser extends BaseParser {
    */
   private rightRelease (): void {
     this.pushGameEvent('RightRelease')
-    this.rightPressed = false
+    if (this.leftPressed) {
+      this.doubleClicks++
+      this.openAround(this.curEvent.column, this.curEvent.row)
+    }
+    // 右键释放后，左键处于无效状态，即释放左键不改变左键点击数、移动鼠标不根据左键是否点击改变方块状态
+    this.rightPressed = this.leftValid = false
   }
 
   /**
@@ -315,6 +320,7 @@ export class VideoParser extends BaseParser {
    */
   private middleClick (): void {
     this.pushGameEvent('MiddleClick')
+    this.pressAround(this.curEvent.column, this.curEvent.row)
     this.middlePressed = true
   }
 
@@ -323,6 +329,9 @@ export class VideoParser extends BaseParser {
    */
   private middleRelease (): void {
     this.pushGameEvent('MiddleRelease')
+    this.doubleClicks++
+    // 中键和左右键互不影响，不用判断左右键的状态，开就完了 (*￣3￣)╭
+    this.openAround(this.curEvent.column, this.curEvent.row)
     this.middlePressed = false
   }
 
