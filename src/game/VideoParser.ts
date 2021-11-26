@@ -79,6 +79,8 @@ export class VideoParser extends BaseParser {
   private middlePressed = false
   // 左键是否处于有效状态，因为右键事件会影响左键事件，如：lc -> rc -> rr，此时执行 lr 事件不增加左键点击数、执行 mv 事件不更改方块样式
   private leftValid = false
+  // 右键是否处于有效状态，因为左键事件会影响右键事件，如：rc -> lc -> rr，最终右键点击数不变，双击点击数加一
+  private rightValid = false
   // Shift键是否处于有效状态，因为部分软件支持左键和Shift键同时按下，相当于中键的效果
   private shiftValid = false
 
@@ -309,8 +311,8 @@ export class VideoParser extends BaseParser {
       this.doubleClicks++
       this.openAround(this.curEvent.column, this.curEvent.row)
     }
-    // 右键释放后，左键处于无效状态，即释放左键不改变左键点击数、移动鼠标不根据左键是否点击改变方块状态
-    this.rightPressed = this.leftValid = false
+    // 右键释放后，将左键设置为无效状态
+    this.rightPressed = this.leftValid = this.shiftValid = false
   }
 
   /**
