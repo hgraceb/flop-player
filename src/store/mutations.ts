@@ -281,29 +281,24 @@ export const mutations = {
   },
   /** 重开游戏，TODO 删除测试代码 */
   upk: (state: State): void => {
-    if (state.videoParser) {
-      state.userParser = state.videoParser
-      store.commit('initGame', state.userParser)
-      state.gameEvents = []
-      const interval = setInterval(() => {
-        if (state.videoParser) {
-          state.gameEvents.push(state.videoParser.getGameEvents()[state.gameEvents.length])
-          if (state.gameEvents.length === state.videoParser.getGameEvents().length) {
-            clearInterval(interval)
-          }
-        }
-      }, 100)
-      // 设置游戏类型
-      state.gameType = 'UPK'
-      // 重置变量
-      store.commit('resetGame')
-      // 播放录像
-      store.commit('playVideo')
-    }
+    state.userParser = state.videoParser
+    store.commit('initGame', state.userParser)
+    state.gameEvents = []
+    const interval = setInterval(() => {
+      state.gameEvents.push(state.videoParser.getGameEvents()[state.gameEvents.length])
+      if (state.gameEvents.length === state.videoParser.getGameEvents().length) {
+        clearInterval(interval)
+      }
+    }, 100)
+    // 设置游戏类型
+    state.gameType = 'UPK'
+    // 重置变量
+    store.commit('resetGame')
+    // 播放录像
+    store.commit('playVideo')
   },
   /** 重新播放游戏录像，TODO 进行函数节流处理 */
   replayVideo: (state: State): void => {
-    if (!state.videoParser) return
     state.gameEvents = state.videoParser.getGameEvents()
     // 设置游戏类型
     state.gameType = 'Video'
