@@ -174,55 +174,57 @@ export default defineComponent({
       // 没有 Openings 信息
       if (store.state.gameCellBoard.length === 0) return ''
       let path = ''
-      const cells: Cell[] = []
-      // TODO 因为第一次写的时候游戏方块布局的索引是从上往下、从左往右的，重构之后绘制有问题，临时将游戏方块布局重新排布了一下，需要找个时间直接改为从左往右、从上往下
-      for (let i = 0; i < store.state.width; i++) {
-        for (let j = 0; j < store.state.height; j++) {
-          cells[i * store.state.height + j] = store.state.gameCellBoard[i + j * store.state.width]
-        }
-      }
-      for (let i = 0; i < cells.length; i++) {
-        // 当前索引对应的方块
-        const current = cells[i]
-        // 只遍历属于 Opening 的非零数字方块
-        if (current.opening <= 0 || current.number <= 0) continue
-        // 当前索引所在行，首行为第 0 行
-        const row = i % store.state.height
-        // 当前索引所在列，首列为第 0 列
-        const column = Math.floor(i / store.state.height)
-        // 方块实际边长
-        const sideLength = CELL_SIDE_LENGTH * SVG_SCALE
-        // 边框宽度，需要修正线段没有闭合导致显示时会有半个像素点缺口的问题
-        const width = 3 * SVG_SCALE
-        // 判断目标方块与当前方块是否属于同一个 Opening，equalZero 表示目标方块的数字是否为 0
-        const isSameOpening = (equalZero: boolean, current?: Cell, target?: Cell): boolean => {
-          if (current === undefined || target === undefined || (equalZero ? target.number !== 0 : target.number === 0)) return false
-          return current.opening === target.opening || current.opening === target.opening2 || current.opening2 === target.opening || current.opening2 === target.opening2
-        }
-        // 临近的方块
-        const down = row < store.state.height - 1 ? cells[i + 1] : undefined
-        const right = column < store.state.width - 1 ? cells[i + store.state.height] : undefined
-        // 临近的方块是否与当前方块属于同一个 Opening 并且 number 属性的值不为 0
-        const isNonZeroDown = isSameOpening(false, current, down)
-        const isNonZeroRight = isSameOpening(false, current, right)
-        // 临近的方块是否与当前方块属于同一个 Opening 并且 number 属性的值为 0
-        const isZeroRight = isSameOpening(true, current, right)
-        const isZeroDown = isSameOpening(true, current, down)
-        const isZeroLeft = isSameOpening(true, current, column > 0 ? cells[i - store.state.height] : undefined)
-        const isZeroLeftDown = isSameOpening(true, current, row < store.state.height - 1 ? cells[i - store.state.height + 1] : undefined)
-        const isZeroRightDown = isSameOpening(true, current, row < store.state.height - 1 ? cells[i + store.state.height + 1] : undefined)
-        const isZeroUp = isSameOpening(true, current, row > 0 ? cells[i - 1] : undefined)
-        const isZeroRightUp = isSameOpening(true, current, row > 0 ? cells[i + store.state.height - 1] : undefined)
-        // 如果当前非零数字方块的底部方块也是非零数字方块，并且当前方块的左侧、右侧、左下角、右下角至少有一个是属于当前 Opening 的零数字方块
-        if (isNonZeroDown && (isZeroLeft || isZeroRight || isZeroLeftDown || isZeroRightDown)) {
-          // 边框长度
-          const length = (1 + (row === 0 || row === store.state.height - 2 ? 0.5 : 0)) * sideLength + (row === 0 || row === store.state.height - 2 ? width / 2 : width)
-          path = `${path} M ${(column + 0.5) * sideLength} ${(row + (row !== 0 ? 0.5 : 0)) * sideLength - (row !== 0 ? width / 2 : 0)} l 0 ${length} Z`
-        }
-        // 如果当前非零数字方块的右侧方块也是非零数字方块，并且当前方块的上侧、底部、右上角、右下角至少有一个是属于当前 Opening 的零数字方块
-        if (isNonZeroRight && (isZeroUp || isZeroDown || isZeroRightUp || isZeroRightDown)) {
-          const length = (1 + (column === 0 || column === store.state.width - 2 ? 0.5 : 0)) * sideLength + (column === 0 || column === store.state.width - 2 ? width / 2 : width)
-          path = `${path} M ${(column + (column !== 0 ? 0.5 : 0)) * sideLength - (column !== 0 ? width / 2 : 0)} ${(row + 0.5) * sideLength} l ${length} 0 Z`
+      for (let column = 0; column < store.state.width; column++) {
+        for (let row = 0; row < store.state.height; row++) {
+          // 当前索引对应的方块
+          const current = store.state.gameCellBoard[column + row * store.state.width]
+          // 只遍历属于 Opening 的非零数字方块
+          if (current.opening <= 0 || current.number <= 0) continue
+          // 方块实际边长
+          const sideLength = CELL_SIDE_LENGTH * SVG_SCALE
+          // 边框宽度，需要修正线段没有闭合导致显示时会有半个像素点缺口的问题
+          const width = 3 * SVG_SCALE
+          // 根据行号和列号获取指定方块，超出游戏区域则返回 undefined
+          const getCell = (x: number, y: number): Cell | undefined => {
+            // 判断方块是否在游戏区域外
+            if (x < 0 || x >= store.state.width || y < 0 || y >= store.state.height) return undefined
+            return store.state.gameCellBoard[x + y * store.state.width]
+          }
+          // 判断目标方块与当前方块是否属于同一个 Opening，equalZero 表示目标方块的数字是否为 0
+          const isSameOpening = (equalZero: boolean, current?: Cell, target?: Cell): boolean => {
+            if (current === undefined || target === undefined || (equalZero ? target.number !== 0 : target.number === 0)) return false
+            return current.opening === target.opening || current.opening === target.opening2 || current.opening2 === target.opening || current.opening2 === target.opening2
+          }
+          // 临近的方块
+          const up = getCell(column, row - 1)
+          const down = getCell(column, row + 1)
+          const left = getCell(column - 1, row)
+          const right = getCell(column + 1, row)
+          const leftDown = getCell(column - 1, row + 1)
+          const rightUp = getCell(column + 1, row - 1)
+          const rightDown = getCell(column + 1, row + 1)
+          // 临近的方块是否与当前方块属于同一个 Opening 并且 number 属性的值不为 0
+          const isNonZeroDown = isSameOpening(false, current, down)
+          const isNonZeroRight = isSameOpening(false, current, right)
+          // 临近的方块是否与当前方块属于同一个 Opening 并且 number 属性的值为 0
+          const isZeroRight = isSameOpening(true, current, right)
+          const isZeroDown = isSameOpening(true, current, down)
+          const isZeroLeft = isSameOpening(true, current, left)
+          const isZeroLeftDown = isSameOpening(true, current, leftDown)
+          const isZeroRightDown = isSameOpening(true, current, rightDown)
+          const isZeroUp = isSameOpening(true, current, up)
+          const isZeroRightUp = isSameOpening(true, current, rightUp)
+          // 如果当前非零数字方块的底部方块也是非零数字方块，并且当前方块的左侧、右侧、左下角、右下角至少有一个是属于当前 Opening 的零数字方块
+          if (isNonZeroDown && (isZeroLeft || isZeroRight || isZeroLeftDown || isZeroRightDown)) {
+            // 边框长度
+            const length = (1 + (row === 0 || row === store.state.height - 2 ? 0.5 : 0)) * sideLength + (row === 0 || row === store.state.height - 2 ? width / 2 : width)
+            path = `${path} M ${(column + 0.5) * sideLength} ${(row + (row !== 0 ? 0.5 : 0)) * sideLength - (row !== 0 ? width / 2 : 0)} l 0 ${length} Z`
+          }
+          // 如果当前非零数字方块的右侧方块也是非零数字方块，并且当前方块的上侧、底部、右上角、右下角至少有一个是属于当前 Opening 的零数字方块
+          if (isNonZeroRight && (isZeroUp || isZeroDown || isZeroRightUp || isZeroRightDown)) {
+            const length = (1 + (column === 0 || column === store.state.width - 2 ? 0.5 : 0)) * sideLength + (column === 0 || column === store.state.width - 2 ? width / 2 : width)
+            path = `${path} M ${(column + (column !== 0 ? 0.5 : 0)) * sideLength - (column !== 0 ? width / 2 : 0)} ${(row + 0.5) * sideLength} l ${length} 0 Z`
+          }
         }
       }
       return path
