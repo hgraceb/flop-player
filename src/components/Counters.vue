@@ -33,8 +33,8 @@ export default defineComponent({
       }
       return store.state.gameElapsedTime / 1000
     })
-    // 可能出现 solvedBBBV 为 0 的情况，比如标雷之后开空
-    const estRTime = computed(() => solvedBBBV.value > 0 ? time.value * (bbbv.value / solvedBBBV.value) : null)
+    // 可能出现 solvedBBBV 为 0 的情况，如：在属于开空的方块上标雷
+    const estRTime = computed(() => solvedBBBV.value > 0 ? time.value * (bbbv.value / solvedBBBV.value) : undefined)
     const stats = computed(() => {
       // 游戏事件索引超出游戏事件总数时按照最后一个游戏事件进行计算
       return store.state.gameEvents[Math.min(store.state.gameEventIndex, store.state.gameEvents.length) - 1]?.stats
@@ -52,6 +52,7 @@ export default defineComponent({
     const wastedClicks = computed(() => wastedLeftClicks.value + wastedRightClicks.value + wastedDoubleClicks.value)
     // 有效点击次数，所有改变当前雷局局面的点击计算为一次有效点击
     const eClicks = computed(() => clicks.value - wastedClicks.value)
+    // 3BV 的值正常情况下不会为 0，不用考虑除零问题，如果出现问题的话应该是录像事件解析器中要做适配
     const coeff = computed(() => solvedBBBV.value / bbbv.value)
     const path = computed(() => stats.value?.path)
     const flags = computed(() => stats.value?.flags)
