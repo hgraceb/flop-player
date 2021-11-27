@@ -6,8 +6,6 @@ import { DefaultParser } from '@/game/DefaultParser'
 export type State = typeof storageDefault & {
   // 游戏类型：Video = 播放录像，UPK = 重开，UPK 模式最大的作用是可以实时验证录像解析器的功能
   gameType: 'Video' | 'UPK'
-  // 第一个打开方块游戏事件对应的索引，用于判断是否需要开始计时，值为负数则代表当前还没有方块打开事件
-  firstOpenIndex: number
   // 录像文件解析结果
   videoParser: BaseParser
   // 玩家操作解析结果
@@ -42,7 +40,9 @@ export type State = typeof storageDefault & {
   faceStatus: ImgFaceType
   // 游戏事件索引
   gameEventIndex: number
-  // 游戏开始的时间（毫秒）, 值为负数时表示还未开始
+  // 游戏是否正式开始，在第一个方块被打开后游戏才开始计时
+  gameStarted: boolean
+  // 游戏开始的时间（毫秒）, 值为 0 时表示游戏还未开始计时
   gameStartTime: number,
   // 游戏经过的时间（毫秒）
   gameElapsedTime: number,
@@ -72,7 +72,6 @@ export const state: State = {
   /** 不进行本地缓存的变量 */
   // 游戏原始信息
   gameType: 'Video',
-  firstOpenIndex: -1,
   videoParser: new DefaultParser(),
   userParser: new DefaultParser(),
   width: 8,
@@ -91,6 +90,7 @@ export const state: State = {
   videoAnimationId: 0,
   faceStatus: 'face-normal',
   gameEventIndex: 0,
+  gameStarted: false,
   gameStartTime: 0.0,
   gameElapsedTime: 0.0,
   gameMousePoints: [],

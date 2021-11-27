@@ -440,6 +440,11 @@ export class VideoParser extends BaseParser {
     if (!this.isInside(column, row) || cell.opened || cell.flagged) return
     // 来都来了，就把你给开了吧 (づ￣ 3￣)づ
     cell.opened = true
+    if (this.gameState === 'Begin') {
+      // 首次方块被打开后开始游戏，开始游戏的事件在打开方块的事件之前
+      this.gameState = 'Start'
+      this.pushGameEvent('Start', column, row)
+    }
     // 如果方块不是雷，游戏事件为正常打开方块；如果方块是雷，游戏事件为方块爆炸
     this.pushGameEvent(cell.number >= 0 ? 'Open' : 'Blast', column, row)
     if (cell.number === 0) {

@@ -58,10 +58,8 @@ export const mutations = {
   },
   /** 设置游戏开始的时间（毫秒） */
   setGameStartTime: (state: State, time: number): void => {
-    // 还没有方块被打开时不进行计时，只模拟游戏事件，如：Flag
-    if (state.firstOpenIndex >= 0) {
-      state.gameStartTime = time
-    }
+    // 还没有方块被打开时不进行计时，只模拟游戏事件，如：标雷
+    state.gameStartTime = state.gameStarted ? time : 0.0
   },
   /** 设置游戏速度 */
   setGameSpeed: (state: State, speed: number): void => {
@@ -155,9 +153,8 @@ export const mutations = {
     // 根据快照还原笑脸状态
     state.faceStatus = event.snapshot!.faceStatus
     switch (event.name) {
-      case 'Open':
-        // 重置第一个打开方块游戏事件对应的索引，如果不重置的话其实问题也不大，因为只有录像才会回放，而录像是可以直接进行计时的
-        state.firstOpenIndex = state.firstOpenIndex !== eventIndex ? state.firstOpenIndex : -1
+      case 'Start':
+        state.gameStarted = false
         break
       case 'LeftClicksAdded':
         state.gameLeftPoints.pop()
@@ -200,6 +197,9 @@ export const mutations = {
       faceStatus: state.faceStatus
     }
     switch (event.name) {
+      case 'Start':
+        state.gameStarted = true
+        break
       case 'Flag':
         state.gameImgBoard[imgIndex] = 'cell-flag'
         break
@@ -219,8 +219,6 @@ export const mutations = {
         state.gameImgBoard[imgIndex] = 'cell-normal'
         break
       case 'Open':
-        // 记录第一个打开方块游戏事件对应的索引
-        state.firstOpenIndex = state.firstOpenIndex >= 0 ? state.firstOpenIndex : eventIndex
         // event.number === -1 不能作为游戏结束的标识，因为可能有多个雷被打开的情况
         state.gameImgBoard[imgIndex] = event.number !== -1 ? ('cell-number-' + event.number) as ImgCellType : 'cell-mine-bomb'
         break
@@ -270,6 +268,7 @@ export const mutations = {
   /** 重置游戏参数 */
   resetGame: (state: State): void => {
     state.gameImgBoard = Array.from(Array(state.width * state.height), () => 'cell-normal')
+    state.gameStarted = false
     state.gameElapsedTime = 0.0
     state.gameEventIndex = 0
     state.faceStatus = 'face-normal'
@@ -277,7 +276,6 @@ export const mutations = {
     state.gameLeftPoints = []
     state.gameRightPoints = []
     state.gameDoublePoints = []
-    state.firstOpenIndex = -1
   },
   /** 重开游戏，TODO 删除测试代码 */
   upk: (state: State): void => {
@@ -319,7 +317,7 @@ export const mutations = {
         return
       }
       // 更新游戏经过的时间（毫秒）,首次时间为 0 ms
-      const elapsedTime = state.gameStartTime <= 0 ? 0 : timestamp - state.gameStartTime
+      const elapsedTime = state.gameStartTime === 0 ? 0 : timestamp - state.gameStartTime
       // 非录像播放时速度始终为一倍速
       store.commit('setGameElapsedTime', plus(state.gameElapsedTime, times(elapsedTime, state.gameType === 'Video' ? state.gameSpeed : 1)))
       // 重置游戏开始时间（毫秒）
