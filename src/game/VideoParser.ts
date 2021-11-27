@@ -12,7 +12,7 @@ export class VideoParser extends BaseParser {
   protected readonly mPlayerArray: Uint8Array
 
   /* 通过二次计算得到的录像数据 */
-  protected mBBBV = 0
+  protected readonly mBBBV: number
   protected mIslands = 0
   protected mOpenings = 0
   protected mGZiNi = 0
@@ -23,8 +23,6 @@ export class VideoParser extends BaseParser {
   /* 计算录像数据需要用到的变量 */
   // 是否允许追加事件
   private readonly appendable: boolean
-  // 方块边长
-  private readonly squareSize = 16
   // 当前是否可以标记问号
   private marks: boolean
   // 上一个录像事件，使用的时候要注意各个属性值可能是 undefined
@@ -39,11 +37,11 @@ export class VideoParser extends BaseParser {
   private flags = 0
   // 已解决的开空数量
   private solvedOps = 0
-  // 未解决的开空数组
+  // 未解决的开空数组，第一个元素（索引为 0）存的是编号为 1 的开空数量
   private unsolvedOps: number[] = []
   // 已解决的岛屿数量
   private solvedIsls = 0
-  // 未解决的岛屿数组
+  // 未解决的岛屿数组，第一个元素（索引为 0）存的是编号为 1 的岛屿数量
   private unsolvedIsls: number[] = []
   // 已解决的 BBBV 数量
   private solvedBBBV = 0
@@ -90,6 +88,8 @@ export class VideoParser extends BaseParser {
     this.marks = video.getMarks() === 1
     // 初始化游戏布局
     this.initBoard(video.getBoard())
+    // 计算最少左键点击数
+    this.mBBBV = this.unsolvedOps.length + this.unsolvedIsls.reduce((pre, cur) => pre + cur)
     // 模拟当前所有录像事件
     for (let i = 0; i < video.getEvents().length; i++) {
       this.performEvent(video.getEvents()[i])
@@ -147,9 +147,17 @@ export class VideoParser extends BaseParser {
     // 设置每个方块对应的开空
     for (let i = 0; i < this.mWidth; i++) {
       for (let j = 0; j < this.mHeight; j++) {
-        // 如果方块不是开空或者方块已经设置过所在开空则不进行设置
-        if (this.board[i + j * this.mWidth].number !== 0 || this.board[i + j * this.mWidth].opening !== 0) continue
-        this.setOpeningsAround(i, j, ++this.mOpenings)
+        const cell = this.board[i + j * this.mWidth]
+        // 方块是开空，并且没有设置过属于哪个开空（可能同时属于两个不同编号的开空）
+        if (cell.number === 0 && cell.opening === 0) this.setOpeningsAround(i, j, ++this.mOpenings)
+      }
+    }
+    // 设置每个方块对应的岛屿
+    for (let i = 0; i < this.mWidth; i++) {
+      for (let j = 0; j < this.mHeight; j++) {
+        const cell = this.board[i + j * this.mWidth]
+        // 方块不是雷、不属于开空、是岛屿并且没有设置过属于哪个岛屿
+        if (cell.number > 0 && cell.opening === 0 && cell.island === 0) this.setIslandAround(i, j, ++this.mIslands)
       }
     }
   }
@@ -172,7 +180,7 @@ export class VideoParser extends BaseParser {
       cell.opening = opening
     }
     // 添加未完成的开空方块数量
-    this.unsolvedOps[opening] = this.unsolvedOps[opening] ? this.unsolvedOps[opening] + 1 : 1
+    this.unsolvedOps[opening - 1] = this.unsolvedOps[opening - 1] ? this.unsolvedOps[opening - 1] + 1 : 1
   }
 
   /**
@@ -182,6 +190,25 @@ export class VideoParser extends BaseParser {
     for (let i = column - 1; i <= column + 1; i++) {
       for (let j = row - 1; j <= row + 1; j++) {
         this.setOpenings(i, j, opening)
+      }
+    }
+  }
+
+  /**
+   * 设置本身和周围方块所在岛屿
+   */
+  private setIslandAround (column: number, row: number, island: number): void {
+    for (let i = column - 1; i <= column + 1; i++) {
+      for (let j = row - 1; j <= row + 1; j++) {
+        if (!this.isInside(i, j)) continue
+        const cell = this.board[i + j * this.mWidth]
+        // 方块不是雷、不属于开空、是岛屿并且没有设置过属于哪个岛屿
+        if (cell.number > 0 && cell.opening === 0 && cell.island === 0) {
+          cell.island = island
+          this.setIslandAround(i, j, island)
+          // 添加未完成的岛屿方块数量
+          this.unsolvedIsls[island - 1] = this.unsolvedIsls[island - 1] ? this.unsolvedIsls[island - 1] + 1 : 1
+        }
       }
     }
   }
