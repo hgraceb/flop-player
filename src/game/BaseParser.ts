@@ -19,14 +19,14 @@ export interface GameEvent {
   // 游戏事件时间
   time: number
   // 游戏事件所在列，从 0 开始
-  row: number
-  // 游戏事件所在行，从 0 开始
   column: number
+  // 游戏事件所在行，从 0 开始
+  row: number
   // 游戏事件所在方块对应的数字，即周围雷的数量，超出游戏区域时值为 undefined
   number: number | undefined
-  // 鼠标指针精确横坐标，和 row 不一定是对应关系
+  // 鼠标指针精确横坐标，和 column 不一定是对应关系，如：双击打开周围方块
   x: number
-  // 鼠标指针精确纵坐标，和 column 不一定是对应关系
+  // 鼠标指针精确纵坐标，和 row 不一定是对应关系，如：双击打开周围方块
   y: number
   // 基础统计数据
   stats: {

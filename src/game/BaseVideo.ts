@@ -6,9 +6,9 @@ export interface VideoEvent {
   time: number
   // <left_click> | <left_release> | <right_click> | <right_release> | <middle_click> | <middle_release> | <mouse_move> | <left_click_with_shift> | <toggle_question_mark_setting>
   mouse: 'lc' | 'lr' | 'rc' | 'rr' | 'mc' | 'mr' | 'mv' | 'sc' | 'mt'
-  // 当前列，从 0 开始
+  // 录像事件所在列，从 0 开始
   column: number
-  // 当前行，从 0 开始
+  // 录像事件所在行，从 0 开始
   row: number
   // X 轴精确坐标
   x: number
