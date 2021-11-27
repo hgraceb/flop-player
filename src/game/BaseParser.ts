@@ -4,15 +4,20 @@ import { ImgCellType, ImgFaceType } from '@/util/image'
 type Base = 'LeftClick' | 'LeftRelease' | 'RightClick' | 'RightRelease' | 'MiddleClick' | 'MiddleRelease' | 'MouseMove' | 'LeftClickWithShift' | 'ToggleQuestionMarkSetting'
 // 自定义游戏事件名称
 type Custom = 'Press' | 'PressQuestionMark' | 'Flag' | 'RemoveFlag' | 'QuestionMark' | 'RemoveQuestionMark' | 'Open' | 'Blast' | 'Mislabeled' | 'Win' | 'Lose'
+// 其他游戏事件名称（暂时未实现）
+type Other = 'Solved3BV' | 'Release' | 'LeftPressWithShift' | 'LeftPress' | 'RightPress' | 'MiddlePress' | 'LeftClicksAdded' | 'RightClicksAdded' | 'DoubleClicksAdded'
 
 // 游戏事件名称
-export type GameEventName = Base | Custom
+export type GameEventName = Base | Custom | Other
 
 /**
  * 游戏事件
  */
 export interface GameEvent {
+  // 游戏事件名称
   name: GameEventName
+  // 游戏事件时间
+  time: number
   // 游戏事件所在列，从 0 开始
   row: number
   // 游戏事件所在行，从 0 开始
@@ -33,6 +38,9 @@ export interface GameEvent {
     leftClicks: number
     rightClicks: number
     doubleClicks: number
+    wastedLeftClicks: number
+    wastedRightClicks: number
+    wastedDoubleClicks: number
   }
   // 快照
   snapshot?: {
@@ -40,6 +48,30 @@ export interface GameEvent {
     cellType: ImgCellType
     // 笑脸状态
     faceStatus: ImgFaceType
+  }
+}
+
+/**
+ * 方块信息
+ */
+export class Cell {
+  // 周围是雷的方块数量，-1 代表方块本身是雷
+  number: number
+  // 是否已经被打开
+  opened = false
+  // 是否被旗子标记
+  flagged = false
+  // 是否被问号标记
+  questioned = false
+  // 所在岛屿编号，为 0 则不属于任何岛屿
+  island = 0
+  // 所在开空编号，为 0 则不属于任何开空
+  opening = 0
+  // 所在第二个开空编号，为 0 则不属于任何开空，一个方块可能同时属于两个开空
+  opening2 = 0
+
+  constructor (mine: boolean) {
+    this.number = mine ? -1 : 0
   }
 }
 
@@ -63,6 +95,8 @@ export abstract class BaseParser {
   protected abstract mGZiNi: number
   // Human ZiNi
   protected abstract mHZiNi: number
+  // 游戏方块信息
+  protected abstract board: Cell[]
   // 当前游戏事件
   protected abstract mGameEvents: GameEvent[]
   // 玩家姓名原始数据
@@ -107,6 +141,11 @@ export abstract class BaseParser {
    * 获取 Human ZiNi
    */
   getHZiNi = (): number => this.mHZiNi
+
+  /**
+   * 获取游戏方块信息
+   */
+  getBoard = (): Cell[] => this.board
 
   /**
    * 获取当前游戏事件

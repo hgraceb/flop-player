@@ -1,26 +1,5 @@
-import { BaseParser, GameEvent, GameEventName } from '@/game/BaseParser'
+import { BaseParser, Cell, GameEvent, GameEventName } from '@/game/BaseParser'
 import { BaseVideo, VideoEvent } from '@/game/BaseVideo'
-
-class Cell {
-  // 周围是雷的方块数量，-1 代表方块本身是雷
-  number: number
-  // 是否已经被打开
-  opened = false
-  // 是否被旗子标记
-  flagged = false
-  // 是否被问号标记
-  questioned = false
-  // 所在岛屿编号，为 0 则不属于任何岛屿
-  island = 0
-  // 所在开空编号，为 0 则不属于任何开空
-  opening = 0
-  // 所在第二个开空编号，为 0 则不属于任何开空，一个方块可能同时属于两个开空
-  opening2 = 0
-
-  constructor (mine: boolean) {
-    this.number = mine ? -1 : 0
-  }
-}
 
 /**
  * 录像事件解析器
@@ -38,6 +17,7 @@ export class VideoParser extends BaseParser {
   protected mOpenings = 0
   protected mGZiNi = 0
   protected mHZiNi = 0
+  protected board: Cell[] = []
   protected mGameEvents: GameEvent[] = []
 
   /* 计算录像数据需要用到的变量 */
@@ -45,8 +25,6 @@ export class VideoParser extends BaseParser {
   private readonly appendable: boolean
   // 方块边长
   private readonly squareSize = 16
-  // 游戏布局
-  private board: Cell[] = []
   // 当前是否可以标记问号
   private marks: boolean
   // 上一个录像事件，使用的时候要注意各个属性值可能是 undefined
@@ -71,6 +49,12 @@ export class VideoParser extends BaseParser {
   private rightClicks = 0
   // 双击点击数
   private doubleClicks = 0
+  // 多余的左键点击数
+  private wastedLeftClicks = 0
+  // 多余的右键点击数
+  private wastedRightClicks = 0
+  // 多余的双击点击数
+  private wastedDoubleClicks = 0
   // 左键是否处于点击状态
   private leftPressed = false
   // 右键是否处于点击状态
@@ -122,6 +106,7 @@ export class VideoParser extends BaseParser {
   private pushGameEvent (name: GameEventName, column: number = this.curEvent.column, row: number = this.curEvent.row): void {
     this.mGameEvents.push({
       name: name,
+      time: this.curEvent.time,
       number: this.board[column + row * this.mWidth].number,
       x: this.curEvent.x,
       y: this.curEvent.y,
@@ -135,7 +120,10 @@ export class VideoParser extends BaseParser {
         solvedBBBV: this.solvedBBBV,
         leftClicks: this.leftClicks,
         rightClicks: this.rightClicks,
-        doubleClicks: this.doubleClicks
+        doubleClicks: this.doubleClicks,
+        wastedLeftClicks: this.wastedLeftClicks,
+        wastedRightClicks: this.wastedRightClicks,
+        wastedDoubleClicks: this.wastedDoubleClicks
       }
     })
   }

@@ -5,11 +5,12 @@ import { ImgCellType, ImgFaceType } from '@/util/image'
 import { SCALE_ARRAY, SPEED_ARRAY } from '@/game/constants'
 import { i18n } from '@/plugins/i18n'
 import { message } from 'ant-design-vue'
-import { Parser } from '@/game/Parser'
 import { RawVideo } from '@/game/RawVideo'
 import { AVFVideo } from '@/game/AVFVideo'
 import { MVFVideo } from '@/game/MVFVideo'
 import { RMVVideo } from '@/game/RMVVideo'
+import { BaseParser } from '@/game/BaseParser'
+import { VideoParser } from '@/game/VideoParser'
 
 /**
  * Mutations 函数定义，使用类型推断的方式，可以快速找到函数的所有 Usages
@@ -88,7 +89,7 @@ export const mutations = {
     }
   },
   /** 初始化游戏 */
-  initGame: (state: State, parser: Parser): void => {
+  initGame: (state: State, parser: BaseParser): void => {
     state.width = parser.getWidth()
     state.height = parser.getHeight()
     state.mines = parser.getMines()
@@ -105,13 +106,13 @@ export const mutations = {
   receiveVideo: (state: State, { type, data }: { type: string, data: ArrayBuffer }): void => {
     try {
       if (type === 'avf') {
-        state.videoParser = new Parser(new AVFVideo(data))
+        state.videoParser = new VideoParser(new AVFVideo(data), false)
       } else if (type === 'mvf') {
-        state.videoParser = new Parser(new MVFVideo(data))
+        state.videoParser = new VideoParser(new MVFVideo(data), false)
       } else if (type === 'rmv') {
-        state.videoParser = new Parser(new RMVVideo(data))
+        state.videoParser = new VideoParser(new RMVVideo(data), false)
       } else if (type === 'rawvf') {
-        state.videoParser = new Parser(new RawVideo(data))
+        state.videoParser = new VideoParser(new RawVideo(data), false)
       } else {
         // 不支持的录像类型
         message.error(`${i18n.global.t('error.videoParse')}${i18n.global.t('error.fileUnsupported')}`, 5)
@@ -144,7 +145,7 @@ export const mutations = {
     const eventIndex = --state.gameEventIndex
     // 根据事件索引获取游戏事件
     const event = state.gameEvents[eventIndex]
-    if (event.name === 'Won' || event.name === 'Lose' || event.name === 'Solved3BV') {
+    if (event.name === 'Win' || event.name === 'Lose' || event.name === 'Solved3BV') {
       return
     }
     // 根据坐标获取图片索引
@@ -168,14 +169,11 @@ export const mutations = {
         state.gameDoublePoints.pop()
         break
     }
-    // 设置当前所在坐标
-    if ('precisionX' in event || 'precisionY' in event) {
-      // 最后一个鼠标路径坐标
-      const lastPoint = state.gameMousePoints[state.gameMousePoints.length - 1]
-      // 如果鼠标的坐标有变动，则移除上一个鼠标路径坐标
-      if (event.precisionX !== lastPoint?.x || event.precisionY !== lastPoint?.y) {
-        state.gameMousePoints.pop()
-      }
+    // 最后一个鼠标路径坐标
+    const lastPoint = state.gameMousePoints[state.gameMousePoints.length - 1]
+    // 如果鼠标的坐标有变动，则移除上一个鼠标路径坐标
+    if (event.x !== lastPoint?.x || event.y !== lastPoint?.y) {
+      state.gameMousePoints.pop()
     }
   },
   /** 模拟下一个游戏事件 */
@@ -188,10 +186,10 @@ export const mutations = {
       return
     }
     // TODO 处理录像意外结尾的情况，即没有雷被打开并且时间没有超时
-    if (event.name === 'Won' || event.name === 'Lose') {
+    if (event.name === 'Win' || event.name === 'Lose') {
       // 设置游戏播放暂停，如果不设置的话，在游戏播放结束之后会误以为游戏还处于正常播放的状态
       store.commit('setVideoPaused')
-      state.faceStatus = event.name === 'Won' ? 'face-win' : 'face-lose'
+      state.faceStatus = event.name === 'Win' ? 'face-win' : 'face-lose'
       return
     }
     // 根据坐标获取图片索引
@@ -253,23 +251,20 @@ export const mutations = {
         break
       case 'LeftClicksAdded':
         // 可以先判断坐标是否重复，但是本来也没有多少个坐标点，没必要为了这几个坐标点多写十几行代码
-        state.gameLeftPoints.push({ x: event.precisionX, y: event.precisionY })
+        state.gameLeftPoints.push({ x: event.x, y: event.y })
         break
       case 'RightClicksAdded':
-        state.gameRightPoints.push({ x: event.precisionX, y: event.precisionY })
+        state.gameRightPoints.push({ x: event.x, y: event.y })
         break
       case 'DoubleClicksAdded':
-        state.gameDoublePoints.push({ x: event.precisionX, y: event.precisionY })
+        state.gameDoublePoints.push({ x: event.x, y: event.y })
         break
     }
-    // 设置当前所在坐标
-    if ('precisionX' in event || 'precisionY' in event) {
-      // 最后一个鼠标路径坐标
-      const lastPoint = state.gameMousePoints[state.gameMousePoints.length - 1]
-      // 如果鼠标的坐标有变动，则添加一个新的鼠标路径坐标
-      if (event.precisionX !== lastPoint?.x || event.precisionY !== lastPoint?.y) {
-        state.gameMousePoints.push({ x: event.precisionX, y: event.precisionY })
-      }
+    // 最后一个鼠标路径坐标
+    const lastPoint = state.gameMousePoints[state.gameMousePoints.length - 1]
+    // 如果鼠标的坐标有变动，则添加一个新的鼠标路径坐标
+    if (event.x !== lastPoint?.x || event.y !== lastPoint?.y) {
+      state.gameMousePoints.push({ x: event.x, y: event.y })
     }
   },
   /** 重置游戏参数 */

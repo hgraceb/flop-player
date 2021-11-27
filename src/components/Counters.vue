@@ -33,13 +33,13 @@ export default defineComponent({
       }
       return store.state.gameElapsedTime / 1000
     })
-    // 可能出现 solvedBbbv 为 0 的情况，比如标雷之后开空
-    const estRTime = computed(() => solvedBbbv.value > 0 ? time.value * (bbbv.value / solvedBbbv.value) : null)
+    // 可能出现 solvedBBBV 为 0 的情况，比如标雷之后开空
+    const estRTime = computed(() => solvedBBBV.value > 0 ? time.value * (bbbv.value / solvedBBBV.value) : null)
     const stats = computed(() => {
       // 游戏事件索引超出游戏事件总数时按照最后一个游戏事件进行计算
       return store.state.gameEvents[Math.min(store.state.gameEventIndex, store.state.gameEvents.length) - 1]?.stats
     })
-    const solvedBbbv = computed(() => stats.value?.solvedBbbv)
+    const solvedBBBV = computed(() => stats.value?.solvedBBBV)
     const solvedOps = computed(() => stats.value?.solvedOps)
     const solvedIsls = computed(() => stats.value?.solvedIsls)
     const leftClicks = computed(() => stats.value?.leftClicks)
@@ -52,7 +52,7 @@ export default defineComponent({
     const wastedClicks = computed(() => wastedLeftClicks.value + wastedRightClicks.value + wastedDoubleClicks.value)
     // 有效点击次数，所有改变当前雷局局面的点击计算为一次有效点击
     const eClicks = computed(() => clicks.value - wastedClicks.value)
-    const coeff = computed(() => solvedBbbv.value / bbbv.value)
+    const coeff = computed(() => solvedBBBV.value / bbbv.value)
     const path = computed(() => stats.value?.path)
     const flags = computed(() => stats.value?.flags)
 
@@ -85,14 +85,14 @@ export default defineComponent({
         key: '3BV',
         value: computed(() => {
           if (isDefault.value) return '*/*'
-          return `${solvedBbbv.value}/${bbbv.value}`
+          return `${solvedBBBV.value}/${bbbv.value}`
         })
       },
       {
         key: '3BV/s',
         value: computed(() => {
           if (isDefault.value) return '*'
-          return `${round(solvedBbbv.value / time.value, 3).toFixed(3)}`
+          return `${round(solvedBBBV.value / time.value, 3).toFixed(3)}`
         })
       },
       {
@@ -155,14 +155,14 @@ export default defineComponent({
         key: 'IOE',
         value: computed(() => {
           if (isDefault.value) return '*'
-          return `${round(solvedBbbv.value / clicks.value, 3).toFixed(3)}`
+          return `${round(solvedBBBV.value / clicks.value, 3).toFixed(3)}`
         })
       },
       {
         key: 'ThrP',
         value: computed(() => {
           if (isDefault.value) return '*'
-          return `${round(solvedBbbv.value / eClicks.value, 3).toFixed(3)}`
+          return `${round(solvedBBBV.value / eClicks.value, 3).toFixed(3)}`
         })
       },
       {
@@ -219,7 +219,7 @@ export default defineComponent({
         key: 'RQP',
         value: computed(() => {
           if (isDefault.value || !estRTime.value) return '*'
-          // 按照 time.value * (time.value + 1) / solvedBbbv.value 计算的话会导致 计算的值一直是递增的，没有参考意义
+          // 按照 time.value * (time.value + 1) / solvedBBBV.value 计算的话会导致 计算的值一直是递增的，没有参考意义
           return `${round(estRTime.value * (estRTime.value + 1) / bbbv.value, 3).toFixed(3)}`
         })
       }

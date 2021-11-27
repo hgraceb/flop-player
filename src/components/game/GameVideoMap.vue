@@ -23,7 +23,7 @@
 import { computed, defineComponent, onMounted, reactive, ref, Ref, watch } from 'vue'
 import { store } from '@/store'
 import { CELL_SIDE_LENGTH, GAME_MIDDLE, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
-import { Cell } from '@/game/Parser'
+import { Cell } from '@/game/BaseParser'
 
 // SVG 元素，用于创建 SVGPoint 对象，因为 SVGPoint 没有单独的构造方法
 const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
