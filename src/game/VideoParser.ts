@@ -39,8 +39,12 @@ export class VideoParser extends BaseParser {
   private flags = 0
   // 已解决的开空数量
   private solvedOps = 0
+  // 未解决的开空数组
+  private unsolvedOps: number[] = []
   // 已解决的岛屿数量
   private solvedIsls = 0
+  // 未解决的岛屿数组
+  private unsolvedIsls: number[] = []
   // 已解决的 BBBV 数量
   private solvedBBBV = 0
   // 左键点击数
@@ -157,14 +161,18 @@ export class VideoParser extends BaseParser {
     const cell = this.board[column + row * this.mWidth]
     // 如果方块超出游戏区域、方块本身是雷或者方块已经设置过对应开空则直接返回
     if (!this.isInside(column, row) || cell.number === -1 || cell.opening === opening) return
+    // 注意以下的赋值逻辑都基于 cell.opening !== opening
     if (cell.number === 0) {
       cell.opening = opening
       this.setOpeningsAround(column, row, opening)
     } else if (cell.opening) {
+      // 如果当前方块已经属于另外一个开空，则设置 opening2 的值
       cell.opening2 = opening
     } else {
       cell.opening = opening
     }
+    // 添加未完成的开空方块数量
+    this.unsolvedOps[opening] = this.unsolvedOps[opening] ? this.unsolvedOps[opening] + 1 : 1
   }
 
   /**
