@@ -140,6 +140,42 @@ export class VideoParser extends BaseParser {
         this.board[i + j * this.mWidth].number = this.getAroundMines(i, j)
       }
     }
+    // 设置每个方块对应的开空
+    for (let i = 0; i < this.mWidth; i++) {
+      for (let j = 0; j < this.mHeight; j++) {
+        // 如果方块不是开空或者方块已经设置过所在开空则不进行设置
+        if (this.board[i + j * this.mWidth].number !== 0 || this.board[i + j * this.mWidth].opening !== 0) continue
+        this.setOpeningsAround(i, j, ++this.mOpenings)
+      }
+    }
+  }
+
+  /**
+   * 设置方块所在开空
+   */
+  private setOpenings (column: number, row: number, opening: number): void {
+    const cell = this.board[column + row * this.mWidth]
+    // 如果方块超出游戏区域、方块本身是雷或者方块已经设置过对应开空则直接返回
+    if (!this.isInside(column, row) || cell.number === -1 || cell.opening === opening) return
+    if (cell.number === 0) {
+      cell.opening = opening
+      this.setOpeningsAround(column, row, opening)
+    } else if (cell.opening) {
+      cell.opening2 = opening
+    } else {
+      cell.opening = opening
+    }
+  }
+
+  /**
+   * 设置本身和周围方块所在开空
+   */
+  private setOpeningsAround (column: number, row: number, opening: number): void {
+    for (let i = column - 1; i <= column + 1; i++) {
+      for (let j = row - 1; j <= row + 1; j++) {
+        this.setOpenings(i, j, opening)
+      }
+    }
   }
 
   /**
@@ -448,7 +484,7 @@ export class VideoParser extends BaseParser {
     // 如果方块不是雷，游戏事件为正常打开方块；如果方块是雷，游戏事件为方块爆炸
     this.pushGameEvent(cell.number >= 0 ? 'Open' : 'Blast', column, row)
     if (cell.number === 0) {
-      // 如果当前方块属于开空，则自动打开周围方块
+      // 如果当前方块是开空则自动打开周围方块
       this.openAround(column, row)
     } else if (cell.number === -1) {
       // 打开的方块是雷，游戏结束
@@ -461,7 +497,7 @@ export class VideoParser extends BaseParser {
    */
   private openAround (column: number, row: number): void {
     const cell = this.board[column + row * this.mWidth]
-    // 只对游戏区域内已经打开过的方块执行操作，并且方块属于开空或者方块周围雷的数量与方块周围被旗子标记的方块数量相等
+    // 只对游戏区域内已经打开过的方块执行操作，并且方块是开空或者方块周围雷的数量与方块周围被旗子标记的方块数量相等
     if (this.isInside(column, row) && cell.opened && (cell.number === 0 || cell.number === this.getAroundFlags(column, row))) {
       for (let i = column - 1; i <= column + 1; i++) {
         for (let j = row - 1; j <= row + 1; j++) {
