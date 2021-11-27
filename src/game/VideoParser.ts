@@ -168,8 +168,8 @@ export class VideoParser extends BaseParser {
   private setOpenings (column: number, row: number, opening: number): void {
     const cell = this.board[column + row * this.mWidth]
     // 如果方块超出游戏区域、方块本身是雷或者方块已经设置过对应开空则直接返回
-    if (!this.isInside(column, row) || cell.number === -1 || cell.opening === opening) return
-    // 注意以下的赋值逻辑都基于 cell.opening !== opening
+    if (!this.isInside(column, row) || cell.number === -1 || cell.opening === opening || cell.opening2 === opening) return
+    // 注意以下的赋值逻辑都基于 cell.opening !== opening && cell.opening2 !== opening
     if (cell.number === 0) {
       cell.opening = opening
       this.setOpeningsAround(column, row, opening)
@@ -516,15 +516,23 @@ export class VideoParser extends BaseParser {
       this.gameState = 'Start'
       this.pushGameEvent('Start', column, row)
     }
-    // 如果方块不是雷，游戏事件为正常打开方块；如果方块是雷，游戏事件为方块爆炸
-    this.pushGameEvent(cell.number >= 0 ? 'Open' : 'Blast', column, row)
-    if (cell.number === 0) {
-      // 如果当前方块是开空则自动打开周围方块
-      this.openAround(column, row)
-    } else if (cell.number === -1) {
-      // 打开的方块是雷，游戏结束
+    if (cell.number === -1) {
+      // 打开的方块是雷，游戏失败
       this.gameState = 'Lose'
+      this.pushGameEvent('Blast', column, row)
+      return
     }
+    // 更新已处理的数据，如果不属与岛屿和开空，Number(--undefined === 0) 的时候结果为 0
+    const solvedOps = Number(--this.unsolvedOps[cell.opening - 1] === 0) + Number(--this.unsolvedOps[cell.opening2 - 1] === 0)
+    this.solvedIsls += Number(--this.unsolvedIsls[cell.island - 1] === 0)
+    this.solvedOps += solvedOps
+    this.solvedBBBV += Number(cell.island > 0) + solvedOps
+    // 数据处理完成后添加打开方块的游戏事件
+    this.pushGameEvent('Open', column, row)
+    // 如果当前方块是开空则自动打开周围方块
+    if (cell.number === 0) this.openAround(column, row)
+    // 所有非雷方块都已经被打开，游戏胜利
+    if (this.solvedBBBV === this.mBBBV) this.gameState = 'Win'
   }
 
   /**
