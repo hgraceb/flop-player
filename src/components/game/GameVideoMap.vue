@@ -148,12 +148,14 @@ export default defineComponent({
       const sideLength = CELL_SIDE_LENGTH * SVG_SCALE
       // 编号文本字体大小，单位：px
       const fontSize = 120
-      for (let i = 0; i < store.state.gameCellBoard.length; i++) {
-        // 当前索引对应的方块
-        const current = store.state.gameCellBoard[i]
-        // 只在零数字方块上进行文本编号显示
-        if (current.number !== 0 || current.opening <= 0 || current.opening > result.length) continue
-        points[current.opening - 1].push({ x: Math.floor(i / store.state.height), y: i % store.state.height })
+      for (let i = 0; i < store.state.width; i++) {
+        for (let j = 0; j < store.state.height; j++) {
+          // 当前索引对应的方块
+          const current = store.state.gameCellBoard[i + j * store.state.width]
+          // 只在零数字方块上进行文本编号显示
+          if (current.number !== 0 || current.opening <= 0 || current.opening > result.length) continue
+          points[current.opening - 1].push({ x: i, y: j })
+        }
       }
       for (let i = 0; i < points.length; i++) {
         // 选择横坐标和纵坐标都比较居中的方块进行文本展示
@@ -172,9 +174,16 @@ export default defineComponent({
       // 没有 Openings 信息
       if (store.state.gameCellBoard.length === 0) return ''
       let path = ''
-      for (let i = 0; i < store.state.gameCellBoard.length; i++) {
+      const cells: Cell[] = []
+      // TODO 因为第一次写的时候游戏方块布局的索引是从上往下、从左往右的，重构之后绘制有问题，临时将游戏方块布局重新排布了一下，需要找个时间直接改为从左往右、从上往下
+      for (let i = 0; i < store.state.width; i++) {
+        for (let j = 0; j < store.state.height; j++) {
+          cells[i * store.state.height + j] = store.state.gameCellBoard[i + j * store.state.width]
+        }
+      }
+      for (let i = 0; i < cells.length; i++) {
         // 当前索引对应的方块
-        const current = store.state.gameCellBoard[i]
+        const current = cells[i]
         // 只遍历属于 Opening 的非零数字方块
         if (current.opening <= 0 || current.number <= 0) continue
         // 当前索引所在行，首行为第 0 行
@@ -191,19 +200,19 @@ export default defineComponent({
           return current.opening === target.opening || current.opening === target.opening2 || current.opening2 === target.opening || current.opening2 === target.opening2
         }
         // 临近的方块
-        const down = row < store.state.height - 1 ? store.state.gameCellBoard[i + 1] : undefined
-        const right = column < store.state.width - 1 ? store.state.gameCellBoard[i + store.state.height] : undefined
+        const down = row < store.state.height - 1 ? cells[i + 1] : undefined
+        const right = column < store.state.width - 1 ? cells[i + store.state.height] : undefined
         // 临近的方块是否与当前方块属于同一个 Opening 并且 number 属性的值不为 0
         const isNonZeroDown = isSameOpening(false, current, down)
         const isNonZeroRight = isSameOpening(false, current, right)
         // 临近的方块是否与当前方块属于同一个 Opening 并且 number 属性的值为 0
         const isZeroRight = isSameOpening(true, current, right)
         const isZeroDown = isSameOpening(true, current, down)
-        const isZeroLeft = isSameOpening(true, current, column > 0 ? store.state.gameCellBoard[i - store.state.height] : undefined)
-        const isZeroLeftDown = isSameOpening(true, current, row < store.state.height - 1 ? store.state.gameCellBoard[i - store.state.height + 1] : undefined)
-        const isZeroRightDown = isSameOpening(true, current, row < store.state.height - 1 ? store.state.gameCellBoard[i + store.state.height + 1] : undefined)
-        const isZeroUp = isSameOpening(true, current, row > 0 ? store.state.gameCellBoard[i - 1] : undefined)
-        const isZeroRightUp = isSameOpening(true, current, row > 0 ? store.state.gameCellBoard[i + store.state.height - 1] : undefined)
+        const isZeroLeft = isSameOpening(true, current, column > 0 ? cells[i - store.state.height] : undefined)
+        const isZeroLeftDown = isSameOpening(true, current, row < store.state.height - 1 ? cells[i - store.state.height + 1] : undefined)
+        const isZeroRightDown = isSameOpening(true, current, row < store.state.height - 1 ? cells[i + store.state.height + 1] : undefined)
+        const isZeroUp = isSameOpening(true, current, row > 0 ? cells[i - 1] : undefined)
+        const isZeroRightUp = isSameOpening(true, current, row > 0 ? cells[i + store.state.height - 1] : undefined)
         // 如果当前非零数字方块的底部方块也是非零数字方块，并且当前方块的左侧、右侧、左下角、右下角至少有一个是属于当前 Opening 的零数字方块
         if (isNonZeroDown && (isZeroLeft || isZeroRight || isZeroLeftDown || isZeroRightDown)) {
           // 边框长度
