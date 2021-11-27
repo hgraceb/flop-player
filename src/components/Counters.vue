@@ -204,8 +204,7 @@ export default defineComponent({
         key: 'Path',
         value: computed(() => {
           if (isDefault.value) return '0'
-          // TODO 修复只对 MouseMove 事件才计算 Path 的问题
-          return path.value
+          return round(path.value, 0)
         })
       },
       {
