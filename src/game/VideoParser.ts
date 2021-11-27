@@ -234,6 +234,16 @@ export class VideoParser extends BaseParser {
     // 计算的是欧几里得距离，因为通过 Minesweeper Arbiter 0.52.3 很容易就可以进行验证
     // 而 FreeSweeper 计算得到的曼哈顿距离就一言难尽了，可能打开 avf 录像计算得到的是一个值，另存为 rawvf 录像文件后重新打开又得到了一个新的值...
     this.path += Math.pow(Math.pow(this.curEvent.x - this.preEvent.x || 0, 2) + Math.pow(this.curEvent.y - this.preEvent.y || 0, 2), 0.5)
+    // 如果鼠标所在方块没有发生改变则不处理方块状态变化
+    if (this.curEvent.column === this.preEvent.column && this.curEvent.row === this.preEvent.row) return
+    // 根据按键状态改变前一个方块和当前方块及其周围方块的状态
+    if ((this.leftPressed && (this.rightPressed || this.shiftValid)) || this.middlePressed) {
+      this.releaseAround(this.preEvent.column, this.preEvent.row)
+      this.pressAround(this.curEvent.column, this.curEvent.row)
+    } else if (this.leftPressed) {
+      this.release(this.preEvent.column, this.preEvent.row)
+      this.press(this.curEvent.column, this.curEvent.row)
+    }
   }
 
   /**
@@ -256,8 +266,8 @@ export class VideoParser extends BaseParser {
   private leftClickWithShift (): void {
     this.pushGameEvent('LeftClickWithShift')
     // 左键和Shift同时按下时将左键和Shift键都设为有效状态
-    this.leftPressed = this.leftValid = this.shiftValid = true
     this.pressAround(this.curEvent.column, this.curEvent.row)
+    this.leftPressed = this.leftValid = this.shiftValid = true
   }
 
   /**
@@ -269,9 +279,11 @@ export class VideoParser extends BaseParser {
       if (this.rightPressed || this.shiftValid) {
         this.doubleClicks++
         if (this.rightValid) this.rightClicks--
+        this.releaseAround(this.curEvent.column, this.curEvent.row)
         this.openAround(this.curEvent.column, this.curEvent.row)
       } else {
         this.leftClicks++
+        this.release(this.curEvent.column, this.curEvent.row)
         this.open(this.curEvent.column, this.curEvent.row)
       }
     }
@@ -301,6 +313,7 @@ export class VideoParser extends BaseParser {
     if (this.leftPressed) {
       this.doubleClicks++
       if (this.rightValid) this.rightClicks--
+      this.releaseAround(this.curEvent.column, this.curEvent.row)
       this.openAround(this.curEvent.column, this.curEvent.row)
     }
     // 右键释放后，重置所有左右键相关状态位
@@ -322,6 +335,7 @@ export class VideoParser extends BaseParser {
   private middleRelease (): void {
     this.pushGameEvent('MiddleRelease')
     this.doubleClicks++
+    this.releaseAround(this.curEvent.column, this.curEvent.row)
     // 中键和左右键互不影响，不用判断左右键的状态，开就完了 (*￣3￣)╭
     this.openAround(this.curEvent.column, this.curEvent.row)
     this.middlePressed = false
@@ -391,6 +405,28 @@ export class VideoParser extends BaseParser {
     for (let i = column - 1; i <= column + 1; i++) {
       for (let j = row - 1; j <= row + 1; j++) {
         this.press(i, j)
+      }
+    }
+  }
+
+  /**
+   * 释放方块
+   */
+  private release (column: number, row: number): void {
+    const cell = this.board[column + row * this.mWidth]
+    // 如果方块超出游戏区域、已经被打开或者已经被旗子标记，则不进行操作
+    if (!this.isInside(column, row) || cell.opened || cell.flagged) return
+    // 根据方块当前问号标记状态添加游戏事件
+    this.pushGameEvent(cell.questioned ? 'ReleaseQuestionMark' : 'Release', column, row)
+  }
+
+  /**
+   * 释放本身和周围方块
+   */
+  private releaseAround (column: number, row: number): void {
+    for (let i = column - 1; i <= column + 1; i++) {
+      for (let j = row - 1; j <= row + 1; j++) {
+        this.release(i, j)
       }
     }
   }

@@ -3,9 +3,9 @@ import { ImgCellType, ImgFaceType } from '@/util/image'
 // 基础游戏事件名称
 type Base = 'LeftClick' | 'LeftRelease' | 'RightClick' | 'RightRelease' | 'MiddleClick' | 'MiddleRelease' | 'MouseMove' | 'LeftClickWithShift' | 'ToggleQuestionMarkSetting'
 // 自定义游戏事件名称
-type Custom = 'Press' | 'PressQuestionMark' | 'Flag' | 'RemoveFlag' | 'QuestionMark' | 'RemoveQuestionMark' | 'Open' | 'Blast' | 'Mislabeled' | 'Win' | 'Lose'
+type Custom = 'Press' | 'Release' | 'PressQuestionMark' | 'ReleaseQuestionMark' | 'Flag' | 'RemoveFlag' | 'QuestionMark' | 'RemoveQuestionMark' | 'Open' | 'Blast' | 'Mislabeled' | 'Win' | 'Lose'
 // 其他游戏事件名称（暂时未实现）
-type Other = 'Solved3BV' | 'Release' | 'LeftPressWithShift' | 'LeftPress' | 'RightPress' | 'MiddlePress' | 'LeftClicksAdded' | 'RightClicksAdded' | 'DoubleClicksAdded'
+type Other = 'Solved3BV' | 'LeftPressWithShift' | 'LeftPress' | 'RightPress' | 'MiddlePress' | 'LeftClicksAdded' | 'RightClicksAdded' | 'DoubleClicksAdded'
 
 // 游戏事件名称
 export type GameEventName = Base | Custom | Other
