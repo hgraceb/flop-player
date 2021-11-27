@@ -37,12 +37,12 @@ export class VideoParser extends BaseParser {
   private flags = 0
   // 已解决的开空数量
   private solvedOps = 0
-  // 未解决的开空数组，第一个元素（索引为 0）存的是编号为 1 的开空数量
-  private unsolvedOps: number[] = []
+  // 未解决的开空数组，第 1 个元素为 0，编号为 x 的开空数量放在第 x + 1 个元素
+  private unsolvedOps = [0]
   // 已解决的岛屿数量
   private solvedIsls = 0
-  // 未解决的岛屿数组，第一个元素（索引为 0）存的是编号为 1 的岛屿数量
-  private unsolvedIsls: number[] = []
+  // 未解决的岛屿数组，第 1 个元素为 0，编号为 x 的岛屿数量放在第 x + 1 个元素
+  private unsolvedIsls = [0]
   // 已解决的 BBBV 数量
   private solvedBBBV = 0
   // 左键点击数
@@ -89,7 +89,7 @@ export class VideoParser extends BaseParser {
     // 初始化游戏布局
     this.initBoard(video.getBoard())
     // 计算最少左键点击数
-    this.mBBBV = this.unsolvedOps.length + this.unsolvedIsls.reduce((pre, cur) => pre + cur)
+    this.mBBBV = this.mOpenings + this.unsolvedIsls.reduce((pre, cur) => pre + cur)
     // 模拟当前所有录像事件
     for (let i = 0; i < video.getEvents().length; i++) {
       this.performEvent(video.getEvents()[i])
@@ -180,7 +180,7 @@ export class VideoParser extends BaseParser {
       cell.opening = opening
     }
     // 添加未完成的开空方块数量
-    this.unsolvedOps[opening - 1] = this.unsolvedOps[opening - 1] ? this.unsolvedOps[opening - 1] + 1 : 1
+    this.unsolvedOps[opening] = this.unsolvedOps[opening] ? this.unsolvedOps[opening] + 1 : 1
   }
 
   /**
@@ -207,7 +207,7 @@ export class VideoParser extends BaseParser {
           cell.island = island
           this.setIslandAround(i, j, island)
           // 添加未完成的岛屿方块数量
-          this.unsolvedIsls[island - 1] = this.unsolvedIsls[island - 1] ? this.unsolvedIsls[island - 1] + 1 : 1
+          this.unsolvedIsls[island] = this.unsolvedIsls[island] ? this.unsolvedIsls[island] + 1 : 1
         }
       }
     }
@@ -522,9 +522,9 @@ export class VideoParser extends BaseParser {
       this.pushGameEvent('Blast', column, row)
       return
     }
-    // 更新已处理的数据，如果不属与岛屿和开空，Number(--undefined === 0) 的时候结果为 0
-    const solvedOps = Number(--this.unsolvedOps[cell.opening - 1] === 0) + Number(--this.unsolvedOps[cell.opening2 - 1] === 0)
-    this.solvedIsls += Number(--this.unsolvedIsls[cell.island - 1] === 0)
+    // 更新操作次数的数据，如果不属与岛屿和开空，则不计算为一次有效操作次数
+    const solvedOps = Number(--this.unsolvedOps[cell.opening] === 0) + Number(--this.unsolvedOps[cell.opening2] === 0)
+    this.solvedIsls += Number(--this.unsolvedIsls[cell.island] === 0)
     this.solvedOps += solvedOps
     this.solvedBBBV += Number(cell.island > 0) + solvedOps
     // 数据处理完成后添加打开方块的游戏事件
