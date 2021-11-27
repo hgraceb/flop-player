@@ -22,8 +22,8 @@ export interface GameEvent {
   row: number
   // 游戏事件所在行，从 0 开始
   column: number
-  // 游戏事件所在方块对应的数字，即周围雷的数量
-  number: number
+  // 游戏事件所在方块对应的数字，即周围雷的数量，超出游戏区域时值为 undefined
+  number: number | undefined
   // 鼠标指针精确横坐标，和 row 不一定是对应关系
   x: number
   // 鼠标指针精确纵坐标，和 column 不一定是对应关系

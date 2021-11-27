@@ -219,8 +219,7 @@ export const mutations = {
         state.gameImgBoard[imgIndex] = 'cell-normal'
         break
       case 'Open':
-        // event.number === -1 不能作为游戏结束的标识，因为可能有多个雷被打开的情况
-        state.gameImgBoard[imgIndex] = event.number !== -1 ? ('cell-number-' + event.number) as ImgCellType : 'cell-mine-bomb'
+        state.gameImgBoard[imgIndex] = ('cell-number-' + event.number) as ImgCellType
         break
       case 'ToggleQuestionMarkSetting':
         break

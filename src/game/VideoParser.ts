@@ -107,7 +107,7 @@ export class VideoParser extends BaseParser {
     this.mGameEvents.push({
       name: name,
       time: this.curEvent.time,
-      number: this.board[column + row * this.mWidth].number,
+      number: this.isInside(column, row) ? this.board[column + row * this.mWidth].number : undefined,
       x: this.curEvent.x,
       y: this.curEvent.y,
       column: column,
