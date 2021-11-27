@@ -149,7 +149,7 @@ export const mutations = {
       return
     }
     // 根据坐标获取图片索引
-    const imgIndex = event.x + event.y * state.width
+    const imgIndex = event.column + event.row * state.width
     // 根据快照还原图片状态
     state.gameImgBoard[imgIndex] = event.snapshot!.cellType
     // 根据快照还原笑脸状态
@@ -193,7 +193,7 @@ export const mutations = {
       return
     }
     // 根据坐标获取图片索引
-    const imgIndex = event.x + event.y * state.width
+    const imgIndex = event.column + event.row * state.width
     // 在更新前保存快照
     event.snapshot = {
       cellType: state.gameImgBoard[imgIndex],
