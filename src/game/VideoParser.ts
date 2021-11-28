@@ -47,7 +47,7 @@ export class VideoParser extends BaseParser {
   private solvedBBBV = 0
   // 左键点击数
   private leftClicks = 0
-  // 右键点击数
+  // 右键点击数，使用 FreeSweeper Release 10 的计数方法，虽然最终结果与 Minesweeper Arbiter 0.52.3 一样，但是更方便计算并且符合直觉
   private rightClicks = 0
   // 双击点击数
   private doubleClicks = 0
@@ -65,7 +65,7 @@ export class VideoParser extends BaseParser {
   private middlePressed = false
   // 左键是否处于有效状态，因为右键事件会影响左键事件，如在游戏区域内任一方块执行：lc -> rc -> rr，此时执行 lr 事件不增加左键点击数、执行 mv 事件不更改方块样式
   private leftValid = false
-  // 右键是否处于有效状态，因为左键事件会影响右键事件，如在已经打开的方块上面执行：rc -> lc -> lr | rr，最终右键点击数不变，双击点击数加一
+  // 右键是否处于有效状态，因为左键事件会影响右键事件，如在已经打开的方块上面执行：rc -> lc -> rr，最终右键点击数不变，双击点击数加一
   private rightValid = false
   // Shift键是否处于有效状态，因为部分软件支持左键和Shift键同时按下，相当于中键的效果
   private shiftValid = false
@@ -358,8 +358,6 @@ export class VideoParser extends BaseParser {
     if (this.leftValid) {
       if (this.rightPressed || this.shiftValid) {
         this.doubleClicks++
-        // 扣除一次右键点击数
-        if (this.rightValid) this.rightClicks--
         this.releaseAround(this.curEvent.column, this.curEvent.row)
         this.openAround(this.curEvent.column, this.curEvent.row)
       } else {
@@ -380,9 +378,14 @@ export class VideoParser extends BaseParser {
     this.pushGameEvent('RightClick')
     if (this.leftPressed) {
       this.pressAround(this.curEvent.column, this.curEvent.row)
-    } else {
+    } else if (this.toggleLabel(this.curEvent.column, this.curEvent.row)) {
+      // 如果右键单击成功改变游戏局面，则直接记为一次有效的右键点击数
       this.rightClicks++
-      this.toggleLabel(this.curEvent.column, this.curEvent.row)
+      // 右键点击数已经被计算过，释放右键的时候不再重复计算
+      this.rightValid = false
+    } else {
+      // 如果右键单击没有改变游戏局面，只有在左键没有按下的时候释放右键才算一次右键点击数
+      this.rightValid = true
     }
     this.rightPressed = true
   }
@@ -394,10 +397,12 @@ export class VideoParser extends BaseParser {
     this.pushGameEvent('RightRelease')
     if (this.leftPressed) {
       this.doubleClicks++
-      // 扣除一次右键点击数
-      if (this.rightValid) this.rightClicks--
       this.releaseAround(this.curEvent.column, this.curEvent.row)
       this.openAround(this.curEvent.column, this.curEvent.row)
+    } else if (this.rightValid) {
+      // 如果右键点击时没有被计算为有效点击数，并且右键点击之后没有释放左键的操作，则将左键没有按下时候的右键释放事件记为一次右键点击数
+      this.rightClicks++
+      this.wastedRightClicks++
     }
     // 右键释放后，重置所有左右键相关状态位
     this.rightPressed = this.leftValid = this.rightValid = this.shiftValid = false
@@ -442,14 +447,11 @@ export class VideoParser extends BaseParser {
   /**
    * 切换方块标记状态
    */
-  private toggleLabel (column: number, row: number): void {
+  private toggleLabel (column: number, row: number): boolean {
     const cell = this.board[column + row * this.mWidth]
-    if (!this.isInside(column, row) || cell.opened) {
-      // 如果在游戏区域外（理论情况，暂时没有软件可以辅助验证，因为 Minesweeper Arbiter 0.52.3 只在游戏区域内点击有效）或者在已经被打开的方块上单击右键，将右键设置为有效状态
-      // 此时右键点击数已经增加一次，等到之后的第一次左键或右键释放事件，将右键点击数扣除一次并将右键状态重置为无效状态，双击点击数正常计算
-      // 如果一直没有等到左键或右键释放事件游戏就结束了，则无需扣除右键点击数，以上右键点击数计算逻辑主要通过测试和参考自：Minesweeper Arbiter 0.52.3
-      this.rightValid = true
-    } else if (this.marks && cell.flagged) {
+    // 如果在游戏区域外或者在已经被打开的方块上单击右键
+    if (!this.isInside(column, row) || cell.opened) return false
+    if (this.marks && cell.flagged) {
       // 如果启用了问号标记设置，移除旗子状态实际上的表现是标记问号
       cell.flagged = false
       cell.questioned = true
@@ -470,6 +472,7 @@ export class VideoParser extends BaseParser {
       cell.questioned = false
       this.pushGameEvent('Flag', column, row)
     }
+    return true
   }
 
   /**
