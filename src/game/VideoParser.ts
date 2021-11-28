@@ -3,6 +3,9 @@ import { BaseVideo, VideoEvent } from '@/game/BaseVideo'
 
 /**
  * 录像事件解析器
+ * 原本想直接用 https://github.com/thefinerminer/minesweeper-rawvf 的 RAWVF2RAWVF 对录像事件进行解析，但是后面才发现问题实在是太多了
+ * 如：双击次数计算错误、问号标记处理错误、不支持切换问号标记模式、鼠标移动距离计算错误、超出游戏区域的录像事件处理有问题、输出内容缺少 Board 字段......
+ * 而且整个工程基本没有在维护，现在就是后悔...非常后悔 (；′⌒`)，不过其中部分代码还是很有参考价值的，只能说明人呐还是不能太懒 (ง •_•)ง
  */
 export class VideoParser extends BaseParser {
   /* 基础录像数据 */
