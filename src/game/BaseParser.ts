@@ -8,37 +8,56 @@ type Clicks = 'LeftIncrease' | 'RightIncrease' | 'DoubleIncrease'
 // 游戏事件名称
 export type GameEventName = Base | Custom | Clicks
 
+// 基础统计数据
+type Stats = {
+  path: number
+  flags: number
+  solvedOps: number
+  solvedBBBV: number
+  solvedIsls: number
+  leftClicks: number
+  rightClicks: number
+  doubleClicks: number
+  wastedLeftClicks: number
+  wastedRightClicks: number
+  wastedDoubleClicks: number
+}
+
 /**
  * 游戏事件
  */
-export interface GameEvent {
+export class GameEvent {
   // 游戏事件名称
   name: GameEventName
   // 游戏事件时间
-  time: number
+  time = 0
   // 游戏事件所在列，从 0 开始
-  column: number
+  column = 0
   // 游戏事件所在行，从 0 开始
-  row: number
+  row = 0
   // 游戏事件所在方块对应的数字，即周围雷的数量，超出游戏区域时值为 undefined
-  number: number | undefined
+  number: number | undefined = undefined
   // 鼠标指针精确横坐标，和 column 不一定是对应关系，如：双击打开周围方块
-  x: number
+  x = 0
   // 鼠标指针精确纵坐标，和 row 不一定是对应关系，如：双击打开周围方块
-  y: number
+  y = 0
   // 基础统计数据
-  stats: {
-    path: number
-    flags: number
-    solvedOps: number
-    solvedBBBV: number
-    solvedIsls: number
-    leftClicks: number
-    rightClicks: number
-    doubleClicks: number
-    wastedLeftClicks: number
-    wastedRightClicks: number
-    wastedDoubleClicks: number
+  stats: Stats = {
+    path: 0,
+    flags: 0,
+    solvedOps: 0,
+    solvedBBBV: 0,
+    solvedIsls: 0,
+    leftClicks: 0,
+    rightClicks: 0,
+    doubleClicks: 0,
+    wastedLeftClicks: 0,
+    wastedRightClicks: 0,
+    wastedDoubleClicks: 0
+  }
+
+  constructor (name: GameEventName) {
+    this.name = name
   }
 }
 

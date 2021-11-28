@@ -1,4 +1,4 @@
-import { BaseParser } from '@/game/BaseParser'
+import { BaseParser, Cell, GameEvent } from '@/game/BaseParser'
 
 /**
  * 默认录像事件解析器，不包含实际数据
@@ -10,7 +10,8 @@ export class DefaultParser extends BaseParser {
   protected mBBBV = 0
   protected mIslands = 0
   protected mOpenings = 0
-  protected board = []
-  protected mGameEvents = []
+  protected board: Cell[] = []
+  // 包含一个录像结束标识事件，不然播放时无法正常结束
+  protected mGameEvents: GameEvent [] = [new GameEvent('UnexpectedEnd')]
   protected mPlayerArray = new Uint8Array()
 }
