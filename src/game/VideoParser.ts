@@ -596,7 +596,7 @@ export class VideoParser extends BaseParser {
         if (cell.opened) continue
         // 如果方块是雷并且方块还没有被旗子标记，则根据游戏胜利或者失败添加标记对应方块样式的游戏事件
         if (cell.number === -1 && !cell.flagged) this.pushGameEvent(this.gameState === 'Win' ? 'Flag' : 'Mine', i, j)
-        // 如果方块不是雷并且被旗子标记了，则添加标记错误的游戏事件
+        // 如果方块不是雷并且被旗子标记了，则添加标记错误的游戏事件，如果只是被问号标记的话则不进行处理
         else if (cell.number >= 0 && cell.flagged) this.pushGameEvent('Mislabeled', i, j)
       }
     }
