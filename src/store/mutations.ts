@@ -154,13 +154,13 @@ export const mutations = {
       case 'Start':
         state.gameStarted = false
         break
-      case 'LeftClicksAdded':
+      case 'LeftIncrease':
         state.gameLeftPoints.pop()
         break
-      case 'RightClicksAdded':
+      case 'RightIncrease':
         state.gameRightPoints.pop()
         break
-      case 'DoubleClicksAdded':
+      case 'DoubleIncrease':
         state.gameDoublePoints.pop()
         break
     }
@@ -244,14 +244,14 @@ export const mutations = {
       case 'MiddleClick':
         state.faceStatus = 'face-normal'
         break
-      case 'LeftClicksAdded':
+      case 'LeftIncrease':
         // 可以先判断坐标是否重复，但是本来也没有多少个坐标点，没必要为了这几个坐标点多写十几行代码
         state.gameLeftPoints.push({ x: event.x, y: event.y })
         break
-      case 'RightClicksAdded':
+      case 'RightIncrease':
         state.gameRightPoints.push({ x: event.x, y: event.y })
         break
-      case 'DoubleClicksAdded':
+      case 'DoubleIncrease':
         state.gameDoublePoints.push({ x: event.x, y: event.y })
         break
     }

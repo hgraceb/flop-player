@@ -358,11 +358,13 @@ export class VideoParser extends BaseParser {
     this.pushGameEvent('LeftRelease')
     if (this.rightPressed || this.shiftValid) {
       this.doubleClicks++
+      this.pushGameEvent('DoubleIncrease')
       this.releaseAround(this.curEvent.column, this.curEvent.row)
       if (!this.openAround(this.curEvent.column, this.curEvent.row)) this.wastedDoubleClicks++
     } else if (this.leftValid) {
       // 如果左键键点击到左键释放中间没有释放右键的操作
       this.leftClicks++
+      this.pushGameEvent('LeftIncrease')
       this.release(this.curEvent.column, this.curEvent.row)
       // 打开方块并判断是否打开成功
       if (!this.open(this.curEvent.column, this.curEvent.row)) this.wastedLeftClicks++
@@ -381,6 +383,7 @@ export class VideoParser extends BaseParser {
     } else if (this.toggleLabel(this.curEvent.column, this.curEvent.row)) {
       // 如果右键单击成功改变游戏局面，则直接记为一次有效的右键点击数
       this.rightClicks++
+      this.pushGameEvent('RightIncrease')
       // 右键点击数已经被计算过，释放右键的时候不再重复计算
       this.rightValid = false
     } else {
@@ -397,11 +400,13 @@ export class VideoParser extends BaseParser {
     this.pushGameEvent('RightRelease')
     if (this.leftPressed) {
       this.doubleClicks++
+      this.pushGameEvent('DoubleIncrease')
       this.releaseAround(this.curEvent.column, this.curEvent.row)
       if (!this.openAround(this.curEvent.column, this.curEvent.row)) this.wastedDoubleClicks++
     } else if (this.rightValid) {
       // 如果右键点击时没有被计算为有效点击数，并且右键点击到右键释放中间没有释放左键的操作，则将左键没有按下时候的右键释放事件记为一次右键点击数
       this.rightClicks++
+      this.pushGameEvent('RightIncrease')
       this.wastedRightClicks++
     }
     // 右键释放后，重置所有左右键相关状态位
@@ -423,6 +428,7 @@ export class VideoParser extends BaseParser {
   private middleRelease (): void {
     this.pushGameEvent('MiddleRelease')
     this.doubleClicks++
+    this.pushGameEvent('DoubleIncrease')
     this.releaseAround(this.curEvent.column, this.curEvent.row)
     // 中键和左右键互不影响，不用判断左右键的状态，开就完了 (*￣3￣)╭
     if (!this.openAround(this.curEvent.column, this.curEvent.row)) this.wastedDoubleClicks++
