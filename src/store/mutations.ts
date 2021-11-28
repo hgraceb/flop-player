@@ -154,6 +154,9 @@ export const mutations = {
       case 'Start':
         state.gameStarted = false
         break
+      case 'MouseMove':
+        state.gameMousePoints.pop()
+        break
       case 'LeftIncrease':
         state.gameLeftPoints.pop()
         break
@@ -163,12 +166,6 @@ export const mutations = {
       case 'DoubleIncrease':
         state.gameDoublePoints.pop()
         break
-    }
-    // 最后一个鼠标路径坐标
-    const lastPoint = state.gameMousePoints[state.gameMousePoints.length - 1]
-    // 如果鼠标的坐标有变动，则移除上一个鼠标路径坐标
-    if (event.x !== lastPoint?.x || event.y !== lastPoint?.y) {
-      state.gameMousePoints.pop()
     }
   },
   /** 模拟下一个游戏事件 */
@@ -195,35 +192,13 @@ export const mutations = {
       case 'Start':
         state.gameStarted = true
         break
-      case 'Flag':
-        state.gameImgBoard[imgIndex] = 'cell-flag'
-        break
-      case 'QuestionMark':
-        state.gameImgBoard[imgIndex] = 'cell-question'
-        break
-      case 'RemoveQuestionMark':
-        state.gameImgBoard[imgIndex] = 'cell-normal'
-        break
-      case 'RemoveFlag':
-        state.gameImgBoard[imgIndex] = 'cell-normal'
-        break
-      case 'Press':
-        state.gameImgBoard[imgIndex] = 'cell-press'
-        break
-      case 'Release':
-        state.gameImgBoard[imgIndex] = 'cell-normal'
-        break
-      case 'Open':
-        state.gameImgBoard[imgIndex] = ('cell-number-' + event.number) as ImgCellType
-        break
-      case 'ToggleQuestionMarkSetting':
-        break
       case 'MouseMove':
-        break
-      case 'LeftPressWithShift':
-        state.faceStatus = 'face-press-cell'
+        state.gameMousePoints.push({ x: event.x, y: event.y })
         break
       case 'LeftPress':
+        state.faceStatus = 'face-press-cell'
+        break
+      case 'LeftPressWithShift':
         state.faceStatus = 'face-press-cell'
         break
       case 'LeftRelease':
@@ -241,6 +216,27 @@ export const mutations = {
       case 'MiddleRelease':
         state.faceStatus = 'face-normal'
         break
+      case 'Flag':
+        state.gameImgBoard[imgIndex] = 'cell-flag'
+        break
+      case 'RemoveFlag':
+        state.gameImgBoard[imgIndex] = 'cell-normal'
+        break
+      case 'QuestionMark':
+        state.gameImgBoard[imgIndex] = 'cell-question'
+        break
+      case 'RemoveQuestionMark':
+        state.gameImgBoard[imgIndex] = 'cell-normal'
+        break
+      case 'Press':
+        state.gameImgBoard[imgIndex] = 'cell-press'
+        break
+      case 'Release':
+        state.gameImgBoard[imgIndex] = 'cell-normal'
+        break
+      case 'Open':
+        state.gameImgBoard[imgIndex] = ('cell-number-' + event.number) as ImgCellType
+        break
       case 'LeftIncrease':
         // 可以先判断坐标是否重复，但是本来也没有多少个坐标点，没必要为了这几个坐标点多写十几行代码
         state.gameLeftPoints.push({ x: event.x, y: event.y })
@@ -251,12 +247,6 @@ export const mutations = {
       case 'DoubleIncrease':
         state.gameDoublePoints.push({ x: event.x, y: event.y })
         break
-    }
-    // 最后一个鼠标路径坐标
-    const lastPoint = state.gameMousePoints[state.gameMousePoints.length - 1]
-    // 如果鼠标的坐标有变动，则添加一个新的鼠标路径坐标
-    if (event.x !== lastPoint?.x || event.y !== lastPoint?.y) {
-      state.gameMousePoints.push({ x: event.x, y: event.y })
     }
   },
   /** 重置游戏参数 */
