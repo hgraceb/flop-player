@@ -146,6 +146,7 @@ export default defineComponent({
         key: 'ThrP',
         value: computed(() => {
           if (isDefault.value) return '*'
+          // Minesweeper Arbiter 0.52.3 中默认的计算公式为：BBBVDONE/(TOTALEFF-MISFLAGS-UNFLAGS-MISUNFLAGS){3}，计算结果可能不同
           return `${round(solvedBBBV.value / eClicks.value, 3).toFixed(3)}`
         })
       },
@@ -153,6 +154,7 @@ export default defineComponent({
         key: 'Corr',
         value: computed(() => {
           if (isDefault.value) return '*'
+          // Minesweeper Arbiter 0.52.3 中默认的计算公式为：(TOTALEFF-MISFLAGS-UNFLAGS-MISUNFLAGS)/TOTALCLK{3}，计算结果可能不同
           return `${round(eClicks.value / clicks.value, 3).toFixed(3)}`
         })
       },

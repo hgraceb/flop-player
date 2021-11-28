@@ -52,11 +52,11 @@ export class VideoParser extends BaseParser {
   private rightClicks = 0
   // 双击点击数
   private doubleClicks = 0
-  // 多余的左键点击数，多余的点击次数均使用 FreeSweeper Release 10 的计数方法，比 Minesweeper Arbiter 0.52.3 的计算结果更符合直觉，无效点击次数较多的局感受会更明显
+  // 多余的左键点击数，没有改变游戏局面则记为一次多余的左键点击次数
   private wastedLeftClicks = 0
-  // 多余的右键点击数
+  // 多余的右键点击数，没有改变游戏局面则记为一次多余的右键点击次数
   private wastedRightClicks = 0
-  // 多余的双击点击数
+  // 多余的双击点击数，没有改变游戏局面则记为一次多余的双击点击次数
   private wastedDoubleClicks = 0
   // 左键是否处于点击状态
   private leftPressed = false
