@@ -75,7 +75,7 @@ export class VideoParser extends BaseParser {
    * 构建录像事件解析器
    *
    * @param video 录像信息
-   * @param appendable 是否允许追加事件，不允许则所有游戏事件都模拟完成后还没胜利自动判负
+   * @param appendable 是否允许追加录像事件，不允许则所有录像事件都模拟完成后还没胜利或失败则认为录像解析意外结尾
    */
   constructor (video: BaseVideo, appendable: boolean) {
     super()
@@ -103,6 +103,8 @@ export class VideoParser extends BaseParser {
         break
       }
     }
+    // 在所有录像事件全部模拟完成后，如果不允许追加录像事件并且游戏没有胜利或者失败，则添加录像意外结尾的游戏事件
+    if (!appendable && this.gameState !== 'Win' && this.gameState !== 'Lose') this.pushGameEvent('UnexpectedEnd')
   }
 
   /**
