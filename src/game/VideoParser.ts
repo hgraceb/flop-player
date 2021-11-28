@@ -197,7 +197,7 @@ export class VideoParser extends BaseParser {
   /**
    * 设置方块所在岛屿
    */
-  private setIsland (column: number, row: number, island: number) {
+  private setIsland (column: number, row: number, island: number): void {
     // 如果方块超出游戏区域则不进行设置
     if (!this.isInside(column, row)) return
     const cell = this.board[column + row * this.mWidth]
