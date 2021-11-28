@@ -24,8 +24,8 @@ export type State = typeof storageDefault & {
   islands: number
   // 玩家名称原始数据
   playerArray: Uint8Array
-  // 游戏事件
-  gameEvents: GameEvent[],
+  // 游戏事件，包含当前方块图片和笑脸图片的快照信息
+  gameEvents: (GameEvent & { snapshot?: { cellType: ImgCellType, faceStatus: ImgFaceType } })[],
   // 游戏方块信息棋盘，存放方块固有信息
   gameCellBoard: Cell[],
   // 游戏图片信息棋盘，存放方块当前对应的图片信息

@@ -1,5 +1,3 @@
-import { ImgCellType, ImgFaceType } from '@/util/image'
-
 // 基础游戏事件名称
 type Base = 'LeftPress' | 'LeftRelease' | 'RightPress' | 'RightRelease' | 'MiddlePress' | 'MiddleRelease' | 'MouseMove' | 'LeftPressWithShift' | 'ToggleQuestionMarkSetting'
 // 自定义游戏事件名称
@@ -41,13 +39,6 @@ export interface GameEvent {
     wastedLeftClicks: number
     wastedRightClicks: number
     wastedDoubleClicks: number
-  }
-  // 快照
-  snapshot?: {
-    // 未根据游戏事件修改前的图片
-    cellType: ImgCellType
-    // 笑脸状态
-    faceStatus: ImgFaceType
   }
 }
 

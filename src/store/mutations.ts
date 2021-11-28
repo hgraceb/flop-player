@@ -143,10 +143,13 @@ export const mutations = {
     const event = state.gameEvents[eventIndex]
     // 根据坐标获取图片索引
     const imgIndex = event.column + event.row * state.width
-    // 根据快照还原图片状态
-    state.gameImgBoard[imgIndex] = event.snapshot!.cellType
-    // 根据快照还原笑脸状态
-    state.faceStatus = event.snapshot!.faceStatus
+    // 如果存在快照信息，一般是先模拟下一个事件再回放模拟上一个事件，所以都是有快照信息的
+    if (event.snapshot) {
+      // 根据快照还原图片状态
+      state.gameImgBoard[imgIndex] = event.snapshot.cellType
+      // 根据快照还原笑脸状态
+      state.faceStatus = event.snapshot.faceStatus
+    }
     switch (event.name) {
       case 'Start':
         state.gameStarted = false
