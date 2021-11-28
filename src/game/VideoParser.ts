@@ -96,8 +96,8 @@ export class VideoParser extends BaseParser {
       this.performEvent(video.getEvents()[i])
       // 如果游戏已经胜利或者失败，则不再模拟后续录像事件
       if (this.gameState === 'Win' || this.gameState === 'Lose') {
-        // 打开未处理方块，要在事件模拟结束后调用，因为可能连续有多个方块爆炸，第一个方块爆炸后立即打开未处理方块会导致后续哑雷
-        this.openUnprocessed()
+        // 处理未打开方块，要在事件模拟结束后调用，因为可能连续有多个方块爆炸，第一个方块爆炸后立即处理未打开方块会导致后续哑雷
+        this.handleUnopened()
         // 在所有方块处理完成后再添加游戏结束事件，避免重复添加或者在游戏结束事件之后还有其他游戏事件
         this.pushGameEvent(this.gameState)
         break
@@ -584,9 +584,21 @@ export class VideoParser extends BaseParser {
   }
 
   /**
-   * 打开未处理方块
+   * 处理未打开方块
    */
-  private openUnprocessed (): void {
-    // TODO
+  private handleUnopened (): void {
+    // 如果游戏没有胜利或者失败，则不进行处理
+    if (this.gameState !== 'Win' && this.gameState !== 'Lose') return
+    for (let i = 0; i < this.mWidth; i++) {
+      for (let j = 0; j < this.mHeight; j++) {
+        const cell = this.board[i + j * this.mWidth]
+        // 只处理未打开的方块
+        if (cell.opened) continue
+        // 如果方块是雷并且方块还没有被旗子标记，则根据游戏胜利或者失败添加标记对应方块样式的游戏事件
+        if (cell.number === -1 && !cell.flagged) this.pushGameEvent(this.gameState === 'Win' ? 'Flag' : 'Mine', i, j)
+        // 如果方块不是雷并且被旗子标记了，则添加标记错误的游戏事件
+        else if (cell.number >= 0 && cell.flagged) this.pushGameEvent('Mislabeled', i, j)
+      }
+    }
   }
 }

@@ -188,6 +188,15 @@ export const mutations = {
       case 'MouseMove':
         state.gameMousePoints.push({ x: event.x, y: event.y })
         break
+      case 'LeftIncrease':
+        state.gameLeftPoints.push({ x: event.x, y: event.y })
+        break
+      case 'RightIncrease':
+        state.gameRightPoints.push({ x: event.x, y: event.y })
+        break
+      case 'DoubleIncrease':
+        state.gameDoublePoints.push({ x: event.x, y: event.y })
+        break
       case 'LeftPress':
         state.faceStatus = 'face-press-cell'
         break
@@ -227,18 +236,17 @@ export const mutations = {
       case 'Release':
         state.gameImgBoard[imgIndex] = 'cell-normal'
         break
+      case 'Mine':
+        state.gameImgBoard[imgIndex] = 'cell-mine'
+        break
+      case 'Mislabeled':
+        state.gameImgBoard[imgIndex] = 'cell-flag-wrong'
+        break
+      case 'Blast':
+        state.gameImgBoard[imgIndex] = 'cell-mine-bomb'
+        break
       case 'Open':
         state.gameImgBoard[imgIndex] = ('cell-number-' + event.number) as ImgCellType
-        break
-      case 'LeftIncrease':
-        // 可以先判断坐标是否重复，但是本来也没有多少个坐标点，没必要为了这几个坐标点多写十几行代码
-        state.gameLeftPoints.push({ x: event.x, y: event.y })
-        break
-      case 'RightIncrease':
-        state.gameRightPoints.push({ x: event.x, y: event.y })
-        break
-      case 'DoubleIncrease':
-        state.gameDoublePoints.push({ x: event.x, y: event.y })
         break
       case 'Win':
         // 设置游戏播放暂停，如果不设置的话，在游戏播放结束之后会误以为游戏还处于正常播放的状态
