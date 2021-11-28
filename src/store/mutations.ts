@@ -141,9 +141,6 @@ export const mutations = {
     const eventIndex = --state.gameEventIndex
     // 根据事件索引获取游戏事件
     const event = state.gameEvents[eventIndex]
-    if (event.name === 'Win' || event.name === 'Lose') {
-      return
-    }
     // 根据坐标获取图片索引
     const imgIndex = event.column + event.row * state.width
     // 根据快照还原图片状态
@@ -174,13 +171,6 @@ export const mutations = {
     const eventIndex = state.gameEventIndex++
     // 根据事件索引获取游戏事件
     const event = state.gameEvents[eventIndex]
-    // TODO 处理录像意外结尾的情况，即没有雷被打开并且时间没有超时
-    if (event.name === 'Win' || event.name === 'Lose') {
-      // 设置游戏播放暂停，如果不设置的话，在游戏播放结束之后会误以为游戏还处于正常播放的状态
-      store.commit('setVideoPaused')
-      state.faceStatus = event.name === 'Win' ? 'face-win' : 'face-lose'
-      return
-    }
     // 根据坐标获取图片索引
     const imgIndex = event.column + event.row * state.width
     // 在更新前保存快照
@@ -246,6 +236,19 @@ export const mutations = {
         break
       case 'DoubleIncrease':
         state.gameDoublePoints.push({ x: event.x, y: event.y })
+        break
+      case 'Win':
+        // 设置游戏播放暂停，如果不设置的话，在游戏播放结束之后会误以为游戏还处于正常播放的状态
+        store.commit('setVideoPaused')
+        state.faceStatus = 'face-win'
+        break
+      case 'Lose':
+        store.commit('setVideoPaused')
+        state.faceStatus = 'face-lose'
+        break
+      case 'UnexpectedEnd':
+        // 录像意外结尾时只暂停录像，即游戏事件全部模拟完成后没有胜利也没有失败
+        store.commit('setVideoPaused')
         break
     }
   },

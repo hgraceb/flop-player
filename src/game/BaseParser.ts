@@ -3,7 +3,7 @@ import { ImgCellType, ImgFaceType } from '@/util/image'
 // 基础游戏事件名称
 type Base = 'LeftPress' | 'LeftRelease' | 'RightPress' | 'RightRelease' | 'MiddlePress' | 'MiddleRelease' | 'MouseMove' | 'LeftPressWithShift' | 'ToggleQuestionMarkSetting'
 // 自定义游戏事件名称
-type Custom = 'Press' | 'Release' | 'PressQuestionMark' | 'ReleaseQuestionMark' | 'Flag' | 'RemoveFlag' | 'QuestionMark' | 'RemoveQuestionMark' | 'Open' | 'Blast' | 'Mislabeled' | 'Start' | 'Win' | 'Lose'
+type Custom = 'Press' | 'Release' | 'PressQuestionMark' | 'ReleaseQuestionMark' | 'Flag' | 'RemoveFlag' | 'QuestionMark' | 'RemoveQuestionMark' | 'Open' | 'Blast' | 'Mislabeled' | 'Start' | 'Win' | 'Lose' | 'UnexpectedEnd'
 // 有效点击数增加游戏事件名称
 type Clicks = 'LeftIncrease' | 'RightIncrease' | 'DoubleIncrease'
 
