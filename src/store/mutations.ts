@@ -141,7 +141,7 @@ export const mutations = {
     const eventIndex = --state.gameEventIndex
     // 根据事件索引获取游戏事件
     const event = state.gameEvents[eventIndex]
-    if (event.name === 'Win' || event.name === 'Lose' || event.name === 'Solved3BV') {
+    if (event.name === 'Win' || event.name === 'Lose') {
       return
     }
     // 根据坐标获取图片索引
@@ -177,9 +177,6 @@ export const mutations = {
     const eventIndex = state.gameEventIndex++
     // 根据事件索引获取游戏事件
     const event = state.gameEvents[eventIndex]
-    if (event.name === 'Solved3BV') {
-      return
-    }
     // TODO 处理录像意外结尾的情况，即没有雷被打开并且时间没有超时
     if (event.name === 'Win' || event.name === 'Lose') {
       // 设置游戏播放暂停，如果不设置的话，在游戏播放结束之后会误以为游戏还处于正常播放的状态
@@ -229,19 +226,19 @@ export const mutations = {
       case 'LeftPress':
         state.faceStatus = 'face-press-cell'
         break
-      case 'LeftClick':
+      case 'LeftRelease':
         state.faceStatus = 'face-normal'
         break
       case 'RightPress':
         state.faceStatus = 'face-press-cell'
         break
-      case 'RightClick':
+      case 'RightRelease':
         state.faceStatus = 'face-normal'
         break
       case 'MiddlePress':
         state.faceStatus = 'face-press-cell'
         break
-      case 'MiddleClick':
+      case 'MiddleRelease':
         state.faceStatus = 'face-normal'
         break
       case 'LeftIncrease':

@@ -277,25 +277,25 @@ export class VideoParser extends BaseParser {
       // 可以在方法执行最开始处将录像事件转换为游戏事件并添加，此游戏事件的统计数据可能有问题，因为还没真的开始模拟录像事件
       // 后续根据模拟录像事件得到的多个新游戏事件，因为时间和上一个游戏事件一样，实际播放时统计数据会显示为模拟完成后的数据
       case 'lc':
-        this.leftClick()
+        this.leftPress()
         break
       case 'lr':
         this.leftRelease()
         break
       case 'rc':
-        this.rightClick()
+        this.rightPress()
         break
       case 'rr':
         this.rightRelease()
         break
       case 'mc':
-        this.middleClick()
+        this.middlePress()
         break
       case 'mr':
         this.middleRelease()
         break
       case 'sc':
-        this.leftClickWithShift()
+        this.leftPressWithShift()
         break
       case 'mt':
         this.toggleQuestionMarkSetting()
@@ -330,8 +330,8 @@ export class VideoParser extends BaseParser {
   /**
    * 模拟左键点击事件
    */
-  private leftClick (): void {
-    this.pushGameEvent('LeftClick')
+  private leftPress (): void {
+    this.pushGameEvent('LeftPress')
     // 左键按下时将左键置为有效状态
     this.leftPressed = this.leftValid = true
     if (this.rightPressed) {
@@ -344,8 +344,8 @@ export class VideoParser extends BaseParser {
   /**
    * 模拟同时按住Shift键的左键点击事件
    */
-  private leftClickWithShift (): void {
-    this.pushGameEvent('LeftClickWithShift')
+  private leftPressWithShift (): void {
+    this.pushGameEvent('LeftPressWithShift')
     // 左键和Shift同时按下时将左键和Shift键都设为有效状态
     this.pressAround(this.curEvent.column, this.curEvent.row)
     this.leftPressed = this.leftValid = this.shiftValid = true
@@ -376,8 +376,8 @@ export class VideoParser extends BaseParser {
   /**
    * 模拟右键点击事件
    */
-  private rightClick (): void {
-    this.pushGameEvent('RightClick')
+  private rightPress (): void {
+    this.pushGameEvent('RightPress')
     if (this.leftPressed) {
       this.pressAround(this.curEvent.column, this.curEvent.row)
     } else if (this.toggleLabel(this.curEvent.column, this.curEvent.row)) {
@@ -416,8 +416,8 @@ export class VideoParser extends BaseParser {
   /**
    * 模拟中键点击事件
    */
-  private middleClick (): void {
-    this.pushGameEvent('MiddleClick')
+  private middlePress (): void {
+    this.pushGameEvent('MiddlePress')
     this.pressAround(this.curEvent.column, this.curEvent.row)
     this.middlePressed = true
   }
