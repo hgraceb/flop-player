@@ -358,13 +358,15 @@ export class VideoParser extends BaseParser {
     if (this.leftValid) {
       if (this.rightPressed || this.shiftValid) {
         this.doubleClicks++
+        // 扣除一次右键点击数
         if (this.rightValid) this.rightClicks--
         this.releaseAround(this.curEvent.column, this.curEvent.row)
         this.openAround(this.curEvent.column, this.curEvent.row)
       } else {
         this.leftClicks++
         this.release(this.curEvent.column, this.curEvent.row)
-        this.open(this.curEvent.column, this.curEvent.row)
+        // 打开方块并判断是否打开成功
+        if (!this.open(this.curEvent.column, this.curEvent.row)) this.wastedLeftClicks++
       }
     }
     // 左键释放后，重置所有左右键相关状态位
@@ -392,6 +394,7 @@ export class VideoParser extends BaseParser {
     this.pushGameEvent('RightRelease')
     if (this.leftPressed) {
       this.doubleClicks++
+      // 扣除一次右键点击数
       if (this.rightValid) this.rightClicks--
       this.releaseAround(this.curEvent.column, this.curEvent.row)
       this.openAround(this.curEvent.column, this.curEvent.row)
@@ -515,11 +518,13 @@ export class VideoParser extends BaseParser {
 
   /**
    * 打开方块
+   *
+   * @return boolean 方块是否打开成功
    */
-  private open (column: number, row: number): void {
+  private open (column: number, row: number): boolean {
     const cell = this.board[column + row * this.mWidth]
     // 如果方块超出游戏区域、已经被打开或者已经被旗子标记，则不进行操作
-    if (!this.isInside(column, row) || cell.opened || cell.flagged) return
+    if (!this.isInside(column, row) || cell.opened || cell.flagged) return false
     // 来都来了，就把你给开了吧 (づ￣ 3￣)づ
     cell.opened = true
     if (this.gameState === 'Begin') {
@@ -531,7 +536,7 @@ export class VideoParser extends BaseParser {
       // 打开的方块是雷，游戏失败
       this.gameState = 'Lose'
       this.pushGameEvent('Blast', column, row)
-      return
+      return true
     }
     // 更新操作次数的数据，如果不属与岛屿和开空，则不计算为一次有效操作次数
     const solvedOps = Number(--this.unsolvedOps[cell.opening] === 0) + Number(--this.unsolvedOps[cell.opening2] === 0)
@@ -544,6 +549,7 @@ export class VideoParser extends BaseParser {
     if (cell.number === 0) this.openAround(column, row)
     // 所有非雷方块都已经被打开，游戏胜利
     if (this.solvedBBBV === this.mBBBV) this.gameState = 'Win'
+    return true
   }
 
   /**
