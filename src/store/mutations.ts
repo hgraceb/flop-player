@@ -324,8 +324,7 @@ const EmptyPayloadFunction = [
   'performNextEvent',
   'resetGame',
   'replayVideo',
-  'playVideo',
-  'pauseVideo'
+  'playVideo'
 ] as const
 
 /** payload 参数不能为空的函数类型集合 */
