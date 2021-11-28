@@ -22,8 +22,6 @@ export default defineComponent({
     const bbbv = computed(() => store.state.bbbv)
     const openings = computed(() => store.state.openings)
     const islands = computed(() => store.state.islands)
-    const gZiNi = computed(() => store.state.gZiNi)
-    const hZiNi = computed(() => store.state.hZiNi)
 
     // 动态统计数据
     const time = computed(() => {
@@ -52,8 +50,6 @@ export default defineComponent({
     const wastedClicks = computed(() => wastedLeftClicks.value + wastedRightClicks.value + wastedDoubleClicks.value)
     // 有效点击次数，所有改变当前雷局局面的点击计算为一次有效点击
     const eClicks = computed(() => clicks.value - wastedClicks.value)
-    // 3BV 的值正常情况下不会为 0，不用考虑除零问题，如果出现问题的话应该是录像事件解析器中要做适配
-    const coeff = computed(() => solvedBBBV.value / bbbv.value)
     const path = computed(() => stats.value?.path)
     const flags = computed(() => stats.value?.flags)
 
@@ -65,6 +61,7 @@ export default defineComponent({
     // 注意不能直接使用 toFixed() 方法进行四舍五入，可能与预期结果不一致，如：0.015.toFixed(2) 的计算结果为 '0.01'，需要先将 0.015 四舍五入为 0.02 再使用 toFixed() 补零
     // 其中四舍五入不能使用类似 Math.round(1.005 * 100) / 100 的方法，因为乘法和除法都可能有问题，如：Chrome 中 1.005 * 100 的结果为 100.49999999999999
     // IOS 数据可能会出现负值，并且没有太大用处，不进行计算和展示，如：RTime = 1 时，计算公式为：(Math.log(bbbv.value) / Math.log(estRTime.value)
+    // ZiNi 相关的数据太难算了...暂时不处理，如：Greedy ZiNi、Human ZiNi、ZNE、HZNE、ZNT、HZNT，啥、啥、啥、写的这是啥 (╯‵□′)╯︵ ╧══╧
     const data: Ref<TypeStat[]> = ref([
       {
         key: 'RTime',
@@ -94,20 +91,6 @@ export default defineComponent({
         value: computed(() => {
           if (isDefault.value) return '*'
           return `${round(solvedBBBV.value / time.value, 3).toFixed(3)}`
-        })
-      },
-      {
-        key: 'ZiNi',
-        value: computed(() => {
-          if (isDefault.value || !estRTime.value) return '*@*'
-          return `${gZiNi.value}@${round(gZiNi.value / estRTime.value, 3).toFixed(3)}`
-        })
-      },
-      {
-        key: 'H.ZiNi',
-        value: computed(() => {
-          if (isDefault.value || !estRTime.value) return '*@*'
-          return `${hZiNi.value}@${round(hZiNi.value / estRTime.value, 3).toFixed(3)}`
         })
       },
       {
@@ -171,34 +154,6 @@ export default defineComponent({
         value: computed(() => {
           if (isDefault.value) return '*'
           return `${round(eClicks.value / clicks.value, 3).toFixed(3)}`
-        })
-      },
-      {
-        key: 'ZNE',
-        value: computed(() => {
-          if (isDefault.value) return '*'
-          return `${round(gZiNi.value * coeff.value / clicks.value, 3).toFixed(3)}`
-        })
-      },
-      {
-        key: 'HZNE',
-        value: computed(() => {
-          if (isDefault.value) return '*'
-          return `${round(hZiNi.value * coeff.value / clicks.value, 3).toFixed(3)}`
-        })
-      },
-      {
-        key: 'ZNT',
-        value: computed(() => {
-          if (isDefault.value) return '*'
-          return `${round(gZiNi.value * coeff.value / eClicks.value, 3).toFixed(3)}`
-        })
-      },
-      {
-        key: 'HZNT',
-        value: computed(() => {
-          if (isDefault.value) return '*'
-          return `${round(hZiNi.value * coeff.value / eClicks.value, 3).toFixed(3)}`
         })
       },
       {

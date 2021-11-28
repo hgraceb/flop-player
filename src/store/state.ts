@@ -22,10 +22,6 @@ export type State = typeof storageDefault & {
   openings: number
   // 岛屿数量
   islands: number
-  // Greedy ZiNi
-  gZiNi: number
-  // Human ZiNi
-  hZiNi: number
   // 玩家名称原始数据
   playerArray: Uint8Array
   // 游戏事件
@@ -80,8 +76,6 @@ export const state: State = {
   bbbv: 0,
   openings: 0,
   islands: 0,
-  gZiNi: 0,
-  hZiNi: 0,
   playerArray: new Uint8Array(),
   gameEvents: [],
   gameCellBoard: [],

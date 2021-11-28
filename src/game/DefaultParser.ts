@@ -10,8 +10,6 @@ export class DefaultParser extends BaseParser {
   protected mBBBV = 0
   protected mIslands = 0
   protected mOpenings = 0
-  protected mGZiNi = 0
-  protected mHZiNi = 0
   protected board = []
   protected mGameEvents = []
   protected mPlayerArray = new Uint8Array()

@@ -95,8 +95,6 @@ export const mutations = {
     state.bbbv = parser.getBBBV()
     state.openings = parser.getOpenings()
     state.islands = parser.getIslands()
-    state.gZiNi = parser.getGZiNi()
-    state.hZiNi = parser.getHZiNi()
     state.gameEvents = parser.getGameEvents()
     state.gameCellBoard = parser.getBoard()
   },

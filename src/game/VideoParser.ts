@@ -18,8 +18,6 @@ export class VideoParser extends BaseParser {
   protected readonly mBBBV: number
   protected mIslands = 0
   protected mOpenings = 0
-  protected mGZiNi = 0
-  protected mHZiNi = 0
   protected board: Cell[] = []
   protected mGameEvents: GameEvent[] = []
 

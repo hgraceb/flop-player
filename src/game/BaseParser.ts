@@ -91,10 +91,6 @@ export abstract class BaseParser {
   protected abstract mIslands: number
   // 开空数量
   protected abstract mOpenings: number
-  // Greedy ZiNi
-  protected abstract mGZiNi: number
-  // Human ZiNi
-  protected abstract mHZiNi: number
   // 游戏方块信息
   protected abstract board: Cell[]
   // 当前游戏事件
@@ -131,16 +127,6 @@ export abstract class BaseParser {
    * 获取开空数量
    */
   getOpenings = (): number => this.mOpenings
-
-  /**
-   * 获取 Greedy ZiNi
-   */
-  getGZiNi = (): number => this.mGZiNi
-
-  /**
-   * 获取 Human ZiNi
-   */
-  getHZiNi = (): number => this.mHZiNi
 
   /**
    * 获取游戏方块信息
