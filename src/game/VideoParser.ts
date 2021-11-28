@@ -312,6 +312,7 @@ export class VideoParser extends BaseParser {
     this.pushGameEvent('MouseMove')
     // 计算的是欧几里得距离，因为通过 Minesweeper Arbiter 0.52.3 很容易就可以进行验证
     // 而 FreeSweeper 计算得到的曼哈顿距离就一言难尽了，可能打开 avf 录像计算得到的是一个值，另存为 rawvf 录像文件后重新打开又得到了一个新的值...
+    // 不过要注意 Minesweeper Arbiter 0.52.3 来回拖动进度条的话可能导致 path 的计算结果不准确，所以不要随便脱呀啊喂 (σ｀д′)σ
     this.path += Math.pow(Math.pow(this.curEvent.x - this.preEvent.x || 0, 2) + Math.pow(this.curEvent.y - this.preEvent.y || 0, 2), 0.5)
     // 如果鼠标所在方块没有发生改变则不处理方块状态变化
     if (this.curEvent.column === this.preEvent.column && this.curEvent.row === this.preEvent.row) return
@@ -451,6 +452,7 @@ export class VideoParser extends BaseParser {
       cell.questioned = true
       this.pushGameEvent('QuestionMark', column, row)
     } else if (cell.flagged) {
+      this.flags--
       // 如果没有启用问号标记设置，则统一移除旗子和问号状态
       cell.flagged = cell.questioned = false
       this.pushGameEvent('RemoveFlag', column, row)
@@ -459,6 +461,7 @@ export class VideoParser extends BaseParser {
       cell.flagged = cell.questioned = false
       this.pushGameEvent('RemoveQuestionMark', column, row)
     } else {
+      this.flags++
       // 没有任何标记状态，直接标雷
       cell.flagged = true
       cell.questioned = false
