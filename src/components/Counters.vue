@@ -222,16 +222,16 @@ td {
 
 td:first-child {
   /* 限制单元格宽度 */
-  min-width: 70px;
-  max-width: 70px;
+  min-width: 60px;
+  max-width: 60px;
   /* 单元格右侧边框 */
   border-right: 1px solid gray;
 }
 
 td:last-child {
   /* 限制单元格宽度 */
-  min-width: 80px;
-  max-width: 80px;
+  min-width: 70px;
+  max-width: 70px;
 }
 
 tr:not(:last-child) td {
