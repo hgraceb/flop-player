@@ -361,7 +361,7 @@ export class VideoParser extends BaseParser {
     if (this.rightPressed || this.shiftValid) {
       this.doubleClicks++
       this.releaseAround(this.curEvent.column, this.curEvent.row)
-      this.openAround(this.curEvent.column, this.curEvent.row)
+      if (!this.openAround(this.curEvent.column, this.curEvent.row)) this.wastedDoubleClicks++
     } else if (this.leftValid) {
       // 如果左键键点击到左键释放中间没有释放右键的操作
       this.leftClicks++
@@ -400,7 +400,7 @@ export class VideoParser extends BaseParser {
     if (this.leftPressed) {
       this.doubleClicks++
       this.releaseAround(this.curEvent.column, this.curEvent.row)
-      this.openAround(this.curEvent.column, this.curEvent.row)
+      if (!this.openAround(this.curEvent.column, this.curEvent.row)) this.wastedDoubleClicks++
     } else if (this.rightValid) {
       // 如果右键点击时没有被计算为有效点击数，并且右键点击到右键释放中间没有释放左键的操作，则将左键没有按下时候的右键释放事件记为一次右键点击数
       this.rightClicks++
@@ -427,7 +427,7 @@ export class VideoParser extends BaseParser {
     this.doubleClicks++
     this.releaseAround(this.curEvent.column, this.curEvent.row)
     // 中键和左右键互不影响，不用判断左右键的状态，开就完了 (*￣3￣)╭
-    this.openAround(this.curEvent.column, this.curEvent.row)
+    if (!this.openAround(this.curEvent.column, this.curEvent.row)) this.wastedDoubleClicks++
     this.middlePressed = false
   }
 
@@ -448,6 +448,8 @@ export class VideoParser extends BaseParser {
 
   /**
    * 切换方块标记状态
+   *
+   * @return boolean 方块标记状态是否切换
    */
   private toggleLabel (column: number, row: number): boolean {
     const cell = this.board[column + row * this.mWidth]
@@ -559,17 +561,22 @@ export class VideoParser extends BaseParser {
 
   /**
    * 打开周围方块
+   *
+   * @return boolean 是否成功打开过至少一个方块
    */
-  private openAround (column: number, row: number): void {
+  private openAround (column: number, row: number): boolean {
     const cell = this.board[column + row * this.mWidth]
+    // 是否成功打开过至少一个方块
+    let opened = false
     // 只对游戏区域内已经打开过的方块执行操作，并且方块是开空或者方块周围雷的数量与方块周围被旗子标记的方块数量相等
     if (this.isInside(column, row) && cell.opened && (cell.number === 0 || cell.number === this.getAroundFlags(column, row))) {
       for (let i = column - 1; i <= column + 1; i++) {
         for (let j = row - 1; j <= row + 1; j++) {
-          this.open(i, j)
+          opened = this.open(i, j) || opened
         }
       }
     }
+    return opened
   }
 
   /**
