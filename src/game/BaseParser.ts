@@ -90,6 +90,13 @@ export abstract class BaseParser {
   protected abstract mPlayerArray: Uint8Array
 
   /**
+   * 抛出一个错误
+   */
+  protected error (msg: string): number {
+    throw new Error(`${this.constructor.name}Error - ${msg}`)
+  }
+
+  /**
    * 获取游戏列数
    */
   getWidth = (): number => this.mWidth

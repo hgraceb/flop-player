@@ -1,5 +1,6 @@
 import { BaseParser, Cell, GameEvent, GameEventName } from '@/game/BaseParser'
 import { BaseVideo, VideoEvent } from '@/game/BaseVideo'
+import { round } from 'number-precision'
 
 /**
  * 录像事件解析器
@@ -103,8 +104,13 @@ export class VideoParser extends BaseParser {
         break
       }
     }
-    // 在所有录像事件全部模拟完成后，如果不允许追加录像事件并且游戏没有胜利或者失败，则添加录像意外结尾的游戏事件
-    if (!appendable && this.gameState !== 'Win' && this.gameState !== 'Lose') this.pushGameEvent('UnexpectedEnd')
+    // 在所有录像事件全部模拟完成后，如果不允许追加录像事件
+    if (!appendable) {
+      // 如果游戏一个方块都没有打开，则抛出一个错误，因为播放的时候需要 Start 事件才开始计时，没有计时的话就永远无法到达录像结尾的真实
+      if (this.gameState === 'Begin') this.error('Unexpected end of video events')
+      // 如果游戏还搁这开始呢，没有胜利或者失败，则认为录像意外结尾，可能是录像文件损坏导致部分录像事件缺失，或者游戏超时自动判负（如：Minesweeper Arbiter 0.52.3）
+      else if (this.gameState === 'Start') this.pushGameEvent('UnexpectedEnd')
+    }
   }
 
   /**
@@ -541,6 +547,8 @@ export class VideoParser extends BaseParser {
     // 来都来了，就把你给开了吧 (づ￣ 3￣)づ
     cell.opened = true
     if (this.gameState === 'Begin') {
+      // 录像开始时间不能大于 0，不然的话会处于一直未开始计时的状态
+      if (this.curEvent.time > 0) this.error(`Unexpected video start time: ${round(this.curEvent.time / 1000, 3).toFixed(3)}`)
       // 首次方块被打开后开始游戏，开始游戏的事件在打开方块的事件之前
       this.gameState = 'Start'
       this.pushGameEvent('Start', column, row)
