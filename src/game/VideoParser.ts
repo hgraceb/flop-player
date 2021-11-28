@@ -278,6 +278,8 @@ export class VideoParser extends BaseParser {
    */
   private performEvent (event: VideoEvent): void {
     this.curEvent = event
+    // 时间流向出现了问题，后一个录像事件的时间不能小于前一个录像事件事件，0 < undefined 的结果也是 false，所以不用考虑前一个录像事件没有赋值的情况
+    if (this.curEvent.time < this.preEvent.time) this.error(`Unexpected time flow: ${round(this.preEvent.time / 1000, 3).toFixed(3)} to ${round(this.curEvent.time / 1000, 3).toFixed(3)}`)
     // 录像事件的坐标改变时，中间不一定会有对应的 mv 事件，坐标位置改变时则认为有鼠标移动事件发生
     this.mouseMove()
     switch (this.curEvent.mouse) {
