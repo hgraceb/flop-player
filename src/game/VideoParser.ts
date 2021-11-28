@@ -167,7 +167,7 @@ export class VideoParser extends BaseParser {
    */
   private setOpenings (column: number, row: number, opening: number): void {
     const cell = this.board[column + row * this.mWidth]
-    // 如果方块超出游戏区域、方块本身是雷或者方块已经设置过对应开空则直接返回
+    // 如果方块超出游戏区域、方块本身是雷或者方块已经设置过对应开空则则不进行设置
     if (!this.isInside(column, row) || cell.number === -1 || cell.opening === opening || cell.opening2 === opening) return
     // 注意以下的赋值逻辑都基于 cell.opening !== opening && cell.opening2 !== opening
     if (cell.number === 0) {
@@ -195,20 +195,28 @@ export class VideoParser extends BaseParser {
   }
 
   /**
+   * 设置方块所在岛屿
+   */
+  private setIsland (column: number, row: number, island: number) {
+    // 如果方块超出游戏区域则不进行设置
+    if (!this.isInside(column, row)) return
+    const cell = this.board[column + row * this.mWidth]
+    // 方块不是雷、不属于开空并且没有设置过属于哪个岛屿
+    if (cell.number > 0 && cell.opening === 0 && cell.island === 0) {
+      cell.island = island
+      this.setIslandAround(column, row, island)
+      // 添加未完成的岛屿方块数量
+      this.unsolvedIsls[island] = this.unsolvedIsls[island] ? this.unsolvedIsls[island] + 1 : 1
+    }
+  }
+
+  /**
    * 设置本身和周围方块所在岛屿
    */
   private setIslandAround (column: number, row: number, island: number): void {
     for (let i = column - 1; i <= column + 1; i++) {
       for (let j = row - 1; j <= row + 1; j++) {
-        if (!this.isInside(i, j)) continue
-        const cell = this.board[i + j * this.mWidth]
-        // 方块不是雷、不属于开空、是岛屿并且没有设置过属于哪个岛屿
-        if (cell.number > 0 && cell.opening === 0 && cell.island === 0) {
-          cell.island = island
-          this.setIslandAround(i, j, island)
-          // 添加未完成的岛屿方块数量
-          this.unsolvedIsls[island] = this.unsolvedIsls[island] ? this.unsolvedIsls[island] + 1 : 1
-        }
+        this.setIsland(i, j, island)
       }
     }
   }
