@@ -355,17 +355,16 @@ export class VideoParser extends BaseParser {
    */
   private leftRelease (): void {
     this.pushGameEvent('LeftRelease')
-    if (this.leftValid) {
-      if (this.rightPressed || this.shiftValid) {
-        this.doubleClicks++
-        this.releaseAround(this.curEvent.column, this.curEvent.row)
-        this.openAround(this.curEvent.column, this.curEvent.row)
-      } else {
-        this.leftClicks++
-        this.release(this.curEvent.column, this.curEvent.row)
-        // 打开方块并判断是否打开成功
-        if (!this.open(this.curEvent.column, this.curEvent.row)) this.wastedLeftClicks++
-      }
+    if (this.rightPressed || this.shiftValid) {
+      this.doubleClicks++
+      this.releaseAround(this.curEvent.column, this.curEvent.row)
+      this.openAround(this.curEvent.column, this.curEvent.row)
+    } else if (this.leftValid) {
+      // 如果左键键点击到左键释放中间没有释放右键的操作
+      this.leftClicks++
+      this.release(this.curEvent.column, this.curEvent.row)
+      // 打开方块并判断是否打开成功
+      if (!this.open(this.curEvent.column, this.curEvent.row)) this.wastedLeftClicks++
     }
     // 左键释放后，重置所有左右键相关状态位
     this.leftPressed = this.leftValid = this.rightValid = this.shiftValid = false
@@ -400,7 +399,7 @@ export class VideoParser extends BaseParser {
       this.releaseAround(this.curEvent.column, this.curEvent.row)
       this.openAround(this.curEvent.column, this.curEvent.row)
     } else if (this.rightValid) {
-      // 如果右键点击时没有被计算为有效点击数，并且右键点击之后没有释放左键的操作，则将左键没有按下时候的右键释放事件记为一次右键点击数
+      // 如果右键点击时没有被计算为有效点击数，并且右键点击到右键释放中间没有释放左键的操作，则将左键没有按下时候的右键释放事件记为一次右键点击数
       this.rightClicks++
       this.wastedRightClicks++
     }
