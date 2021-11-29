@@ -53,6 +53,9 @@ export class RawVideo extends BaseVideo {
       } else if (option === 'level') {
         // Marathon is a Viennasweeper mode used in some tournaments
         if (value === 'marathon') this.error('This program doesn\'t support marathon RawVF')
+      } else if (option === 'mode') {
+        // 不支持作弊模式，作弊模式下有很多额外的可选项，如：Lives、Autoflag、Lawnmower、ElmarTechnique、NonoMouse、SuperClick、SuperFlag
+        if (value === 'cheat') this.error('This program doesn\'t support cheat RawVF')
       } else if (option === 'board') {
         break
       }
