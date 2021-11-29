@@ -11,5 +11,13 @@ module.exports = {
         style: true
       }
     ]
-  ]
+  ],
+  "env": {
+    "production": {
+      "plugins": [
+        // 生产环境下移除日志打印
+        "transform-remove-console"
+      ]
+    }
+  }
 }
