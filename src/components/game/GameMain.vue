@@ -54,7 +54,7 @@ export default defineComponent({
     }
     // 棋盘对应的元素
     const boardElement = ref<SVGPolylineElement>()
-    // 处理方块的鼠标事件，TODO 完善鼠标事件处理，除了添加鼠标移动事件还要在 document 上监听鼠标事件
+    // 处理方块的鼠标事件，TODO 完善鼠标事件处理，除了添加鼠标移动事件还要在 document 上监听鼠标事件、添加移动端的点击事件处理
     const cellMouseHandler = (e: MouseEvent) => {
       if (!boardElement.value) return
       // 阻止默认的点击事件执行
@@ -63,11 +63,13 @@ export default defineComponent({
       e.stopPropagation()
       // 获取方块容器的位置信息
       const rect = boardElement.value.getBoundingClientRect()
-      // 在方块上点击时，限制横坐标最小值为 0，最大值为 width - 1，因为点击边缘位置时可能因为原始数据已经被四舍五入过，导致计算结果有误差
+      // 在方块上点击时，限制横坐标最小值为 0，最大值为 width - 1，因为原始数据可能已经被四舍五入过，点击边缘位置时计算得到的值可能超出实际游戏范围
       const x = Math.max(0, Math.min(round(e.x - rect.x, 0), store.state.width * 16 - 1))
       // 在方块上点击时，限制纵坐标最小值为 0，最大值为 height - 1
       const y = Math.max(0, Math.min(round(e.y - rect.y, 0), store.state.height * 16 - 1))
-      if (e.type === 'mousedown' && e.button === 0) {
+      if (e.type === 'mousedown' && e.button === 0 && e.shiftKey) {
+        console.log({ type: 'sc', x: x, y: y })
+      } else if (e.type === 'mousedown' && e.button === 0) {
         console.log({ type: 'lc', x: x, y: y })
       } else if (e.type === 'mousedown' && e.button === 1) {
         console.log({ type: 'mc', x: x, y: y })
