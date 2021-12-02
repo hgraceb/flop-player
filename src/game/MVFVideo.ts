@@ -37,7 +37,7 @@ export class MVFVideo extends BaseVideo {
   protected mWidth: number
   protected mHeight: number
   protected mMines: number
-  protected mMarks: number
+  protected mMarks: boolean
   protected mBoard: number[]
   protected mPlayer: Uint8Array
   protected mEvents: VideoEvent[] = []
@@ -101,15 +101,15 @@ export class MVFVideo extends BaseVideo {
     if (!this.readmvf()) {
       this.error('Invalid MVF')
     }
-    // 设置游戏基本信息
+    // 设置录像基本信息
     this.mWidth = this.w
     this.mHeight = this.h
     this.mMines = this.m
-    this.mMarks = this.qm
+    this.mMarks = this.qm !== 0
     this.mBoard = this.board
     // 设置玩家名称
     this.mPlayer = new Uint8Array(this.name)
-    // 设置游戏事件
+    // 设置录像事件
     this.dumpFirstEvent(this.video[0])
     for (let i = 1; i < this.size; i++) {
       this.dumpEvent(this.video[i], this.video[i - 1])

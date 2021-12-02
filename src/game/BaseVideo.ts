@@ -26,8 +26,7 @@ export abstract class BaseVideo {
   protected abstract mWidth: number
   protected abstract mHeight: number
   protected abstract mMines: number
-  // TODO 将类型改为 boolean
-  protected abstract mMarks: number
+  protected abstract mMarks: boolean
   protected abstract mBoard: number[]
   protected abstract mEvents: VideoEvent[]
   protected abstract mPlayer: Uint8Array
@@ -140,38 +139,38 @@ export abstract class BaseVideo {
     return char >= '0' && char <= '9'
   }
 
-  /** 获取游戏列数 */
+  /** 获取录像列数 */
   getWidth (): number {
     return this.mWidth
   }
 
-  /** 获取游戏行数 */
+  /** 获取录像行数 */
   getHeight (): number {
     return this.mHeight
   }
 
-  /** 获取游戏雷数 */
+  /** 获取录像雷数 */
   getMines (): number {
     return this.mMines
   }
 
   /** 获取是否标记问号 */
-  getMarks (): number {
+  getMarks (): boolean {
     return this.mMarks
   }
 
-  /** 获取游戏布局 */
+  /** 获取录像布局 */
   getBoard (): number[] {
     return this.mBoard
   }
 
-  /** 获取游戏事件 */
+  /** 获取录像事件 */
   getEvents (): VideoEvent[] {
     return this.mEvents
   }
 
   /** 获取玩家名称原始数据 */
-  getPlayer (): Uint8Array {
+  getPlayerArray (): Uint8Array {
     return this.mPlayer
   }
 }

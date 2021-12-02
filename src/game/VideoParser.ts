@@ -13,13 +13,14 @@ export class VideoParser extends BaseParser {
   protected readonly mWidth: number
   protected readonly mHeight: number
   protected readonly mMines: number
+  protected readonly mVideoBoard: number[]
   protected readonly mPlayerArray: Uint8Array
 
   /* 通过二次计算得到的录像数据 */
   protected readonly mBBBV: number
   protected mIslands = 0
   protected mOpenings = 0
-  protected board: Cell[] = []
+  protected mGameBoard: Cell[] = []
   protected mGameEvents: GameEvent[] = []
 
   /* 计算录像数据需要用到的变量 */
@@ -84,10 +85,11 @@ export class VideoParser extends BaseParser {
     this.mWidth = video.getWidth()
     this.mHeight = video.getHeight()
     this.mMines = video.getMines()
-    this.mPlayerArray = video.getPlayer()
+    this.mVideoBoard = video.getBoard()
+    this.mPlayerArray = video.getPlayerArray()
     // 保存其他视频信息
     this.appendable = appendable
-    this.marks = video.getMarks() === 1
+    this.marks = video.getMarks()
     // 初始化游戏布局
     this.initBoard(video.getBoard())
     // 计算最少左键点击数
@@ -114,13 +116,22 @@ export class VideoParser extends BaseParser {
   }
 
   /**
+   * 追加录像事件
+   */
+  appendEvent (event: VideoEvent): GameEvent[] {
+    // TODO 添加胜负判断
+    if (this.appendable) this.performEvent(event)
+    return this.mGameEvents
+  }
+
+  /**
    * 添加游戏事件
    */
   private pushGameEvent (name: GameEventName, column: number = this.curEvent.column, row: number = this.curEvent.row): void {
     this.mGameEvents.push({
       name: name,
       time: this.curEvent.time,
-      number: this.isInside(column, row) ? this.board[column + row * this.mWidth].number : undefined,
+      number: this.isInside(column, row) ? this.mGameBoard[column + row * this.mWidth].number : undefined,
       x: this.curEvent.x,
       y: this.curEvent.y,
       column: column,
@@ -146,17 +157,17 @@ export class VideoParser extends BaseParser {
    */
   private initBoard (board: number[]): void {
     // 先初始化所有方块
-    this.board = Array.from(Array(this.mWidth * this.mHeight), (_, index) => new Cell(board[index] === 1))
+    this.mGameBoard = Array.from(Array(this.mWidth * this.mHeight), (_, index) => new Cell(board[index] === 1))
     // 计算每个方块对应的数字
     for (let i = 0; i < this.mWidth; i++) {
       for (let j = 0; j < this.mHeight; j++) {
-        this.board[i + j * this.mWidth].number = this.getAroundMines(i, j)
+        this.mGameBoard[i + j * this.mWidth].number = this.getAroundMines(i, j)
       }
     }
     // 设置每个方块对应的开空
     for (let i = 0; i < this.mWidth; i++) {
       for (let j = 0; j < this.mHeight; j++) {
-        const cell = this.board[i + j * this.mWidth]
+        const cell = this.mGameBoard[i + j * this.mWidth]
         // 方块是开空，并且没有设置过属于哪个开空（可能同时属于两个不同编号的开空）
         if (cell.number === 0 && cell.opening === 0) this.setOpeningsAround(i, j, ++this.mOpenings)
       }
@@ -164,7 +175,7 @@ export class VideoParser extends BaseParser {
     // 设置每个方块对应的岛屿
     for (let i = 0; i < this.mWidth; i++) {
       for (let j = 0; j < this.mHeight; j++) {
-        const cell = this.board[i + j * this.mWidth]
+        const cell = this.mGameBoard[i + j * this.mWidth]
         // 方块不是雷、不属于开空、是岛屿并且没有设置过属于哪个岛屿
         if (cell.number > 0 && cell.opening === 0 && cell.island === 0) this.setIslandAround(i, j, ++this.mIslands)
       }
@@ -175,7 +186,7 @@ export class VideoParser extends BaseParser {
    * 设置方块所在开空
    */
   private setOpenings (column: number, row: number, opening: number): void {
-    const cell = this.board[column + row * this.mWidth]
+    const cell = this.mGameBoard[column + row * this.mWidth]
     // 如果方块超出游戏区域、方块本身是雷或者方块已经设置过对应开空则则不进行设置
     if (!this.isInside(column, row) || cell.number === -1 || cell.opening === opening || cell.opening2 === opening) return
     // 注意以下的赋值逻辑都基于 cell.opening !== opening && cell.opening2 !== opening
@@ -209,7 +220,7 @@ export class VideoParser extends BaseParser {
   private setIsland (column: number, row: number, island: number): void {
     // 如果方块超出游戏区域则不进行设置
     if (!this.isInside(column, row)) return
-    const cell = this.board[column + row * this.mWidth]
+    const cell = this.mGameBoard[column + row * this.mWidth]
     // 方块不是雷、不属于开空并且没有设置过属于哪个岛屿
     if (cell.number > 0 && cell.opening === 0 && cell.island === 0) {
       cell.island = island
@@ -234,7 +245,7 @@ export class VideoParser extends BaseParser {
    * 获取指定方块周围是雷的方块数量
    */
   private getAroundMines (column: number, row: number): number {
-    const cell = this.board[column + row * this.mWidth]
+    const cell = this.mGameBoard[column + row * this.mWidth]
     // 如果方块超出游戏区域或者方块本身是雷则不计算周围雷的数量
     if (!this.isInside(column, row) || cell.number === -1) return cell.number
     // 周围是雷的方块数量
@@ -242,7 +253,7 @@ export class VideoParser extends BaseParser {
     for (let i = column - 1; i <= column + 1; i++) {
       for (let j = row - 1; j <= row + 1; j++) {
         // 如果遍历到的方块在游戏区域内并且是雷
-        mines += (this.isInside(i, j) && this.board[i + j * this.mWidth].number === -1) ? 1 : 0
+        mines += (this.isInside(i, j) && this.mGameBoard[i + j * this.mWidth].number === -1) ? 1 : 0
       }
     }
     return mines
@@ -259,7 +270,7 @@ export class VideoParser extends BaseParser {
     for (let i = column - 1; i <= column + 1; i++) {
       for (let j = row - 1; j <= row + 1; j++) {
         // 如果遍历到的方块在游戏区域内并且被旗子标记
-        flags += (this.isInside(i, j) && this.board[i + j * this.mWidth].flagged) ? 1 : 0
+        flags += (this.isInside(i, j) && this.mGameBoard[i + j * this.mWidth].flagged) ? 1 : 0
       }
     }
     return flags
@@ -466,7 +477,7 @@ export class VideoParser extends BaseParser {
    * @return boolean 方块标记状态是否切换
    */
   private toggleLabel (column: number, row: number): boolean {
-    const cell = this.board[column + row * this.mWidth]
+    const cell = this.mGameBoard[column + row * this.mWidth]
     // 如果在游戏区域外或者在已经被打开的方块上单击右键
     if (!this.isInside(column, row) || cell.opened) return false
     if (this.marks && cell.flagged) {
@@ -497,7 +508,7 @@ export class VideoParser extends BaseParser {
    * 点击方块
    */
   private press (column: number, row: number): void {
-    const cell = this.board[column + row * this.mWidth]
+    const cell = this.mGameBoard[column + row * this.mWidth]
     // 如果方块超出游戏区域、已经被打开或者已经被旗子标记，则不进行操作
     if (!this.isInside(column, row) || cell.opened || cell.flagged) return
     // 根据方块当前问号标记状态添加游戏事件
@@ -519,7 +530,7 @@ export class VideoParser extends BaseParser {
    * 释放方块
    */
   private release (column: number, row: number): void {
-    const cell = this.board[column + row * this.mWidth]
+    const cell = this.mGameBoard[column + row * this.mWidth]
     // 如果方块超出游戏区域、已经被打开或者已经被旗子标记，则不进行操作
     if (!this.isInside(column, row) || cell.opened || cell.flagged) return
     // 根据方块当前问号标记状态添加游戏事件
@@ -543,7 +554,7 @@ export class VideoParser extends BaseParser {
    * @return boolean 方块是否打开成功
    */
   private open (column: number, row: number): boolean {
-    const cell = this.board[column + row * this.mWidth]
+    const cell = this.mGameBoard[column + row * this.mWidth]
     // 如果方块超出游戏区域、已经被打开或者已经被旗子标记，则不进行操作
     if (!this.isInside(column, row) || cell.opened || cell.flagged) return false
     // 来都来了，就把你给开了吧 (づ￣ 3￣)づ
@@ -581,7 +592,7 @@ export class VideoParser extends BaseParser {
    * @return boolean 是否成功打开过至少一个方块
    */
   private openAround (column: number, row: number): boolean {
-    const cell = this.board[column + row * this.mWidth]
+    const cell = this.mGameBoard[column + row * this.mWidth]
     // 是否成功打开过至少一个方块
     let opened = false
     // 只对游戏区域内已经打开过的方块执行操作，并且方块是开空或者方块周围雷的数量与方块周围被旗子标记的方块数量相等
@@ -603,7 +614,7 @@ export class VideoParser extends BaseParser {
     if (this.gameState !== 'Win' && this.gameState !== 'Lose') return
     for (let i = 0; i < this.mWidth; i++) {
       for (let j = 0; j < this.mHeight; j++) {
-        const cell = this.board[i + j * this.mWidth]
+        const cell = this.mGameBoard[i + j * this.mWidth]
         // 只处理未打开的方块
         if (cell.opened) continue
         // 如果方块是雷并且方块还没有被旗子标记，则根据游戏胜利或者失败添加标记对应方块样式的游戏事件

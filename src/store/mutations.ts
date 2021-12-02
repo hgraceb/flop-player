@@ -11,6 +11,7 @@ import { MVFVideo } from '@/game/MVFVideo'
 import { RMVVideo } from '@/game/RMVVideo'
 import { BaseParser } from '@/game/BaseParser'
 import { VideoParser } from '@/game/VideoParser'
+import { CustomVideo } from '@/game/CustomVideo'
 
 /**
  * Mutations 函数定义，使用类型推断的方式，可以快速找到函数的所有 Usages
@@ -96,7 +97,12 @@ export const mutations = {
     state.openings = parser.getOpenings()
     state.islands = parser.getIslands()
     state.gameEvents = parser.getGameEvents()
-    state.gameCellBoard = parser.getBoard()
+    state.gameCellBoard = parser.getGameBoard()
+  },
+  /** 添加玩家操作事件 */
+  pushUserEvent: (state: State, { mouse, x, y }: { mouse: 'lc' | 'lr' | 'rc' | 'rr' | 'mc' | 'mr' | 'mv' | 'sc' | 'mt', x: number, y: number }): void => {
+    if (state.gameType !== 'UPK') return
+    state.gameEvents = state.userParser.appendEvent({ time: state.gameElapsedTime, mouse: mouse, column: Math.floor(x / 16), row: Math.floor(y / 16), x: x, y: y })
   },
   /** 接收并处理录像数据 */
   receiveVideo: (state: State, { type, data }: { type: string, data: ArrayBuffer }): void => {
@@ -277,15 +283,11 @@ export const mutations = {
   },
   /** 重开游戏，TODO 删除测试代码 */
   upk: (state: State): void => {
-    state.userParser = state.videoParser
+    const parser = state.videoParser
+    // TODO 动态获取玩家选择的问号标记设置
+    const video = new CustomVideo(parser.getWidth(), parser.getHeight(), parser.getMines(), false, parser.getVideoBoard())
+    state.userParser = new VideoParser(video, true)
     store.commit('initGame', state.userParser)
-    state.gameEvents = []
-    const interval = setInterval(() => {
-      state.gameEvents.push(state.videoParser.getGameEvents()[state.gameEvents.length])
-      if (state.gameEvents.length === state.videoParser.getGameEvents().length) {
-        clearInterval(interval)
-      }
-    }, 100)
     // 设置游戏类型
     state.gameType = 'UPK'
     // 重置变量

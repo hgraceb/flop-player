@@ -5,7 +5,7 @@ export class RawVideo extends BaseVideo {
   protected mWidth = -1
   protected mHeight = -1
   protected mMines = -1
-  protected mMarks = 0
+  protected mMarks = false
   protected mBoard: number[] = []
   protected mEvents: VideoEvent[] = []
   protected mPlayer: Uint8Array = new Uint8Array()
@@ -49,7 +49,7 @@ export class RawVideo extends BaseVideo {
         // QuestionMarks 是为了兼容部分旧版本录像，如：FreeSweeper release 10 保存的录像
       } else if (option === 'marks' || option === 'QuestionMarks'.toLowerCase()) {
         if (value !== 'on' && value !== 'off') this.error(`Invalid question marks: "${value}"`)
-        this.mMarks = value === 'on' ? 1 : 0
+        this.mMarks = value === 'on'
       } else if (option === 'level') {
         // Marathon is a Viennasweeper mode used in some tournaments
         if (value === 'marathon') this.error('This program doesn\'t support marathon RawVF')

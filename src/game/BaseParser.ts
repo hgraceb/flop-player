@@ -1,4 +1,6 @@
 // 基础游戏事件名称
+import { VideoEvent } from '@/game/BaseVideo'
+
 type Base = 'LeftPress' | 'LeftRelease' | 'RightPress' | 'RightRelease' | 'MiddlePress' | 'MiddleRelease' | 'MouseMove' | 'LeftPressWithShift' | 'ToggleQuestionMarkSetting'
 // 自定义游戏事件名称
 type Custom = 'Press' | 'Release' | 'PressQuestionMark' | 'ReleaseQuestionMark' | 'Flag' | 'RemoveFlag' | 'QuestionMark' | 'RemoveQuestionMark' | 'Open' | 'Mine' | 'Blast' | 'Mislabeled' | 'Start' | 'Win' | 'Lose' | 'UnexpectedEnd'
@@ -101,12 +103,19 @@ export abstract class BaseParser {
   protected abstract mIslands: number
   // 开空数量
   protected abstract mOpenings: number
+  // 录像布局信息
+  protected abstract mVideoBoard: number[]
   // 游戏方块信息
-  protected abstract board: Cell[]
+  protected abstract mGameBoard: Cell[]
   // 当前游戏事件
   protected abstract mGameEvents: GameEvent[]
   // 玩家姓名原始数据
   protected abstract mPlayerArray: Uint8Array
+
+  /**
+   * 追加录像事件
+   */
+  abstract appendEvent (event: VideoEvent): GameEvent[]
 
   /**
    * 抛出一个错误
@@ -146,9 +155,14 @@ export abstract class BaseParser {
   getOpenings = (): number => this.mOpenings
 
   /**
+   * 获取录像布局信息
+   */
+  getVideoBoard = (): number[] => this.mVideoBoard
+
+  /**
    * 获取游戏方块信息
    */
-  getBoard = (): Cell[] => this.board
+  getGameBoard = (): Cell[] => this.mGameBoard
 
   /**
    * 获取当前游戏事件

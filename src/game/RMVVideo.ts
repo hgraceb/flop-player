@@ -35,7 +35,7 @@ export class RMVVideo extends BaseVideo {
   protected mWidth: number
   protected mHeight: number
   protected mMines: number
-  protected mMarks: number
+  protected mMarks: boolean
   protected mBoard: number[]
   protected mPlayer: Uint8Array
   protected mEvents: VideoEvent[] = []
@@ -99,15 +99,15 @@ export class RMVVideo extends BaseVideo {
     if (!this.readrmv()) {
       this.error('Invalid RMV')
     }
-    // 设置游戏基本信息
+    // 设置录像基本信息
     this.mWidth = this.w
     this.mHeight = this.h
     this.mMines = this.m
-    this.mMarks = this.qm
+    this.mMarks = this.qm !== 0
     this.mBoard = this.board
     // 设置玩家名称
     this.mPlayer = new Uint8Array(this.name)
-    // 设置游戏事件
+    // 设置录像事件
     const eventNames: ('mv' | 'lc' | 'lr' | 'rc' | 'rr' | 'mc' | 'mr')[] = ['mv', 'lc', 'lr', 'rc', 'rr', 'mc', 'mr']
     for (let i = 0; i < this.size; ++i) {
       const e = this.video[i]

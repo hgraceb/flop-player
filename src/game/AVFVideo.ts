@@ -47,7 +47,7 @@ export class AVFVideo extends BaseVideo {
   protected mWidth: number
   protected mHeight: number
   protected mMines: number
-  protected mMarks: number
+  protected mMarks: boolean
   protected mBoard: number[]
   protected mPlayer: Uint8Array
   protected mEvents: VideoEvent[]
@@ -66,7 +66,7 @@ export class AVFVideo extends BaseVideo {
   // Stores board and mine locations
   private board: number[] = []
   // Questionmarks
-  private qm = 0
+  private qm = false
   // Version
   private ver = 0
   // Player name
@@ -106,7 +106,7 @@ export class AVFVideo extends BaseVideo {
     if (!this.readavf()) {
       this.error('Invalid AVF')
     }
-    // 设置游戏基本信息
+    // 设置录像基本信息
     this.mWidth = this.w
     this.mHeight = this.h
     this.mMines = this.m
@@ -117,7 +117,7 @@ export class AVFVideo extends BaseVideo {
     this.name.forEach((char, index) => {
       this.mPlayer[index] = char.charCodeAt(0)
     })
-    // 设置游戏事件
+    // 设置录像事件
     this.mEvents = []
     let curx = -1
     let cury = -1
@@ -266,7 +266,7 @@ export class AVFVideo extends BaseVideo {
 
     // See if Questionmark option was turned on
     if (cr[0] !== 17 && cr[0] !== 127) return 0
-    this.qm = (cr[0] === 17) ? 1 : 0
+    this.qm = cr[0] === 17
 
     // Throw away the next byte (the first '[' before timestamp)
     this.getChar()

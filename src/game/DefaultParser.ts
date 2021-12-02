@@ -10,8 +10,13 @@ export class DefaultParser extends BaseParser {
   protected mBBBV = 0
   protected mIslands = 0
   protected mOpenings = 0
-  protected board: Cell[] = []
+  protected mVideoBoard: number[] = []
+  protected mGameBoard: Cell[] = []
   // 包含一个录像结束标识事件，不然播放时无法正常结束
   protected mGameEvents: GameEvent [] = [new GameEvent('UnexpectedEnd')]
   protected mPlayerArray = new Uint8Array()
+
+  appendEvent (): GameEvent[] {
+    return this.mGameEvents
+  }
 }

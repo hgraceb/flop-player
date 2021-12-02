@@ -68,19 +68,19 @@ export default defineComponent({
       // 在方块上点击时，限制纵坐标最小值为 0，最大值为 height - 1
       const y = Math.max(0, Math.min(round(e.y - rect.y, 0), store.state.height * 16 - 1))
       if (e.type === 'mousedown' && e.button === 0 && e.shiftKey) {
-        console.log({ type: 'sc', x: x, y: y })
+        store.commit('pushUserEvent', { mouse: 'sc', x: x, y: y })
       } else if (e.type === 'mousedown' && e.button === 0) {
-        console.log({ type: 'lc', x: x, y: y })
+        store.commit('pushUserEvent', { mouse: 'lc', x: x, y: y })
       } else if (e.type === 'mousedown' && e.button === 1) {
-        console.log({ type: 'mc', x: x, y: y })
+        store.commit('pushUserEvent', { mouse: 'mc', x: x, y: y })
       } else if (e.type === 'mousedown' && e.button === 2) {
-        console.log({ type: 'rc', x: x, y: y })
+        store.commit('pushUserEvent', { mouse: 'rc', x: x, y: y })
       } else if (e.type === 'mouseup' && e.button === 0) {
-        console.log({ type: 'lr', x: x, y: y })
+        store.commit('pushUserEvent', { mouse: 'lr', x: x, y: y })
       } else if (e.type === 'mouseup' && e.button === 1) {
-        console.log({ type: 'mr', x: x, y: y })
+        store.commit('pushUserEvent', { mouse: 'mr', x: x, y: y })
       } else if (e.type === 'mouseup' && e.button === 2) {
-        console.log({ type: 'rr', x: x, y: y })
+        store.commit('pushUserEvent', { mouse: 'rr', x: x, y: y })
       }
     }
 
