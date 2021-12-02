@@ -1,5 +1,5 @@
 <template>
-  <skin-symbol :translate-x="cursorTranslateX" :translate-y="cursorTranslateY" name="cursor-arrow" />
+  <skin-symbol v-show="show" :translate-x="cursorTranslateX" :translate-y="cursorTranslateY" name="cursor-arrow" />
 </template>
 
 <script lang="ts">
@@ -11,6 +11,8 @@ import { GAME_MIDDLE, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE
 export default defineComponent({
   components: { SkinSymbol },
   setup () {
+    // 只在录像播放时展示鼠标指针
+    const show = computed(() => store.state.gameType === 'Video')
     // 当前鼠标的坐标位置，默认为 (0, 0)
     const currentMousePoint = computed(() => store.state.gameMousePoints[store.state.gameMousePoints.length - 1] || { x: 0, y: 0 })
     // 指针 X 轴坐标位置
@@ -20,7 +22,7 @@ export default defineComponent({
       return (GAME_TOP_UPPER.height + GAME_TOP_MIDDLE.height + GAME_TOP_LOWER.height + currentMousePoint.value.y) * SVG_SCALE
     })
 
-    return { cursorTranslateX, cursorTranslateY }
+    return { show, cursorTranslateX, cursorTranslateY }
   }
 })
 </script>

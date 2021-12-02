@@ -1,5 +1,5 @@
 <template>
-  <g v-if="display.isVideoMap" :transform="`translate(${translateX} ${translateY})`">
+  <g v-if="display.isVideoMap" :transform="`translate(${translateX} ${translateY})`" class="video-map">
     <!-- 遮罩 -->
     <path :d="`M0 0 H ${maskWidth} V ${maskHeight} H 0 L 0 0`" class="mouse-mask" />
     <template v-if="display.isShowOpening">
@@ -255,6 +255,12 @@ export default defineComponent({
 </script>
 
 <style scoped>
+/* 录像地图 */
+.video-map {
+  /* 不响应鼠标事件，让玩家在进行操作时也同步生成录像地图 */
+  pointer-events: none;
+}
+
 /* 遮罩 */
 .mouse-mask {
   fill: rgba(0, 0, 0, .5);
