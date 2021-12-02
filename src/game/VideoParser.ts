@@ -98,13 +98,7 @@ export class VideoParser extends BaseParser {
     for (let i = 0; i < video.getEvents().length; i++) {
       this.performEvent(video.getEvents()[i])
       // 如果游戏已经胜利或者失败，则不再模拟后续录像事件
-      if (this.gameState === 'Win' || this.gameState === 'Lose') {
-        // 处理未打开方块，要在事件模拟结束后调用，因为可能连续有多个方块爆炸，第一个方块爆炸后立即处理未打开方块会导致后续哑雷
-        this.handleUnopened()
-        // 在所有方块处理完成后再添加游戏结束事件，避免重复添加或者在游戏结束事件之后还有其他游戏事件
-        this.pushGameEvent(this.gameState)
-        break
-      }
+      if (this.gameState === 'Win' || this.gameState === 'Lose') break
     }
     // 在所有录像事件全部模拟完成后，如果不允许追加录像事件
     if (!appendable) {
@@ -119,7 +113,7 @@ export class VideoParser extends BaseParser {
    * 追加录像事件
    */
   appendEvent (event: VideoEvent): GameEvent[] {
-    // TODO 添加胜负判断
+    // 如果允许追加录像事件才进行模拟
     if (this.appendable) this.performEvent(event)
     return this.mGameEvents
   }
@@ -288,6 +282,8 @@ export class VideoParser extends BaseParser {
    * @param event 录像事件
    */
   private performEvent (event: VideoEvent): void {
+    // 游戏结束后不再模拟录像事件
+    if (this.gameState === 'Win' || this.gameState === 'Lose') return
     this.curEvent = event
     // 时间流向出现了问题，后一个录像事件的时间不能小于前一个录像事件事件，0 < undefined 的结果也是 false，所以不用考虑前一个录像事件没有赋值的情况
     if (this.curEvent.time < this.preEvent.time) this.error(`Unexpected time flow: ${round(this.preEvent.time / 1000, 3).toFixed(3)} to ${round(this.curEvent.time / 1000, 3).toFixed(3)}`)
@@ -323,6 +319,21 @@ export class VideoParser extends BaseParser {
         break
     }
     this.preEvent = this.curEvent
+    // 检查游戏是否已经结束
+    this.checkGameOver()
+  }
+
+  /**
+   * 检查游戏是否已经结束
+   */
+  private checkGameOver () {
+    // 如果游戏已经结束
+    if (this.gameState === 'Win' || this.gameState === 'Lose') {
+      // 处理未打开方块，要在事件模拟结束后调用，因为可能连续有多个方块爆炸，第一个方块爆炸后立即处理未打开方块会导致后续哑雷
+      this.handleUnopened()
+      // 在所有方块处理完成后再添加游戏结束事件，避免重复添加或者在游戏结束事件之后还有其他游戏事件
+      this.pushGameEvent(this.gameState)
+    }
   }
 
   /**
