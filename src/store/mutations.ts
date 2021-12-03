@@ -139,7 +139,8 @@ export const mutations = {
   },
   /** 暂停录像播放 */
   setVideoPaused: (state: State): void => {
-    state.videoAnimationId = 0
+    // 只在录像播放时停止动画
+    if (state.gameType === 'Video') state.videoAnimationId = 0
   },
   /** 模拟上一个游戏事件 */
   performPreviousEvent: (state: State): void => {
@@ -255,17 +256,17 @@ export const mutations = {
         state.gameImgBoard[imgIndex] = ('cell-number-' + event.number) as ImgCellType
         break
       case 'Win':
-        // 设置游戏播放暂停，如果不设置的话，在游戏播放结束之后会误以为游戏还处于正常播放的状态
-        store.commit('setVideoPaused')
+        // 停止游戏动画
+        state.videoAnimationId = 0
         state.faceStatus = 'face-win'
         break
       case 'Lose':
-        store.commit('setVideoPaused')
+        state.videoAnimationId = 0
         state.faceStatus = 'face-lose'
         break
       case 'UnexpectedEnd':
-        // 录像意外结尾时只暂停录像，即游戏事件全部模拟完成后没有胜利也没有失败
-        store.commit('setVideoPaused')
+        // 录像意外结尾时只停止游戏动画，即游戏事件全部模拟完成后没有胜利也没有失败
+        state.videoAnimationId = 0
         break
     }
   },

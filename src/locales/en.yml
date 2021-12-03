@@ -18,6 +18,7 @@ menu:
     title: Help
 
 game:
+  upk: UPK
   anonymous: Anonymous
 
 controlBar:
