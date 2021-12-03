@@ -259,14 +259,17 @@ export const mutations = {
         // 停止游戏动画
         state.videoAnimationId = 0
         state.faceStatus = 'face-win'
+        console.log('Game win')
         break
       case 'Lose':
         state.videoAnimationId = 0
         state.faceStatus = 'face-lose'
+        console.log('Game lose')
         break
       case 'UnexpectedEnd':
         // 录像意外结尾时只停止游戏动画，即游戏事件全部模拟完成后没有胜利也没有失败
         state.videoAnimationId = 0
+        console.log('Unexpected end of the game')
         break
     }
   },
@@ -314,7 +317,7 @@ export const mutations = {
     const animationId = requestAnimationFrame(function performEvent () {
       const timestamp = Date.now()
       // 此处不判断当前游戏事件索引是否大于游戏事件数量，因为非录像模式下两者是相等的，如：UPK
-      if (store.getters.isVideoPaused || state.videoAnimationId !== animationId) {
+      if (state.videoAnimationId !== animationId) {
         // 停止更新动画
         console.log(`End of animation frame: ${animationId}`)
         return
@@ -329,6 +332,7 @@ export const mutations = {
     })
     // 更新动画ID，取消其他动画
     state.videoAnimationId = animationId
+    console.log(`Start of animation frame: ${animationId}`)
   }
 }
 

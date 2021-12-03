@@ -27,7 +27,7 @@ export default defineComponent({
     })
     // 当前计数器显示的游戏时间
     const countTime = computed(() => {
-      const time = Math.min(store.state.gameEvents[store.state.gameEvents.length - 1]?.time || 0, store.state.gameElapsedTime) / 1000
+      const time = store.getters.getTime
       // 当游戏经过的时间为 0 时，计数器显示的时间也为 0，否则需要转换成秒数后 +1
       return time === 0 ? 0 : Math.floor(time) + 1
     })

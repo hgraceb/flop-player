@@ -24,13 +24,7 @@ export default defineComponent({
     const islands = computed(() => store.state.islands)
 
     // 动态统计数据
-    const time = computed(() => {
-      // 如果当前是播放录像，则计数器时间最大为最后一个游戏事件的时间
-      if (store.state.gameType === 'Video') {
-        return Math.min(store.state.gameEvents[store.state.gameEvents.length - 1]?.time || 0, store.state.gameElapsedTime) / 1000
-      }
-      return store.state.gameElapsedTime / 1000
-    })
+    const time = computed(() => store.getters.getTime)
     // 可能出现 solvedBBBV 为 0 的情况，如：在属于开空的方块上标雷
     const estRTime = computed(() => solvedBBBV.value > 0 ? time.value * (bbbv.value / solvedBBBV.value) : undefined)
     const stats = computed(() => {
