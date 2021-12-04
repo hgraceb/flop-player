@@ -24,7 +24,7 @@ export default defineComponent({
     const islands = computed(() => store.state.islands)
 
     // 动态统计数据
-    const time = computed(() => store.getters.getTime)
+    const time = computed(() => store.getters.getRealTime)
     // 可能出现 solvedBBBV 为 0 的情况，如：在属于开空的方块上标雷
     const estRTime = computed(() => solvedBBBV.value > 0 ? time.value * (bbbv.value / solvedBBBV.value) : undefined)
     const stats = computed(() => {
