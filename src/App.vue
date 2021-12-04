@@ -39,6 +39,15 @@ export default defineComponent({
     const scale = computed(() => store.state.scale)
 
     onMounted(() => {
+      // 屏蔽开始拖动事件
+      document.ondragstart = () => false
+      // 屏蔽左键选择事件
+      document.onselectstart = () => false
+      // 屏蔽右键菜单事件
+      document.oncontextmenu = () => false
+    })
+
+    onMounted(() => {
       // TODO 删除测试代码和对应的文件（最后不参与打包或者在 README 文件中说明需要手动删除对应的测试录像文件）
       // store.dispatch('fetchUri', 'videos/avf/arbiter_beg.avf')
       // store.dispatch('fetchUri', 'videos/avf/arbiter_int.avf')
