@@ -1,6 +1,7 @@
 <template>
-  <!-- stop 是为了兼容 Firefox 93.0 (64 位)，否则文件还是会在新窗口被打开预览 -->
-  <screen-center v-if="show" class="mask" @dragover.prevent.stop @drop.prevent.stop="drop" @dragleave.prevent.stop="dragleave">
+  <!-- stop 是为了兼容 Firefox 93.0 (Windows 64 位)，否则文件还是会在新窗口被打开预览 -->
+  <!-- 监听点击事件是为了遮罩在没有自动隐藏时可以手动点击隐藏，如：将文件拖放到页面中但是不释放、页面刷新时移出鼠标 -->
+  <screen-center v-if="show" class="mask" @click="dragleave" @dragover.prevent.stop @drop.prevent.stop="drop" @dragleave.prevent.stop="dragleave">
     <h2>{{ $t('common.fileSelect') }}</h2>
   </screen-center>
 </template>
