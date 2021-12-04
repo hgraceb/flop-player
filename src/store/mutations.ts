@@ -319,7 +319,6 @@ export const mutations = {
       // 此处不判断当前游戏事件索引是否大于游戏事件数量，因为非录像模式下两者是相等的，如：UPK
       if (state.videoAnimationId !== animationId) {
         // 停止更新动画
-        console.log(`End of animation frame: ${animationId}`)
         return
       }
       // 更新游戏经过的时间（毫秒）,首次时间为 0 ms
@@ -332,7 +331,6 @@ export const mutations = {
     })
     // 更新动画ID，取消其他动画
     state.videoAnimationId = animationId
-    console.log(`Start of animation frame: ${animationId}`)
   }
 }
 
