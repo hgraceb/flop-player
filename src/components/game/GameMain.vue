@@ -56,17 +56,24 @@ export default defineComponent({
     const cells = ref<(SVGUseElement | undefined)[]>([])
     // 处理方块的鼠标事件，TODO 完善鼠标事件处理，除了添加鼠标移动事件还要在 document 上监听鼠标事件、添加移动端的点击事件处理
     const cellMouseHandler = (e: MouseEvent) => {
-      if (!cells.value[0]) return
+      // 如果左上角第一个方块不存在或者事件的当前目标类型错误
+      if (!cells.value[0] || !(e.currentTarget instanceof SVGUseElement)) return
+      const index = cells.value.indexOf(e.currentTarget)
+      // 如果方块元素数组没有对应的元素或者元素超出游戏区域
+      if (index < 0 || index > store.state.width * store.state.height) return
       // 阻止默认的点击事件执行
       e.preventDefault()
       // 阻止捕获和冒泡阶段中当前事件的进一步传播
       e.stopPropagation()
       // 获取左上角第一个方块的位置信息
       const rect = cells.value[0].getBoundingClientRect()
-      // 在方块上点击时，限制横坐标最小值为 0，最大值为 width - 1，因为原始数据可能已经被四舍五入过，点击边缘位置时计算得到的值可能超出实际游戏范围
-      const x = Math.max(0, Math.min(round(e.x - rect.x, 0), store.state.width * 16 - 1))
-      // 在方块上点击时，限制纵坐标最小值为 0，最大值为 height - 1
-      const y = Math.max(0, Math.min(round(e.y - rect.y, 0), store.state.height * 16 - 1))
+      // 被点击方块所在列
+      const column = index % store.state.width
+      // 被点击方块所在行
+      const row = Math.floor(index / store.state.width)
+      // 在方块上点击时，将横坐标和纵坐标限制在方块区域内，因为原始数据可能已经被四舍五入过，点击边缘位置时计算得到的值可能超出实际方块范围
+      const x = Math.max(column * 16, Math.min(round(e.x - rect.x, 0), (column + 1) * 16 - 1))
+      const y = Math.max(row * 16, Math.min(round(e.y - rect.y, 0), (row + 1) * 16 - 1))
       if (e.type === 'mousedown' && e.button === 0 && e.shiftKey) {
         store.commit('pushUserEvent', { mouse: 'sc', x: x, y: y })
       } else if (e.type === 'mousedown' && e.button === 0) {
