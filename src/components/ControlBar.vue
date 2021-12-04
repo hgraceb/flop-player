@@ -21,7 +21,8 @@
         </a-button>
         <a-slider v-model:value="speedSlider" :max="SPEED_ARRAY.length - 1" :tooltipVisible="false" style="width: 80px" />
         <a-button :title="$t('controlBar.reset')" class="text-btn" size="small" type="text" @click="resetSpeed">{{ speedValue }}x</a-button>
-        <a-slider v-model:value="timeSlider" :max="timeMax" :tooltipVisible="false" style="width: 240px" />
+        <!-- 从录像播放模式切换到 UPK 时，timeMax 先变更为 0，导致 timeSlider 无法重置为 0，通过将 key 值设置为 timeMax 的方式强制更新进度条的值 -->
+        <a-slider :key="timeMax" v-model:value="timeSlider" :max="timeMax" :tooltipVisible="false" style="width: 240px" />
         <a-input-number v-model:value="timeValue" :precision="3" size="small" />
       </a-space>
     </a-card>
@@ -86,6 +87,8 @@ export default defineComponent({
 
     // 游戏时间进度条的最大值，以最后一个游戏事件的时间作为标准，0.001 秒为一个单位长度
     const timeMax = computed(() => {
+      // 如果当前不是在播放录像，则将进度条最大值设置为 0
+      if (store.state.gameType !== 'Video') return 0
       return store.state.gameEvents[store.state.gameEvents.length - 1]?.time || 0
     })
     // 游戏时间进度条当前值，通过当前游戏经过的时间计算得到
