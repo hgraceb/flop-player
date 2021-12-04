@@ -1,7 +1,7 @@
 <template>
   <g :transform="`translate(${translateX} ${translateY})`">
     <!-- 背景颜色，用于修正部分缩放比例下有白边的问题，7.89 是为了填充游戏区域顶部和左侧与边框之前的白边，也是为了尽量不影响正常的图片显示，此元素不能放到方块容器外面，否则无法生效 -->
-    <path :d="`M -7.89 -7.89 h ${gameWidth * 160 + 7.89} v 15.78 h ${gameWidth * -160 + 7.89} v ${gameHeight * 160 - 7.89} h -15.78 Z`" fill="gray" />
+    <!--    <path :d="`M -7.89 -7.89 h ${gameWidth * 160 + 7.89} v 15.78 h ${gameWidth * -160 + 7.89} v ${gameHeight * 160 - 7.89} h -15.78 Z`" fill="gray" />-->
     <template v-for="(item, height) in gameHeight" :key="item">
       <skin-symbol
         v-for="(item, width) in gameWidth"
@@ -56,8 +56,8 @@ export default defineComponent({
     const cells = ref<(SVGUseElement | undefined)[]>([])
     // 处理方块的鼠标事件，TODO 完善鼠标事件处理，除了添加鼠标移动事件还要在 document 上监听鼠标事件、添加移动端的点击事件处理
     const cellMouseHandler = (e: MouseEvent) => {
-      // 如果左上角第一个方块不存在或者事件的当前目标类型错误
-      if (!cells.value[0] || !(e.currentTarget instanceof SVGUseElement)) return
+      // 如果事件的当前目标类型不属于指定类型
+      if (!(e.currentTarget instanceof SVGUseElement)) return
       const index = cells.value.indexOf(e.currentTarget)
       // 如果方块元素数组没有对应的元素或者元素超出游戏区域
       if (index < 0 || index > store.state.width * store.state.height) return
@@ -65,15 +65,15 @@ export default defineComponent({
       e.preventDefault()
       // 阻止捕获和冒泡阶段中当前事件的进一步传播
       e.stopPropagation()
-      // 获取左上角第一个方块的位置信息
-      const rect = cells.value[0].getBoundingClientRect()
+      // 获取被点击方块的位置信息
+      const rect = e.currentTarget.getBoundingClientRect()
       // 被点击方块所在列
       const column = index % store.state.width
       // 被点击方块所在行
       const row = Math.floor(index / store.state.width)
       // 在方块上点击时，将横坐标和纵坐标限制在方块区域内，因为原始数据可能已经被四舍五入过，点击边缘位置时计算得到的值可能超出实际方块范围
-      const x = Math.max(column * 16, Math.min(round(e.x - rect.x, 0), (column + 1) * 16 - 1))
-      const y = Math.max(row * 16, Math.min(round(e.y - rect.y, 0), (row + 1) * 16 - 1))
+      const x = column * 16 + Math.max(0, Math.min(round(e.x - rect.x, 0), 16 - 1))
+      const y = row * 16 + Math.max(0, Math.min(round(e.y - rect.y, 0), 16 - 1))
       if (e.type === 'mousedown' && e.button === 0 && e.shiftKey) {
         store.commit('pushUserEvent', { mouse: 'sc', x: x, y: y })
       } else if (e.type === 'mousedown' && e.button === 0) {
