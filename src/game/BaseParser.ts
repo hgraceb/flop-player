@@ -97,6 +97,8 @@ export abstract class BaseParser {
   protected abstract mHeight: number
   // 游戏雷数
   protected abstract mMines: number
+  // 是否可以标记问号的初始值
+  protected abstract mMarks: boolean
   // 最少左键点击数
   protected abstract mBBBV: number
   // 岛屿数量
@@ -138,6 +140,11 @@ export abstract class BaseParser {
    * 获取游戏雷数
    */
   getMines = (): number => this.mMines
+
+  /**
+   * 获取是否可以标记问号的初始值
+   */
+  getMarks = (): boolean => this.mMarks
 
   /**
    * 获取最少左键点击数

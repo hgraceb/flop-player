@@ -2,6 +2,7 @@ menu:
   game:
     title: 遊戲
     localVideo: 本地錄像
+    marks: 標記問號 (?)
   options:
     title: 選項
     language: 繁體中文

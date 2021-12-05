@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref, watch } from 'vue'
 import { store } from '@/store'
 import SkinSymbol from '@/components/skin/SkinSymbol.vue'
 import { CELL_SIDE_LENGTH, GAME_MIDDLE, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
@@ -52,6 +52,10 @@ export default defineComponent({
     const getTranslateY = (height: number): number => {
       return height * CELL_SIDE_LENGTH * SVG_SCALE
     }
+    // 当前 X 坐标
+    const curX = ref(0)
+    // 当前 Y 坐标
+    const curY = ref(0)
     // 棋盘方块对应的元素数组
     const cells = ref<(SVGUseElement | undefined)[]>([])
     // 处理方块的鼠标事件，处理完成后不需要阻止鼠标事件的传播，其他组件需要进一步处理，如：顶部笑脸点击和释放事件处理
@@ -69,24 +73,26 @@ export default defineComponent({
       // 被点击方块所在行
       const row = Math.floor(index / store.state.width)
       // 在方块上点击时，将横坐标和纵坐标限制在方块区域内，因为原始数据可能已经被四舍五入过，点击边缘位置时计算得到的值可能超出实际方块范围
-      const x = column * 16 + Math.max(0, Math.min(round(e.x - rect.x, 0), 16 - 1))
-      const y = row * 16 + Math.max(0, Math.min(round(e.y - rect.y, 0), 16 - 1))
+      curX.value = column * 16 + Math.max(0, Math.min(round(e.x - rect.x, 0), 16 - 1))
+      curY.value = row * 16 + Math.max(0, Math.min(round(e.y - rect.y, 0), 16 - 1))
       if (e.type === 'mousedown' && e.button === 0 && e.shiftKey) {
-        store.commit('pushUserEvent', { mouse: 'sc', x: x, y: y })
+        store.commit('pushUserEvent', { mouse: 'sc', x: curX.value, y: curY.value })
       } else if (e.type === 'mousedown' && e.button === 0) {
-        store.commit('pushUserEvent', { mouse: 'lc', x: x, y: y })
+        store.commit('pushUserEvent', { mouse: 'lc', x: curX.value, y: curY.value })
       } else if (e.type === 'mousedown' && e.button === 1) {
-        store.commit('pushUserEvent', { mouse: 'mc', x: x, y: y })
+        store.commit('pushUserEvent', { mouse: 'mc', x: curX.value, y: curY.value })
       } else if (e.type === 'mousedown' && e.button === 2) {
-        store.commit('pushUserEvent', { mouse: 'rc', x: x, y: y })
+        store.commit('pushUserEvent', { mouse: 'rc', x: curX.value, y: curY.value })
       } else if (e.type === 'mouseup' && e.button === 0) {
-        store.commit('pushUserEvent', { mouse: 'lr', x: x, y: y })
+        store.commit('pushUserEvent', { mouse: 'lr', x: curX.value, y: curY.value })
       } else if (e.type === 'mouseup' && e.button === 1) {
-        store.commit('pushUserEvent', { mouse: 'mr', x: x, y: y })
+        store.commit('pushUserEvent', { mouse: 'mr', x: curX.value, y: curY.value })
       } else if (e.type === 'mouseup' && e.button === 2) {
-        store.commit('pushUserEvent', { mouse: 'rr', x: x, y: y })
+        store.commit('pushUserEvent', { mouse: 'rr', x: curX.value, y: curY.value })
       }
     }
+    // 切换问号标记模式时添加对应的游戏事件，坐标使用前一个事件的坐标
+    watch(computed(() => store.state.marks), () => store.commit('pushUserEvent', { mouse: 'mt', x: curX.value, y: curY.value }))
 
     return { translateX, translateY, gameWidth, gameHeight, getCellImg, getTranslateX, getTranslateY, cells, cellMouseHandler }
   }

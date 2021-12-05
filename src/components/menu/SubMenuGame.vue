@@ -6,16 +6,23 @@
       <!-- 使用 accept 属性对文件进行筛选可能会导致部分浏览器无法正常获取文件，如：Quark 5.3.8.193 (Android) -->
       <input ref="fileInputElement" style="display: none" type="file" @change="fileChange" />
     </a-menu-item>
+    <a-menu-divider />
+    <a-menu-item :disabled="marksDisabled" @click="toggleMarks">
+      <CheckOutlined v-if="marks" />
+      <a-icon-empty v-else />
+      <span>{{ $t('menu.game.marks') }}</span>
+    </a-menu-item>
   </a-sub-menu>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { store } from '@/store'
-import { FileSearchOutlined } from '@ant-design/icons-vue'
+import { CheckOutlined, FileSearchOutlined } from '@ant-design/icons-vue'
+import AIconEmpty from '@/components/common/AIconEmpty.vue'
 
 export default defineComponent({
-  components: { FileSearchOutlined },
+  components: { FileSearchOutlined, CheckOutlined, AIconEmpty },
   setup () {
     // 鼠标双击坐标点对应的元素
     const fileInputElement = ref<HTMLInputElement>()
@@ -23,8 +30,14 @@ export default defineComponent({
     const fileSelect = () => fileInputElement.value?.click()
     // 选择的文件发生改变
     const fileChange = () => store.dispatch('fetchFiles', fileInputElement.value?.files)
+    // 是否问号标记模式
+    const marks = computed(() => store.state.marks)
+    // 切换问号标记模式
+    const toggleMarks = () => store.commit('toggleMarks')
+    // 问号标记模式菜单是否处于不可用状态
+    const marksDisabled = computed(() => store.state.gameType === 'Video')
 
-    return { fileInputElement, fileSelect, fileChange }
+    return { fileInputElement, fileSelect, fileChange, marks, toggleMarks, marksDisabled }
   }
 })
 </script>

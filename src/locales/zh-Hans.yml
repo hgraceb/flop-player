@@ -4,6 +4,7 @@ menu:
   game:
     title: 游戏
     localVideo: 本地录像
+    marks: 标记问号 (?)
   options:
     title: 选项
     # 切换语言

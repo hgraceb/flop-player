@@ -13,6 +13,7 @@ export class VideoParser extends BaseParser {
   protected readonly mWidth: number
   protected readonly mHeight: number
   protected readonly mMines: number
+  protected readonly mMarks: boolean
   protected readonly mVideoBoard: number[]
   protected readonly mPlayerArray: Uint8Array
 
@@ -89,7 +90,7 @@ export class VideoParser extends BaseParser {
     this.mPlayerArray = video.getPlayerArray()
     // 保存其他视频信息
     this.appendable = appendable
-    this.marks = video.getMarks()
+    this.mMarks = this.marks = video.getMarks()
     // 初始化游戏布局
     this.initBoard(video.getBoard())
     // 计算最少左键点击数

@@ -137,6 +137,10 @@ export const mutations = {
     // 如果页面处于加载状态则暂停录像播放
     if (state.loading) store.commit('setVideoPaused')
   },
+  /** 切换问号标记模式 */
+  toggleMarks: (state: State): void => {
+    state.marks = !state.marks
+  },
   /** 暂停录像播放 */
   setVideoPaused: (state: State): void => {
     // 只在录像播放时停止动画
@@ -285,11 +289,10 @@ export const mutations = {
     state.gameRightPoints = []
     state.gameDoublePoints = []
   },
-  /** 重开游戏，TODO 删除测试代码 */
+  /** 重开游戏 */
   upk: (state: State): void => {
     const parser = state.videoParser
-    // TODO 动态获取玩家选择的问号标记设置
-    const video = new CustomVideo(parser.getWidth(), parser.getHeight(), parser.getMines(), false, parser.getVideoBoard())
+    const video = new CustomVideo(parser.getWidth(), parser.getHeight(), parser.getMines(), state.marks, parser.getVideoBoard())
     state.userParser = new VideoParser(video, true)
     store.commit('initGame', state.userParser)
     // 设置游戏类型
@@ -337,6 +340,7 @@ export const mutations = {
 /** payload 参数可以为空的函数名称集合 */
 const EmptyPayloadFunction = [
   'upk',
+  'toggleMarks',
   'setVideoPaused',
   'performPreviousEvent',
   'performNextEvent',

@@ -10,6 +10,8 @@ export const STORAGE_KEY = 'flop-mine-locale-storage'
 export const storageDefault = {
   // 页面缩放值
   scale: 1,
+  // 是否可以标记问号
+  marks: false,
   // 当前语言
   locale: i18n.global.locale,
   // 游戏速度
@@ -39,6 +41,9 @@ export const storage = useStorage(STORAGE_KEY, storageDefault)
 const localStoragePlugin = (store: VuexStore): void => {
   store.watch(state => state.scale, value => {
     storage.value.scale = value
+  })
+  store.watch(state => state.marks, value => {
+    storage.value.marks = value
   })
   store.watch(state => state.locale, value => {
     // 更新本地缓存的语言
