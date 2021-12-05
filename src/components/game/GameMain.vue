@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, watch } from 'vue'
+import { computed, defineComponent, onMounted, onUnmounted, ref, watch } from 'vue'
 import { store } from '@/store'
 import SkinSymbol from '@/components/skin/SkinSymbol.vue'
 import { CELL_SIDE_LENGTH, GAME_MIDDLE, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
@@ -58,23 +58,10 @@ export default defineComponent({
     const curY = ref(0)
     // 棋盘方块对应的元素数组
     const cells = ref<(SVGUseElement | undefined)[]>([])
-    // 处理方块的鼠标事件，处理完成后不需要阻止鼠标事件的传播，其他组件需要进一步处理，如：顶部笑脸点击和释放事件处理
-    // TODO 完善鼠标事件处理，除了添加鼠标移动事件还要在 document 上监听鼠标事件、添加移动端的点击事件处理
-    const cellMouseHandler = (e: MouseEvent) => {
-      // 如果事件的当前目标类型不属于指定类型
-      if (!(e.currentTarget instanceof SVGUseElement)) return
-      const index = cells.value.indexOf(e.currentTarget)
-      // 如果方块元素数组没有对应的元素或者元素超出游戏区域
-      if (index < 0 || index > store.state.width * store.state.height) return
-      // 获取被点击方块的位置信息
-      const rect = e.currentTarget.getBoundingClientRect()
-      // 被点击方块所在列
-      const column = index % store.state.width
-      // 被点击方块所在行
-      const row = Math.floor(index / store.state.width)
-      // 在方块上点击时，将横坐标和纵坐标限制在方块区域内，因为原始数据可能已经被四舍五入过，点击边缘位置时计算得到的值可能超出实际方块范围
-      curX.value = column * 16 + Math.max(0, Math.min(round(e.x - rect.x, 0), 16 - 1))
-      curY.value = row * 16 + Math.max(0, Math.min(round(e.y - rect.y, 0), 16 - 1))
+    // 添加鼠标事件
+    const pushEvent = (e: MouseEvent) => {
+      // 阻止捕获和冒泡阶段中当前事件的进一步传播
+      e.stopPropagation()
       if (e.type === 'mousedown' && e.button === 0 && e.shiftKey) {
         store.commit('pushUserEvent', { mouse: 'sc', x: curX.value, y: curY.value })
       } else if (e.type === 'mousedown' && e.button === 0) {
@@ -91,6 +78,48 @@ export default defineComponent({
         store.commit('pushUserEvent', { mouse: 'rr', x: curX.value, y: curY.value })
       }
     }
+    // 处理方块的鼠标事件
+    const cellMouseHandler = (e: MouseEvent) => {
+      // 如果当前玩家未开始游戏或者事件的当前目标类型不属于指定类型
+      if (!store.getters.isUserPlaying || !(e.currentTarget instanceof SVGUseElement)) return
+      const index = cells.value.indexOf(e.currentTarget)
+      // 如果方块元素数组没有对应的元素或者元素超出游戏区域
+      if (index < 0 || index > store.state.width * store.state.height) return
+      // 获取被点击方块的位置信息
+      const rect = e.currentTarget.getBoundingClientRect()
+      // 被点击方块所在列
+      const column = index % store.state.width
+      // 被点击方块所在行
+      const row = Math.floor(index / store.state.width)
+      // 在方块上点击时，将横坐标和纵坐标限制在方块区域内，因为原始数据可能已经被四舍五入过，点击边缘位置时计算得到的值可能超出实际方块范围
+      curX.value = column * CELL_SIDE_LENGTH + Math.max(0, Math.min(round(e.x - rect.x, 0), CELL_SIDE_LENGTH - 1))
+      curY.value = row * CELL_SIDE_LENGTH + Math.max(0, Math.min(round(e.y - rect.y, 0), CELL_SIDE_LENGTH - 1))
+      pushEvent(e)
+    }
+    // 处理其他区域的鼠标事件
+    const otherMouseHandler = (e: MouseEvent) => {
+      // 如果当前玩家未开始游戏或者首个方块没有被渲染
+      if (!store.getters.isUserPlaying || !cells.value[0]) return
+      // 获取左上角首个方块的位置信息
+      const rect = cells.value[0].getBoundingClientRect()
+      const width = store.state.width * CELL_SIDE_LENGTH
+      const height = store.state.height * CELL_SIDE_LENGTH
+      curX.value = round(e.x - rect.x, 0)
+      curY.value = round(e.y - rect.y, 0)
+      // 在方块外点击时，将横坐标和纵坐标限制在方块区域外
+      if (curX.value > -1 && curX.value < width) curX.value = curX.value < width / 2 ? -1 : width
+      if (curY.value > -1 && curY.value < height) curY.value = curY.value < height / 2 ? -1 : height
+      pushEvent(e)
+    }
+    // TODO 添加鼠标移动事件处理
+    onMounted(() => {
+      document.addEventListener('mousedown', otherMouseHandler)
+      document.addEventListener('mouseup', otherMouseHandler)
+    })
+    onUnmounted(() => {
+      document.removeEventListener('mousedown', otherMouseHandler)
+      document.removeEventListener('mouseup', otherMouseHandler)
+    })
     // 切换问号标记模式时添加对应的游戏事件，坐标使用前一个事件的坐标
     watch(computed(() => store.state.marks), () => store.commit('pushUserEvent', { mouse: 'mt', x: curX.value, y: curY.value }))
 

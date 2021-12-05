@@ -8,8 +8,10 @@
     :d="`M 0,0 ${maskWidth},0 ${maskWidth},${maskHeight} 0,${maskHeight}`"
     :transform="`translate(${maskTranslateX} ${maskTranslateY})`"
     fill="rgba(0, 0, 0, 0)"
-    @mousedown="maskMousedown"
-    @mouseup="maskMouseup"
+    @mousedown.stop="maskMouseHandler"
+    @mouseleave.stop="maskMouseHandler"
+    @mouseenter.stop="maskMouseHandler"
+    @mouseup.stop="maskMouseHandler"
   />
 </template>
 
@@ -50,19 +52,40 @@ export default defineComponent({
     const maskHeight = GAME_TOP_MIDDLE.height * SVG_SCALE
     // 笑脸状态
     const faceStatus = ref<ImgFaceType>('face-normal')
-    // 遮罩区域鼠标按压，修改笑脸状态
-    const maskMousedown = () => (faceStatus.value = 'face-press-normal')
-    // 遮罩区域鼠标释放
-    const maskMouseup = () => {
-      // 根据笑脸状态判断是否需要重开游戏
-      if (faceStatus.value === 'face-press-normal') store.commit('upk')
+    // 鼠标是否处于遮罩范围内
+    const mouseEnter = ref(false)
+    // 处理遮罩鼠标事件
+    const maskMouseHandler = (e: MouseEvent) => {
+      switch (e.type) {
+        case 'mousedown':
+          faceStatus.value = 'face-press-normal'
+          break
+        case 'mouseup':
+          // 根据笑脸状态判断是否需要重开游戏
+          if (faceStatus.value === 'face-press-normal') store.commit('upk')
+          // 还原笑脸状态
+          faceStatus.value = 'face-normal'
+          break
+        case 'mouseenter':
+          mouseEnter.value = true
+          break
+        case 'mouseleave':
+          mouseEnter.value = false
+          break
+      }
     }
-    // 任一区域鼠标释放，还原笑脸状态
-    const mouseup = () => (faceStatus.value = 'face-normal')
-    // 向当前窗口注册和移除监听器
-    onMounted(() => document.addEventListener('mouseup', mouseup))
-    onUnmounted(() => document.removeEventListener('mouseup', mouseup))
-    return { countLeftMines, minesCountTranslateX, countTime, timeCountTranslateX, maskTranslateX, maskTranslateY, maskWidth, maskHeight, faceStatus, maskMousedown, maskMouseup }
+    // 处理鼠标释放事件
+    const mouseup = (e: MouseEvent) => {
+      // 如果笑脸处于被点击状态并且当前鼠标不在遮罩范围内，则还原笑脸状态并阻止鼠标事件进一步传播
+      if (faceStatus.value === 'face-press-normal' && !mouseEnter.value) {
+        e.stopPropagation()
+        faceStatus.value = 'face-normal'
+      }
+    }
+    // 注册和移除监听器，在事件传播阶段就对其进行处理，避免被其他元素处理或者拦截
+    onMounted(() => document.addEventListener('mouseup', mouseup, true))
+    onUnmounted(() => document.removeEventListener('mouseup', mouseup, true))
+    return { countLeftMines, minesCountTranslateX, countTime, timeCountTranslateX, maskTranslateX, maskTranslateY, maskWidth, maskHeight, faceStatus, maskMouseHandler }
   }
 })
 </script>
