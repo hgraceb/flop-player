@@ -1,7 +1,8 @@
 menu:
   game:
     title: 遊戲
-    localVideo: 本地錄像
+    localVideo: 選擇本地文件
+    fileDrag: 檢測文件拖放
     marks: 標記問號 (?)
   options:
     title: 選項

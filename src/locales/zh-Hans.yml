@@ -3,7 +3,8 @@
 menu:
   game:
     title: 游戏
-    localVideo: 本地录像
+    localVideo: 选择本地文件
+    fileDrag: 检测文件拖放
     marks: 标记问号 (?)
   options:
     title: 选项

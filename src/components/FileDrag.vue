@@ -30,6 +30,8 @@ export default defineComponent({
 
     // 检测到有元素被拖放进当前窗口时触发遮罩显示，其他事件由遮罩内部自行处理和判断
     const dragenter = () => {
+      // 判断当前是否需要检测文件拖放
+      if (!store.state.fileDrag) return
       // 不显示滚动条，避免元素拖放到滚动条上，导致可能没有触发 dragleave 事件或者页面内元素进行滚动
       document.body.classList.add(classHidden)
       show.value = true

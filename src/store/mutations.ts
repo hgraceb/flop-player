@@ -141,6 +141,10 @@ export const mutations = {
   toggleMarks: (state: State): void => {
     state.marks = !state.marks
   },
+  /** 切换是否检测文件拖放 */
+  toggleFileDrag: (state: State): void => {
+    state.fileDrag = !state.fileDrag
+  },
   /** 暂停录像播放 */
   setVideoPaused: (state: State): void => {
     // 只在录像播放时停止动画
@@ -341,6 +345,7 @@ export const mutations = {
 const EmptyPayloadFunction = [
   'upk',
   'toggleMarks',
+  'toggleFileDrag',
   'setVideoPaused',
   'performPreviousEvent',
   'performNextEvent',

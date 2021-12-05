@@ -58,6 +58,7 @@ export const state: State = {
   /** 进行本地缓存的变量，不一定都能获取到默认值（比如本地只缓存了部分键值），需要手动进行设置 */
   scale: storage.value.scale ?? storageDefault.scale,
   marks: storage.value.marks ?? storageDefault.marks,
+  fileDrag: storage.value.fileDrag ?? storageDefault.fileDrag,
   locale: storage.value.locale ?? storageDefault.locale,
   gameSpeed: storage.value.gameSpeed ?? storageDefault.gameSpeed,
   isVideoMap: storage.value.isVideoMap ?? storageDefault.isVideoMap,

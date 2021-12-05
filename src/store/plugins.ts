@@ -2,7 +2,7 @@ import { VuexStore } from '@/store/index'
 import { useStorage } from '@vueuse/core'
 import { i18n } from '@/plugins/i18n'
 
-export const STORAGE_KEY = 'flop-mine-locale-storage'
+export const STORAGE_KEY = 'flop-player-locale-storage'
 
 /**
  * 本地缓存默认值
@@ -12,6 +12,8 @@ export const storageDefault = {
   scale: 1,
   // 是否可以标记问号
   marks: false,
+  // 是否检测文件拖放，这个设置本身是没什么必要的，主要是想让用户知道有这个功能 (￣▽￣)
+  fileDrag: true,
   // 当前语言
   locale: i18n.global.locale,
   // 游戏速度
@@ -44,6 +46,9 @@ const localStoragePlugin = (store: VuexStore): void => {
   })
   store.watch(state => state.marks, value => {
     storage.value.marks = value
+  })
+  store.watch(state => state.fileDrag, value => {
+    storage.value.fileDrag = value
   })
   store.watch(state => state.locale, value => {
     // 更新本地缓存的语言

@@ -1,7 +1,8 @@
 menu:
   game:
     title: Game
-    localVideo: Local video
+    localVideo: Select local file
+    fileDrag: Detect file drag
     marks: Marks (?)
   options:
     title: Options
