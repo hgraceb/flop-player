@@ -54,17 +54,14 @@ export default defineComponent({
     }
     // 棋盘方块对应的元素数组
     const cells = ref<(SVGUseElement | undefined)[]>([])
-    // 处理方块的鼠标事件，TODO 完善鼠标事件处理，除了添加鼠标移动事件还要在 document 上监听鼠标事件、添加移动端的点击事件处理
+    // 处理方块的鼠标事件，处理完成后不需要阻止鼠标事件的传播，其他组件需要进一步处理，如：顶部笑脸点击和释放事件处理
+    // TODO 完善鼠标事件处理，除了添加鼠标移动事件还要在 document 上监听鼠标事件、添加移动端的点击事件处理
     const cellMouseHandler = (e: MouseEvent) => {
       // 如果事件的当前目标类型不属于指定类型
       if (!(e.currentTarget instanceof SVGUseElement)) return
       const index = cells.value.indexOf(e.currentTarget)
       // 如果方块元素数组没有对应的元素或者元素超出游戏区域
       if (index < 0 || index > store.state.width * store.state.height) return
-      // 阻止默认的点击事件执行
-      e.preventDefault()
-      // 阻止捕获和冒泡阶段中当前事件的进一步传播
-      e.stopPropagation()
       // 获取被点击方块的位置信息
       const rect = e.currentTarget.getBoundingClientRect()
       // 被点击方块所在列

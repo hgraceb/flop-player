@@ -1,30 +1,29 @@
 <template>
   <skin-counter-top :count="countLeftMines" :translate-x="minesCountTranslateX" />
-  <skin-face />
+  <skin-face :face-status="faceStatus" />
   <!-- Arbiter 中设置的游戏时间最大值为 999.00，超时自动判负，但是 Minesweeper X 没有对游戏时间做限制，所以一般不设置游戏时间最大值 -->
   <skin-counter-top :count="countTime" :min="0" :translate-x="timeCountTranslateX" />
-  <!-- 点击事件遮罩，统一处理点击事件并修改笑脸状态，TODO 处理点击事件，修改笑脸状态和判断是否需要 UPK -->
-  <path :d="`M 0,0 ${maskWidth},0 ${maskWidth},${maskHeight} 0,${maskHeight}`" :transform="`translate(${maskTranslateX} ${maskTranslateY})`" fill="rgba(0, 0, 0, 0)" />
+  <!-- 点击事件遮罩，统一处理点击事件并修改笑脸状态 -->
+  <path
+    :d="`M 0,0 ${maskWidth},0 ${maskWidth},${maskHeight} 0,${maskHeight}`"
+    :transform="`translate(${maskTranslateX} ${maskTranslateY})`"
+    fill="rgba(0, 0, 0, 0)"
+    @mousedown="maskMousedown"
+    @mouseup="maskMouseup"
+  />
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, onMounted, onUnmounted, ref } from 'vue'
 import { CELL_SIDE_LENGTH, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
 import { store } from '@/store'
 import SkinCounterTop from '@/components/skin/SkinCounterTop.vue'
 import SkinFace from '@/components/skin/SkinFace.vue'
+import { ImgFaceType } from '@/util/image'
 
 export default defineComponent({
   components: { SkinFace, SkinCounterTop },
   setup () {
-    // 遮罩的 X 轴坐标偏移量，TODO 修改顶部中间区域宽度的全局配置，这里可以不用 -1
-    const maskTranslateX = (GAME_TOP_MIDDLE.widthLeft - 1) * SVG_SCALE
-    // 遮罩的 Y 轴坐标偏移量
-    const maskTranslateY = GAME_TOP_UPPER.height * SVG_SCALE
-    // 遮罩的宽度
-    const maskWidth = computed(() => (store.state.width * CELL_SIDE_LENGTH + 2) * SVG_SCALE)
-    // 遮罩的高度
-    const maskHeight = GAME_TOP_MIDDLE.height * SVG_SCALE
     // 雷数计数器的 X 轴坐标偏移量，3 为雷数计数器与左边框的距离
     const minesCountTranslateX = (GAME_TOP_MIDDLE.widthLeft + 3) * SVG_SCALE
     // 时间计数器的 X 轴坐标偏移量，41 为时间计数器的背景宽度，3 为时间计数器与右边框的距离，Minesweeper X 和 Arbiter 中的值均为 6，看着不爽就改成对称的了
@@ -41,7 +40,29 @@ export default defineComponent({
       // 当游戏经过的时间为 0 时，计数器显示的时间也为 0，否则需要转换成秒数后 +1
       return time === 0 ? 0 : Math.floor(time) + 1
     })
-    return { maskTranslateX, maskTranslateY, maskWidth, maskHeight, countLeftMines, minesCountTranslateX, countTime, timeCountTranslateX }
+    // 遮罩的 X 轴坐标偏移量，TODO 修改顶部中间区域宽度的全局配置，这里可以不用 -1
+    const maskTranslateX = (GAME_TOP_MIDDLE.widthLeft - 1) * SVG_SCALE
+    // 遮罩的 Y 轴坐标偏移量
+    const maskTranslateY = GAME_TOP_UPPER.height * SVG_SCALE
+    // 遮罩的宽度
+    const maskWidth = computed(() => (store.state.width * CELL_SIDE_LENGTH + 2) * SVG_SCALE)
+    // 遮罩的高度
+    const maskHeight = GAME_TOP_MIDDLE.height * SVG_SCALE
+    // 笑脸状态
+    const faceStatus = ref<ImgFaceType>('face-normal')
+    // 遮罩区域鼠标按压，修改笑脸状态
+    const maskMousedown = () => (faceStatus.value = 'face-press-normal')
+    // 遮罩区域鼠标释放
+    const maskMouseup = () => {
+      // 根据笑脸状态判断是否需要重开游戏
+      if (faceStatus.value === 'face-press-normal') store.commit('upk')
+    }
+    // 任一区域鼠标释放，还原笑脸状态
+    const mouseup = () => (faceStatus.value = 'face-normal')
+    // 向当前窗口注册和移除监听器
+    onMounted(() => document.addEventListener('mouseup', mouseup))
+    onUnmounted(() => document.removeEventListener('mouseup', mouseup))
+    return { countLeftMines, minesCountTranslateX, countTime, timeCountTranslateX, maskTranslateX, maskTranslateY, maskWidth, maskHeight, faceStatus, maskMousedown, maskMouseup }
   }
 })
 </script>
