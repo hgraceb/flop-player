@@ -106,9 +106,12 @@ export default defineComponent({
       const height = store.state.height * CELL_SIDE_LENGTH
       curX.value = round(e.x - rect.x, 0)
       curY.value = round(e.y - rect.y, 0)
-      // 在方块外点击时，将横坐标和纵坐标限制在方块区域外
-      if (curX.value > -1 && curX.value < width) curX.value = curX.value < width / 2 ? -1 : width
-      if (curY.value > -1 && curY.value < height) curY.value = curY.value < height / 2 ? -1 : height
+      // 在方块区域外点击但是计算结果却在方块区域内时，将横坐标和纵坐标限制在方块区域外
+      if (curX.value > -1 && curX.value < width && curY.value > -1 && curY.value < height) {
+        // 取临近的方块区域外边缘坐标点
+        curX.value = curX.value < width / 2 ? -1 : width
+        curY.value = curY.value < height / 2 ? -1 : height
+      }
       pushEvent(e)
     }
     // TODO 添加鼠标移动事件处理
