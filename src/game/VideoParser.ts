@@ -202,6 +202,8 @@ export class VideoParser extends BaseParser {
    * 设置本身和周围方块所在开空
    */
   private setOpeningsAround (column: number, row: number, opening: number): void {
+    // 如果方块超出游戏区域则不进行操作
+    if (!this.isInside(column, row)) return
     for (let i = column - 1; i <= column + 1; i++) {
       for (let j = row - 1; j <= row + 1; j++) {
         this.setOpenings(i, j, opening)
@@ -229,6 +231,8 @@ export class VideoParser extends BaseParser {
    * 设置本身和周围方块所在岛屿
    */
   private setIslandAround (column: number, row: number, island: number): void {
+    // 如果方块超出游戏区域则不进行操作
+    if (!this.isInside(column, row)) return
     for (let i = column - 1; i <= column + 1; i++) {
       for (let j = row - 1; j <= row + 1; j++) {
         this.setIsland(i, j, island)
@@ -531,6 +535,8 @@ export class VideoParser extends BaseParser {
    * 点击本身和周围方块
    */
   private pressAround (column: number, row: number): void {
+    // 如果方块超出游戏区域则不进行操作
+    if (!this.isInside(column, row)) return
     for (let i = column - 1; i <= column + 1; i++) {
       for (let j = row - 1; j <= row + 1; j++) {
         this.press(i, j)
@@ -553,6 +559,8 @@ export class VideoParser extends BaseParser {
    * 释放本身和周围方块
    */
   private releaseAround (column: number, row: number): void {
+    // 如果方块超出游戏区域则不进行操作
+    if (!this.isInside(column, row)) return
     for (let i = column - 1; i <= column + 1; i++) {
       for (let j = row - 1; j <= row + 1; j++) {
         this.release(i, j)
