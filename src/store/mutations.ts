@@ -101,7 +101,8 @@ export const mutations = {
   },
   /** 添加玩家操作事件 */
   pushUserEvent: (state: State, { mouse, x, y }: { mouse: 'lc' | 'lr' | 'rc' | 'rr' | 'mc' | 'mr' | 'mv' | 'sc' | 'mt', x: number, y: number }): void => {
-    if (state.gameType !== 'UPK') return
+    // 如果当前正在播放录像或者鼠标移动事件之前没有其他录像事件，则不添加当前事件
+    if (state.gameType === 'Video' || (mouse === 'mv' && state.gameEvents.length === 0)) return
     state.gameEvents = state.userParser.appendEvent({ time: state.gameElapsedTime, mouse: mouse, column: Math.floor(x / 16), row: Math.floor(y / 16), x: x, y: y })
   },
   /** 接收并处理录像数据 */
