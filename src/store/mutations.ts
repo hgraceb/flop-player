@@ -53,10 +53,6 @@ export const mutations = {
       state.locale = locale
     }
   },
-  /** 设置笑脸状态，TODO 完善笑脸状态设置逻辑 */
-  setFaceStatus: (state: State, faceStatus: ImgFaceType): void => {
-    state.faceStatus = faceStatus
-  },
   /** 设置游戏开始的时间（毫秒） */
   setGameStartTime: (state: State, time: number): void => {
     // 还没有方块被打开时不进行计时，只模拟游戏事件，如：标雷
