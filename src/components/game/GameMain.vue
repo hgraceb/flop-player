@@ -9,8 +9,8 @@
         :ref="el => { if (el) cells[width + height * gameWidth] = el.$el }"
         :name="getCellImg(width, height)"
         :onmousedown="cellMouseHandler"
-        :onmouseup="cellMouseHandler"
         :onmousemove="cellMouseHandler"
+        :onmouseup="cellMouseHandler"
         :translate-x="getTranslateX(width)"
         :translate-y="getTranslateY(height)"
       />
@@ -25,6 +25,7 @@ import SkinSymbol from '@/components/skin/SkinSymbol.vue'
 import { CELL_SIDE_LENGTH, GAME_MIDDLE, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
 import { ImgCellType } from '@/util/image'
 import { round } from 'number-precision'
+import { useThrottleFn } from '@vueuse/core'
 
 export default defineComponent({
   components: { SkinSymbol },
@@ -59,13 +60,16 @@ export default defineComponent({
     const curY = ref(0)
     // 棋盘方块对应的元素数组
     const cells = ref<(SVGUseElement | undefined)[]>([])
+    // 添加鼠标事件，做节流处理，避免采样率过高导致游戏有卡顿感，按 1 秒 60 帧算，4 毫秒大概是 1/4 帧
+    const pushMouseMove = useThrottleFn(() => {
+      store.commit('pushUserEvent', { mouse: 'mv', x: curX.value, y: curY.value })
+    }, 4)
     // 添加鼠标事件
     const pushEvent = (e: MouseEvent) => {
       // 阻止捕获和冒泡阶段中当前事件的进一步传播
       e.stopPropagation()
       if (e.type === 'mousemove') {
-        // 暂时没有对鼠标移动事件做节流处理，因为 Arbiter 0.52.3 中好像没有做类似的处理，而且生产环境下也没有明显卡顿
-        store.commit('pushUserEvent', { mouse: 'mv', x: curX.value, y: curY.value })
+        pushMouseMove()
       } else if (e.type === 'mousedown' && e.button === 0 && e.shiftKey) {
         store.commit('pushUserEvent', { mouse: 'sc', x: curX.value, y: curY.value })
       } else if (e.type === 'mousedown' && e.button === 0) {
