@@ -354,7 +354,7 @@ export class VideoParser extends BaseParser {
     if ((this.leftPressed && (this.rightPressed || this.shiftValid)) || this.middlePressed) {
       this.releaseAround(this.preEvent.column, this.preEvent.row)
       this.pressAround(this.curEvent.column, this.curEvent.row)
-    } else if (this.leftPressed) {
+    } else if (this.leftPressed && this.leftValid) {
       this.release(this.preEvent.column, this.preEvent.row)
       this.press(this.curEvent.column, this.curEvent.row)
     }
