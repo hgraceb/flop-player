@@ -1,7 +1,7 @@
 import { State } from './state'
 import { store } from '@/store/index'
 import { plus, times } from 'number-precision'
-import { ImgCellType, ImgFaceType } from '@/util/image'
+import { ImgCellType } from '@/util/image'
 import { SCALE_ARRAY, SPEED_ARRAY } from '@/game/constants'
 import { i18n } from '@/plugins/i18n'
 import { message } from 'ant-design-vue'
