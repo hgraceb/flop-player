@@ -10,6 +10,7 @@
         :name="getCellImg(width, height)"
         :onmousedown="cellMouseHandler"
         :onmouseup="cellMouseHandler"
+        :onmousemove="cellMouseHandler"
         :translate-x="getTranslateX(width)"
         :translate-y="getTranslateY(height)"
       />
@@ -62,7 +63,10 @@ export default defineComponent({
     const pushEvent = (e: MouseEvent) => {
       // 阻止捕获和冒泡阶段中当前事件的进一步传播
       e.stopPropagation()
-      if (e.type === 'mousedown' && e.button === 0 && e.shiftKey) {
+      if (e.type === 'mousemove') {
+        // 暂时没有对鼠标移动事件做节流处理，因为 Arbiter 0.52.3 中好像没有做类似的处理，而且生产环境下也没有明显卡顿
+        store.commit('pushUserEvent', { mouse: 'mv', x: curX.value, y: curY.value })
+      } else if (e.type === 'mousedown' && e.button === 0 && e.shiftKey) {
         store.commit('pushUserEvent', { mouse: 'sc', x: curX.value, y: curY.value })
       } else if (e.type === 'mousedown' && e.button === 0) {
         store.commit('pushUserEvent', { mouse: 'lc', x: curX.value, y: curY.value })
@@ -114,12 +118,13 @@ export default defineComponent({
       }
       pushEvent(e)
     }
-    // TODO 添加鼠标移动事件处理
     onMounted(() => {
+      document.addEventListener('mousemove', otherMouseHandler)
       document.addEventListener('mousedown', otherMouseHandler)
       document.addEventListener('mouseup', otherMouseHandler)
     })
     onUnmounted(() => {
+      document.removeEventListener('mousemove', otherMouseHandler)
       document.removeEventListener('mousedown', otherMouseHandler)
       document.removeEventListener('mouseup', otherMouseHandler)
     })
