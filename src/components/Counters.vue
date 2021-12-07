@@ -186,7 +186,7 @@ export default defineComponent({
         title: 'Rapport Qualité Prix: Estimated Time * (Estimated Time + 1) / 3BV',
         value: computed(() => {
           if (isDefault.value || !estRTime.value) return '*'
-          // 按照 time.value * (time.value + 1) / solvedBBBV.value 计算的话会导致 计算的值一直是递增的，没有参考意义
+          // 按照 time.value * (time.value + 1) / solvedBBBV.value 计算的话会导致计算的值一直是递增的，没有参考意义
           return `${round(estRTime.value * (estRTime.value + 1) / bbbv.value, 3).toFixed(3)}`
         })
       }

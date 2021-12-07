@@ -1,41 +1,27 @@
-# Web Minesweeper Player
+# Flop Player
 
-## Preview
+网页版扫雷录像播放器
 
-- Online preview address: https://hgraceb.github.io/web-minesweeper-player/
+## 预览
 
-## Usage
+- 在线预览地址：https://hgraceb.github.io/web-minesweeper-player-demo/
 
-1. Copy the "dist" directory to your project.
+## 特性
 
-2. Modify your website entry html file as follows:
+1. ...
 
-   ```html
-   <!-- Chinese is displayed by default (some unhandled errors will display the original error data). -->
-   <!-- If you need to display English you can set the lang attribute to start with 'en' (it only takes effect once). -->
-   <html lang="en">
-   
-   ...
-   
-   <!-- First: add a container for playing the video -->
-   <div id="video-stage" style="display: none;position: absolute;z-index: 999;background-color: rgba(0 ,0 ,0 ,0.33)">
-       <iframe id="video-iframe" src="./dist/index.html?v=20210617" style="border: 0;width: 0;height: 0;" scrolling="no"></iframe>
-   </div>
-   
-   ...
-   
-   <script>
-       function playVideo(filePath) {
-           /* Second: call the "loadVideo" function when you need to play the video */
-           document.getElementById('video-iframe').contentWindow.loadVideo(filePath);
-       }
-   </script>
-   
-   ...
-   ```
+## 使用
 
-## About
+1. ...
 
-- Example video sources：Personal、[minesweepergame.com](https://minesweepergame.com/) (World Rankings)、[saolei.wang](http://www.saolei.wang/) (China Rankings)
+## 关于
 
-- Minesweeper RAW Video Format：https://github.com/thefinerminer/minesweeper-rawvf
+- 本工程所有测试录像均来自[扫雷网](https://saolei.wang/)、[Authoritative Minesweeper](https://minesweepergame.com/) 公开资源及个人录像
+
+## 其他
+
+| 名称                                                         | 说明                                      |
+| ------------------------------------------------------------ | ----------------------------------------- |
+| [Ant Design Vue](https://2x.antdv.com/components/overview/)  | 基于 Ant Design 和 Vue 3 的企业级 UI 组件 |
+| [Minesweeper RAW Video Format](https://github.com/thefinerminer/minesweeper-rawvf) | 扫雷录像文件解析                          |
+|                                                              |                                           |
