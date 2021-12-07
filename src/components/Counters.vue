@@ -1,7 +1,7 @@
 <template>
   <table>
     <tr v-for="item in data" :key="item.key">
-      <td :title="item.key">{{ item.key }}</td>
+      <td :title="item.title">{{ item.key }}</td>
       <td :title="item.value">{{ item.value }}</td>
     </tr>
   </table>
@@ -59,6 +59,7 @@ export default defineComponent({
     const data: Ref<TypeStat[]> = ref([
       {
         key: 'RTime',
+        title: 'Real Time',
         value: computed(() => {
           if (isDefault.value) return '0.00 (0)'
           // 因为有默认值，不用考虑当时间 <= 0 时的情况，estRTime 同理
@@ -67,6 +68,7 @@ export default defineComponent({
       },
       {
         key: 'Est RTime',
+        title: 'Estimated Time: Real Time * (3BV / Solved 3BV)',
         value: computed(() => {
           // 如果 estRTime 值为 null 则返回默认值
           if (isDefault.value || !estRTime.value) return '* (*)'
@@ -75,6 +77,7 @@ export default defineComponent({
       },
       {
         key: '3BV',
+        title: 'Bechtel\'s Board Benchmark Value',
         value: computed(() => {
           if (isDefault.value) return '*/*'
           return `${solvedBBBV.value}/${bbbv.value}`
@@ -82,6 +85,7 @@ export default defineComponent({
       },
       {
         key: '3BV/s',
+        title: '3BV / Real Time',
         value: computed(() => {
           if (isDefault.value) return '*'
           return `${round(solvedBBBV.value / time.value, 3).toFixed(3)}`
@@ -89,6 +93,7 @@ export default defineComponent({
       },
       {
         key: 'Ops',
+        title: 'Openings',
         value: computed(() => {
           if (isDefault.value) return '*/*'
           return `${solvedOps.value}/${openings.value}`
@@ -96,6 +101,7 @@ export default defineComponent({
       },
       {
         key: 'Isls',
+        title: 'Islands',
         value: computed(() => {
           if (isDefault.value) return '*/*'
           return `${solvedIsls.value}/${islands.value}`
@@ -103,6 +109,7 @@ export default defineComponent({
       },
       {
         key: 'Left',
+        title: 'Left Clicks',
         value: computed(() => {
           if (isDefault.value) return '0@0'
           return `${leftClicks.value}@${round(leftClicks.value / time.value, 3).toFixed(3)}`
@@ -110,6 +117,7 @@ export default defineComponent({
       },
       {
         key: 'Right',
+        title: 'Right Clicks',
         value: computed(() => {
           if (isDefault.value) return '0@0'
           return `${rightClicks.value}@${round(rightClicks.value / time.value, 3).toFixed(3)}`
@@ -117,6 +125,7 @@ export default defineComponent({
       },
       {
         key: 'Double',
+        title: 'Double Clicks',
         value: computed(() => {
           if (isDefault.value) return '0@0'
           return `${doubleClicks.value}@${round(doubleClicks.value / time.value, 3).toFixed(3)}`
@@ -124,6 +133,7 @@ export default defineComponent({
       },
       {
         key: 'Cl',
+        title: 'Total Clicks',
         value: computed(() => {
           if (isDefault.value) return '0@0'
           return `${clicks.value}@${round(clicks.value / time.value, 3).toFixed(3)}`
@@ -131,6 +141,7 @@ export default defineComponent({
       },
       {
         key: 'IOE',
+        title: 'Index of Efficiency: Solved 3BV / Total Clicks',
         value: computed(() => {
           if (isDefault.value) return '*'
           return `${round(solvedBBBV.value / clicks.value, 3).toFixed(3)}`
@@ -138,6 +149,7 @@ export default defineComponent({
       },
       {
         key: 'ThrP',
+        title: 'ThroughPut: 3BV / Effective Clicks',
         value: computed(() => {
           if (isDefault.value) return '*'
           // Minesweeper Arbiter 0.52.3 中默认的计算公式为：BBBVDONE/(TOTALEFF-MISFLAGS-UNFLAGS-MISUNFLAGS){3}，计算结果可能不同
@@ -146,6 +158,7 @@ export default defineComponent({
       },
       {
         key: 'Corr',
+        title: 'Correctness: Effective Clicks / Total Clicks',
         value: computed(() => {
           if (isDefault.value) return '*'
           // Minesweeper Arbiter 0.52.3 中默认的计算公式为：(TOTALEFF-MISFLAGS-UNFLAGS-MISUNFLAGS)/TOTALCLK{3}，计算结果可能不同
@@ -154,6 +167,7 @@ export default defineComponent({
       },
       {
         key: 'Path',
+        title: 'Euclidean Distance',
         value: computed(() => {
           if (isDefault.value) return '0'
           return round(path.value, 0)
@@ -161,6 +175,7 @@ export default defineComponent({
       },
       {
         key: 'Flags',
+        title: 'Flags',
         value: computed(() => {
           if (isDefault.value) return '0'
           return flags.value
@@ -168,6 +183,7 @@ export default defineComponent({
       },
       {
         key: 'RQP',
+        title: 'Rapport Qualité Prix: Estimated Time * (Estimated Time + 1) / 3BV',
         value: computed(() => {
           if (isDefault.value || !estRTime.value) return '*'
           // 按照 time.value * (time.value + 1) / solvedBBBV.value 计算的话会导致 计算的值一直是递增的，没有参考意义
