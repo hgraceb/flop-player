@@ -100,6 +100,8 @@ export default defineComponent({
 
 <style scoped>
 .game-menu {
+  /* 设置最小宽度与行高一致，避免菜单不显示，如：在 iframe 中连续打开两次不支持文件类型的录像时，关闭菜单会被隐藏 */
+  min-width: 24px;
   /* 设置游戏菜单行高 */
   line-height: 24px;
   /* SVG 动画效果不好，为了统一 SVG 和游戏菜单的动画效果，去除游戏菜单宽度改变时的动画效果，原始值：background 0.3s ease 0s, width 0.3s cubic-bezier(0.2, 0, 0, 1) 0s */
