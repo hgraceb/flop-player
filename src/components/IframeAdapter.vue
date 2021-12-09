@@ -16,7 +16,6 @@ export default defineComponent({
     const classOverflowHidden = 'flop-player-overflow-hidden'
     // 暴露接口给父窗口
     parent.window.flop = {
-      // TODO 添加 IE 判断
       fetchUri: (uri: string) => {
         store.commit('setExit', false)
         store.dispatch('fetchUri', uri)

@@ -3,7 +3,7 @@
     overflow: hidden !important;
 }
 
-/* 隐藏元素 */
+/* 隐藏元素，在 iframe 中使用时默认必须添加，避免影响 IE 执行和判断 */
 .flop-player-display-none {
     display: none !important;
 }

@@ -10,7 +10,7 @@
 </head>
 <body style="background-color: #ccc;height: 150vh;width: 150vw;margin: 0">
 
-<iframe class="flop-player-iframe" src="index.html"></iframe>
+<iframe class="flop-player-iframe flop-player-display-none" src="index.html"></iframe>
 
 <div>
     <button onclick="playVideo('./videos/avf/arbiter_beg.avf')" type="button">arbiter_beg.avf</button>
@@ -55,6 +55,10 @@
 
 <script>
     function playVideo(uri) {
+        if (window.ActiveXObject || "ActiveXObject" in window) {
+            alert('暂不支持 IE 内核，请更换浏览器或内核！');
+            return
+        }
         window.flop.fetchUri(uri)
     }
 </script>
