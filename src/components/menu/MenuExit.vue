@@ -1,7 +1,7 @@
 <template>
   <a-menu v-if="show" :title="$t('menu.exit.title')" mode="horizontal">
     <a-sub-menu @click="exit">
-      <template #title title="test">
+      <template #title>
         <CloseOutlined />
       </template>
     </a-sub-menu>
