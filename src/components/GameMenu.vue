@@ -1,9 +1,8 @@
 <template>
   <div :style="`display: flex;width: ${width}px`">
     <!-- 设置 triggerSubMenuAction="click" 可以将菜单展开方式切换为点击后展开（源代码中查看的属性，不同版本可能会有差异） -->
-    <!-- 将当前选中的菜单项 key 数组设置为 null，实现不可变的效果 -->
-    <!-- TODO 测试是否正常折叠 -->
-    <a-menu :selectedKeys="null" class="game-menu" mode="horizontal" style="flex-grow: 1">
+    <!-- 将当前选中的菜单项 key 数组设置为 null，实现不可变的效果；将 width 设置为 0 是为了菜单可以正常折叠 -->
+    <a-menu :selectedKeys="null" class="game-menu" mode="horizontal" style="flex-grow: 1;width: 0">
       <!-- 游戏 -->
       <sub-menu-game />
 
