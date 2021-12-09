@@ -23,6 +23,8 @@ menu:
       opening: 开空
   help:
     title: 帮助
+  exit:
+    title: 退出
 
 # 游戏区域
 game:

@@ -1,57 +1,61 @@
 <template>
-  <!-- TODO 如果当前页面被放在 iframe 内则需要添加退出按钮 -->
-  <!-- 设置 triggerSubMenuAction="click" 可以将菜单展开方式切换为点击后展开（源代码中查看的属性，不同版本可能会有差异） -->
-  <a-menu v-model:selectedKeys="selected" :style="`width: ${width}px`" class="game-menu" mode="horizontal">
-    <!-- 游戏 -->
-    <sub-menu-game />
+  <div :style="`display: flex;width: ${width}px`">
+    <!-- 设置 triggerSubMenuAction="click" 可以将菜单展开方式切换为点击后展开（源代码中查看的属性，不同版本可能会有差异） -->
+    <!-- 将当前选中的菜单项 key 数组设置为 null，实现不可变的效果 -->
+    <a-menu :selectedKeys="null" class="game-menu" mode="horizontal" style="flex-grow: 1">
+      <!-- 游戏 -->
+      <sub-menu-game />
 
-    <a-sub-menu :title="$t('menu.options.title')">
-      <a-sub-menu :title="$t('menu.options.toggleLanguages')">
-        <template #icon>
-          <GlobalOutlined />
-        </template>
-        <!-- 如果用户设置的语言不再当前可用语言列表中，则单独显示 -->
-        <template v-if="!availableLocales.includes(locale)">
-          <a-menu-item>
-            <CheckOutlined />
-            {{ locale }}
+      <a-sub-menu :title="$t('menu.options.title')">
+        <a-sub-menu :title="$t('menu.options.toggleLanguages')">
+          <template #icon>
+            <GlobalOutlined />
+          </template>
+          <!-- 如果用户设置的语言不再当前可用语言列表中，则单独显示 -->
+          <template v-if="!availableLocales.includes(locale)">
+            <a-menu-item>
+              <CheckOutlined />
+              {{ locale }}
+            </a-menu-item>
+            <a-menu-divider />
+          </template>
+          <a-menu-item v-for="(item, key) in availableLocales" :key="key" @click="changeLocales(item)">
+            <CheckOutlined v-if="locale === item" />
+            <a-icon-empty v-else />
+            {{ $t('menu.options.language', item) }}
           </a-menu-item>
-          <a-menu-divider />
-        </template>
-        <a-menu-item v-for="(item, key) in availableLocales" :key="key" @click="changeLocales(item)">
-          <CheckOutlined v-if="locale === item" />
-          <a-icon-empty v-else />
-          {{ $t('menu.options.language', item) }}
-        </a-menu-item>
-      </a-sub-menu>
+        </a-sub-menu>
 
-      <!-- 录像地图 -->
-      <sub-menu-video-map />
+        <!-- 录像地图 -->
+        <sub-menu-video-map />
 
-      <!-- 缩放比例 -->
-      <a-menu-divider />
-      <a-sub-menu :title="$t('menu.options.scaling')">
-        <template #icon>
-          <ExpandAltOutlined />
-        </template>
-        <!-- 如果用户当前设置的缩放比例不在预设的缩放比例中，则单独显示 -->
-        <template v-if="!availableScales.includes(scale)">
-          <a-menu-item>
-            <CheckOutlined />
-            {{ scale.toFixed(2) }}x
+        <!-- 缩放比例 -->
+        <a-menu-divider />
+        <a-sub-menu :title="$t('menu.options.scaling')">
+          <template #icon>
+            <ExpandAltOutlined />
+          </template>
+          <!-- 如果用户当前设置的缩放比例不在预设的缩放比例中，则单独显示 -->
+          <template v-if="!availableScales.includes(scale)">
+            <a-menu-item>
+              <CheckOutlined />
+              {{ scale.toFixed(2) }}x
+            </a-menu-item>
+            <a-menu-divider />
+          </template>
+          <a-menu-item v-for="(item, index) in availableScales" :key="index" @click="changeScale(item)">
+            <CheckOutlined v-if="item === scale" />
+            <a-icon-empty v-else />
+            {{ item.toFixed(2).substring(0, 4) }}x
           </a-menu-item>
-          <a-menu-divider />
-        </template>
-        <a-menu-item v-for="(item, index) in availableScales" :key="index" @click="changeScale(item)">
-          <CheckOutlined v-if="item === scale" />
-          <a-icon-empty v-else />
-          {{ item.toFixed(2).substring(0, 4) }}x
-        </a-menu-item>
+        </a-sub-menu>
       </a-sub-menu>
-    </a-sub-menu>
-    <a-sub-menu :title="$t('menu.help.title')">
-    </a-sub-menu>
-  </a-menu>
+      <a-sub-menu :title="$t('menu.help.title')">
+      </a-sub-menu>
+    </a-menu>
+    <!-- 退出菜单 -->
+    <menu-exit class="game-menu" />
+  </div>
 </template>
 
 <script lang="ts">
@@ -63,16 +67,15 @@ import { CheckOutlined, ExpandAltOutlined, GlobalOutlined } from '@ant-design/ic
 import AIconEmpty from '@/components/common/AIconEmpty.vue'
 import SubMenuVideoMap from '@/components/menu/SubMenuVideoMap.vue'
 import SubMenuGame from '@/components/menu/SubMenuGame.vue'
+import MenuExit from '@/components/menu/MenuExit.vue'
 
 export default defineComponent({
-  components: { SubMenuGame, SubMenuVideoMap, AIconEmpty, CheckOutlined, ExpandAltOutlined, GlobalOutlined },
+  components: { MenuExit, SubMenuGame, SubMenuVideoMap, AIconEmpty, CheckOutlined, ExpandAltOutlined, GlobalOutlined },
   setup () {
     // 菜单宽度
     const width = computed(() => {
       return GAME_TOP_UPPER.widthLeft + GAME_TOP_UPPER.widthRight + store.state.width * CELL_SIDE_LENGTH
     })
-    // 当前选中的菜单项 key 数组，设置为 null 实现不可变的效果
-    const selected = null
 
     const { locale, availableLocales } = useI18n()
 
@@ -90,7 +93,7 @@ export default defineComponent({
       store.commit('setScale', scale)
     }
 
-    return { width, selected, locale, availableLocales, changeLocales, scale, availableScales, changeScale }
+    return { width, locale, availableLocales, changeLocales, scale, availableScales, changeScale }
   }
 })
 </script>

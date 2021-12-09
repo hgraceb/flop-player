@@ -18,6 +18,8 @@ menu:
       opening: Opening
   help:
     title: Help
+  exit:
+    title: Exit
 
 game:
   upk: UPK

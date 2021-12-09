@@ -18,6 +18,8 @@ menu:
       opening: 開空
   help:
     title: 幫助
+  exit:
+    title: 退出
 
 game:
   upk: 重開
