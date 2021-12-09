@@ -1,6 +1,13 @@
 /* 背景颜色 */
 body {
-    background-color: #eee !important;
+    background-color: transparent !important;
+}
+
+/* 应用容器 */
+#app {
+    /* 让子元素可以垂直居中 */
+    height: 100%;
+    display: flex;
 }
 
 /* 裁剪元素框外的内容，并且不显示滚动条 */

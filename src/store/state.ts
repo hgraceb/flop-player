@@ -52,6 +52,8 @@ export type State = typeof storageDefault & {
   gameDoublePoints: { x: number, y: number }[]
   // 页面加载中，null 表示页面处于初始加载状态，但是没有正在加载的内容
   loading: boolean | null
+  // 页面是否退出（只在 iframe 内时生效）
+  exit: boolean
 }
 
 export const state: State = {
@@ -93,5 +95,6 @@ export const state: State = {
   gameLeftPoints: [],
   gameRightPoints: [],
   gameDoublePoints: [],
-  loading: null
+  loading: null,
+  exit: self !== top
 }

@@ -1,0 +1,17 @@
+/* 裁剪元素框外的内容，并且不显示滚动条 */
+.flop-player-overflow-hidden {
+    overflow: hidden !important;
+}
+
+/* 隐藏元素 */
+.flop-player-display-none {
+    display: none !important;
+}
+
+/* 通用 iframe 样式，也可以使用自定义样式 */
+.flop-player-iframe {
+    border: 0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+}

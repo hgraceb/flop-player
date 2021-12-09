@@ -9,3 +9,7 @@ declare module '*.yml' {
   const content: any
   export default content
 }
+
+declare interface Window {
+  flop: any
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width,initial-scale=1.0" name="viewport">
+    <link href="favicon.ico" rel="icon">
+    <link href="index.css" rel="stylesheet" type="text/css">
+    <title>Flop Player Preview</title>
+</head>
+<body style="background-color: #cccccc;height: 120vh;width: 120vw;margin: 0">
+
+<iframe class="flop-player-iframe" src="index.html"></iframe>
+
+<div>
+    <button onclick="playVideo('./videos/avf/arbiter_beg.avf')" type="button">arbiter_beg.avf</button>
+    <button onclick="playVideo('./videos/avf/arbiter_int.avf')" type="button">arbiter_int.avf</button>
+    <button onclick="playVideo('./videos/avf/arbiter_exp.avf')" type="button">arbiter_exp.avf</button>
+    <br /><br />
+    <button onclick="playVideo('./videos/avf/Cus_8x30_30mines.avf')" type="button">Cus_8x30_30mines.avf</button>
+    <button onclick="playVideo('./videos/avf/Cus_20x20_20mines.avf')" type="button">Cus_20x20_20mines.avf</button>
+    <button onclick="playVideo('./videos/avf/Cus_30x8_30mines.avf')" type="button">Cus_30x8_30mines.avf</button>
+    <button onclick="playVideo('./videos/avf/wasted_clicks_test.avf')" type="button">wasted_clicks_test.avf</button>
+    <br /><br />
+    <button onclick="playVideo('./videos/error/error_file_not_found.rawvf')" type="button">error_file_not_found.rawvf</button>
+    <button onclick="playVideo('./videos/error/error_file_unsupported_type.txt')" type="button">error_file_unsupported_type.txt</button>
+    <br /><br />
+    <button onclick="playVideo('./videos/error/error_parser_unexpected_end.rawvf')" type="button">error_parser_unexpected_end.rawvf</button>
+    <button onclick="playVideo('./videos/error/error_parser_unexpected_flow.rawvf')" type="button">error_parser_unexpected_flow.rawvf</button>
+    <button onclick="playVideo('./videos/error/error_parser_unexpected_start.rawvf')" type="button">error_parser_unexpected_start.rawvf</button>
+    <br /><br />
+    <button onclick="playVideo('./videos/error/error_video_content_empty.rawvf')" type="button">error_video_content_empty.rawvf</button>
+    <button onclick="playVideo('./videos/error/error_video_invalid_event.rawvf')" type="button">error_video_invalid_event.rawvf</button>
+    <br /><br />
+    <button onclick="playVideo('./videos/error/error_video_no_board_5120KB.rawvf')" type="button">error_video_no_board_5120KB.rawvf</button>
+    <button onclick="playVideo('./videos/error/error_video_size_exceeds_5121KB.rawvf')" type="button">error_video_size_exceeds_5121KB.rawvf</button>
+    <button onclick="playVideo('./videos/error/error_video_unsupported_marathon.rawvf')" type="button">error_video_unsupported_marathon.rawvf</button>
+    <br /><br />
+</div>
+
+<script>
+    function playVideo(uri) {
+        window.flop.fetchUri(uri)
+    }
+</script>
+
+</body>
+</html>

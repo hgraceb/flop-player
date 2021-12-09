@@ -12,6 +12,7 @@ import { RMVVideo } from '@/game/RMVVideo'
 import { BaseParser } from '@/game/BaseParser'
 import { VideoParser } from '@/game/VideoParser'
 import { CustomVideo } from '@/game/CustomVideo'
+import { DefaultParser } from '@/game/DefaultParser'
 
 /**
  * Mutations 函数定义，使用类型推断的方式，可以快速找到函数的所有 Usages
@@ -133,6 +134,17 @@ export const mutations = {
     state.loading = loading
     // 如果页面处于加载状态则暂停录像播放
     if (state.loading) store.commit('setVideoPaused')
+  },
+  /** 设置页面退出状态 */
+  setExit: (state: State, exit: boolean): void => {
+    // 如果设置页面退出，则重置游戏相关变量
+    if (exit) {
+      state.gameType = 'Video'
+      state.videoParser = state.userParser = new DefaultParser()
+      store.commit('initGame', state.videoParser)
+      store.commit('resetGame')
+    }
+    state.exit = exit
   },
   /** 切换问号标记模式 */
   toggleMarks: (state: State): void => {
@@ -321,7 +333,7 @@ export const mutations = {
     const animationId = requestAnimationFrame(function performEvent () {
       const timestamp = Date.now()
       // 此处不判断当前游戏事件索引是否大于游戏事件数量，因为非录像模式下两者是相等的，如：UPK
-      if (state.videoAnimationId !== animationId) {
+      if (state.videoAnimationId !== animationId || state.exit) {
         // 停止更新动画
         return
       }
