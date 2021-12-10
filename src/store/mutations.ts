@@ -135,6 +135,10 @@ export const mutations = {
     // 如果页面处于加载状态则暂停录像播放
     if (state.loading) store.commit('setVideoPaused')
   },
+  /** 设置是否匿名显示玩家名称 */
+  setAnonymous: (state: State, anonymous: boolean): void => {
+    state.anonymous = anonymous
+  },
   /** 设置页面退出状态 */
   setExit: (state: State, exit: boolean): void => {
     // 如果设置页面退出，则重置游戏相关变量

@@ -24,6 +24,8 @@ export type State = typeof storageDefault & {
   islands: number
   // 玩家名称原始数据
   playerArray: Uint8Array
+  // 是否匿名显示玩家名称
+  anonymous: boolean
   // 游戏事件，包含当前方块图片和笑脸图片的快照信息
   gameEvents: (GameEvent & { snapshot?: { cellType: ImgCellType, faceStatus: ImgFaceType } })[],
   // 游戏方块信息棋盘，存放方块固有信息
@@ -81,6 +83,7 @@ export const state: State = {
   openings: 0,
   islands: 0,
   playerArray: new Uint8Array(),
+  anonymous: false,
   gameEvents: [],
   gameCellBoard: [],
   // 其他变量

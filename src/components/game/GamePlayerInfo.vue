@@ -45,13 +45,13 @@ export default defineComponent({
     })
     // 玩家名称
     const player = computed(() => {
-      // 没有玩家姓名信息则显示默认值
-      return playerDecoded.value.length > 0 ? playerDecoded.value : t('game.anonymous')
+      // 没有玩家姓名信息或者手动设置匿名显示玩家名称时则显示默认值
+      return playerDecoded.value.length === 0 || store.state.anonymous ? t('game.anonymous') : playerDecoded.value
     })
     // 玩家名称的文本不透明度
     const opacityPlayer = computed(() => {
-      // 没有玩家姓名信息或者当前不是播放录像则置灰显示
-      return playerDecoded.value.length === 0 || store.state.gameType !== 'Video' ? 0.2 : 1
+      // 没有玩家姓名信息、当前不是录像播放模式、手动设置匿名显示玩家名称时则置灰显示
+      return playerDecoded.value.length === 0 || store.state.anonymous || store.state.gameType !== 'Video' ? 0.2 : 1
     })
     return { player, opacityPlayer }
   }

@@ -53,16 +53,21 @@
 </div>
 
 <script>
-    function playVideo(uri) {
+    /**
+     * 播放录像
+     * @param {string} uri 录像文件地址
+     * @param {boolean|undefined} anonymous 是否匿名显示玩家名称，默认不匿名
+     */
+    function playVideo(uri, anonymous) {
         if (window.ActiveXObject || 'ActiveXObject' in window) {
             alert('暂不支持 IE 内核，请更换浏览器或内核！')
             return
         }
-        window.flop.playVideo(uri)
+        window.flop.playVideo(uri, anonymous)
     }
 
     window.onload = function () {
-        playVideo('./videos/avf/arbiter_exp.avf')
+        playVideo('./videos/avf/arbiter_exp.avf', true)
     }
 </script>
 
