@@ -16,7 +16,7 @@ export default defineComponent({
     const classOverflowHidden = 'flop-player-overflow-hidden'
     // 暴露接口给父窗口
     parent.window.flop = {
-      fetchUri: (uri: string) => {
+      playVideo: (uri: string) => {
         store.commit('setExit', false)
         store.dispatch('fetchUri', uri)
       }

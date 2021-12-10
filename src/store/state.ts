@@ -36,7 +36,7 @@ export type State = typeof storageDefault & {
   faceStatus: ImgFaceType
   // 游戏事件索引
   gameEventIndex: number
-  // 游戏是否正式开始，在第一个方块被打开后游戏才开始计时
+  // 游戏是否正式开始，在第一个方块被打开后游戏才开始计时，只针对非录像播放模式，因为部分录像的开始时间可能大于 0
   gameStarted: boolean
   // 游戏开始的时间（毫秒）, 值为 0 时表示游戏还未开始计时
   gameStartTime: number,

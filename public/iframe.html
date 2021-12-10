@@ -27,7 +27,6 @@
     <br /><br />
     <button onclick="playVideo('./videos/error/error_parser_unexpected_end.rawvf')" type="button">error_parser_unexpected_end.rawvf</button>
     <button onclick="playVideo('./videos/error/error_parser_unexpected_flow.rawvf')" type="button">error_parser_unexpected_flow.rawvf</button>
-    <button onclick="playVideo('./videos/error/error_parser_unexpected_start.rawvf')" type="button">error_parser_unexpected_start.rawvf</button>
     <br /><br />
     <button onclick="playVideo('./videos/error/error_video_content_empty.rawvf')" type="button">error_video_content_empty.rawvf</button>
     <button onclick="playVideo('./videos/error/error_video_invalid_event.rawvf')" type="button">error_video_invalid_event.rawvf</button>
@@ -60,7 +59,7 @@
             alert('暂不支持 IE 内核，请更换浏览器或内核！');
             return
         }
-        window.flop.fetchUri(uri)
+        window.flop.playVideo(uri)
     }
 </script>
 

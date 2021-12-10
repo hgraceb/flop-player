@@ -580,9 +580,7 @@ export class VideoParser extends BaseParser {
     // 来都来了，就把你给开了吧 (づ￣ 3￣)づ
     cell.opened = true
     if (this.gameState === 'Begin') {
-      // 录像开始时间不能大于 0，不然的话会处于一直未开始计时的状态
-      if (this.curEvent.time > 0) this.error(`Unexpected video start time: ${round(this.curEvent.time / 1000, 3).toFixed(3)}`)
-      // 首次方块被打开后开始游戏，开始游戏的事件在打开方块的事件之前
+      // 首次方块被打开后开始游戏，开始游戏的事件在打开方块的事件之前，部分录像的开始时间可能大于 0
       this.gameState = 'Start'
       this.pushGameEvent('Start', column, row)
     }

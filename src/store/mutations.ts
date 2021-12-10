@@ -56,8 +56,8 @@ export const mutations = {
   },
   /** 设置游戏开始的时间（毫秒） */
   setGameStartTime: (state: State, time: number): void => {
-    // 还没有方块被打开时不进行计时，只模拟游戏事件，如：标雷
-    state.gameStartTime = state.gameStarted ? time : 0.0
+    // 非录像播放模式下，还没有方块被打开时不进行计时，只模拟游戏事件，如：标雷
+    state.gameStartTime = state.gameType === 'Video' || state.gameStarted ? time : 0.0
   },
   /** 设置游戏速度 */
   setGameSpeed: (state: State, speed: number): void => {
