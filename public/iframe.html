@@ -54,11 +54,15 @@
 
 <script>
     function playVideo(uri) {
-        if (window.ActiveXObject || "ActiveXObject" in window) {
-            alert('暂不支持 IE 内核，请更换浏览器或内核！');
+        if (window.ActiveXObject || 'ActiveXObject' in window) {
+            alert('暂不支持 IE 内核，请更换浏览器或内核！')
             return
         }
         window.flop.playVideo(uri)
+    }
+
+    window.onload = function () {
+        playVideo('./videos/avf/arbiter_exp.avf')
     }
 </script>
 
