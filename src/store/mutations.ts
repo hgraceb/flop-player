@@ -147,6 +147,8 @@ export const mutations = {
       state.videoParser = state.userParser = new DefaultParser()
       store.commit('initGame', state.videoParser)
       store.commit('resetGame')
+      // 销毁全局消息提示
+      message.destroy()
     }
     state.exit = exit
   },
