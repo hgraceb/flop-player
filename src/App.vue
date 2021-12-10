@@ -1,4 +1,6 @@
 <template>
+  <!-- iframe 适配器 -->
+  <iframe-adapter />
   <!-- TODO 如果当前页面被放在 iframe 内则需要添加退出按钮 -->
   <screen-center v-show="loading">
     <a-spin :tip="$t('common.loading')" />
@@ -19,8 +21,6 @@
     <!-- 将文件拖放处理控件放到主布局当中，页面正在加载的时候不对文件拖动事件进行处理 -->
     <file-drag />
   </div>
-  <!-- iframe 适配器 -->
-  <iframe-adapter />
 </template>
 
 <script lang="ts">

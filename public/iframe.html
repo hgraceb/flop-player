@@ -55,6 +55,7 @@
 <script>
     /**
      * 播放录像
+     *
      * @param {string} uri 录像文件地址
      * @param {boolean|undefined} anonymous 是否匿名显示玩家名称，默认不匿名
      */
@@ -66,7 +67,19 @@
         window.flop.playVideo(uri, anonymous)
     }
 
+    /**
+     * 设置自定义选项
+     *
+     * @param {string} background 遮罩背景样式
+     */
+    function setOptions(background) {
+        window.flop.setOptions({
+            background: background
+        })
+    }
+
     window.onload = function () {
+        setOptions('rgba(0, 0, 0, .5)')
         playVideo('./videos/avf/arbiter_exp.avf', true)
     }
 </script>
