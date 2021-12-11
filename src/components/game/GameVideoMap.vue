@@ -22,7 +22,7 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, reactive, ref, Ref, watch } from 'vue'
 import { store } from '@/store'
-import { CELL_SIDE_LENGTH, GAME_MIDDLE, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
+import { SQUARE_SIZE, GAME_MIDDLE, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
 import { Cell } from '@/game/BaseParser'
 
 // SVG 元素，用于创建 SVGPoint 对象，因为 SVGPoint 没有单独的构造方法
@@ -118,9 +118,9 @@ export default defineComponent({
     // 轨迹图整体的 Y 轴坐标偏移量
     const translateY = (GAME_TOP_UPPER.height + GAME_TOP_MIDDLE.height + GAME_TOP_LOWER.height) * SVG_SCALE
     // 遮罩宽度
-    const maskWidth = computed(() => store.state.width * CELL_SIDE_LENGTH * SVG_SCALE)
+    const maskWidth = computed(() => store.state.width * SQUARE_SIZE * SVG_SCALE)
     // 遮罩高度
-    const maskHeight = computed(() => store.state.height * CELL_SIDE_LENGTH * SVG_SCALE)
+    const maskHeight = computed(() => store.state.height * SQUARE_SIZE * SVG_SCALE)
     // 鼠标路径对应的元素
     const mousePathElement = ref<SVGPolylineElement | undefined>()
     // 鼠标左键坐标点对应的元素
@@ -145,7 +145,7 @@ export default defineComponent({
       const result = new Array<{ x: number, y: number }>(store.state.openings)
       const points: { x: number, y: number }[][] = Array.from(Array(result.length), () => [])
       // 方块实际边长
-      const sideLength = CELL_SIDE_LENGTH * SVG_SCALE
+      const sideLength = SQUARE_SIZE * SVG_SCALE
       // 编号文本字体大小，单位：px
       const fontSize = 120
       for (let i = 0; i < store.state.width; i++) {
@@ -181,7 +181,7 @@ export default defineComponent({
           // 只遍历属于 Opening 的非零数字方块
           if (current.opening <= 0 || current.number <= 0) continue
           // 方块实际边长
-          const sideLength = CELL_SIDE_LENGTH * SVG_SCALE
+          const sideLength = SQUARE_SIZE * SVG_SCALE
           // 边框宽度，需要修正线段没有闭合导致显示时会有半个像素点缺口的问题
           const width = 3 * SVG_SCALE
           // 根据行号和列号获取指定方块，超出游戏区域则返回 undefined

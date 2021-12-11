@@ -22,7 +22,7 @@
 import { computed, defineComponent, onMounted, onUnmounted, ref, watch } from 'vue'
 import { store } from '@/store'
 import SkinSymbol from '@/components/skin/SkinSymbol.vue'
-import { CELL_SIDE_LENGTH, GAME_MIDDLE, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
+import { SQUARE_SIZE, GAME_MIDDLE, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
 import { ImgCellType } from '@/util/image'
 import { round } from 'number-precision'
 import { useThrottleFn } from '@vueuse/core'
@@ -48,11 +48,11 @@ export default defineComponent({
     }
     // 根据横坐标获取 X 轴坐标偏移量
     const getTranslateX = (width: number): number => {
-      return width * CELL_SIDE_LENGTH * SVG_SCALE
+      return width * SQUARE_SIZE * SVG_SCALE
     }
     // 根据纵坐标获取 Y 轴坐标偏移量
     const getTranslateY = (height: number): number => {
-      return height * CELL_SIDE_LENGTH * SVG_SCALE
+      return height * SQUARE_SIZE * SVG_SCALE
     }
     // 当前 X 坐标
     const curX = ref(0)
@@ -102,8 +102,8 @@ export default defineComponent({
       // 被点击方块所在行
       const row = Math.floor(index / store.state.width)
       // 在方块上点击时，将横坐标和纵坐标限制在方块区域内，因为原始数据可能已经被四舍五入过，点击边缘位置时计算得到的值可能超出实际方块范围
-      curX.value = column * CELL_SIDE_LENGTH + Math.max(0, Math.min(round(e.x - rect.x, 0), CELL_SIDE_LENGTH - 1))
-      curY.value = row * CELL_SIDE_LENGTH + Math.max(0, Math.min(round(e.y - rect.y, 0), CELL_SIDE_LENGTH - 1))
+      curX.value = column * SQUARE_SIZE + Math.max(0, Math.min(round(e.x - rect.x, 0), SQUARE_SIZE - 1))
+      curY.value = row * SQUARE_SIZE + Math.max(0, Math.min(round(e.y - rect.y, 0), SQUARE_SIZE - 1))
       pushEvent(e)
     }
     // 处理其他区域的鼠标事件
@@ -112,8 +112,8 @@ export default defineComponent({
       if (!store.getters.isUserPlaying || !cells.value[0]) return
       // 获取左上角首个方块的位置信息
       const rect = cells.value[0].getBoundingClientRect()
-      const width = store.state.width * CELL_SIDE_LENGTH
-      const height = store.state.height * CELL_SIDE_LENGTH
+      const width = store.state.width * SQUARE_SIZE
+      const height = store.state.height * SQUARE_SIZE
       curX.value = round(e.x - rect.x, 0)
       curY.value = round(e.y - rect.y, 0)
       // 在方块区域外点击但是计算结果却在方块区域内时，将横坐标和纵坐标限制在方块区域外

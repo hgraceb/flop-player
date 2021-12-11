@@ -62,7 +62,7 @@
 import { computed, defineComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { store } from '@/store'
-import { CELL_SIDE_LENGTH, GAME_TOP_UPPER, SCALE_ARRAY } from '@/game/constants'
+import { SQUARE_SIZE, GAME_TOP_UPPER, SCALE_ARRAY } from '@/game/constants'
 import { CheckOutlined, ExpandAltOutlined, GlobalOutlined } from '@ant-design/icons-vue'
 import AIconEmpty from '@/components/common/AIconEmpty.vue'
 import SubMenuVideoMap from '@/components/menu/SubMenuVideoMap.vue'
@@ -74,7 +74,7 @@ export default defineComponent({
   setup () {
     // 菜单宽度
     const width = computed(() => {
-      return GAME_TOP_UPPER.widthLeft + GAME_TOP_UPPER.widthRight + store.state.width * CELL_SIDE_LENGTH
+      return GAME_TOP_UPPER.widthLeft + GAME_TOP_UPPER.widthRight + store.state.width * SQUARE_SIZE
     })
 
     const { locale, availableLocales } = useI18n()
