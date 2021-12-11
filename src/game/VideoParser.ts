@@ -395,16 +395,17 @@ export class VideoParser extends BaseParser {
     this.pushGameEvent('LeftRelease')
     if (this.rightPressed || this.shiftValid) {
       this.doubleClicks++
-      this.pushGameEvent('DoubleIncrease')
       this.releaseAround(this.curEvent.column, this.curEvent.row)
       if (!this.openAround(this.curEvent.column, this.curEvent.row)) this.wastedDoubleClicks++
+      // 添加点击次数增加的游戏事件，需要在计算完无效点击事件之后，否则此游戏事件的统计数据会有问题
+      this.pushGameEvent('DoubleIncrease')
     } else if (this.leftValid) {
       // 如果左键键点击到左键释放中间没有释放右键的操作
       this.leftClicks++
-      this.pushGameEvent('LeftIncrease')
       this.release(this.curEvent.column, this.curEvent.row)
       // 打开方块并判断是否打开成功
       if (!this.open(this.curEvent.column, this.curEvent.row)) this.wastedLeftClicks++
+      this.pushGameEvent('LeftIncrease')
     }
     // 左键释放后，重置所有左右键相关状态位
     this.leftPressed = this.leftValid = this.rightValid = this.shiftValid = false
@@ -437,14 +438,14 @@ export class VideoParser extends BaseParser {
     this.pushGameEvent('RightRelease')
     if (this.leftPressed) {
       this.doubleClicks++
-      this.pushGameEvent('DoubleIncrease')
       this.releaseAround(this.curEvent.column, this.curEvent.row)
       if (!this.openAround(this.curEvent.column, this.curEvent.row)) this.wastedDoubleClicks++
+      this.pushGameEvent('DoubleIncrease')
     } else if (this.rightValid) {
       // 如果右键点击时没有被计算为有效点击数，并且右键点击到右键释放中间没有释放左键的操作，则将左键没有按下时候的右键释放事件记为一次右键点击数
       this.rightClicks++
-      this.pushGameEvent('RightIncrease')
       this.wastedRightClicks++
+      this.pushGameEvent('RightIncrease')
     }
     // 右键释放后，重置所有左右键相关状态位
     this.rightPressed = this.leftValid = this.rightValid = this.shiftValid = false
@@ -465,10 +466,10 @@ export class VideoParser extends BaseParser {
   private middleRelease (): void {
     this.pushGameEvent('MiddleRelease')
     this.doubleClicks++
-    this.pushGameEvent('DoubleIncrease')
     this.releaseAround(this.curEvent.column, this.curEvent.row)
     // 中键和左右键互不影响，不用判断左右键的状态，开就完了 (*￣3￣)╭
     if (!this.openAround(this.curEvent.column, this.curEvent.row)) this.wastedDoubleClicks++
+    this.pushGameEvent('DoubleIncrease')
     this.middlePressed = false
   }
 

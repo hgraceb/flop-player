@@ -132,6 +132,14 @@ export default defineComponent({
         })
       },
       {
+        key: 'Ce',
+        title: 'Effective Clicks',
+        value: computed(() => {
+          if (isDefault.value) return '0@0'
+          return `${eClicks.value}@${round(eClicks.value / time.value, 3).toFixed(3)}`
+        })
+      },
+      {
         key: 'Cl',
         title: 'Total Clicks',
         value: computed(() => {
