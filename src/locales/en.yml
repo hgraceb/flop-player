@@ -39,7 +39,6 @@ common:
 
 error:
   videoParse: 'Video parsing error: '
-  fileDuplicate: Please wait for other file to finish parsing
   fileNotPresent: File does not exist
   fileNotSelect: No file selected or file not accessible
   fileTooMany: 'Too many files: {0}'

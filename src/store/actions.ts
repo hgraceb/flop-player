@@ -26,20 +26,6 @@ function getExtension (name: string) {
 }
 
 /**
- * 检查是否只有一个文件正在处理
- *
- * @return 是否只有一个文件正在处理
- */
-function checkUnique (): boolean {
-  if (store.state.loading === true) {
-    // 还有其他文件正在处理
-    messageError(t('error.fileDuplicate'))
-    return false
-  }
-  return true
-}
-
-/**
  * 检查文件数量
  *
  * @param fileList 文件列表
@@ -105,7 +91,7 @@ function checkFileSize (size: number, name: string): boolean {
 export const actions = {
   /** 从 Uri 获取录像数据 */
   fetchUri: ({ commit }: { commit: Commit }, uri: string): void => {
-    if (!checkUnique() || !checkFileType(uri)) return
+    if (!checkFileType(uri)) return
     // 将页面加载状态设置为加载中并暂停录像播放
     commit('setLoading', true)
     // 请求录像数据
@@ -121,7 +107,7 @@ export const actions = {
   },
   /** 从文件列表获取录像数据 */
   fetchFiles: ({ commit }: { commit: Commit }, fileList: FileList | undefined | null): void => {
-    if (!checkUnique() || !checkFileNumber(fileList) || !fileList) return
+    if (!checkFileNumber(fileList) || !fileList) return
     const file = fileList[0]
     if (!checkFileType(file.name) || !checkFileSize(file.size, file.name)) return
     // 将页面加载状态设置为加载中并暂停录像播放

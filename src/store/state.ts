@@ -52,8 +52,8 @@ export type State = typeof storageDefault & {
   gameRightPoints: { x: number, y: number }[]
   // 游戏双击点坐标数组，x：精确的横坐标，y：精确的纵坐标
   gameDoublePoints: { x: number, y: number }[]
-  // 页面加载中，null 表示页面处于初始加载状态，但是没有正在加载的内容
-  loading: boolean | null
+  // 页面加载状态
+  loading: boolean
   // 页面是否退出（只在 iframe 内时生效）
   exit: boolean
 }
@@ -98,6 +98,6 @@ export const state: State = {
   gameLeftPoints: [],
   gameRightPoints: [],
   gameDoublePoints: [],
-  loading: null,
+  loading: false,
   exit: self !== top
 }
