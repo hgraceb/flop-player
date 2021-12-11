@@ -91,6 +91,8 @@ export class Cell {
  * 基础录像事件解析器
  */
 export abstract class BaseParser {
+  // 游戏真实时间（毫秒）
+  protected abstract mTime: number
   // 游戏列数
   protected abstract mWidth: number
   // 游戏行数
@@ -125,6 +127,11 @@ export abstract class BaseParser {
   protected error (msg: string): number {
     throw new Error(`${this.constructor.name}Error - ${msg}`)
   }
+
+  /**
+   * 获取游戏真实时间（毫秒）
+   */
+  getTime = (): number => this.mTime
 
   /**
    * 获取游戏列数

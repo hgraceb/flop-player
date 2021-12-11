@@ -10,6 +10,7 @@ import { round } from 'number-precision'
  */
 export class VideoParser extends BaseParser {
   /* 基础录像数据 */
+  protected mTime = 0
   protected readonly mWidth: number
   protected readonly mHeight: number
   protected readonly mMines: number
@@ -125,7 +126,7 @@ export class VideoParser extends BaseParser {
   private pushGameEvent (name: GameEventName, column: number = this.curEvent.column, row: number = this.curEvent.row): void {
     this.mGameEvents.push({
       name: name,
-      time: this.curEvent.time,
+      time: this.mTime = this.curEvent.time,
       number: this.isInside(column, row) ? this.mGameBoard[column + row * this.mWidth].number : undefined,
       x: this.curEvent.x,
       y: this.curEvent.y,

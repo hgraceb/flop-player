@@ -13,6 +13,11 @@
 <iframe class="flop-player-iframe flop-player-display-none" src="index.html"></iframe>
 
 <div>
+    <input id="file" onchange="parseFile()" type="file">
+    3BV<input id="3bv">
+    RealTime<input id="time">
+    Error<input id="error">
+    <br /><br />
     <button onclick="playVideo('./videos/avf/arbiter_beg.avf')" type="button">arbiter_beg.avf</button>
     <button onclick="playVideo('./videos/avf/arbiter_int.avf')" type="button">arbiter_int.avf</button>
     <button onclick="playVideo('./videos/avf/arbiter_exp.avf')" type="button">arbiter_exp.avf</button>
@@ -54,6 +59,43 @@
 
 <script>
     /**
+     * 检查是否 IE 浏览器
+     *
+     * @return {boolean} true: 是 IE 浏览器
+     */
+    function checkIE() {
+        if (window.ActiveXObject || 'ActiveXObject' in window) {
+            alert('暂不支持 IE 内核，请更换浏览器或内核！')
+            return true
+        }
+        return false
+    }
+
+    /**
+     * 解析录像文件
+     */
+    function parseFile() {
+        if (checkIE()) return
+        const elementFile = document.getElementById('file')
+        const element3bv = document.getElementById('3bv')
+        const elementTime = document.getElementById('time')
+        const elementError = document.getElementById('error')
+        // 解析成功的回调
+        const onSuccess = function (video) {
+            element3bv.value = element3bv.title = video.getBBBV()
+            elementTime.value = elementTime.title = `${video.getTime() / 1000}`
+            elementError.value = elementError.title = ''
+        }
+        // 解析失败的回调
+        const onError = function (info) {
+            element3bv.value = element3bv.title = ''
+            elementTime.value = elementTime.title = ''
+            elementError.value = elementError.title = info
+        }
+        window.flop.parseFiles(elementFile.files, onSuccess, onError)
+    }
+
+    /**
      * 播放录像
      *
      * @param {string} uri 录像地址
@@ -63,12 +105,9 @@
      * @param {function|undefined} options.listener 退出录像播放页面的回调
      */
     function playVideo(uri, options) {
-        if (window.ActiveXObject || 'ActiveXObject' in window) {
-            alert('暂不支持 IE 内核，请更换浏览器或内核！')
-            return
-        }
+        if (checkIE()) return
         window.flop.playVideo(uri, options || {
-            background: `rgba(0, 0, 0, .5)`,
+            background: 'rgba(0, 0, 0, .5)',
             anonymous: false,
             listener: () => console.log('Flop player exit')
         })

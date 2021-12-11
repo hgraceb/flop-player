@@ -6,6 +6,7 @@
 import { computed, defineComponent, Ref, ref, watch } from 'vue'
 import { store } from '@/store'
 import ScreenCenter from '@/components/common/ScreenCenter.vue'
+import { BaseParser } from '@/game/BaseParser'
 
 export default defineComponent({
   components: { ScreenCenter },
@@ -22,6 +23,7 @@ export default defineComponent({
     const exitListener: Ref<() => void> = ref(() => ({}))
     // 暴露接口给父窗口
     parent.window.flop = {
+      /** 播放录像 */
       playVideo: (uri: string, { anonymous, background, listener }: { anonymous?: boolean, background?: string, listener?: () => void }) => {
         // 设置页面退出状态以显示播放页面
         store.commit('setExit', false)
@@ -31,6 +33,10 @@ export default defineComponent({
         store.commit('setAnonymous', anonymous)
         // 拉取录像并播放
         store.dispatch('fetchUri', uri)
+      },
+      /** 解析录像文件 */
+      parseFiles: (fileList: FileList, onSuccess: () => BaseParser, onError: () => string) => {
+        store.dispatch('parseFiles', { fileList, onSuccess, onError })
       }
     }
     // 退出时清理页面

@@ -5,10 +5,6 @@ import { ImgCellType } from '@/util/image'
 import { SCALE_ARRAY, SPEED_ARRAY } from '@/game/constants'
 import { i18n } from '@/plugins/i18n'
 import { message } from 'ant-design-vue'
-import { RawVideo } from '@/game/RawVideo'
-import { AVFVideo } from '@/game/AVFVideo'
-import { MVFVideo } from '@/game/MVFVideo'
-import { RMVVideo } from '@/game/RMVVideo'
 import { BaseParser } from '@/game/BaseParser'
 import { VideoParser } from '@/game/VideoParser'
 import { CustomVideo } from '@/game/CustomVideo'
@@ -103,29 +99,10 @@ export const mutations = {
     state.gameEvents = state.userParser.appendEvent({ time: state.gameElapsedTime, mouse: mouse, column: Math.floor(x / 16), row: Math.floor(y / 16), x: x, y: y })
   },
   /** 接收并处理录像数据 */
-  receiveVideo: (state: State, { type, data }: { type: string, data: ArrayBuffer }): void => {
-    try {
-      if (type === 'avf') {
-        state.videoParser = new VideoParser(new AVFVideo(data), false)
-      } else if (type === 'mvf') {
-        state.videoParser = new VideoParser(new MVFVideo(data), false)
-      } else if (type === 'rmv') {
-        state.videoParser = new VideoParser(new RMVVideo(data), false)
-      } else if (type === 'rawvf') {
-        state.videoParser = new VideoParser(new RawVideo(data), false)
-      } else {
-        // 不支持的录像类型
-        message.error(`${i18n.global.t('error.videoParse')}${i18n.global.t('error.fileUnsupported')}`, 5)
-        return
-      }
-    } catch (e) {
-      // 展示录像解析失败的相关信息
-      message.error(`${i18n.global.t('error.videoParse')}${e.message}`, 5)
-      return
-    } finally {
-      // 录像解析结束后取消页面的加载状态
-      state.loading = false
-    }
+  receiveVideo: (state: State, video: BaseParser): void => {
+    state.videoParser = video
+    // 录像解析结束后取消页面的加载状态
+    store.commit('setLoading', false)
     store.commit('initGame', state.videoParser)
     store.commit('replayVideo')
   },
