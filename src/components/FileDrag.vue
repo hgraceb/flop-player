@@ -50,7 +50,7 @@ export default defineComponent({
 .mask {
   /* Ant Design Vue 的控件有的堆叠层级会达到 1000+，遮罩使用 9999 是为了保证显示在顶层 */
   z-index: 9999;
-  background: rgba(0, 0, 0, .7);
+  background: rgba(0, 0, 0, .66);
 }
 
 .mask * {
