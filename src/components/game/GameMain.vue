@@ -66,6 +66,8 @@ export default defineComponent({
     }, 4)
     // 添加鼠标事件
     const pushEvent = (e: MouseEvent) => {
+      // 阻止默认的点击事件执行，如：中键移动
+      e.preventDefault()
       // 阻止捕获和冒泡阶段中当前事件的进一步传播
       e.stopPropagation()
       if (e.type === 'mousemove') {
