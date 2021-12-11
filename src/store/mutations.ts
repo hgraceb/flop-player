@@ -136,8 +136,8 @@ export const mutations = {
     if (state.loading) store.commit('setVideoPaused')
   },
   /** 设置是否匿名显示玩家名称 */
-  setAnonymous: (state: State, anonymous: boolean): void => {
-    state.anonymous = anonymous
+  setAnonymous: (state: State, anonymous?: boolean): void => {
+    state.anonymous = anonymous === true
   },
   /** 设置页面退出状态 */
   setExit: (state: State, exit: boolean): void => {

@@ -6,7 +6,7 @@
     <meta content="width=device-width,initial-scale=1.0" name="viewport">
     <link href="favicon.ico" rel="icon">
     <link href="index.css" rel="stylesheet" type="text/css">
-    <title>Flop Player Preview</title>
+    <title>Flop Player Demo</title>
 </head>
 <body style="background-color: #ccc;height: 150vh;width: 150vw;margin: 0">
 
@@ -54,34 +54,31 @@
 
 <script>
     /**
-     * 设置自定义选项
-     *
-     * @param {string} background 遮罩背景样式
-     */
-    function setOptions(background) {
-        window.flop.setOptions({
-            background: background
-        })
-    }
-
-    /**
      * 播放录像
      *
-     * @param {string} uri 录像文件地址
-     * @param {boolean|undefined} anonymous 是否匿名显示玩家名称，默认不匿名
+     * @param {string} uri 录像地址
+     * @param {object|undefined} options 可选参数
+     * @param {string|undefined} options.background 遮罩背景样式
+     * @param {boolean|undefined} options.anonymous 是否匿名显示玩家名称
+     * @param {function|undefined} options.listener 退出录像播放页面的回调
      */
-    function playVideo(uri, anonymous) {
+    function playVideo(uri, options) {
         if (window.ActiveXObject || 'ActiveXObject' in window) {
             alert('暂不支持 IE 内核，请更换浏览器或内核！')
             return
         }
-        // 每次播放录像前都设置自定义选项是为了方便开发环境下进行测试，实际使用时调用一次即可
-        setOptions('rgba(0, 0, 0, .5)')
-        window.flop.playVideo(uri, anonymous)
+        window.flop.playVideo(uri, options || {
+            background: `rgba(0, 0, 0, .5)`,
+            anonymous: false,
+            listener: () => console.log('Flop player exit')
+        })
     }
 
     window.onload = function () {
-        playVideo('./videos/avf/arbiter_exp.avf', true)
+        playVideo('./videos/avf/arbiter_exp.avf', {
+            background: 'rgba(0, 0, 0, .5)',
+            anonymous: true
+        })
     }
 </script>
 

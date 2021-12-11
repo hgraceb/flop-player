@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, watch } from 'vue'
+import { computed, defineComponent, Ref, ref, watch } from 'vue'
 import { store } from '@/store'
 import ScreenCenter from '@/components/common/ScreenCenter.vue'
 
@@ -18,20 +18,25 @@ export default defineComponent({
     const classOverflowHidden = 'flop-player-overflow-hidden'
     // 遮罩背景样式
     const maskBackground = ref('')
+    // 退出播放的回调
+    const exitListener: Ref<() => void> = ref(() => ({}))
     // 暴露接口给父窗口
     parent.window.flop = {
-      playVideo: (uri: string, anonymous?: boolean) => {
+      playVideo: (uri: string, { anonymous, background, listener }: { anonymous?: boolean, background?: string, listener?: () => void }) => {
+        // 设置页面退出状态以显示播放页面
         store.commit('setExit', false)
-        store.commit('setAnonymous', anonymous === true)
-        store.dispatch('fetchUri', uri)
-      },
-      setOptions: ({ background }: { background?: string }) => {
+        // 设置可选参数
         maskBackground.value = background || ''
+        exitListener.value = listener || (() => ({}))
+        store.commit('setAnonymous', anonymous)
+        // 拉取录像并播放
+        store.dispatch('fetchUri', uri)
       }
     }
     // 退出时清理页面
     watch(computed(() => store.state.exit), (exit) => {
       if (exit) {
+        exitListener.value()
         self.frameElement.classList.add(classDisplayNone)
         parent.window.document.body.classList.remove(classOverflowHidden)
       } else {
