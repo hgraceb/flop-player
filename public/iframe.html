@@ -13,9 +13,9 @@
 <iframe class="flop-player-iframe flop-player-display-none" src="index.html"></iframe>
 
 <div>
-    <input id="file" onchange="parseFile()" type="file">
+    <input id="file" type="file">
     3BV<input id="3bv">
-    RealTime<input id="time">
+    RTime<input id="time">
     Error<input id="error">
     <br /><br />
     <button onclick="playVideo('./videos/avf/arbiter_beg.avf')" type="button">arbiter_beg.avf</button>
@@ -59,40 +59,65 @@
 
 <script>
     /**
-     * 检查是否 IE 浏览器
+     * 判断是否 IE 浏览器
      *
      * @return {boolean} true: 是 IE 浏览器
      */
-    function checkIE() {
-        if (window.ActiveXObject || 'ActiveXObject' in window) {
-            alert('暂不支持 IE 内核，请更换浏览器或内核！')
-            return true
-        }
-        return false
+    function isIE() {
+        return !!window.ActiveXObject || 'ActiveXObject' in window
+    }
+
+    /**
+     * 录像解析成功的回调
+     *
+     * @param video 录像信息
+     * @param {function(): number} video.getTime 获取游戏真实时间（毫秒）
+     * @param {function(): number} video.getBBBV 获取游戏最少左键点击数
+     */
+    function onSuccess(video) {
+        const element3bv = document.getElementById('3bv')
+        const elementTime = document.getElementById('time')
+        const elementError = document.getElementById('error')
+        element3bv.value = element3bv.title = video.getBBBV().toString()
+        elementTime.value = elementTime.title = (video.getTime() / 1000).toString()
+        elementError.value = elementError.title = ''
+    }
+
+    /**
+     * 录像解析失败的回调
+     *
+     * @param {string} info 错误信息，文本语言默认为用户选择的语言
+     */
+    function onError(info) {
+        const element3bv = document.getElementById('3bv')
+        const elementTime = document.getElementById('time')
+        const elementError = document.getElementById('error')
+        element3bv.value = element3bv.title = ''
+        elementTime.value = elementTime.title = ''
+        elementError.value = elementError.title = info
     }
 
     /**
      * 解析录像文件
+     *
+     * @param {HTMLInputElement} inputElement 文件选择元素
+     * @param {function} onSuccess 录像解析成功的回调
+     * @param {function|undefined} onError 录像解析失败的回调
      */
-    function parseFile() {
-        if (checkIE()) return
+    function parseFiles(inputElement, onSuccess, onError) {
+        if (isIE()) {
+            onError('暂不支持 IE 内核，请更换浏览器或内核！')
+            return
+        }
+        window.flop.parseFiles(inputElement.files, onSuccess, onError)
+    }
+
+    /**
+     * 选择文件
+     */
+    function fileChange() {
         const elementFile = document.getElementById('file')
-        const element3bv = document.getElementById('3bv')
-        const elementTime = document.getElementById('time')
-        const elementError = document.getElementById('error')
-        // 解析成功的回调
-        const onSuccess = function (video) {
-            element3bv.value = element3bv.title = video.getBBBV()
-            elementTime.value = elementTime.title = `${video.getTime() / 1000}`
-            elementError.value = elementError.title = ''
-        }
-        // 解析失败的回调
-        const onError = function (info) {
-            element3bv.value = element3bv.title = ''
-            elementTime.value = elementTime.title = ''
-            elementError.value = elementError.title = info
-        }
-        window.flop.parseFiles(elementFile.files, onSuccess, onError)
+        parseFiles(elementFile, onSuccess, onError)
     }
 
     /**
@@ -105,15 +130,21 @@
      * @param {function|undefined} options.listener 退出录像播放页面的回调
      */
     function playVideo(uri, options) {
-        if (checkIE()) return
+        if (isIE()) {
+            alert('暂不支持 IE 内核，请更换浏览器或内核！')
+            return
+        }
         window.flop.playVideo(uri, options || {
             background: 'rgba(0, 0, 0, .5)',
             anonymous: false,
-            listener: () => console.log('Flop player exit')
+            listener: function () {
+                console.log('Flop player exit')
+            }
         })
     }
 
     window.onload = function () {
+        document.getElementById('file').addEventListener('change', fileChange)
         playVideo('./videos/avf/arbiter_exp.avf', {
             background: 'rgba(0, 0, 0, .5)',
             anonymous: true

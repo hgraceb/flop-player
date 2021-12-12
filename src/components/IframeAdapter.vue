@@ -35,7 +35,8 @@ export default defineComponent({
         store.dispatch('fetchUri', uri)
       },
       /** 解析录像文件 */
-      parseFiles: (fileList: FileList, onSuccess: () => BaseParser, onError: () => string) => {
+      parseFiles: (fileList: FileList | undefined | null, onSuccess: (video: BaseParser) => void, onError?: (info: string) => void) => {
+        onError = onError || (() => ({}))
         store.dispatch('parseFiles', { fileList, onSuccess, onError })
       }
     }
