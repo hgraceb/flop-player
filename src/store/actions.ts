@@ -147,7 +147,7 @@ export const actions = {
     })
   },
   /** 从 Uri 获取并解析录像数据 */
-  parseUri: ({ commit }: { commit: Commit }, { uri, onload, onerror }: { uri: string, onload: (video: BaseParser) => void, onerror: (info: string) => void }): void => {
+  parseUri: (context: { commit: Commit }, { uri, onload, onerror }: { uri: string, onload: (video: BaseParser) => void, onerror: (info: string) => void }): void => {
     if (!checkFileType(uri, onerror)) return
     // 请求录像数据
     const request = new XMLHttpRequest()
@@ -176,7 +176,7 @@ export const actions = {
     })
   },
   /** 从文件列表获取并解析录像数据 */
-  parseFiles: ({ commit }: { commit: Commit }, { fileList, onload, onerror }: { fileList: FileList | undefined | null, onload: (video: BaseParser) => void, onerror: (info: string) => void }): void => {
+  parseFiles: (context: { commit: Commit }, { fileList, onload, onerror }: { fileList: FileList | undefined | null, onload: (video: BaseParser) => void, onerror: (info: string) => void }): void => {
     if (!checkFileNumber(fileList, onerror) || !fileList) return
     const file = fileList[0]
     if (!checkFileType(file.name, onerror) || !checkFileSize(file.size, file.name, onerror)) return
