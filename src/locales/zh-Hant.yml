@@ -5,7 +5,8 @@ menu:
     fileDrag: 檢測文件拖放
     marks: 標記問號 (?)
     share:
-      title: 複製分享鏈接
+      copy: 複製分享鏈接
+      open: 打開分享鏈接
       copied: 分享鏈接已複製到剪貼板
       error: 分享鏈接複製失敗
     download: 下載錄像文件

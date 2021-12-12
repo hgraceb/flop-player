@@ -5,7 +5,8 @@ menu:
     fileDrag: Detect file drag
     marks: Marks (?)
     share:
-      title: Copy share link
+      copy: Copy share link
+      open: Open share link
       copied: Share link has been copied to clipboard
       error: Share link copy failed
     download: Download video

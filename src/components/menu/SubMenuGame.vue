@@ -18,10 +18,18 @@
       <span>{{ $t('menu.game.fileDrag') }}</span>
     </a-menu-item>
     <a-menu-divider v-if="showShareLink || showURI" />
-    <a-menu-item v-if="showShareLink" @click="copyShareLink">
-      <CopyOutlined />
-      <span>{{ $t('menu.game.share.title') }}</span>
-    </a-menu-item>
+    <template v-if="showShareLink">
+      <a-menu-item @click="copyShareLink">
+        <CopyOutlined />
+        <span>{{ $t('menu.game.share.copy') }}</span>
+      </a-menu-item>
+      <a-menu-item>
+        <ShareAltOutlined />
+        <span>
+          <a :href="shareLink" target="_blank">{{ $t('menu.game.share.open') }}</a>
+        </span>
+      </a-menu-item>
+    </template>
     <a-menu-item v-if="showURI" :title="uri">
       <DownloadOutlined />
       <span>
@@ -35,14 +43,14 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue'
 import { store } from '@/store'
-import { CheckOutlined, CopyOutlined, DownloadOutlined, FileSearchOutlined } from '@ant-design/icons-vue'
+import { CheckOutlined, CopyOutlined, DownloadOutlined, FileSearchOutlined, ShareAltOutlined } from '@ant-design/icons-vue'
 import AIconEmpty from '@/components/common/AIconEmpty.vue'
 import { message } from 'ant-design-vue'
 import { useI18n } from 'vue-i18n'
 import copy from 'copy-text-to-clipboard'
 
 export default defineComponent({
-  components: { FileSearchOutlined, CheckOutlined, CopyOutlined, DownloadOutlined, AIconEmpty },
+  components: { FileSearchOutlined, CheckOutlined, CopyOutlined, DownloadOutlined, ShareAltOutlined, AIconEmpty },
   setup () {
     const { t } = useI18n()
     // 鼠标双击坐标点对应的元素
@@ -61,10 +69,12 @@ export default defineComponent({
     const toggleMarks = () => store.commit('toggleMarks')
     // 问号标记模式菜单是否处于不可用状态
     const marksDisabled = computed(() => store.state.gameType === 'Video')
+    // 分享链接
+    const shareLink = computed(() => store.state.shareLink)
     // 复制分享链接，http 协议的网址无法直接使用 navigator.clipboard
-    const copyShareLink = () => copy(store.state.shareLink) ? message.info(t('menu.game.share.copied')) : message.error(t('menu.game.share.error'))
+    const copyShareLink = () => copy(shareLink.value) ? message.info(t('menu.game.share.copied')) : message.error(t('menu.game.share.error'))
     // 是否展示复制分享链接按钮
-    const showShareLink = computed(() => store.state.shareLink.length > 0)
+    const showShareLink = computed(() => shareLink.value.length > 0)
     // 录像 URI
     const uri = computed(() => store.state.uri)
     // 录像 URI 是否请求成功
@@ -72,7 +82,7 @@ export default defineComponent({
     // 是否展示 URI 下载按钮
     const showURI = computed(() => uri.value.length > 0)
 
-    return { fileInputElement, fileSelect, fileChange, fileDrag, toggleFileDrag, marks, toggleMarks, marksDisabled, copyShareLink, showShareLink, uri, uriSuccess, showURI }
+    return { fileInputElement, fileSelect, fileChange, fileDrag, toggleFileDrag, marks, toggleMarks, marksDisabled, shareLink, copyShareLink, showShareLink, uri, uriSuccess, showURI }
   }
 })
 </script>
