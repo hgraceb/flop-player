@@ -1,6 +1,8 @@
 <template>
+  <!-- 分享页面适配器 -->
+  <share-adapter v-if="topmost" />
   <!-- iframe 适配器 -->
-  <iframe-adapter />
+  <iframe-adapter v-else />
   <!-- TODO 如果当前页面被放在 iframe 内则需要添加退出按钮 -->
   <screen-center v-show="loading">
     <a-spin :tip="$t('common.loading')" />
@@ -33,13 +35,17 @@ import GameMenu from '@/components/GameMenu.vue'
 import ScreenCenter from '@/components/common/ScreenCenter.vue'
 import FileDrag from '@/components/FileDrag.vue'
 import IframeAdapter from '@/components/IframeAdapter.vue'
+import ShareAdapter from '@/components/ShareAdapter.vue'
 
 export default defineComponent({
-  components: { IframeAdapter, FileDrag, ScreenCenter, GameMenu, Counters, Game, ControlBar },
+  components: { ShareAdapter, IframeAdapter, FileDrag, ScreenCenter, GameMenu, Counters, Game, ControlBar },
   setup () {
-    const loading = computed(() => store.state.loading !== false)
+    // 页面加载状态
+    const loading = computed(() => store.state.loading)
     // 用户设置的缩放比例
     const scale = computed(() => store.state.scale)
+    // 当前页面是否是最上层页面
+    const topmost = self === top
 
     onMounted(() => {
       // 屏蔽开始拖动事件
@@ -72,7 +78,7 @@ export default defineComponent({
       // store.dispatch('fetchUri', 'videos/rmv/exp.rmv')
     })
 
-    return { loading, scale }
+    return { loading, scale, topmost }
   }
 })
 </script>

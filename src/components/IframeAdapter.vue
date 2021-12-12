@@ -11,9 +11,7 @@ import { BaseParser } from '@/game/BaseParser'
 export default defineComponent({
   components: { ScreenCenter },
   setup () {
-    // 如果当前页面没有被嵌套进 iframe，则显示默认背景样式
-    if (self === top) return { maskBackground: '#eee' }
-    // 隐藏当前窗口
+    // 隐藏当前窗口对应的全局样式名称
     const classDisplayNone = 'flop-player-display-none'
     // 裁剪元素框外内容对应的全局样式名称
     const classOverflowHidden = 'flop-player-overflow-hidden'

@@ -39,6 +39,7 @@ common:
 
 error:
   videoParse: '錄像解析出錯：'
+  uriRequest: '數據請求出錯：{0}'
   fileNotPresent: 文件不存在
   fileNotSelect: 未選擇文件或者文件無法訪問
   fileTooMany: '文件數量過多：{0}'

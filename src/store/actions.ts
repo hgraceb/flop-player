@@ -156,6 +156,11 @@ export const actions = {
       // 解析录像数据
       parseVideo(getExtension(uri) as FileType, request.response, onSuccess, onError)
     }
+    request.onerror = (e) => {
+      console.error(e)
+      // 数据请求出错，如：跨域请求
+      onError(t('error.uriRequest', [uri]))
+    }
     request.open('GET', uri)
     request.responseType = 'arraybuffer'
     request.send()
@@ -181,8 +186,9 @@ export const actions = {
       // 解析录像数据
       parseVideo(getExtension(file.name) as FileType, reader.result as ArrayBuffer, onSuccess, onError)
     }
-    reader.onerror = function () {
-      // 文件读取出错
+    reader.onerror = function (e) {
+      console.error(e)
+      // 文件读取出错，如：读取文件夹
       onError(t('error.fileReadError', [reader.error]))
     }
     reader.readAsArrayBuffer(file)

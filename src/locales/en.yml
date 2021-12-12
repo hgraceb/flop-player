@@ -39,6 +39,7 @@ common:
 
 error:
   videoParse: 'Video parsing error: '
+  uriRequest: 'Data request error：{0}'
   fileNotPresent: File does not exist
   fileNotSelect: No file selected or file not accessible
   fileTooMany: 'Too many files: {0}'

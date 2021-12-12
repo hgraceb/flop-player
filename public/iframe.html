@@ -27,6 +27,8 @@
     <button onclick="playVideo('./videos/avf/Cus_30x8_30mines.avf')" type="button">Cus_30x8_30mines.avf</button>
     <button onclick="playVideo('./videos/avf/wasted_clicks_test.avf')" type="button">wasted_clicks_test.avf</button>
     <br /><br /><br />
+    <button onclick="playVideo('https://example.com/error_uri_blocked.rawvf')" type="button">error_uri_blocked.rawvf</button>
+    <br /><br />
     <button onclick="playVideo('./videos/error/error_file_not_found.rawvf')" type="button">error_file_not_found.rawvf</button>
     <button onclick="playVideo('./videos/error/error_file_unsupported_type.txt')" type="button">error_file_unsupported_type.txt</button>
     <br /><br />
@@ -125,8 +127,13 @@
      *
      * @param {string} uri 录像地址
      * @param {object|undefined} options 可选参数
-     * @param {string|undefined} options.background 遮罩背景样式
+     * @param {object|undefined} options.share 分享链接配置
+     * @param {string|undefined} options.share.uri 分享链接页面录像地址
+     * @param {string|undefined} options.share.title 分享链接页面标题
+     * @param {boolean|undefined} options.share.anonymous 分享链接页面是否匿名显示玩家名称
+     * @param {string|undefined} options.share.background 分享链接页面背景样式，如：rgba(0, 0, 0, .5)
      * @param {boolean|undefined} options.anonymous 是否匿名显示玩家名称
+     * @param {string|undefined} options.background 遮罩背景样式，如：rgba(0, 0, 0, .5)
      * @param {function|undefined} options.listener 退出录像播放页面的回调
      */
     function playVideo(uri, options) {
@@ -135,8 +142,14 @@
             return
         }
         window.flop.playVideo(uri, options || {
-            background: 'rgba(0, 0, 0, .5)',
+            share: {
+                uri: uri,
+                anonymous: false,
+                background: '#eee',
+                title: 'Flop Player Share'
+            },
             anonymous: false,
+            background: 'rgba(0, 0, 0, .5)',
             listener: function () {
                 console.log('Flop player exit')
             }
@@ -146,8 +159,9 @@
     window.onload = function () {
         document.getElementById('file').addEventListener('change', fileChange)
         playVideo('./videos/avf/arbiter_exp.avf', {
-            background: 'rgba(0, 0, 0, .5)',
-            anonymous: true
+            share: undefined,
+            anonymous: true,
+            background: 'rgba(0, 0, 0, .5)'
         })
     }
 </script>
