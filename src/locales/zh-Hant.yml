@@ -8,6 +8,7 @@ menu:
       title: 複製分享鏈接
       copied: 分享鏈接已複製到剪貼板
       error: 分享鏈接複製失敗
+    download: 下載錄像文件
   options:
     title: 選項
     language: 繁體中文

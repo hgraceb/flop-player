@@ -136,17 +136,24 @@ function parseVideo (type: FileType, data: ArrayBuffer, onload: (video: BasePars
 }
 
 export const actions = {
-  /** 从 Uri 获取录像数据 */
+  /** 从 URI 获取录像数据 */
   fetchUri: ({ commit }: { commit: Commit }, uri: string): void => {
     // 将页面加载状态设置为加载中并暂停录像播放
     commit('setLoading', true)
+    // 保存 URI
+    commit('setURI', uri)
+    // 重置 URI 请求状态
+    commit('setURISuccess', false)
     store.dispatch('parseUri', {
       uri: uri,
-      onload: (video) => commit('receiveVideo', video),
+      onload: (video) => {
+        commit('receiveVideo', video)
+        commit('setURISuccess', true)
+      },
       onerror: (error) => messageError(error)
     })
   },
-  /** 从 Uri 获取并解析录像数据 */
+  /** 从 URI 获取并解析录像数据 */
   parseUri: (context: { commit: Commit }, { uri, onload, onerror }: { uri: string, onload: (video: BaseParser) => void, onerror: (info: string) => void }): void => {
     if (!checkFileType(uri, onerror)) return
     // 请求录像数据

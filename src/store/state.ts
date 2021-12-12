@@ -58,6 +58,10 @@ export type State = typeof storageDefault & {
   exit: boolean
   // 分享页面链接
   shareLink: string
+  // 录像 URI
+  uri: string
+  // 录像 URI 是否请求成功
+  uriSuccess: boolean
 }
 
 export const state: State = {
@@ -102,5 +106,7 @@ export const state: State = {
   gameDoublePoints: [],
   loading: false,
   exit: self !== top,
-  shareLink: ''
+  shareLink: '',
+  uri: '',
+  uriSuccess: false
 }

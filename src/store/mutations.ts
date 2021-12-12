@@ -133,6 +133,14 @@ export const mutations = {
   setShareLink: (state: State, shareLink: string): void => {
     state.shareLink = shareLink
   },
+  /** 设置录像 URI */
+  setURI: (state: State, uri: string): void => {
+    state.uri = uri
+  },
+  /** 设置录像 URI 是否请求成功 */
+  setURISuccess: (state: State, uriSuccess: boolean): void => {
+    state.uriSuccess = uriSuccess
+  },
   /** 切换问号标记模式 */
   toggleMarks: (state: State): void => {
     state.marks = !state.marks

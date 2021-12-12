@@ -8,6 +8,7 @@ menu:
       title: Copy share link
       copied: Share link has been copied to clipboard
       error: Share link copy failed
+    download: Download video
   options:
     title: Options
     language: English

@@ -10,6 +10,7 @@ menu:
       title: 复制分享链接
       copied: 分享链接已复制到剪贴板
       error: 分享链接复制失败
+    download: 下载录像文件
   options:
     title: 选项
     # 切换语言

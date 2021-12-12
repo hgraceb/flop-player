@@ -17,27 +17,32 @@
       <a-icon-empty v-else />
       <span>{{ $t('menu.game.fileDrag') }}</span>
     </a-menu-item>
-    <template v-if="showShareLink">
-      <a-menu-divider />
-      <a-menu-item @click="copyShareLink">
-        <ShareAltOutlined />
-        <span>{{ $t('menu.game.share.title') }}</span>
-      </a-menu-item>
-    </template>
+    <a-menu-divider v-if="showShareLink || showURI" />
+    <a-menu-item v-if="showShareLink" @click="copyShareLink">
+      <CopyOutlined />
+      <span>{{ $t('menu.game.share.title') }}</span>
+    </a-menu-item>
+    <a-menu-item v-if="showURI" :title="uri">
+      <DownloadOutlined />
+      <span>
+        <!-- 如果录像 URI 请求成功，则直接在当前页面下载录像，不用打开新的窗口；请求失败则打开新的窗口查看链接，避免点击错误链接导致页面加载出错 -->
+        <a :href="uri" :target="`${uriSuccess ? '_self' : '_blank'}`" download>{{ $t('menu.game.download') }}</a>
+      </span>
+    </a-menu-item>
   </a-sub-menu>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue'
 import { store } from '@/store'
-import { CheckOutlined, FileSearchOutlined, ShareAltOutlined } from '@ant-design/icons-vue'
+import { CheckOutlined, CopyOutlined, DownloadOutlined, FileSearchOutlined } from '@ant-design/icons-vue'
 import AIconEmpty from '@/components/common/AIconEmpty.vue'
 import { message } from 'ant-design-vue'
 import { useI18n } from 'vue-i18n'
 import copy from 'copy-text-to-clipboard'
 
 export default defineComponent({
-  components: { FileSearchOutlined, CheckOutlined, ShareAltOutlined, AIconEmpty },
+  components: { FileSearchOutlined, CheckOutlined, CopyOutlined, DownloadOutlined, AIconEmpty },
   setup () {
     const { t } = useI18n()
     // 鼠标双击坐标点对应的元素
@@ -60,8 +65,14 @@ export default defineComponent({
     const copyShareLink = () => copy(store.state.shareLink) ? message.info(t('menu.game.share.copied')) : message.error(t('menu.game.share.error'))
     // 是否展示复制分享链接按钮
     const showShareLink = computed(() => store.state.shareLink.length > 0)
+    // 录像 URI
+    const uri = computed(() => store.state.uri)
+    // 录像 URI 是否请求成功
+    const uriSuccess = computed(() => store.state.uriSuccess)
+    // 是否展示 URI 下载按钮
+    const showURI = computed(() => uri.value.length > 0)
 
-    return { fileInputElement, fileSelect, fileChange, fileDrag, toggleFileDrag, marks, toggleMarks, marksDisabled, copyShareLink, showShareLink }
+    return { fileInputElement, fileSelect, fileChange, fileDrag, toggleFileDrag, marks, toggleMarks, marksDisabled, copyShareLink, showShareLink, uri, uriSuccess, showURI }
   }
 })
 </script>
