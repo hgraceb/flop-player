@@ -4,6 +4,10 @@ menu:
     localVideo: 選擇本地文件
     fileDrag: 檢測文件拖放
     marks: 標記問號 (?)
+    share:
+      title: 複製分享鏈接
+      copied: 分享鏈接已複製到剪貼板
+      error: 分享鏈接複製失敗
   options:
     title: 選項
     language: 繁體中文

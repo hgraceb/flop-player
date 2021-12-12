@@ -1,5 +1,11 @@
 <template>
   <a-sub-menu :title="$t('menu.game.title')">
+    <a-menu-item :disabled="marksDisabled" @click="toggleMarks">
+      <CheckOutlined v-if="marks" />
+      <a-icon-empty v-else />
+      <span>{{ $t('menu.game.marks') }}</span>
+    </a-menu-item>
+    <a-menu-divider />
     <a-menu-item :title="$t('common.fileSelect')" @click="fileSelect">
       <FileSearchOutlined />
       <span>{{ $t('menu.game.localVideo') }}</span>
@@ -11,24 +17,29 @@
       <a-icon-empty v-else />
       <span>{{ $t('menu.game.fileDrag') }}</span>
     </a-menu-item>
-    <a-menu-divider />
-    <a-menu-item :disabled="marksDisabled" @click="toggleMarks">
-      <CheckOutlined v-if="marks" />
-      <a-icon-empty v-else />
-      <span>{{ $t('menu.game.marks') }}</span>
-    </a-menu-item>
+    <template v-if="showShareLink">
+      <a-menu-divider />
+      <a-menu-item @click="copyShareLink">
+        <ShareAltOutlined />
+        <span>{{ $t('menu.game.share.title') }}</span>
+      </a-menu-item>
+    </template>
   </a-sub-menu>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue'
 import { store } from '@/store'
-import { CheckOutlined, FileSearchOutlined } from '@ant-design/icons-vue'
+import { CheckOutlined, FileSearchOutlined, ShareAltOutlined } from '@ant-design/icons-vue'
 import AIconEmpty from '@/components/common/AIconEmpty.vue'
+import { useClipboard } from '@vueuse/core'
+import { message } from 'ant-design-vue'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
-  components: { FileSearchOutlined, CheckOutlined, AIconEmpty },
+  components: { FileSearchOutlined, CheckOutlined, ShareAltOutlined, AIconEmpty },
   setup () {
+    const { t } = useI18n()
     // 鼠标双击坐标点对应的元素
     const fileInputElement = ref<HTMLInputElement>()
     // 打开文件选择页面
@@ -45,8 +56,17 @@ export default defineComponent({
     const toggleMarks = () => store.commit('toggleMarks')
     // 问号标记模式菜单是否处于不可用状态
     const marksDisabled = computed(() => store.state.gameType === 'Video')
+    // 复制分享链接
+    const copyShareLink = () => {
+      // 没测试到复制失败的情况，姑且写着
+      useClipboard().copy(store.state.shareLink)
+        .then(() => message.info(t('menu.game.share.copied')))
+        .catch(() => message.error(t('menu.game.share.error')))
+    }
+    // 是否展示复制分享链接按钮
+    const showShareLink = computed(() => store.state.shareLink.length > 0)
 
-    return { fileInputElement, fileSelect, fileChange, fileDrag, toggleFileDrag, marks, toggleMarks, marksDisabled }
+    return { fileInputElement, fileSelect, fileChange, fileDrag, toggleFileDrag, marks, toggleMarks, marksDisabled, copyShareLink, showShareLink }
   }
 })
 </script>

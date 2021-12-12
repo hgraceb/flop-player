@@ -8,6 +8,15 @@ import { store } from '@/store'
 import ScreenCenter from '@/components/common/ScreenCenter.vue'
 import { BaseParser } from '@/game/BaseParser'
 
+/** 分享链接配置 */
+interface Share {
+  uri: string,
+  title?: string
+  pathname?: string
+  anonymous?: boolean,
+  background?: string,
+}
+
 export default defineComponent({
   components: { ScreenCenter },
   setup () {
@@ -22,7 +31,7 @@ export default defineComponent({
     // 暴露接口给父窗口
     parent.window.flop = {
       /** 播放录像 */
-      playVideo: (uri: string, { anonymous, background, listener }: { anonymous?: boolean, background?: string, listener?: () => void }) => {
+      playVideo: (uri: string, { anonymous, background, share, listener }: { anonymous?: boolean, background?: string, share?: Share, listener?: () => void }) => {
         // 设置页面退出状态以显示播放页面
         store.commit('setExit', false)
         // 设置可选参数
@@ -31,6 +40,21 @@ export default defineComponent({
         store.commit('setAnonymous', anonymous)
         // 拉取录像并播放
         store.dispatch('fetchUri', uri)
+        // 如果配置了分享链接参数
+        if (share?.uri) {
+          // 页面路径
+          const path = `${parent.window.location.origin}${share.pathname ? share.pathname : '/'}`
+          // 搜索参数
+          let params = `?uri=${encodeURIComponent(share.uri)}`
+          if (share.title) params = `${params}&title=${encodeURIComponent(share.title)}`
+          if (share.anonymous) params = `${params}&anonymous=${encodeURIComponent(share.anonymous)}`
+          if (share.background) params = `${params}&background=${encodeURIComponent(share.background)}`
+          const shareLink = `${path}${params}`
+          // 打印完整分享链接
+          console.log(shareLink)
+          // 设置分享链接
+          store.commit('setShareLink', shareLink)
+        }
       },
       /** 解析录像文件 */
       parseFiles: (fileList: FileList | undefined | null, onload: (video: BaseParser) => void, onerror?: (info: string) => void) => {

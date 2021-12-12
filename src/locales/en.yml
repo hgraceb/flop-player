@@ -4,6 +4,10 @@ menu:
     localVideo: Select local file
     fileDrag: Detect file drag
     marks: Marks (?)
+    share:
+      title: Copy share link
+      copied: Share link has been copied to clipboard
+      error: Share link copy failed
   options:
     title: Options
     language: English

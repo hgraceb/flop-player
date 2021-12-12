@@ -56,6 +56,8 @@ export type State = typeof storageDefault & {
   loading: boolean
   // 页面是否退出（只在 iframe 内时生效）
   exit: boolean
+  // 分享页面链接
+  shareLink: string
 }
 
 export const state: State = {
@@ -99,5 +101,6 @@ export const state: State = {
   gameRightPoints: [],
   gameDoublePoints: [],
   loading: false,
-  exit: self !== top
+  exit: self !== top,
+  shareLink: ''
 }

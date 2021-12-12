@@ -6,6 +6,10 @@ menu:
     localVideo: 选择本地文件
     fileDrag: 检测文件拖放
     marks: 标记问号 (?)
+    share:
+      title: 复制分享链接
+      copied: 分享链接已复制到剪贴板
+      error: 分享链接复制失败
   options:
     title: 选项
     # 切换语言

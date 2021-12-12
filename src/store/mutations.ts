@@ -129,6 +129,10 @@ export const mutations = {
     }
     state.exit = exit
   },
+  /** 设置分享页面链接 */
+  setShareLink: (state: State, shareLink: string): void => {
+    state.shareLink = shareLink
+  },
   /** 切换问号标记模式 */
   toggleMarks: (state: State): void => {
     state.marks = !state.marks
