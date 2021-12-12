@@ -107,31 +107,31 @@ function checkFileSize (size: number, name: string, callback: (info: string) => 
  *
  * @param type 录像类型
  * @param data 录像原始数据
- * @param onSuccess 解析成功的回调
- * @param onError 解析失败的回调
+ * @param onload 解析成功的回调
+ * @param onerror 解析失败的回调
  */
-function parseVideo (type: FileType, data: ArrayBuffer, onSuccess: (video: BaseParser) => void, onError: (info: string) => void) {
+function parseVideo (type: FileType, data: ArrayBuffer, onload: (video: BaseParser) => void, onerror: (info: string) => void) {
   try {
     switch (type) {
       case 'avf':
-        onSuccess(new VideoParser(new AVFVideo(data), false))
+        onload(new VideoParser(new AVFVideo(data), false))
         break
       case 'mvf':
-        onSuccess(new VideoParser(new MVFVideo(data), false))
+        onload(new VideoParser(new MVFVideo(data), false))
         break
       case 'rmv':
-        onSuccess(new VideoParser(new RMVVideo(data), false))
+        onload(new VideoParser(new RMVVideo(data), false))
         break
       case 'rawvf':
-        onSuccess(new VideoParser(new RawVideo(data), false))
+        onload(new VideoParser(new RawVideo(data), false))
         break
       default:
-        onError(`${t('error.videoParse')}${t('error.fileUnsupported')}`)
+        onerror(`${t('error.videoParse')}${t('error.fileUnsupported')}`)
     }
   } catch (e) {
     console.error(e)
     // 展示录像解析失败的相关信息
-    onError(`${t('error.videoParse')}${e.message}`)
+    onerror(`${t('error.videoParse')}${e.message}`)
   }
 }
 
@@ -142,24 +142,24 @@ export const actions = {
     commit('setLoading', true)
     store.dispatch('parseUri', {
       uri: uri,
-      onSuccess: (video) => commit('receiveVideo', video),
-      onError: (error) => messageError(error)
+      onload: (video) => commit('receiveVideo', video),
+      onerror: (error) => messageError(error)
     })
   },
   /** 从 Uri 获取并解析录像数据 */
-  parseUri: ({ commit }: { commit: Commit }, { uri, onSuccess, onError }: { uri: string, onSuccess: (video: BaseParser) => void, onError: (info: string) => void }): void => {
-    if (!checkFileType(uri, onError)) return
+  parseUri: ({ commit }: { commit: Commit }, { uri, onload, onerror }: { uri: string, onload: (video: BaseParser) => void, onerror: (info: string) => void }): void => {
+    if (!checkFileType(uri, onerror)) return
     // 请求录像数据
     const request = new XMLHttpRequest()
     request.onload = () => {
-      if (!checkFileSize(request.response.byteLength, uri, onError)) return
+      if (!checkFileSize(request.response.byteLength, uri, onerror)) return
       // 解析录像数据
-      parseVideo(getExtension(uri) as FileType, request.response, onSuccess, onError)
+      parseVideo(getExtension(uri) as FileType, request.response, onload, onerror)
     }
     request.onerror = (e) => {
       console.error(e)
       // 数据请求出错，如：跨域请求
-      onError(t('error.uriRequest', [uri]))
+      onerror(t('error.uriRequest', [uri]))
     }
     request.open('GET', uri)
     request.responseType = 'arraybuffer'
@@ -171,25 +171,25 @@ export const actions = {
     commit('setLoading', true)
     store.dispatch('parseFiles', {
       fileList: fileList,
-      onSuccess: (video) => commit('receiveVideo', video),
-      onError: (error) => messageError(error)
+      onload: (video) => commit('receiveVideo', video),
+      onerror: (error) => messageError(error)
     })
   },
   /** 从文件列表获取并解析录像数据 */
-  parseFiles: ({ commit }: { commit: Commit }, { fileList, onSuccess, onError }: { fileList: FileList | undefined | null, onSuccess: (video: BaseParser) => void, onError: (info: string) => void }): void => {
-    if (!checkFileNumber(fileList, onError) || !fileList) return
+  parseFiles: ({ commit }: { commit: Commit }, { fileList, onload, onerror }: { fileList: FileList | undefined | null, onload: (video: BaseParser) => void, onerror: (info: string) => void }): void => {
+    if (!checkFileNumber(fileList, onerror) || !fileList) return
     const file = fileList[0]
-    if (!checkFileType(file.name, onError) || !checkFileSize(file.size, file.name, onError)) return
+    if (!checkFileType(file.name, onerror) || !checkFileSize(file.size, file.name, onerror)) return
     // 读取文件内容
     const reader = new FileReader()
     reader.onload = function () {
       // 解析录像数据
-      parseVideo(getExtension(file.name) as FileType, reader.result as ArrayBuffer, onSuccess, onError)
+      parseVideo(getExtension(file.name) as FileType, reader.result as ArrayBuffer, onload, onerror)
     }
     reader.onerror = function (e) {
       console.error(e)
       // 文件读取出错，如：读取文件夹
-      onError(t('error.fileReadError', [reader.error]))
+      onerror(t('error.fileReadError', [reader.error]))
     }
     reader.readAsArrayBuffer(file)
   }

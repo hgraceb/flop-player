@@ -33,9 +33,9 @@ export default defineComponent({
         store.dispatch('fetchUri', uri)
       },
       /** 解析录像文件 */
-      parseFiles: (fileList: FileList | undefined | null, onSuccess: (video: BaseParser) => void, onError?: (info: string) => void) => {
-        onError = onError || (() => ({}))
-        store.dispatch('parseFiles', { fileList, onSuccess, onError })
+      parseFiles: (fileList: FileList | undefined | null, onload: (video: BaseParser) => void, onerror?: (info: string) => void) => {
+        onerror = onerror || (() => ({}))
+        store.dispatch('parseFiles', { fileList, onload, onerror })
       }
     }
     // 退出时清理页面
