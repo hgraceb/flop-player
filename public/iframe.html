@@ -76,7 +76,7 @@
      * @param {function(): number} video.getTime 获取游戏真实时间（毫秒）
      * @param {function(): number} video.getBBBV 获取游戏最少左键点击数
      */
-    function onload(video) {
+    function onSuccess(video) {
         const element3bv = document.getElementById('3bv')
         const elementTime = document.getElementById('time')
         const elementError = document.getElementById('error')
@@ -90,7 +90,7 @@
      *
      * @param {string} info 错误信息，文本语言默认为用户选择的语言
      */
-    function onerror(info) {
+    function onError(info) {
         const element3bv = document.getElementById('3bv')
         const elementTime = document.getElementById('time')
         const elementError = document.getElementById('error')
@@ -103,15 +103,15 @@
      * 解析录像文件
      *
      * @param {HTMLInputElement} inputElement 文件选择元素
-     * @param {function} onload 录像解析成功的回调
-     * @param {function|undefined} onerror 录像解析失败的回调
+     * @param {function} onSuccess 录像解析成功的回调
+     * @param {function|undefined} onError 录像解析失败的回调
      */
-    function parseFiles(inputElement, onload, onerror) {
+    function parseFiles(inputElement, onSuccess, onError) {
         if (isIE()) {
-            onerror('暂不支持 IE 内核，请更换浏览器或内核！')
+            onError('暂不支持 IE 内核，请更换浏览器或内核！')
             return
         }
-        window.flop.parseFiles(inputElement.files, onload, onerror)
+        window.flop.parseFiles(inputElement.files, onSuccess, onError)
     }
 
     /**
@@ -119,7 +119,7 @@
      */
     function fileChange() {
         const elementFile = document.getElementById('file')
-        parseFiles(elementFile, onload, onerror)
+        parseFiles(elementFile, onSuccess, onError)
     }
 
     /**
