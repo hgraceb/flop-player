@@ -32,9 +32,9 @@ import { computed, defineComponent, ref } from 'vue'
 import { store } from '@/store'
 import { CheckOutlined, FileSearchOutlined, ShareAltOutlined } from '@ant-design/icons-vue'
 import AIconEmpty from '@/components/common/AIconEmpty.vue'
-import { useClipboard } from '@vueuse/core'
 import { message } from 'ant-design-vue'
 import { useI18n } from 'vue-i18n'
+import copy from 'copy-text-to-clipboard'
 
 export default defineComponent({
   components: { FileSearchOutlined, CheckOutlined, ShareAltOutlined, AIconEmpty },
@@ -56,13 +56,8 @@ export default defineComponent({
     const toggleMarks = () => store.commit('toggleMarks')
     // 问号标记模式菜单是否处于不可用状态
     const marksDisabled = computed(() => store.state.gameType === 'Video')
-    // 复制分享链接
-    const copyShareLink = () => {
-      // 没测试到复制失败的情况，姑且写着
-      useClipboard().copy(store.state.shareLink)
-        .then(() => message.info(t('menu.game.share.copied')))
-        .catch(() => message.error(t('menu.game.share.error')))
-    }
+    // 复制分享链接，http 协议的网址无法直接使用 navigator.clipboard
+    const copyShareLink = () => copy(store.state.shareLink) ? message.info(t('menu.game.share.copied')) : message.error(t('menu.game.share.error'))
     // 是否展示复制分享链接按钮
     const showShareLink = computed(() => store.state.shareLink.length > 0)
 
