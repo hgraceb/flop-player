@@ -14,7 +14,6 @@ menu:
     title: Options
     language: English
     toggleLanguages: Languages
-    squareSize: Square Size
     videoMap:
       title: Video map
       move: Mouse move

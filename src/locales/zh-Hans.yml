@@ -14,11 +14,8 @@ menu:
     download: 下载录像文件
   options:
     title: 选项
-    # 切换语言
     language: 简体中文
     toggleLanguages: 切换语言
-    # 切换方块实际显示边长
-    squareSize: 方块边长
     # 切换轨迹图显示状态
     videoMap:
       title: 录像地图
@@ -49,7 +46,7 @@ controlBar:
 # 通用
 common:
   loading: 加载中...
-  # 一般录像文件的大小都不会超过 5MB，可以先不用提示，我就不信你还真有这么大个录像 (っ °Д °;)っ
+  # 一般录像文件的大小都不会超过 5MB，可以先不用在选择时提示，我就不信你还真有这么大个录像 (っ °Д °;)っ
   fileSelect: '请选择一个 avf/mvf/rmv/rawvf 文件'
 
 # 错误信息
