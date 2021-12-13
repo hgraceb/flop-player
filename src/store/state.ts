@@ -83,7 +83,7 @@ export const state: State = {
   userParser: new DefaultParser(),
   width: 8,
   height: 8,
-  mines: 10,
+  mines: 0,
   bbbv: 0,
   openings: 0,
   islands: 0,
