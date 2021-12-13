@@ -2,7 +2,7 @@ import { State } from './state'
 import { store } from '@/store/index'
 import { plus, times } from 'number-precision'
 import { ImgCellType } from '@/util/image'
-import { SCALE_ARRAY, SPEED_ARRAY } from '@/game/constants'
+import { SQUARE_SIZE_ARRAY, SPEED_ARRAY } from '@/game/constants'
 import { i18n } from '@/plugins/i18n'
 import { message } from 'ant-design-vue'
 import { BaseParser } from '@/game/BaseParser'
@@ -38,10 +38,10 @@ export const mutations = {
   setShowOpening: (state: State, isShowOpening: boolean): void => {
     state.isShowOpening = isShowOpening
   },
-  /** 设置页面缩放值 */
-  setScale: (state: State, scale: number): void => {
-    if (SCALE_ARRAY.includes(scale)) {
-      state.scale = scale
+  /** 设置方块实际显示边长 */
+  setSquareSize: (state: State, squireSize: number): void => {
+    if (SQUARE_SIZE_ARRAY.includes(squireSize)) {
+      state.squireSize = squireSize
     }
   },
   /** 设置当前语言 */

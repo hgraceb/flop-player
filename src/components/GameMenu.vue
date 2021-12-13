@@ -29,24 +29,24 @@
         <!-- 录像地图 -->
         <sub-menu-video-map />
 
-        <!-- 缩放比例 -->
+        <!-- 方块实际显示边长 -->
         <a-menu-divider />
-        <a-sub-menu :title="$t('menu.options.scaling')">
+        <a-sub-menu :title="$t('menu.options.squareSize')">
           <template #icon>
             <ExpandAltOutlined />
           </template>
-          <!-- 如果用户当前设置的缩放比例不在预设的缩放比例中，则单独显示 -->
-          <template v-if="!availableScales.includes(scale)">
+          <!-- 如果用户当前设置的方块实际显示边长不在预设中，则单独显示 -->
+          <template v-if="!availableSquareSize.includes(squireSize)">
             <a-menu-item>
               <CheckOutlined />
-              {{ scale.toFixed(2) }}x
+              {{ squireSize }}
             </a-menu-item>
             <a-menu-divider />
           </template>
-          <a-menu-item v-for="(item, index) in availableScales" :key="index" @click="changeScale(item)">
-            <CheckOutlined v-if="item === scale" />
+          <a-menu-item v-for="(item, index) in availableSquareSize" :key="index" @click="changeSquareSize(item)">
+            <CheckOutlined v-if="item === squireSize" />
             <a-icon-empty v-else />
-            {{ item.toFixed(2).substring(0, 4) }}x
+            {{ item }}
           </a-menu-item>
         </a-sub-menu>
       </a-sub-menu>
@@ -62,7 +62,7 @@
 import { computed, defineComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { store } from '@/store'
-import { SQUARE_SIZE, GAME_TOP_UPPER, SCALE_ARRAY } from '@/game/constants'
+import { GAME_TOP_UPPER, SQUARE_SIZE, SQUARE_SIZE_ARRAY } from '@/game/constants'
 import { CheckOutlined, ExpandAltOutlined, GlobalOutlined } from '@ant-design/icons-vue'
 import AIconEmpty from '@/components/common/AIconEmpty.vue'
 import SubMenuVideoMap from '@/components/menu/SubMenuVideoMap.vue'
@@ -73,27 +73,20 @@ export default defineComponent({
   components: { MenuExit, SubMenuGame, SubMenuVideoMap, AIconEmpty, CheckOutlined, ExpandAltOutlined, GlobalOutlined },
   setup () {
     // 菜单宽度
-    const width = computed(() => {
-      return GAME_TOP_UPPER.widthLeft + GAME_TOP_UPPER.widthRight + store.state.width * SQUARE_SIZE
-    })
+    const width = computed(() => GAME_TOP_UPPER.widthLeft + GAME_TOP_UPPER.widthRight + store.state.width * SQUARE_SIZE)
 
     const { locale, availableLocales } = useI18n()
-
     // 切换语言
-    const changeLocales = (item: string) => {
-      store.commit('setLocale', item)
-    }
+    const changeLocales = (item: string) => store.commit('setLocale', item)
 
-    // 用户设置的缩放比例
-    const scale = computed(() => store.state.scale)
-    // 所有可选的缩放比例
-    const availableScales = SCALE_ARRAY
-    // 设置缩放比例
-    const changeScale = (scale: number) => {
-      store.commit('setScale', scale)
-    }
+    // 用户设置的方块实际显示边长
+    const squireSize = computed(() => store.state.squireSize)
+    // 所有可选的方块实际显示边长
+    const availableSquareSize = SQUARE_SIZE_ARRAY
+    // 设置方块实际显示边长
+    const changeSquareSize = (squireSize: number) => store.commit('setSquareSize', squireSize)
 
-    return { width, locale, availableLocales, changeLocales, scale, availableScales, changeScale }
+    return { width, locale, availableLocales, changeLocales, squireSize, availableSquareSize, changeSquareSize }
   }
 })
 </script>

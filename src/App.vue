@@ -3,13 +3,11 @@
   <share-adapter v-if="topmost" />
   <!-- iframe 适配器 -->
   <iframe-adapter v-else />
-  <!-- TODO 如果当前页面被放在 iframe 内则需要添加退出按钮 -->
   <screen-center v-show="loading">
     <a-spin :tip="$t('common.loading')" />
   </screen-center>
-  <!-- TODO 解决缩放后没有影响到游戏菜单弹出的窗体内容、 Flex 布局左右边距错误跟随缩放导致有白边的问题 -->
   <div v-show="!loading" style="width: fit-content;margin: auto">
-    <div :style="{transformOrigin: '0 0 0', transform: `scale(${scale})`}" style="display: flex;align-items: flex-end">
+    <div style="display: flex;align-items: flex-end">
       <div style="margin-left: auto">
         <counters />
       </div>
@@ -42,8 +40,6 @@ export default defineComponent({
   setup () {
     // 页面加载状态
     const loading = computed(() => store.state.loading)
-    // 用户设置的缩放比例
-    const scale = computed(() => store.state.scale)
     // 当前页面是否是最上层页面
     const topmost = self === top
 
@@ -78,7 +74,7 @@ export default defineComponent({
       // store.dispatch('fetchUri', 'videos/rmv/exp.rmv')
     })
 
-    return { loading, scale, topmost }
+    return { loading, topmost }
   }
 })
 </script>

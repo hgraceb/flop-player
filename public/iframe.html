@@ -160,8 +160,11 @@
 
     window.onload = function () {
         document.getElementById('file').addEventListener('change', fileChange)
-        playVideo('./videos/avf/arbiter_exp.avf', {
-            share: undefined,
+        const uri = './videos/avf/arbiter_exp.avf'
+        playVideo(uri, {
+            share: {
+                uri: uri,
+            },
             anonymous: true,
             background: 'rgba(0, 0, 0, .5)'
         })

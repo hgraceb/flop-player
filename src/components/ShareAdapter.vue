@@ -1,5 +1,5 @@
 <template>
-  <screen-center :style="`background: ${background}`" />
+  <screen-center :style="{background: background, zIndex: -9999}" />
 </template>
 
 <script lang="ts">

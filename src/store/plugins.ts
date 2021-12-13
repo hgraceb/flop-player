@@ -8,8 +8,8 @@ export const STORAGE_KEY = 'flop-player-locale-storage'
  * 本地缓存默认值
  */
 export const storageDefault = {
-  // 页面缩放值
-  scale: 1,
+  // 方块实际显示边长
+  squireSize: 16,
   // 是否可以标记问号
   marks: false,
   // 是否检测文件拖放，这个设置本身是没什么必要的，主要是想让用户知道有这个功能 (￣▽￣)
@@ -41,8 +41,8 @@ export const storage = useStorage(STORAGE_KEY, storageDefault)
  * 本地缓存插件，响应式更新本地缓存
  */
 const localStoragePlugin = (store: VuexStore): void => {
-  store.watch(state => state.scale, value => {
-    storage.value.scale = value
+  store.watch(state => state.squireSize, value => {
+    storage.value.squireSize = value
   })
   store.watch(state => state.marks, value => {
     storage.value.marks = value
