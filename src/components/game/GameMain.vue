@@ -15,6 +15,8 @@
         :translate-y="getTranslateY(height)"
       />
     </template>
+    <!-- 如果存在没有方块的区域，则使用背景色进行填充，隐藏方块右侧多余的部分 -->
+    <path v-if="emptyWidth > 0" :d="`M ${gameWidth * 160} -7.89 h ${emptyWidth * 160} v ${gameHeight * 160 + 7.89} h ${emptyWidth * -160} Z`" fill="silver" />
   </g>
 </template>
 
@@ -22,7 +24,7 @@
 import { computed, defineComponent, onMounted, onUnmounted, ref, watch } from 'vue'
 import { store } from '@/store'
 import SkinSymbol from '@/components/skin/SkinSymbol.vue'
-import { SQUARE_SIZE, GAME_MIDDLE, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
+import { GAME_MIDDLE, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SQUARE_SIZE, SVG_SCALE } from '@/game/constants'
 import { ImgCellType } from '@/util/image'
 import { round } from 'number-precision'
 import { useThrottleFn } from '@vueuse/core'
@@ -36,6 +38,8 @@ export default defineComponent({
     const translateY = (GAME_TOP_UPPER.height + GAME_TOP_MIDDLE.height + GAME_TOP_LOWER.height) * SVG_SCALE
     // 游戏宽度
     const gameWidth = computed(() => store.state.width)
+    // 没有方块的游戏宽度
+    const emptyWidth = computed(() => store.getters.getDisplayWidth - gameWidth.value)
     // 游戏高度
     const gameHeight = computed(() => store.state.height)
     // 根据横坐标和纵坐标获取方块的图片名称
@@ -137,7 +141,7 @@ export default defineComponent({
     // 切换问号标记模式时添加对应的游戏事件，坐标使用前一个事件的坐标
     watch(computed(() => store.state.marks), () => store.commit('pushUserEvent', { mouse: 'mt', x: curX.value, y: curY.value }))
 
-    return { translateX, translateY, gameWidth, gameHeight, getCellImg, getTranslateX, getTranslateY, cells, cellMouseHandler }
+    return { translateX, translateY, gameWidth, emptyWidth, gameHeight, getCellImg, getTranslateX, getTranslateY, cells, cellMouseHandler }
   }
 })
 </script>

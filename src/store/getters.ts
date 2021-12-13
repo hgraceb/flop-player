@@ -1,4 +1,5 @@
 import { State } from '@/store/state'
+import { MIN_WIDTH } from '@/game/constants'
 
 export const getters = {
   /** 录像是否处于暂停状态 */
@@ -16,6 +17,10 @@ export const getters = {
       return Math.min(state.gameEvents[state.gameEvents.length - 1]?.time || 0, state.gameElapsedTime) / 1000
     }
     return state.gameElapsedTime / 1000
+  },
+  /** 获取页面实际显示的宽度 */
+  getDisplayWidth: (state: State): number => {
+    return state.width > MIN_WIDTH ? state.width : MIN_WIDTH
   }
 }
 

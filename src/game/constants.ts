@@ -74,6 +74,11 @@ export const GAME_BOTTOM_LOWER = {
 export const SQUARE_SIZE = 16
 
 /**
+ * 游戏页面最小宽度
+ */
+export const MIN_WIDTH = 8
+
+/**
  * 计数器数字 SVG 宽高信息
  */
 export const SIZE_COUNT_NUMBER = {

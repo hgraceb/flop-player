@@ -118,7 +118,7 @@ export default defineComponent({
     // 轨迹图整体的 Y 轴坐标偏移量
     const translateY = (GAME_TOP_UPPER.height + GAME_TOP_MIDDLE.height + GAME_TOP_LOWER.height) * SVG_SCALE
     // 遮罩宽度
-    const maskWidth = computed(() => store.state.width * SQUARE_SIZE * SVG_SCALE)
+    const maskWidth = computed(() => store.getters.getDisplayWidth * SQUARE_SIZE * SVG_SCALE)
     // 遮罩高度
     const maskHeight = computed(() => store.state.height * SQUARE_SIZE * SVG_SCALE)
     // 鼠标路径对应的元素

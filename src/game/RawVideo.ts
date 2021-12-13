@@ -45,7 +45,8 @@ export class RawVideo extends BaseVideo {
         if (!Number.isInteger(this.mHeight) || this.mHeight <= 0) this.error(`Invalid board height: "${value}"`)
       } else if (option === 'mines') {
         this.mMines = Number(value)
-        if (!Number.isInteger(this.mMines) || this.mMines <= 0) this.error(`Invalid number of mines: "${value}"`)
+        // 雷数可以为 0
+        if (!Number.isInteger(this.mMines) || this.mMines < 0) this.error(`Invalid number of mines: "${value}"`)
         // QuestionMarks 是为了兼容部分旧版本录像，如：FreeSweeper release 10 保存的录像
       } else if (option === 'marks' || option === 'QuestionMarks'.toLowerCase()) {
         if (value !== 'on' && value !== 'off') this.error(`Invalid question marks: "${value}"`)
