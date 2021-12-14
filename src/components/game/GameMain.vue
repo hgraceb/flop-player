@@ -4,7 +4,6 @@
     <path :d="`M -7.89 -7.89 h ${gameWidth * 160 + 7.89} v 15.78 h ${gameWidth * -160 + 7.89} v ${gameHeight * 160 - 7.89} h -15.78 Z`" :transform="`scale(${squareScale})`" fill="gray" />
     <template v-for="(item, height) in gameHeight" :key="item">
       <skin-symbol
-        :scale="squareScale"
         v-for="(item, width) in gameWidth"
         :key="item"
         :ref="el => { if (el) cells[width + height * gameWidth] = el.$el }"
@@ -12,6 +11,7 @@
         :onmousedown="cellMouseHandler"
         :onmousemove="cellMouseHandler"
         :onmouseup="cellMouseHandler"
+        :scale="squareScale"
         :translate-x="getTranslateX(width)"
         :translate-y="getTranslateY(height)"
       />
@@ -73,7 +73,6 @@ export default defineComponent({
       store.commit('pushUserEvent', { mouse: 'mv', x: curX.value, y: curY.value })
     }, 4)
     // 添加鼠标事件
-    // TODO 计算缩放比例改变后的点击位置坐标
     const pushEvent = (e: MouseEvent) => {
       // 阻止默认的点击事件执行，如：中键移动
       e.preventDefault()
@@ -111,8 +110,8 @@ export default defineComponent({
       // 被点击方块所在行
       const row = Math.floor(index / store.state.width)
       // 在方块上点击时，将横坐标和纵坐标限制在方块区域内，因为原始数据可能已经被四舍五入过，点击边缘位置时计算得到的值可能超出实际方块范围
-      curX.value = column * SQUARE_SIZE + Math.max(0, Math.min(round(e.x - rect.x, 0), SQUARE_SIZE - 1))
-      curY.value = row * SQUARE_SIZE + Math.max(0, Math.min(round(e.y - rect.y, 0), SQUARE_SIZE - 1))
+      curX.value = column * SQUARE_SIZE + Math.max(0, Math.min(round((e.x - rect.x) / squareScale.value, 0), SQUARE_SIZE - 1))
+      curY.value = row * SQUARE_SIZE + Math.max(0, Math.min(round((e.y - rect.y) / squareScale.value, 0), SQUARE_SIZE - 1))
       pushEvent(e)
     }
     // 处理其他区域的鼠标事件
@@ -123,13 +122,16 @@ export default defineComponent({
       const rect = cells.value[0].getBoundingClientRect()
       const width = store.state.width * SQUARE_SIZE
       const height = store.state.height * SQUARE_SIZE
-      curX.value = round(e.x - rect.x, 0)
-      curY.value = round(e.y - rect.y, 0)
-      // 在方块区域外点击但是计算结果却在方块区域内时，将横坐标和纵坐标限制在方块区域外
+      curX.value = round((e.x - rect.x) / squareScale.value, 0)
+      curY.value = round((e.y - rect.y) / squareScale.value, 0)
+      // 在方块区域外点击但是计算结果却在方块区域内时，将横坐标或者纵坐标限制在方块区域外
       if (curX.value > -1 && curX.value < width && curY.value > -1 && curY.value < height) {
-        // 取临近的方块区域外边缘坐标点
-        curX.value = curX.value < width / 2 ? -1 : width
-        curY.value = curY.value < height / 2 ? -1 : height
+        // 如果 X 坐标离边缘更近，则将 X 坐标改为临近的外边缘坐标
+        if (Math.min(curX.value - -1, width - curX.value) < Math.min(curY.value - -1, height - curY.value)) {
+          curX.value = curX.value < (width - 1) / 2 ? -1 : width
+        } else {
+          curY.value = curY.value < (height - 1) / 2 ? -1 : height
+        }
       }
       pushEvent(e)
     }
