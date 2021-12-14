@@ -25,7 +25,7 @@ export default defineComponent({
   },
   setup (props) {
     // 笑脸的 X 轴坐标偏移量
-    const translateX = computed(() => (GAME_TOP_MIDDLE.widthLeft + store.getters.getDisplayWidth * store.state.squareSize + GAME_TOP_MIDDLE.widthRight - SIZE_FACE.width) / 2 * SVG_SCALE)
+    const translateX = computed(() => (GAME_TOP_MIDDLE.widthLeft + store.getters.getMainWidth + GAME_TOP_MIDDLE.widthRight - SIZE_FACE.width) / 2 * SVG_SCALE)
     // 笑脸的 Y 轴坐标偏移量
     const translateY = (GAME_TOP_UPPER.height + 4) * SVG_SCALE
     // 实际展示的笑脸状态

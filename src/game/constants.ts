@@ -2,7 +2,7 @@
  * 方块实际显示边长，数值定义由小到大
  */
 export const SQUARE_SIZE_ARRAY = [
-  4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48
+  8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48
 ]
 
 /**
@@ -84,7 +84,7 @@ export const SQUARE_SIZE = 16
 /**
  * 游戏页面最小宽度
  */
-export const MIN_WIDTH = 8
+export const MIN_WIDTH = SQUARE_SIZE * 8
 
 /**
  * 计数器数字 SVG 宽高信息

@@ -17,7 +17,7 @@
       />
     </template>
     <!-- 如果存在没有方块的区域，则使用背景色进行填充，隐藏方块右侧多余的部分 -->
-    <path v-if="emptyWidth > 0" :d="`M ${gameWidth * 160} -7.89 h ${emptyWidth * 160} v ${gameHeight * 160 + 7.89} h ${emptyWidth * -160} Z`" :transform="`scale(${squareScale})`" fill="silver" />
+    <path v-if="emptyWidth > 0" :d="`M ${gameWidth * 160} -7.89 h ${emptyWidth * 10} v ${gameHeight * 160 + 7.89} h ${emptyWidth * -10} Z`" :transform="`scale(${squareScale})`" fill="silver" />
   </g>
 </template>
 
@@ -39,9 +39,10 @@ export default defineComponent({
     const translateY = (GAME_TOP_UPPER.height + GAME_TOP_MIDDLE.height + GAME_TOP_LOWER.height) * SVG_SCALE
     // 游戏宽度
     const gameWidth = computed(() => store.state.width)
+    // 方块缩放比例
+    const squareScale = computed(() => store.getters.getSquareScale)
     // 没有方块的游戏宽度
-    // TODO 改用限制最小宽度
-    const emptyWidth = computed(() => store.getters.getDisplayWidth - gameWidth.value)
+    const emptyWidth = computed(() => store.getters.getMainWidth / squareScale.value - store.state.width * SQUARE_SIZE)
     // 游戏高度
     const gameHeight = computed(() => store.state.height)
     // 根据横坐标和纵坐标获取方块的图片名称
@@ -60,8 +61,6 @@ export default defineComponent({
     const getTranslateY = (height: number): number => {
       return height * store.state.squareSize * SVG_SCALE
     }
-    // 方块缩放比例
-    const squareScale = computed(() => store.getters.getSquareScale)
     // 当前 X 坐标
     const curX = ref(0)
     // 当前 Y 坐标

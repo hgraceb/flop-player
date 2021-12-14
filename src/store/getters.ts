@@ -18,9 +18,10 @@ export const getters = {
     }
     return state.gameElapsedTime / 1000
   },
-  /** 获取页面实际显示的宽度 */
-  getDisplayWidth: (state: State): number => {
-    return state.width > MIN_WIDTH ? state.width : MIN_WIDTH
+  /** 获取游戏主要区域宽度 */
+  getMainWidth: (state: State): number => {
+    const width = state.width * state.squareSize
+    return width > MIN_WIDTH ? width : MIN_WIDTH
   },
   /** 获取方块缩放比例 */
   getSquareScale: (state: State): number => {

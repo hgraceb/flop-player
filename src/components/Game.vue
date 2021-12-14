@@ -34,7 +34,7 @@ export default defineComponent({
   components: { GameCounter, GameMain, GamePlayerInfo, GameBackground, GameBorder, GameVideoMap, GameCursor, SkinSprites, BaseSvg },
   setup () {
     // SVG 高度信息
-    const width = computed(() => (GAME_TOP_UPPER.widthLeft + store.getters.getDisplayWidth * store.state.squareSize + GAME_TOP_UPPER.widthRight) * SVG_SCALE)
+    const width = computed(() => (GAME_TOP_UPPER.widthLeft + store.getters.getMainWidth + GAME_TOP_UPPER.widthRight) * SVG_SCALE)
     // SVG 宽度信息
     const height = computed(() => {
       // 游戏顶部高度

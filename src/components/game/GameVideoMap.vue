@@ -120,7 +120,7 @@ export default defineComponent({
     // 缩放比例
     const scale = computed(() => store.getters.getSquareScale)
     // 遮罩宽度
-    const maskWidth = computed(() => store.getters.getDisplayWidth * SQUARE_SIZE * SVG_SCALE)
+    const maskWidth = computed(() => store.getters.getMainWidth / scale.value * SVG_SCALE)
     // 遮罩高度
     const maskHeight = computed(() => store.state.height * SQUARE_SIZE * SVG_SCALE)
     // 鼠标路径对应的元素

@@ -73,7 +73,7 @@ export default defineComponent({
   components: { MenuExit, SubMenuGame, SubMenuVideoMap, AIconEmpty, CheckOutlined, ExpandAltOutlined, GlobalOutlined },
   setup () {
     // 菜单宽度
-    const width = computed(() => GAME_TOP_UPPER.widthLeft + GAME_TOP_UPPER.widthRight + store.getters.getDisplayWidth * store.state.squareSize)
+    const width = computed(() => GAME_TOP_UPPER.widthLeft + GAME_TOP_UPPER.widthRight + store.getters.getMainWidth)
 
     const { locale, availableLocales } = useI18n()
     // 切换语言
