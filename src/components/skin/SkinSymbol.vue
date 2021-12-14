@@ -1,5 +1,5 @@
 <template>
-  <use :transform="`translate(${translateX} ${translateY})`" :xlink:href="`#${name}`" />
+  <use :transform="`translate(${translateX} ${translateY}) scale(${scale})`" :xlink:href="`#${name}`" />
 </template>
 
 <script lang="ts">
@@ -18,6 +18,11 @@ export default defineComponent({
     translateY: {
       type: Number,
       required: true
+    },
+    scale: {
+      type: Number,
+      required: false,
+      default: 1.0
     }
   }
 })

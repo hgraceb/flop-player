@@ -19,7 +19,7 @@
 <script lang="ts">
 import BaseSvg from '@/components/BaseSvg.vue'
 import SkinSprites from '@/components/skin/SkinSprites.vue'
-import { GAME_BOTTOM_LOWER, GAME_BOTTOM_MIDDLE, GAME_BOTTOM_UPPER, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SQUARE_SIZE, SVG_SCALE } from '@/game/constants'
+import { GAME_BOTTOM_LOWER, GAME_BOTTOM_MIDDLE, GAME_BOTTOM_UPPER, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
 import { store } from '@/store'
 import { computed, defineComponent } from 'vue'
 import GameCursor from '@/components/game/GameCursor.vue'
@@ -34,13 +34,13 @@ export default defineComponent({
   components: { GameCounter, GameMain, GamePlayerInfo, GameBackground, GameBorder, GameVideoMap, GameCursor, SkinSprites, BaseSvg },
   setup () {
     // SVG 高度信息
-    const width = computed(() => (GAME_TOP_UPPER.widthLeft + store.getters.getDisplayWidth * SQUARE_SIZE + GAME_TOP_UPPER.widthRight) * SVG_SCALE)
+    const width = computed(() => (GAME_TOP_UPPER.widthLeft + store.getters.getDisplayWidth * store.state.squareSize + GAME_TOP_UPPER.widthRight) * SVG_SCALE)
     // SVG 宽度信息
     const height = computed(() => {
       // 游戏顶部高度
       const heightTop = GAME_TOP_UPPER.height + GAME_TOP_MIDDLE.height + GAME_TOP_LOWER.height
       // 游戏中部高度
-      const heightMiddle = store.state.height * SQUARE_SIZE
+      const heightMiddle = store.state.height * store.state.squareSize
       // 游戏底部高度
       const heightBottom = GAME_BOTTOM_UPPER.height + GAME_BOTTOM_MIDDLE.height + GAME_BOTTOM_LOWER.height
       return (heightTop + heightMiddle + heightBottom) * SVG_SCALE

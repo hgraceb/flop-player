@@ -33,7 +33,8 @@ export const GAME_TOP_UPPER = {
  */
 export const GAME_TOP_MIDDLE = {
   height: 33,
-  widthLeft: GAME_TOP_UPPER.widthLeft
+  widthLeft: GAME_TOP_UPPER.widthLeft,
+  widthRight: GAME_TOP_UPPER.widthRight
 }
 
 /**

@@ -36,15 +36,15 @@
             <ExpandAltOutlined />
           </template>
           <!-- 如果用户当前设置的方块实际显示边长不在预设中，则单独显示 -->
-          <template v-if="!availableSquareSize.includes(squireSize)">
+          <template v-if="!availableSquareSize.includes(squareSize)">
             <a-menu-item>
               <CheckOutlined />
-              {{ squireSize }}
+              {{ squareSize }}
             </a-menu-item>
             <a-menu-divider />
           </template>
           <a-menu-item v-for="(item, index) in availableSquareSize" :key="index" @click="changeSquareSize(item)">
-            <CheckOutlined v-if="item === squireSize" />
+            <CheckOutlined v-if="item === squareSize" />
             <a-icon-empty v-else />
             {{ item }}
           </a-menu-item>
@@ -62,7 +62,7 @@
 import { computed, defineComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { store } from '@/store'
-import { GAME_TOP_UPPER, SQUARE_SIZE, SQUARE_SIZE_ARRAY } from '@/game/constants'
+import { GAME_TOP_UPPER, SQUARE_SIZE_ARRAY } from '@/game/constants'
 import { CheckOutlined, ExpandAltOutlined, GlobalOutlined } from '@ant-design/icons-vue'
 import AIconEmpty from '@/components/common/AIconEmpty.vue'
 import SubMenuVideoMap from '@/components/menu/SubMenuVideoMap.vue'
@@ -73,20 +73,20 @@ export default defineComponent({
   components: { MenuExit, SubMenuGame, SubMenuVideoMap, AIconEmpty, CheckOutlined, ExpandAltOutlined, GlobalOutlined },
   setup () {
     // 菜单宽度
-    const width = computed(() => GAME_TOP_UPPER.widthLeft + GAME_TOP_UPPER.widthRight + store.getters.getDisplayWidth * SQUARE_SIZE)
+    const width = computed(() => GAME_TOP_UPPER.widthLeft + GAME_TOP_UPPER.widthRight + store.getters.getDisplayWidth * store.state.squareSize)
 
     const { locale, availableLocales } = useI18n()
     // 切换语言
     const changeLocales = (item: string) => store.commit('setLocale', item)
 
     // 用户设置的方块实际显示边长
-    const squireSize = computed(() => store.state.squireSize)
+    const squareSize = computed(() => store.state.squareSize)
     // 所有可选的方块实际显示边长
     const availableSquareSize = SQUARE_SIZE_ARRAY
     // 设置方块实际显示边长
-    const changeSquareSize = (squireSize: number) => store.commit('setSquareSize', squireSize)
+    const changeSquareSize = (squareSize: number) => store.commit('setSquareSize', squareSize)
 
-    return { width, locale, availableLocales, changeLocales, squireSize, availableSquareSize, changeSquareSize }
+    return { width, locale, availableLocales, changeLocales, squareSize, availableSquareSize, changeSquareSize }
   }
 })
 </script>

@@ -1,9 +1,10 @@
 <template>
   <g :transform="`translate(${translateX} ${translateY})`">
     <!-- 背景颜色，用于修正部分缩放比例下有白边的问题，7.89 是为了填充游戏区域顶部和左侧与边框之前的白边，也是为了尽量不影响正常的图片显示，此元素不能放到方块容器外面，否则无法生效 -->
-    <path :d="`M -7.89 -7.89 h ${gameWidth * 160 + 7.89} v 15.78 h ${gameWidth * -160 + 7.89} v ${gameHeight * 160 - 7.89} h -15.78 Z`" fill="gray" />
+    <path :d="`M -7.89 -7.89 h ${gameWidth * 160 + 7.89} v 15.78 h ${gameWidth * -160 + 7.89} v ${gameHeight * 160 - 7.89} h -15.78 Z`" :transform="`scale(${squareScale})`" fill="gray" />
     <template v-for="(item, height) in gameHeight" :key="item">
       <skin-symbol
+        :scale="squareScale"
         v-for="(item, width) in gameWidth"
         :key="item"
         :ref="el => { if (el) cells[width + height * gameWidth] = el.$el }"
@@ -16,7 +17,7 @@
       />
     </template>
     <!-- 如果存在没有方块的区域，则使用背景色进行填充，隐藏方块右侧多余的部分 -->
-    <path v-if="emptyWidth > 0" :d="`M ${gameWidth * 160} -7.89 h ${emptyWidth * 160} v ${gameHeight * 160 + 7.89} h ${emptyWidth * -160} Z`" fill="silver" />
+    <path v-if="emptyWidth > 0" :d="`M ${gameWidth * 160} -7.89 h ${emptyWidth * 160} v ${gameHeight * 160 + 7.89} h ${emptyWidth * -160} Z`" :transform="`scale(${squareScale})`" fill="silver" />
   </g>
 </template>
 
@@ -39,6 +40,7 @@ export default defineComponent({
     // 游戏宽度
     const gameWidth = computed(() => store.state.width)
     // 没有方块的游戏宽度
+    // TODO 改用限制最小宽度
     const emptyWidth = computed(() => store.getters.getDisplayWidth - gameWidth.value)
     // 游戏高度
     const gameHeight = computed(() => store.state.height)
@@ -52,12 +54,14 @@ export default defineComponent({
     }
     // 根据横坐标获取 X 轴坐标偏移量
     const getTranslateX = (width: number): number => {
-      return width * SQUARE_SIZE * SVG_SCALE
+      return width * store.state.squareSize * SVG_SCALE
     }
     // 根据纵坐标获取 Y 轴坐标偏移量
     const getTranslateY = (height: number): number => {
-      return height * SQUARE_SIZE * SVG_SCALE
+      return height * store.state.squareSize * SVG_SCALE
     }
+    // 方块缩放比例
+    const squareScale = computed(() => store.getters.getSquareScale)
     // 当前 X 坐标
     const curX = ref(0)
     // 当前 Y 坐标
@@ -69,6 +73,7 @@ export default defineComponent({
       store.commit('pushUserEvent', { mouse: 'mv', x: curX.value, y: curY.value })
     }, 4)
     // 添加鼠标事件
+    // TODO 计算缩放比例改变后的点击位置坐标
     const pushEvent = (e: MouseEvent) => {
       // 阻止默认的点击事件执行，如：中键移动
       e.preventDefault()
@@ -141,7 +146,7 @@ export default defineComponent({
     // 切换问号标记模式时添加对应的游戏事件，坐标使用前一个事件的坐标
     watch(computed(() => store.state.marks), () => store.commit('pushUserEvent', { mouse: 'mt', x: curX.value, y: curY.value }))
 
-    return { translateX, translateY, gameWidth, emptyWidth, gameHeight, getCellImg, getTranslateX, getTranslateY, cells, cellMouseHandler }
+    return { translateX, translateY, gameWidth, emptyWidth, gameHeight, getCellImg, getTranslateX, getTranslateY, squareScale, cells, cellMouseHandler }
   }
 })
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <g v-if="display.isVideoMap" :transform="`translate(${translateX} ${translateY})`" class="video-map">
+  <g v-if="display.isVideoMap" :transform="`translate(${translateX} ${translateY}) scale(${scale})`" class="video-map">
     <!-- 遮罩 -->
     <path :d="`M0 0 H ${maskWidth} V ${maskHeight} H 0 L 0 0`" class="mouse-mask" />
     <template v-if="display.isShowOpening">
@@ -22,7 +22,7 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, reactive, ref, Ref, watch } from 'vue'
 import { store } from '@/store'
-import { SQUARE_SIZE, GAME_MIDDLE, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SVG_SCALE } from '@/game/constants'
+import { GAME_MIDDLE, GAME_TOP_LOWER, GAME_TOP_MIDDLE, GAME_TOP_UPPER, SQUARE_SIZE, SVG_SCALE } from '@/game/constants'
 import { Cell } from '@/game/BaseParser'
 
 // SVG 元素，用于创建 SVGPoint 对象，因为 SVGPoint 没有单独的构造方法
@@ -117,6 +117,8 @@ export default defineComponent({
     const translateX = (GAME_MIDDLE.widthLeft) * SVG_SCALE
     // 轨迹图整体的 Y 轴坐标偏移量
     const translateY = (GAME_TOP_UPPER.height + GAME_TOP_MIDDLE.height + GAME_TOP_LOWER.height) * SVG_SCALE
+    // 缩放比例
+    const scale = computed(() => store.getters.getSquareScale)
     // 遮罩宽度
     const maskWidth = computed(() => store.getters.getDisplayWidth * SQUARE_SIZE * SVG_SCALE)
     // 遮罩高度
@@ -249,7 +251,7 @@ export default defineComponent({
       })
     })
 
-    return { translateX, translateY, display, maskWidth, maskHeight, mousePathElement, mouseLeftElement, mouseRightElement, mouseDoubleElement, openingsNumber, openingsPath }
+    return { translateX, translateY, scale, display, maskWidth, maskHeight, mousePathElement, mouseLeftElement, mouseRightElement, mouseDoubleElement, openingsNumber, openingsPath }
   }
 })
 </script>

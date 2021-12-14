@@ -39,9 +39,9 @@ export const mutations = {
     state.isShowOpening = isShowOpening
   },
   /** 设置方块实际显示边长 */
-  setSquareSize: (state: State, squireSize: number): void => {
-    if (SQUARE_SIZE_ARRAY.includes(squireSize)) {
-      state.squireSize = squireSize
+  setSquareSize: (state: State, squareSize: number): void => {
+    if (SQUARE_SIZE_ARRAY.includes(squareSize)) {
+      state.squareSize = squareSize
     }
   },
   /** 设置当前语言 */

@@ -1,5 +1,5 @@
 import { State } from '@/store/state'
-import { MIN_WIDTH } from '@/game/constants'
+import { MIN_WIDTH, SQUARE_SIZE } from '@/game/constants'
 
 export const getters = {
   /** 录像是否处于暂停状态 */
@@ -21,6 +21,10 @@ export const getters = {
   /** 获取页面实际显示的宽度 */
   getDisplayWidth: (state: State): number => {
     return state.width > MIN_WIDTH ? state.width : MIN_WIDTH
+  },
+  /** 获取方块缩放比例 */
+  getSquareScale: (state: State): number => {
+    return state.squareSize / SQUARE_SIZE
   }
 }
 
