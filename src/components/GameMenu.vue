@@ -30,7 +30,6 @@
         <sub-menu-video-map />
 
         <!-- 方块实际显示边长 -->
-        <a-menu-divider />
         <a-sub-menu :title="$t('menu.options.squareSize')">
           <template #icon>
             <ExpandAltOutlined />

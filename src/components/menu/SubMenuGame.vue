@@ -5,6 +5,19 @@
       <a-icon-empty v-else />
       <span>{{ $t('menu.game.marks') }}</span>
     </a-menu-item>
+    <template v-if="showShareLink">
+      <a-menu-divider />
+      <a-menu-item @click="copyShareLink">
+        <CopyOutlined />
+        <span>{{ $t('menu.game.share.copy') }}</span>
+      </a-menu-item>
+      <a-menu-item>
+        <ShareAltOutlined />
+        <span>
+          <a :href="shareLink" target="_blank">{{ $t('menu.game.share.open') }}</a>
+        </span>
+      </a-menu-item>
+    </template>
     <a-menu-divider />
     <a-menu-item :title="$t('common.fileSelect')" @click="fileSelect">
       <FileSearchOutlined />
@@ -17,19 +30,6 @@
       <a-icon-empty v-else />
       <span>{{ $t('menu.game.fileDrag') }}</span>
     </a-menu-item>
-    <a-menu-divider v-if="showShareLink || showURI" />
-    <template v-if="showShareLink">
-      <a-menu-item @click="copyShareLink">
-        <CopyOutlined />
-        <span>{{ $t('menu.game.share.copy') }}</span>
-      </a-menu-item>
-      <a-menu-item>
-        <ShareAltOutlined />
-        <span>
-          <a :href="shareLink" target="_blank">{{ $t('menu.game.share.open') }}</a>
-        </span>
-      </a-menu-item>
-    </template>
     <a-menu-item v-if="showURI" :title="uri">
       <DownloadOutlined />
       <span>
