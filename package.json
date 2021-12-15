@@ -1,5 +1,5 @@
 {
-  "name": "web-minesweeper-player",
+  "name": "flop-player",
   "version": "1.0.0",
   "private": true,
   "description": "Web minesweeper player",
@@ -48,13 +48,13 @@
     "yaml-loader": "^0.6.0"
   },
   "bugs": {
-    "url": "https://github.com/hgraceb/web-minesweeper-player/issues"
+    "url": "https://github.com/hgraceb/flop-player/issues"
   },
-  "homepage": "https://github.com/hgraceb/web-minesweeper-player",
+  "homepage": "https://github.com/hgraceb/flop-player",
   "keywords": [],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hgraceb/web-minesweeper-player.git"
+    "url": "https://github.com/hgraceb/flop-player.git"
   }
 }
