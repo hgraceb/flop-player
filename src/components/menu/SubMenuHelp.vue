@@ -31,7 +31,7 @@
         </span>
       </a-menu-item>
       <a-menu-item :title="urlDomain">
-        <IdcardOutlined />
+        <ProfileOutlined />
         <span>
           <a :href="urlDomain" download target="_blank">{{ $t('menu.help.author.domain') }}</a>
         </span>
@@ -42,13 +42,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { BugOutlined, GithubOutlined, IdcardOutlined, PartitionOutlined, ReadOutlined, UserOutlined } from '@ant-design/icons-vue'
+import { BugOutlined, GithubOutlined, PartitionOutlined, ProfileOutlined, ReadOutlined, UserOutlined } from '@ant-design/icons-vue'
 import copy from 'copy-text-to-clipboard'
 import { message } from 'ant-design-vue'
 import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
-  components: { GithubOutlined, UserOutlined, PartitionOutlined, IdcardOutlined, ReadOutlined, BugOutlined },
+  components: { GithubOutlined, UserOutlined, PartitionOutlined, ProfileOutlined, ReadOutlined, BugOutlined },
   setup () {
     const { t } = useI18n()
     // 源代码链接
