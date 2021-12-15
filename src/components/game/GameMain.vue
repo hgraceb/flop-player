@@ -1,7 +1,7 @@
 <template>
   <g :transform="`translate(${translateX} ${translateY})`">
-    <!-- 背景颜色，用于修正部分缩放比例下有白边的问题，7.89 是为了填充游戏区域顶部和左侧与边框之前的白边，也是为了尽量不影响正常的图片显示，此元素不能放到方块容器外面，否则无法生效 -->
-    <path :d="`M -7.89 -7.89 h ${gameWidth * 160 + 7.89} v 15.78 h ${gameWidth * -160 + 7.89} v ${gameHeight * 160 - 7.89} h -15.78 Z`" :transform="`scale(${squareScale})`" fill="gray" />
+    <!-- 用于修正部分缩放比例下白边问题的边框，7.89 是为了填充游戏区域顶部和左侧与边框之前的白边，也是为了尽量不影响正常的图片显示，此元素不能放到方块容器外面，否则无法生效 -->
+    <path :d="`M -7.89 -7.89 h ${gameWidth * 160 + 7.89} v 15.78 h ${gameWidth * -160 + 7.89} v ${gameHeight * 160 - 7.89} h -15.78 Z`" :fill="borderFill" :transform="`scale(${squareScale})`" />
     <template v-for="(item, height) in gameHeight" :key="item">
       <skin-symbol
         v-for="(item, width) in gameWidth"
@@ -37,6 +37,10 @@ export default defineComponent({
     const translateX = (GAME_MIDDLE.widthLeft) * SVG_SCALE
     // 游戏棋盘整体的 Y 轴坐标偏移量
     const translateY = (GAME_TOP_UPPER.height + GAME_TOP_MIDDLE.height + GAME_TOP_LOWER.height) * SVG_SCALE
+    // 修复白边问题边框的颜色，当不显示录像地图的遮罩时，设置为游戏区域顶部和左侧边框一样的 gray 颜色就行
+    // 当显示录像地图的遮罩时，经过测试，当遮罩的颜色为 rgba(0, 0, 0, .5) 时，将边框的颜色设置为 rgb(222, 222, 222) 过渡效果最好，不会有明显的灰边
+    // 测试环境为：64 位 Windows 10 系统缩放比例 200%、Chrome 96.0.4664.110 缩放比例 175%
+    const borderFill = computed(() => store.state.isVideoMap ? 'rgb(222, 222, 222)' : 'gray')
     // 游戏宽度
     const gameWidth = computed(() => store.state.width)
     // 方块缩放比例
@@ -147,7 +151,7 @@ export default defineComponent({
     // 切换问号标记模式时添加对应的游戏事件，坐标使用前一个事件的坐标
     watch(computed(() => store.state.marks), () => store.commit('pushUserEvent', { mouse: 'mt', x: curX.value, y: curY.value }))
 
-    return { translateX, translateY, gameWidth, emptyWidth, gameHeight, getCellImg, getTranslateX, getTranslateY, squareScale, cells, cellMouseHandler }
+    return { translateX, translateY, borderFill, gameWidth, emptyWidth, gameHeight, getCellImg, getTranslateX, getTranslateY, squareScale, cells, cellMouseHandler }
   }
 })
 </script>
