@@ -17,7 +17,7 @@
       />
     </template>
     <!-- 如果存在没有方块的区域，则使用背景色进行填充，隐藏方块右侧多余的部分 -->
-    <path v-if="emptyWidth > 0" :d="`M ${gameWidth * 160} -7.89 h ${emptyWidth * 10} v ${gameHeight * 160 + 7.89} h ${emptyWidth * -10} Z`" :transform="`scale(${squareScale})`" fill="silver" />
+    <path v-if="emptyWidth > 0" :d="`M ${gameWidth * 160} 0 h ${emptyWidth * 10} v ${gameHeight * 160} h ${emptyWidth * -10} Z`" :transform="`scale(${squareScale})`" fill="silver" />
   </g>
 </template>
 
