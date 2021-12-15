@@ -24,6 +24,13 @@ menu:
       opening: 開空
   help:
     title: 幫助
+    source: 開源代碼
+    bugs: 問題反饋
+    version: 版本信息
+    author:
+      title: 作者
+      blog: 我的博客
+      domain: 我的地盤
   exit:
     title: 退出
 
@@ -41,9 +48,11 @@ controlBar:
 
 common:
   loading: 加載中...
+  copied: '複製成功: {0}'
   fileSelect: '請選擇一個 avf/mvf/rmv/rawvf 文件'
 
 error:
+  copy: '複製失敗: {0}'
   videoParse: '錄像解析出錯：'
   uriRequest: '數據請求出錯：{0}'
   fileNotPresent: 文件不存在

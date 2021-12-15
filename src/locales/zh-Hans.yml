@@ -9,6 +9,7 @@ menu:
     share:
       copy: 复制分享链接
       open: 打开分享链接
+      # 分享链接一般比较长，所以单独设置复制结果的提醒文本
       copied: 分享链接已复制到剪贴板
       error: 分享链接复制失败
     download: 下载录像文件
@@ -28,6 +29,13 @@ menu:
       opening: 开空
   help:
     title: 帮助
+    source: 开源代码
+    bugs: 问题反馈
+    version: 版本信息
+    author:
+      title: 作者
+      blog: 我的博客
+      domain: 我的地盘
   exit:
     title: 退出
 
@@ -48,11 +56,13 @@ controlBar:
 # 通用
 common:
   loading: 加载中...
+  copied: '复制成功: {0}'
   # 一般录像文件的大小都不会超过 5MB，可以先不用在选择时提示，我就不信你还真有这么大个录像 (っ °Д °;)っ
   fileSelect: '请选择一个 avf/mvf/rmv/rawvf 文件'
 
 # 错误信息
 error:
+  copy: '复制失败: {0}'
   videoParse: '录像解析出错：'
   uriRequest: '数据请求出错：{0}'
   fileNotPresent: 文件不存在

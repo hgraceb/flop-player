@@ -3,9 +3,9 @@
     <!-- 设置 triggerSubMenuAction="click" 可以将菜单展开方式切换为点击后展开（源代码中查看的属性，不同版本可能会有差异） -->
     <!-- 将当前选中的菜单项 key 数组设置为 null，实现不可变的效果；将 width 设置为 0 是为了菜单可以正常折叠 -->
     <a-menu :selectedKeys="null" class="game-menu" mode="horizontal" style="flex-grow: 1;width: 0">
-      <!-- 游戏 -->
+      <!-- 游戏菜单 -->
       <sub-menu-game />
-
+      <!-- 选项菜单 -->
       <a-sub-menu :title="$t('menu.options.title')">
         <a-sub-menu :title="$t('menu.options.toggleLanguages')">
           <template #icon>
@@ -49,8 +49,8 @@
           </a-menu-item>
         </a-sub-menu>
       </a-sub-menu>
-      <a-sub-menu :title="$t('menu.help.title')">
-      </a-sub-menu>
+      <!-- 帮助菜单 -->
+      <sub-menu-help />
     </a-menu>
     <!-- 退出菜单 -->
     <menu-exit class="game-menu" />
@@ -67,9 +67,10 @@ import AIconEmpty from '@/components/common/AIconEmpty.vue'
 import SubMenuVideoMap from '@/components/menu/SubMenuVideoMap.vue'
 import SubMenuGame from '@/components/menu/SubMenuGame.vue'
 import MenuExit from '@/components/menu/MenuExit.vue'
+import SubMenuHelp from '@/components/menu/SubMenuHelp.vue'
 
 export default defineComponent({
-  components: { MenuExit, SubMenuGame, SubMenuVideoMap, AIconEmpty, CheckOutlined, ExpandAltOutlined, GlobalOutlined },
+  components: { SubMenuHelp, MenuExit, SubMenuGame, SubMenuVideoMap, AIconEmpty, CheckOutlined, ExpandAltOutlined, GlobalOutlined },
   setup () {
     // 菜单宽度
     const width = computed(() => GAME_TOP_UPPER.widthLeft + GAME_TOP_UPPER.widthRight + store.getters.getMainWidth)

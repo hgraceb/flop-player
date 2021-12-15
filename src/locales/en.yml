@@ -24,6 +24,13 @@ menu:
       opening: Opening
   help:
     title: Help
+    source: Source code
+    bugs: Bug feedback
+    version: Version name
+    author:
+      title: Author
+      blog: My blog
+      domain: My domain
   exit:
     title: Exit
 
@@ -41,9 +48,11 @@ controlBar:
 
 common:
   loading: Loading...
+  copied: 'Copy success: {0}'
   fileSelect: 'Please select a avf/mvf/rmv/rawvf file'
 
 error:
+  copy: 'Copy failure: {0}'
   videoParse: 'Video parsing error: '
   uriRequest: 'Data request error：{0}'
   fileNotPresent: File does not exist
