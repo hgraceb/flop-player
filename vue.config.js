@@ -5,6 +5,14 @@ module.exports = {
   publicPath: './',
   // https://cli.vuejs.org/config/#productionsourcemap
   productionSourceMap: false,
+  // https://cli.vuejs.org/config/#chainwebpack
+  chainWebpack: config => {
+    config.plugin('copy').tap(([options]) => {
+      // 复制 public 文件夹时忽略测试文件，在 configureWebpack 中配置无法生效，原因未知
+      options[0].ignore.push('favicon.ico', 'iframe.html', 'videos/**/*')
+      return [options]
+    })
+  },
   // https://cli.vuejs.org/config/#configurewebpack
   configureWebpack: {
     module: {
