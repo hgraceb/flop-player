@@ -9,7 +9,7 @@ module.exports = {
   chainWebpack: config => {
     config.plugin('copy').tap(([options]) => {
       // 复制 public 文件夹时忽略测试文件，在 configureWebpack 中配置无法生效
-      options[0].ignore.push('favicon.ico', 'iframe.html', 'index.css', 'videos/**/*')
+      options[0].ignore.push('favicon.ico', 'demo.html', 'index.css', 'videos/**/*')
       return [options]
     })
   },
