@@ -4,14 +4,14 @@
     <a-menu-item :title="urlSource">
       <GithubOutlined />
       <span>
-        <a :href="urlSource" download target="_blank">{{ $t('menu.help.source') }}</a>
+        <a :href="urlSource" target="_blank">{{ $t('menu.help.source') }}</a>
       </span>
     </a-menu-item>
     <!-- 问题反馈 -->
     <a-menu-item :title="urlBugs">
       <BugOutlined />
       <span>
-        <a :href="urlBugs" download target="_blank">{{ $t('menu.help.bugs') }}</a>
+        <a :href="urlBugs" target="_blank">{{ $t('menu.help.bugs') }}</a>
       </span>
     </a-menu-item>
     <!-- 版本信息 -->
@@ -27,13 +27,13 @@
       <a-menu-item :title="urlBlog">
         <ReadOutlined />
         <span>
-          <a :href="urlBlog" download target="_blank">{{ $t('menu.help.author.blog') }}</a>
+          <a :href="urlBlog" target="_blank">{{ $t('menu.help.author.blog') }}</a>
         </span>
       </a-menu-item>
       <a-menu-item :title="urlDomain">
         <ProfileOutlined />
         <span>
-          <a :href="urlDomain" download target="_blank">{{ $t('menu.help.author.domain') }}</a>
+          <a :href="urlDomain" target="_blank">{{ $t('menu.help.author.domain') }}</a>
         </span>
       </a-menu-item>
     </a-sub-menu>
