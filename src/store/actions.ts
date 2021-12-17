@@ -41,7 +41,7 @@ function getExtension (name: string) {
  *
  * @param fileList 文件列表
  * @param callback 错误回调
- * @return 文件数量是否合法
+ * @return {boolean} 文件数量是否合法
  */
 function checkFileNumber (fileList: FileList | undefined | null, callback: (info: string) => void): boolean {
   if (!fileList) {
@@ -67,7 +67,7 @@ function checkFileNumber (fileList: FileList | undefined | null, callback: (info
  *
  * @param name 文件名称
  * @param callback 错误回调
- * @return 文件类型是否合法
+ * @return {boolean} 文件类型是否合法
  */
 function checkFileType (name: string, callback: (info: string) => void): boolean {
   // 获取文件扩展名
@@ -86,7 +86,7 @@ function checkFileType (name: string, callback: (info: string) => void): boolean
  * @param size 文件字节大小
  * @param name 文件名称，用于错误提示文本
  * @param callback 错误回调
- * @return 文件大小是否合法
+ * @return {boolean} 文件大小是否合法
  */
 function checkFileSize (size: number, name: string, callback: (info: string) => void): boolean {
   if (size <= 0) {
@@ -100,6 +100,21 @@ function checkFileSize (size: number, name: string, callback: (info: string) => 
     return false
   }
   return true
+}
+
+/**
+ * 检查状态码
+ *
+ * @param status 状态码
+ * @param callback 错误回调
+ * @return {boolean} 状态码是否合法
+ */
+function checkStatus (status: number, callback: (info: string) => void): boolean {
+  // 请求成功
+  if (status === 200) return true
+  // 无效的状态码，如：404
+  callback(t('error.invalidStatus', [status]))
+  return false
 }
 
 /**
@@ -159,7 +174,7 @@ export const actions = {
     // 请求录像数据
     const request = new XMLHttpRequest()
     request.onload = () => {
-      if (!checkFileSize(request.response.byteLength, uri, onerror)) return
+      if (!checkStatus(request.status, onerror) || !checkFileSize(request.response.byteLength, uri, onerror)) return
       // 解析录像数据
       parseVideo(getExtension(uri) as FileType, request.response, onload, onerror)
     }
