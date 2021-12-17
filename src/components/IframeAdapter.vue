@@ -10,10 +10,17 @@ import { BaseParser } from '@/game/BaseParser'
 
 /** 分享链接配置 */
 interface Share {
+  // 录像地址
   uri: string,
+  // 页面标题
   title?: string
+  // 图标地址
+  favicon?: string,
+  // 路径名称
   pathname?: string
+  // 是否匿名显示
   anonymous?: boolean,
+  // 页面背景样式
   background?: string,
 }
 
@@ -47,6 +54,7 @@ export default defineComponent({
           // 搜索参数
           let params = `?uri=${encodeURIComponent(share.uri)}`
           if (share.title) params = `${params}&title=${encodeURIComponent(share.title)}`
+          if (share.favicon) params = `${params}&favicon=${encodeURIComponent(share.favicon)}`
           if (share.anonymous) params = `${params}&anonymous=${encodeURIComponent(share.anonymous)}`
           if (share.background) params = `${params}&background=${encodeURIComponent(share.background)}`
           const shareLink = `${path}${params}`

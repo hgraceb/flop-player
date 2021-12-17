@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import ScreenCenter from '@/components/common/ScreenCenter.vue'
-import { useTitle, useUrlSearchParams } from '@vueuse/core'
+import { useFavicon, useTitle, useUrlSearchParams } from '@vueuse/core'
 import { store } from '@/store'
 
 export default defineComponent({
@@ -17,6 +17,8 @@ export default defineComponent({
     console.table(params)
     // 页面标题
     useTitle().value = params.title ? `${params.title}` : 'Flop Player'
+    // 页面图标
+    useFavicon().value = params.favicon ? `${params.favicon}` : useFavicon().value
     // 遮罩背景样式
     const background = params.background ? params.background : '#eee'
     // 如果有录像参数
