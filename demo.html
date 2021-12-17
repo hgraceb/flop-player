@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width,initial-scale=1.0" name="viewport">
+    <link href="public/favicon.ico" rel="icon">
+    <link href="dist/index.min.css" rel="stylesheet" type="text/css">
+    <title>Flop Player Demo</title>
+</head>
+<body style="background-color: #ccc;height: 150vh;width: 150vw;margin: 0">
+
+<iframe class="flop-player-iframe flop-player-display-none" src="dist/index.html"></iframe>
+
+<div>
+    <input id="file" type="file">
+    3BV<input id="3bv">
+    RTime<input id="time">
+    Error<input id="error">
+    <br /><br />
+    <button onclick="playVideo('../public/videos/avf/arbiter_beg.avf')" type="button">arbiter_beg.avf</button>
+    <button onclick="playVideo('../public/videos/avf/arbiter_int.avf')" type="button">arbiter_int.avf</button>
+    <button onclick="playVideo('../public/videos/avf/arbiter_exp.avf')" type="button">arbiter_exp.avf</button>
+    <br /><br />
+    <button onclick="playVideo('../public/videos/avf/Cus_8x30_30mines.avf')" type="button">Cus_8x30_30mines.avf</button>
+    <button onclick="playVideo('../public/videos/avf/Cus_20x20_20mines.avf')" type="button">Cus_20x20_20mines.avf</button>
+    <button onclick="playVideo('../public/videos/avf/Cus_30x8_30mines.avf')" type="button">Cus_30x8_30mines.avf</button>
+    <button onclick="playVideo('../public/videos/avf/wasted_clicks_test.avf')" type="button">wasted_clicks_test.avf</button>
+    <br /><br /><br />
+    <button onclick="playVideo('https://example.com/error_uri_blocked.rawvf')" type="button">error_uri_blocked.rawvf</button>
+    <br /><br />
+    <button onclick="playVideo('../public/videos/error/error_file_not_found.rawvf')" type="button">error_file_not_found.rawvf</button>
+    <button onclick="playVideo('../public/videos/error/error_file_unsupported_type.txt')" type="button">error_file_unsupported_type.txt</button>
+    <br /><br />
+    <button onclick="playVideo('../public/videos/error/error_parser_unexpected_end.rawvf')" type="button">error_parser_unexpected_end.rawvf</button>
+    <button onclick="playVideo('../public/videos/error/error_parser_unexpected_flow.rawvf')" type="button">error_parser_unexpected_flow.rawvf</button>
+    <br /><br />
+    <button onclick="playVideo('../public/videos/error/error_video_content_empty.rawvf')" type="button">error_video_content_empty.rawvf</button>
+    <button onclick="playVideo('../public/videos/error/error_video_invalid_event.rawvf')" type="button">error_video_invalid_event.rawvf</button>
+    <br /><br />
+    <button onclick="playVideo('../public/videos/error/error_video_no_board_5120KB.rawvf')" type="button">error_video_no_board_5120KB.rawvf</button>
+    <button onclick="playVideo('../public/videos/error/error_video_size_exceeds_5121KB.rawvf')" type="button">error_video_size_exceeds_5121KB.rawvf</button>
+    <button onclick="playVideo('../public/videos/error/error_video_unsupported_marathon.rawvf')" type="button">error_video_unsupported_marathon.rawvf</button>
+    <br /><br /><br />
+    <button onclick="playVideo('../public/videos/mvf/0.96_beta_or_earlier.mvf')" type="button">0.96_beta_or_earlier.mvf</button>
+    <button onclick="playVideo('../public/videos/mvf/0.97_beta.mvf')" type="button">0.97_beta.mvf</button>
+    <br /><br />
+    <button onclick="playVideo('../public/videos/mvf/2006_release_1.mvf')" type="button">2006_release_1.mvf</button>
+    <button onclick="playVideo('../public/videos/mvf/2006_release_2.mvf')" type="button">2006_release_2.mvf</button>
+    <button onclick="playVideo('../public/videos/mvf/2007_release_1.mvf')" type="button">2007_release_1.mvf</button>
+    <button onclick="playVideo('../public/videos/mvf/2007_release_2.mvf')" type="button">2007_release_2.mvf</button>
+    <br /><br /><br />
+    <button onclick="playVideo('../public/videos/rawvf/Cus_1x1_0mines.rawvf')" type="button">Cus_1x1_0mines.rawvf</button>
+    <button onclick="playVideo('../public/videos/rawvf/custom.rawvf')" type="button">custom.rawvf</button>
+    <button onclick="playVideo('../public/videos/rawvf/nested-opening.rawvf')" type="button">nested-opening.rawvf</button>
+    <br /><br /><br />
+    <button onclick="playVideo('../public/videos/rmv/beg.rmv')" type="button">beg.rmv</button>
+    <button onclick="playVideo('../public/videos/rmv/int.rmv')" type="button">int.rmv</button>
+    <button onclick="playVideo('../public/videos/rmv/exp.rmv')" type="button">exp.rmv</button>
+    <br /><br /><br />
+</div>
+
+<script>
+    /**
+     * 判断是否 IE 浏览器
+     *
+     * @return {boolean} true: 是 IE 浏览器
+     */
+    function isIE() {
+        return !!window.ActiveXObject || 'ActiveXObject' in window
+    }
+
+    /**
+     * 录像解析成功的回调
+     *
+     * @param video 录像信息
+     * @param {function(): number} video.getTime 获取游戏真实时间（毫秒）
+     * @param {function(): number} video.getBBBV 获取游戏最少左键点击数
+     */
+    function onSuccess(video) {
+        const element3bv = document.getElementById('3bv')
+        const elementTime = document.getElementById('time')
+        const elementError = document.getElementById('error')
+        element3bv.value = element3bv.title = video.getBBBV().toString()
+        elementTime.value = elementTime.title = (video.getTime() / 1000).toString()
+        elementError.value = elementError.title = ''
+    }
+
+    /**
+     * 录像解析失败的回调
+     *
+     * @param {string} info 错误信息，文本语言默认为用户选择的语言
+     */
+    function onError(info) {
+        const element3bv = document.getElementById('3bv')
+        const elementTime = document.getElementById('time')
+        const elementError = document.getElementById('error')
+        element3bv.value = element3bv.title = ''
+        elementTime.value = elementTime.title = ''
+        elementError.value = elementError.title = info
+    }
+
+    /**
+     * 解析录像文件
+     *
+     * @param {HTMLInputElement} inputElement 文件选择元素
+     * @param {function} onSuccess 录像解析成功的回调
+     * @param {function|undefined} onError 录像解析失败的回调
+     */
+    function parseFiles(inputElement, onSuccess, onError) {
+        if (isIE()) {
+            onError('暂不支持 IE 内核，请更换浏览器或内核！')
+            return
+        }
+        window.flop.parseFiles(inputElement.files, onSuccess, onError)
+    }
+
+    /**
+     * 选择文件
+     */
+    function fileChange() {
+        const elementFile = document.getElementById('file')
+        parseFiles(elementFile, onSuccess, onError)
+    }
+
+    /**
+     * 播放录像
+     *
+     * @param {string} uri 录像地址
+     * @param {object|undefined} options 可选参数
+     * @param {object|undefined} options.share 分享链接配置，用户复制后还可以手动修改，请根据实际情况决定是否使用
+     * @param {string} options.share.uri 分享链接页面录像地址
+     * @param {string|undefined} options.share.title 分享链接页面标题
+     * @param {string|undefined} options.share.pathname 分享链接页面路径名称，开头有一个“/"
+     * @param {boolean|undefined} options.share.anonymous 分享链接页面是否匿名显示玩家名称
+     * @param {string|undefined} options.share.background 分享链接页面背景样式，如：rgba(0, 0, 0, .5)
+     * @param {boolean|undefined} options.anonymous 是否匿名显示玩家名称
+     * @param {string|undefined} options.background 遮罩背景样式，如：rgba(0, 0, 0, .5)
+     * @param {function|undefined} options.listener 退出录像播放页面的回调
+     */
+    function playVideo(uri, options) {
+        if (isIE()) {
+            alert('暂不支持 IE 内核，请更换浏览器或内核！')
+            return
+        }
+        window.flop.playVideo(uri, options || {
+            share: {
+                uri: uri,
+                pathname: '/share',
+                anonymous: true,
+                background: '#eee',
+                title: 'Flop Player Share'
+            },
+            anonymous: false,
+            background: 'rgba(0, 0, 0, .5)',
+            listener: function () {
+                console.log('Flop player exit')
+            }
+        })
+    }
+
+    window.onload = function () {
+        document.getElementById('file').addEventListener('change', fileChange)
+        const uri = '../public/videos/avf/arbiter_exp.avf'
+        playVideo(uri, {
+            share: {
+                uri: uri,
+            },
+            anonymous: true,
+            background: 'rgba(0, 0, 0, .5)'
+        })
+    }
+</script>
+
+</body>
+</html>
