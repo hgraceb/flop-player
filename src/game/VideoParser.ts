@@ -9,6 +9,8 @@ import { round } from 'number-precision'
  * 而且整个工程基本没有在维护，现在就是后悔...非常后悔 (；′⌒`)，不过其中部分代码还是很有参考价值的，只能说明人呐还是不能太懒 (ง •_•)ง
  */
 export class VideoParser extends BaseParser {
+  protected readonly mName = 'VideoParser'
+
   /* 基础录像数据 */
   protected mTime = 0
   protected readonly mWidth: number

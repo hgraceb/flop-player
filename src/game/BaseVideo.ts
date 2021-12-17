@@ -23,6 +23,7 @@ export abstract class BaseVideo {
   private mOffset = 0
   private readonly mData = new Uint8Array()
 
+  protected abstract mName: string
   protected abstract mWidth: number
   protected abstract mHeight: number
   protected abstract mMines: number
@@ -37,7 +38,7 @@ export abstract class BaseVideo {
 
   /** 抛出一个错误 */
   protected error (msg: string): number {
-    throw new Error(`${this.constructor.name}Error - ${msg}`)
+    throw new Error(`${this.mName}Error - ${msg}`)
   }
 
   /**

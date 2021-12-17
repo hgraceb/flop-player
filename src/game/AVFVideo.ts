@@ -44,6 +44,7 @@ interface Event {
 }
 
 export class AVFVideo extends BaseVideo {
+  protected mName = 'AVFVideo'
   protected mWidth: number
   protected mHeight: number
   protected mMines: number

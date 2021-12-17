@@ -4,6 +4,7 @@ import { BaseParser, Cell, GameEvent } from '@/game/BaseParser'
  * 默认录像事件解析器，不包含实际数据
  */
 export class DefaultParser extends BaseParser {
+  protected readonly mName = 'DefaultParser'
   protected readonly mTime = 0
   protected readonly mWidth = 8
   protected readonly mHeight = 8

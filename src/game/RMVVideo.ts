@@ -32,6 +32,7 @@ interface Event {
 }
 
 export class RMVVideo extends BaseVideo {
+  protected mName = 'RMVVideo'
   protected mWidth: number
   protected mHeight: number
   protected mMines: number

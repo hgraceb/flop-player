@@ -1,6 +1,7 @@
 import { BaseVideo, VideoEvent } from '@/game/BaseVideo'
 
 export class CustomVideo extends BaseVideo {
+  protected mName = 'CustomVideo'
   protected mWidth: number
   protected mHeight: number
   protected mMines: number

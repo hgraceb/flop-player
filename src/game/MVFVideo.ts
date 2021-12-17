@@ -34,6 +34,7 @@ interface Event {
 }
 
 export class MVFVideo extends BaseVideo {
+  protected mName = 'MVFVideo'
   protected mWidth: number
   protected mHeight: number
   protected mMines: number

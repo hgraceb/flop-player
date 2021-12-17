@@ -91,6 +91,8 @@ export class Cell {
  * 基础录像事件解析器
  */
 export abstract class BaseParser {
+  // 解析器名称
+  protected abstract mName: string
   // 游戏真实时间（毫秒）
   protected abstract mTime: number
   // 游戏列数
@@ -125,7 +127,7 @@ export abstract class BaseParser {
    * 抛出一个错误
    */
   protected error (msg: string): number {
-    throw new Error(`${this.constructor.name}Error - ${msg}`)
+    throw new Error(`${this.mName}Error - ${msg}`)
   }
 
   /**
