@@ -5,11 +5,11 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width,initial-scale=1.0" name="viewport">
     <link href="public/favicon.ico" rel="icon">
-    <link href="dist/index.min.css" rel="stylesheet" type="text/css">
+    <link href="player/index.min.css" rel="stylesheet" type="text/css">
     <title>Flop Player Demo</title>
 </head>
 <body style="background-color: #ccc;height: 150vh;width: 150vw;margin: 0">
-<iframe class="flop-player-iframe flop-player-display-none" src="dist/index.html"></iframe>
+<iframe class="flop-player-iframe flop-player-display-none" src="player/index.html"></iframe>
 <div>
     <input id="file" type="file">
     3BV<input id="3bv">
@@ -144,7 +144,7 @@
         window.flop.playVideo(uri, options || {
             share: {
                 uri: uri,
-                pathname: '/flop-player/dist',
+                pathname: '/flop-player/player',
                 anonymous: true,
                 background: '#eee',
                 title: 'Flop Player Share'
@@ -163,7 +163,7 @@
         playVideo(uri, {
             share: {
                 uri: uri,
-                pathname: '/flop-player/dist'
+                pathname: '/flop-player/player'
             },
             anonymous: true,
             background: 'rgba(0, 0, 0, .5)'
