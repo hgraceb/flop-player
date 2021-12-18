@@ -21,7 +21,7 @@ export default defineComponent({
     let share: Share = {}
     try {
       // 解析分享参数
-      share = params.share ? JSON.parse(atob(`${params.share}`)) : share
+      share = params.share ? JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(`${params.share}`))))) : share
     } catch (e) {
       console.error(e)
       // 搜索参数解析失败
