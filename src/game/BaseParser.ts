@@ -105,6 +105,12 @@ export abstract class BaseParser {
   protected abstract mMarks: boolean
   // 最少左键点击数
   protected abstract mBBBV: number
+  // 左键点击数
+  protected abstract mLeftClicks: number
+  // 右键点击数
+  protected abstract mRightClicks: number
+  // 双击点击数
+  protected abstract mDoubleClicks: number
   // 岛屿数量
   protected abstract mIslands: number
   // 开空数量
@@ -159,6 +165,21 @@ export abstract class BaseParser {
    * 获取最少左键点击数
    */
   getBBBV = (): number => this.mBBBV
+
+  /**
+   * 获取左键点击数
+   */
+  getLeftClicks = (): number => this.mLeftClicks
+
+  /**
+   * 获取右键点击数
+   */
+  getRightClicks = (): number => this.mRightClicks
+
+  /**
+   * 获取双击点击数
+   */
+  getDoubleClicks = (): number => this.mDoubleClicks
 
   /**
    * 获取岛屿数量

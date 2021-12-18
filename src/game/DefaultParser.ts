@@ -11,6 +11,9 @@ export class DefaultParser extends BaseParser {
   protected readonly mMines = 0
   protected readonly mMarks = false
   protected readonly mBBBV = 0
+  protected readonly mDoubleClicks = 0
+  protected readonly mLeftClicks = 0
+  protected readonly mRightClicks = 0
   protected readonly mIslands = 0
   protected readonly mOpenings = 0
   protected readonly mVideoBoard: number[] = []

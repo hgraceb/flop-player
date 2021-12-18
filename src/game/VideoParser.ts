@@ -22,6 +22,10 @@ export class VideoParser extends BaseParser {
 
   /* 通过二次计算得到的录像数据 */
   protected readonly mBBBV: number
+  protected mLeftClicks = 0
+  // 使用 FreeSweeper Release 10 的计数方法，虽然最终结果与 Minesweeper Arbiter 0.52.3 一样，但是更方便计算并且符合直觉
+  protected mRightClicks = 0
+  protected mDoubleClicks = 0
   protected mIslands = 0
   protected mOpenings = 0
   protected mGameBoard: Cell[] = []
@@ -52,12 +56,6 @@ export class VideoParser extends BaseParser {
   private unsolvedIsls = [0]
   // 已解决的 BBBV 数量
   private solvedBBBV = 0
-  // 左键点击数
-  private leftClicks = 0
-  // 右键点击数，使用 FreeSweeper Release 10 的计数方法，虽然最终结果与 Minesweeper Arbiter 0.52.3 一样，但是更方便计算并且符合直觉
-  private rightClicks = 0
-  // 双击点击数
-  private doubleClicks = 0
   // 多余的左键点击数，没有改变游戏局面则记为一次多余的左键点击次数
   private wastedLeftClicks = 0
   // 多余的右键点击数，没有改变游戏局面则记为一次多余的右键点击次数
@@ -140,9 +138,9 @@ export class VideoParser extends BaseParser {
         solvedOps: this.solvedOps,
         solvedIsls: this.solvedIsls,
         solvedBBBV: this.solvedBBBV,
-        leftClicks: this.leftClicks,
-        rightClicks: this.rightClicks,
-        doubleClicks: this.doubleClicks,
+        leftClicks: this.mLeftClicks,
+        rightClicks: this.mRightClicks,
+        doubleClicks: this.mDoubleClicks,
         wastedLeftClicks: this.wastedLeftClicks,
         wastedRightClicks: this.wastedRightClicks,
         wastedDoubleClicks: this.wastedDoubleClicks
@@ -397,14 +395,14 @@ export class VideoParser extends BaseParser {
   private leftRelease (): void {
     this.pushGameEvent('LeftRelease')
     if (this.rightPressed || this.shiftValid) {
-      this.doubleClicks++
+      this.mDoubleClicks++
       this.releaseAround(this.curEvent.column, this.curEvent.row)
       if (!this.openAround(this.curEvent.column, this.curEvent.row)) this.wastedDoubleClicks++
       // 添加点击次数增加的游戏事件，需要在计算完无效点击事件之后，否则此游戏事件的统计数据会有问题
       this.pushGameEvent('DoubleIncrease')
     } else if (this.leftValid) {
       // 如果左键键点击到左键释放中间没有释放右键的操作
-      this.leftClicks++
+      this.mLeftClicks++
       this.release(this.curEvent.column, this.curEvent.row)
       // 打开方块并判断是否打开成功
       if (!this.open(this.curEvent.column, this.curEvent.row)) this.wastedLeftClicks++
@@ -423,7 +421,7 @@ export class VideoParser extends BaseParser {
       this.pressAround(this.curEvent.column, this.curEvent.row)
     } else if (this.toggleLabel(this.curEvent.column, this.curEvent.row)) {
       // 如果右键单击成功改变游戏局面，则直接记为一次有效的右键点击数
-      this.rightClicks++
+      this.mRightClicks++
       this.pushGameEvent('RightIncrease')
       // 右键点击数已经被计算过，释放右键的时候不再重复计算
       this.rightValid = false
@@ -440,13 +438,13 @@ export class VideoParser extends BaseParser {
   private rightRelease (): void {
     this.pushGameEvent('RightRelease')
     if (this.leftPressed) {
-      this.doubleClicks++
+      this.mDoubleClicks++
       this.releaseAround(this.curEvent.column, this.curEvent.row)
       if (!this.openAround(this.curEvent.column, this.curEvent.row)) this.wastedDoubleClicks++
       this.pushGameEvent('DoubleIncrease')
     } else if (this.rightValid) {
       // 如果右键点击时没有被计算为有效点击数，并且右键点击到右键释放中间没有释放左键的操作，则将左键没有按下时候的右键释放事件记为一次右键点击数
-      this.rightClicks++
+      this.mRightClicks++
       this.wastedRightClicks++
       this.pushGameEvent('RightIncrease')
     }
@@ -468,7 +466,7 @@ export class VideoParser extends BaseParser {
    */
   private middleRelease (): void {
     this.pushGameEvent('MiddleRelease')
-    this.doubleClicks++
+    this.mDoubleClicks++
     this.releaseAround(this.curEvent.column, this.curEvent.row)
     // 中键和左右键互不影响，不用判断左右键的状态，开就完了 (*￣3￣)╭
     if (!this.openAround(this.curEvent.column, this.curEvent.row)) this.wastedDoubleClicks++
