@@ -37,6 +37,14 @@ module.exports = {
       new AntdDayjsWebpackPlugin({
         preset: 'antdv3'
       })
-    ]
+    ],
+    optimization: {
+      // https://webpack.js.org/plugins/split-chunks-plugin/
+      splitChunks: {
+        minSize: 10000,
+        // 拆分 chunks，优化首屏加载时长
+        maxSize: 250000
+      }
+    }
   }
 }
