@@ -4,11 +4,12 @@
 
 ## 预览
 
-- 在线预览地址：https://hgraceb.github.io/web-minesweeper-player-demo/
+- 在线预览地址：https://hgraceb.github.io/flop-player/
 
 ## 特性
 
-1. ...
+1. 精确到毫秒的录像控制条
+2. ...
 
 ## 使用
 
