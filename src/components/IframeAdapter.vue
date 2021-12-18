@@ -7,22 +7,7 @@ import { computed, defineComponent, Ref, ref, watch } from 'vue'
 import { store } from '@/store'
 import ScreenCenter from '@/components/common/ScreenCenter.vue'
 import { BaseParser } from '@/game/BaseParser'
-
-/** 分享链接配置 */
-interface Share {
-  // 录像地址
-  uri: string,
-  // 页面标题
-  title?: string
-  // 图标地址
-  favicon?: string,
-  // 路径名称
-  pathname?: string
-  // 是否匿名显示
-  anonymous?: boolean,
-  // 页面背景样式
-  background?: string,
-}
+import { Share } from '@/game/constants'
 
 export default defineComponent({
   components: { ScreenCenter },
@@ -51,12 +36,10 @@ export default defineComponent({
         if (share?.uri) {
           // 页面路径
           const path = `${parent.window.location.origin}${share.pathname ? share.pathname : '/'}`
-          // 搜索参数
-          let params = `?uri=${encodeURIComponent(share.uri)}`
-          if (share.title) params = `${params}&title=${encodeURIComponent(share.title)}`
-          if (share.favicon) params = `${params}&favicon=${encodeURIComponent(share.favicon)}`
-          if (share.anonymous) params = `${params}&anonymous=${encodeURIComponent(share.anonymous)}`
-          if (share.background) params = `${params}&background=${encodeURIComponent(share.background)}`
+          // 使用 base-64 编码对分享参数进行简单加密，可以一定程度避免参数被篡改，如：anonymous
+          // 也可以避免部分浏览器在处理链接时会将多个 “.” 合并为一个 “.” 的问题，如：Quark 5.3.8.193 (Android)
+          const params = `?share=${encodeURIComponent(btoa(JSON.stringify(share)))}`
+          // 完整分享链接
           const shareLink = `${path}${params}`
           // 打印完整分享链接
           console.log(shareLink)

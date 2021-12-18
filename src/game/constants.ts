@@ -109,3 +109,21 @@ export const SIZE_COUNTERS = {
   width: 41,
   height: 25
 }
+
+/**
+ * 分享链接配置
+ */
+export interface Share {
+  // 录像地址
+  uri?: string,
+  // 页面标题
+  title?: string
+  // 图标地址
+  favicon?: string,
+  // 路径名称
+  pathname?: string
+  // 是否匿名显示
+  anonymous?: boolean,
+  // 页面背景样式
+  background?: string,
+}

@@ -7,26 +7,40 @@ import { defineComponent } from 'vue'
 import ScreenCenter from '@/components/common/ScreenCenter.vue'
 import { useFavicon, useTitle, useUrlSearchParams } from '@vueuse/core'
 import { store } from '@/store'
+import { Share } from '@/game/constants'
+import { message } from 'ant-design-vue'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   components: { ScreenCenter },
   setup () {
-    // 遮罩背景样式
+    const { t } = useI18n()
+    // 获取搜索参数
     const params = useUrlSearchParams('history')
     // 打印搜索参数
     console.table(params)
+    // 分享参数
+    let share: Share = {}
+    try {
+      // 解析分享参数
+      share = JSON.parse(atob(`${params.share}`))
+      console.table(share)
+    } catch (e) {
+      console.error(e)
+      message.error(t('error.shareParams', [e.message]))
+    }
     // 页面标题
-    useTitle().value = params.title ? `${params.title}` : 'Flop Player'
+    useTitle().value = share.title ? `${share.title}` : 'Flop Player'
     // 页面图标
-    useFavicon().value = params.favicon ? `${params.favicon}` : useFavicon().value
+    useFavicon().value = share.favicon ? `${share.favicon}` : useFavicon().value
     // 遮罩背景样式
-    const background = params.background ? params.background : '#eee'
+    const background = share.background ? share.background : '#eee'
     // 如果有录像参数
-    if (params.uri) {
+    if (share.uri) {
       // 设置是否匿名显示玩家名称
-      store.commit('setAnonymous', params.anonymous === 'true')
+      store.commit('setAnonymous', share.anonymous === true)
       // 拉取录像并播放
-      store.dispatch('fetchUri', `${params.uri}`)
+      store.dispatch('fetchUri', `${share.uri}`)
     }
     return { background }
   }
