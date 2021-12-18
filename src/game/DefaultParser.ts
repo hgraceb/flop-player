@@ -10,6 +10,7 @@ export class DefaultParser extends BaseParser {
   protected readonly mHeight = 8
   protected readonly mMines = 0
   protected readonly mMarks = false
+  protected readonly mLevel = 1
   protected readonly mBBBV = 0
   protected readonly mDoubleClicks = 0
   protected readonly mLeftClicks = 0

@@ -7,6 +7,7 @@ export class RawVideo extends BaseVideo {
   protected mHeight = -1
   protected mMines = -1
   protected mMarks = false
+  protected mLevel = 0
   protected mBoard: number[] = []
   protected mEvents: VideoEvent[] = []
   protected mPlayer: Uint8Array = new Uint8Array()
@@ -53,8 +54,12 @@ export class RawVideo extends BaseVideo {
         if (value !== 'on' && value !== 'off') this.error(`Invalid question marks: "${value}"`)
         this.mMarks = value === 'on'
       } else if (option === 'level') {
+        if (value === 'beginner') this.mLevel = 1
+        else if (value === 'intermediate') this.mLevel = 2
+        else if (value === 'expert') this.mLevel = 3
+        else if (value === 'custom') this.mLevel = 4
         // Marathon is a Viennasweeper mode used in some tournaments
-        if (value === 'marathon') this.error('This program doesn\'t support marathon RawVF')
+        else if (value === 'marathon') this.error('This program doesn\'t support marathon RawVF')
       } else if (option === 'mode') {
         // 不支持作弊模式，作弊模式下有很多额外的可选项，如：Lives、Autoflag、Lawnmower、ElmarTechnique、NonoMouse、SuperClick、SuperFlag
         if (value === 'cheat') this.error('This program doesn\'t support cheat RawVF')

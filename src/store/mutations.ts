@@ -2,7 +2,7 @@ import { State } from './state'
 import { store } from '@/store/index'
 import { plus, times } from 'number-precision'
 import { ImgCellType } from '@/util/image'
-import { SQUARE_SIZE_ARRAY, SPEED_ARRAY } from '@/game/constants'
+import { SPEED_ARRAY, SQUARE_SIZE_ARRAY } from '@/game/constants'
 import { i18n } from '@/plugins/i18n'
 import { message } from 'ant-design-vue'
 import { BaseParser } from '@/game/BaseParser'
@@ -300,7 +300,7 @@ export const mutations = {
   /** 重开游戏 */
   upk: (state: State): void => {
     const parser = state.videoParser
-    const video = new CustomVideo(parser.getWidth(), parser.getHeight(), parser.getMines(), state.marks, parser.getVideoBoard())
+    const video = new CustomVideo(parser.getWidth(), parser.getHeight(), parser.getMines(), state.marks, parser.getLevel(), parser.getVideoBoard())
     state.userParser = new VideoParser(video, true)
     store.commit('initGame', state.userParser)
     // 设置游戏类型

@@ -32,14 +32,15 @@ interface Event {
 }
 
 export class RMVVideo extends BaseVideo {
-  protected mName = 'RMVVideo'
-  protected mWidth: number
-  protected mHeight: number
-  protected mMines: number
-  protected mMarks: boolean
-  protected mBoard: number[]
-  protected mPlayer: Uint8Array
-  protected mEvents: VideoEvent[] = []
+  protected readonly mName = 'RMVVideo'
+  protected readonly mWidth: number
+  protected readonly mHeight: number
+  protected readonly mMines: number
+  protected readonly mMarks: boolean
+  protected readonly mLevel: number
+  protected readonly mBoard: number[]
+  protected readonly mPlayer: Uint8Array
+  protected readonly mEvents: VideoEvent[] = []
 
   // Mode
   private mode = 0
@@ -105,6 +106,7 @@ export class RMVVideo extends BaseVideo {
     this.mHeight = this.h
     this.mMines = this.m
     this.mMarks = this.qm !== 0
+    this.mLevel = this.level
     this.mBoard = this.board
     // 设置玩家名称
     this.mPlayer = new Uint8Array(this.name)

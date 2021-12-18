@@ -23,13 +23,23 @@ export abstract class BaseVideo {
   private mOffset = 0
   private readonly mData = new Uint8Array()
 
+  // 录像类的名称
   protected abstract mName: string
+  // 录像列数
   protected abstract mWidth: number
+  // 录像行数
   protected abstract mHeight: number
+  // 录像雷数
   protected abstract mMines: number
+  // 是否可以标记问号的初始值
   protected abstract mMarks: boolean
+  // 录像级别，0：未知，1：初级，2：中级，3：高级，4：自定义
+  protected abstract mLevel: number
+  // 录像布局
   protected abstract mBoard: number[]
+  // 录像事件
   protected abstract mEvents: VideoEvent[]
+  // 玩家姓名原始数据
   protected abstract mPlayer: Uint8Array
 
   protected constructor (data: ArrayBuffer) {
@@ -140,37 +150,58 @@ export abstract class BaseVideo {
     return char >= '0' && char <= '9'
   }
 
-  /** 获取录像列数 */
+  /**
+   * 获取录像列数
+   */
   getWidth (): number {
     return this.mWidth
   }
 
-  /** 获取录像行数 */
+  /**
+   * 获取录像行数
+   */
   getHeight (): number {
     return this.mHeight
   }
 
-  /** 获取录像雷数 */
+  /**
+   * 获取录像雷数
+   */
   getMines (): number {
     return this.mMines
   }
 
-  /** 获取是否标记问号 */
+  /**
+   * 获取是否标记问号
+   */
   getMarks (): boolean {
     return this.mMarks
   }
 
-  /** 获取录像布局 */
+  /**
+   * 获取录像级别
+   */
+  getLevel (): number {
+    return this.mLevel
+  }
+
+  /**
+   * 获取录像布局
+   */
   getBoard (): number[] {
     return this.mBoard
   }
 
-  /** 获取录像事件 */
+  /**
+   * 获取录像事件
+   */
   getEvents (): VideoEvent[] {
     return this.mEvents
   }
 
-  /** 获取玩家名称原始数据 */
+  /**
+   * 获取玩家名称原始数据
+   */
   getPlayerArray (): Uint8Array {
     return this.mPlayer
   }

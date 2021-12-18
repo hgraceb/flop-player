@@ -103,6 +103,8 @@ export abstract class BaseParser {
   protected abstract mMines: number
   // 是否可以标记问号的初始值
   protected abstract mMarks: boolean
+  // 游戏级别，0：未知，1：初级，2：中级，3：高级，4：自定义
+  protected abstract mLevel: number
   // 最少左键点击数
   protected abstract mBBBV: number
   // 左键点击数
@@ -160,6 +162,11 @@ export abstract class BaseParser {
    * 获取是否可以标记问号的初始值
    */
   getMarks = (): boolean => this.mMarks
+
+  /**
+   * 获取游戏级别
+   */
+  getLevel = (): number => this.mLevel
 
   /**
    * 获取最少左键点击数

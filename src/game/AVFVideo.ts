@@ -44,14 +44,15 @@ interface Event {
 }
 
 export class AVFVideo extends BaseVideo {
-  protected mName = 'AVFVideo'
-  protected mWidth: number
-  protected mHeight: number
-  protected mMines: number
-  protected mMarks: boolean
-  protected mBoard: number[]
-  protected mPlayer: Uint8Array
-  protected mEvents: VideoEvent[]
+  protected readonly mName = 'AVFVideo'
+  protected readonly mWidth: number
+  protected readonly mHeight: number
+  protected readonly mMines: number
+  protected readonly mMarks: boolean
+  protected readonly mLevel: number
+  protected readonly mBoard: number[]
+  protected readonly mPlayer: Uint8Array
+  protected readonly mEvents: VideoEvent[]
 
   private readonly MAX_NAME = 1000
   // Mode
@@ -113,6 +114,7 @@ export class AVFVideo extends BaseVideo {
     this.mMines = this.m
     this.mMarks = this.qm
     this.mBoard = this.board
+    this.mLevel = this.mode
     // 设置玩家名称
     this.mPlayer = new Uint8Array(this.name.length)
     this.name.forEach((char, index) => {
