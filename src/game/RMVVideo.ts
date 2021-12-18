@@ -106,7 +106,7 @@ export class RMVVideo extends BaseVideo {
     this.mHeight = this.h
     this.mMines = this.m
     this.mMarks = this.qm !== 0
-    this.mLevel = this.level
+    this.mLevel = this.level + 1
     this.mBoard = this.board
     // 设置玩家名称
     this.mPlayer = new Uint8Array(this.name)
