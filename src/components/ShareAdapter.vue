@@ -17,17 +17,20 @@ export default defineComponent({
     const { t } = useI18n()
     // 获取搜索参数
     const params = useUrlSearchParams('history')
-    // 打印搜索参数
-    console.table(params)
     // 分享参数
     let share: Share = {}
     try {
       // 解析分享参数
-      share = JSON.parse(atob(`${params.share}`))
-      console.table(share)
+      share = params.share ? JSON.parse(atob(`${params.share}`)) : share
     } catch (e) {
       console.error(e)
+      // 搜索参数解析失败
       message.error(t('error.shareParams', [e.message]))
+    }
+    // 打印参数
+    if (params.share) {
+      console.table(params)
+      console.table(share)
     }
     // 页面标题
     useTitle().value = share.title ? `${share.title}` : 'Flop Player'
