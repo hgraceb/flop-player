@@ -1,4 +1,4 @@
-# Flop Player
+# ：Flop Player
 
 网页版扫雷录像播放器
 
@@ -72,7 +72,5 @@
 
 ## 其他
 
-| 名称                                                         | 说明                                                         |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [Ant Design Vue](https://2x.antdv.com/components/overview/)  | 🌈 An enterprise-class UI components based on Ant Design and Vue. 🐜 |
-| [Minesweeper RAW Video Format](https://github.com/thefinerminer/minesweeper-rawvf) | This project hosts code for converting different videos formats into RAWVF. |
+- [Ant Design Vue](https://2x.antdv.com/components/overview/)：🌈 An enterprise-class UI components based on Ant Design and Vue. 🐜
+- [Minesweeper RAW Video Format](https://github.com/thefinerminer/minesweeper-rawvf)：This project hosts code for converting different videos formats into RAWVF.
