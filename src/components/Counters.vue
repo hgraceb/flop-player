@@ -1,8 +1,10 @@
 <template>
   <table>
     <tr v-for="item in data" :key="item.key">
-      <td :title="item.title">{{ item.key }}</td>
-      <td :title="item.value">{{ item.value }}</td>
+      <template v-if="item.show !== false">
+        <td :title="item.title">{{ item.key }}</td>
+        <td :title="item.value">{{ item.value }}</td>
+      </template>
     </tr>
   </table>
 </template>
@@ -14,11 +16,16 @@ import { round } from 'number-precision'
 
 export default defineComponent({
   setup () {
+    // 参数类型
     interface TypeStat {
-      [key: string]: string | number
+      key: string,
+      title: string,
+      value: number | string,
+      show?: boolean
     }
 
     // 静态统计数据
+    const level = computed(() => store.state.level)
     const bbbv = computed(() => store.state.bbbv)
     const openings = computed(() => store.state.openings)
     const islands = computed(() => store.state.islands)
@@ -196,6 +203,26 @@ export default defineComponent({
           if (isDefault.value || !estRTime.value) return '*'
           // 按照 time.value * (time.value + 1) / solvedBBBV.value 计算的话会导致计算的值一直是递增的，没有参考意义
           return `${round(estRTime.value * (estRTime.value + 1) / bbbv.value, 3).toFixed(3)}`
+        })
+      },
+      {
+        key: 'QG',
+        title: 'Quality Grade: (Real Time ^ 1.7) / Solved 3BV',
+        value: computed(() => {
+          if (isDefault.value || !solvedBBBV.value) return '*'
+          return `${round(Math.pow(time.value, 1.7) / solvedBBBV.value, 3).toFixed(3)}`
+        })
+      },
+      {
+        key: 'STNB',
+        title: 'STNB: (87.420 * (Level ^ 2) - 155.829 * Level + 115.708) / QG * ((Solved 3BV / 3BV) ^ 0.5)',
+        // 只有初级、中级、高级的录像才显示 STNB 数据
+        show: computed(() => level.value === 1 || level.value === 2 || level.value === 3),
+        value: computed(() => {
+          if (isDefault.value || !solvedBBBV.value) return '*'
+          const constant = (87.420 * level.value * level.value - 155.829 * level.value + 115.708)
+          const QG = Math.pow(time.value, 1.7) / solvedBBBV.value
+          return `${round(constant / QG * Math.pow(solvedBBBV.value / bbbv.value, 0.5), 3).toFixed(3)}`
         })
       }
     ])

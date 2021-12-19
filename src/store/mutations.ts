@@ -86,6 +86,7 @@ export const mutations = {
     state.height = parser.getHeight()
     state.mines = parser.getMines()
     state.playerArray = parser.getPlayerArray()
+    state.level = parser.getLevel()
     state.bbbv = parser.getBBBV()
     state.openings = parser.getOpenings()
     state.islands = parser.getIslands()

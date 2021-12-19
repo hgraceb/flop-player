@@ -16,6 +16,8 @@ export type State = typeof storageDefault & {
   height: number
   // 游戏雷数
   mines: number
+  // 游戏级别，0：未知，1：初级，2：中级，3：高级，4：自定义
+  level: number
   // 最少左键点击数
   bbbv: number
   // 开空数量
@@ -85,6 +87,7 @@ export const state: State = {
   width: 8,
   height: 8,
   mines: 0,
+  level: 0,
   bbbv: 0,
   openings: 0,
   islands: 0,
