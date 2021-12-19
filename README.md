@@ -1,4 +1,4 @@
-# ：Flop Player
+# Flop Player
 
 网页版扫雷录像播放器
 
