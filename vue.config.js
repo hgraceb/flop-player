@@ -41,8 +41,8 @@ module.exports = {
     optimization: {
       // https://webpack.js.org/plugins/split-chunks-plugin/
       splitChunks: {
-        minSize: 10000,
-        // 拆分 chunks，优化首屏加载时长
+        // 拆分 chunks，优化首屏加载时长、提高资源文件的复用率
+        minSize: 250000,
         maxSize: 250000
       }
     }
