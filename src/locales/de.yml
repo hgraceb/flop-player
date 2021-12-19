@@ -1,0 +1,66 @@
+menu:
+  game:
+    title: Spiel
+    localVideo: Lokale Datei auswählen
+    fileDrag: Ziehen und Ablegen erkennen
+    marks: Fragezeichen
+    share:
+      copy: Link kopieren
+      open: Link öffnen
+      copied: Link wurde in die Zwischenablage kopiert
+      error: Link kopieren fehlgeschlagen
+    download: Video herunterladen
+  options:
+    title: Optionen
+    language: Deutsch
+    toggleLanguages: Sprachen
+    squareSize: Feldgröße
+    videoMap:
+      title: Mauspfad
+      move: Mausbewegung
+      left: Linksklick
+      right: Rechtsklick
+      double: Doppelklick
+      opening: Öffnung
+  help:
+    title: Hilfe
+    source: Quellcode
+    bugs: Fehler melden
+    version: Versionsname
+    author:
+      title: Autor
+      blog: Mein Blog
+      domain: Meine Domain
+  exit:
+    title: Beenden
+
+game:
+  upk: Vorabinformation
+  anonymous: Anonym
+
+controlBar:
+  play: Abspielen
+  pause: Pausieren
+  replay: Erneut abspielen
+  displayVideoMap: Mauspfad anzeigen
+  hideVideoMap: Mauspfad ausblenden
+  reset: Neustart
+
+common:
+  loading: Lädt...
+  copied: 'Kopieren erfolgreich: {0}'
+  fileSelect: 'Bitte wählen Sie eine avf/mvf/rmv/rawvf-Datei aus'
+
+error:
+  copy: 'Kopieren fehlgeschlagen: {0}'
+  videoParse: 'Lesefehler: '
+  uriRequest: 'Datenanfragefehler：{0}'
+  invalidStatus: 'Invalider Statuscode：{0}'
+  shareParams: 'Teil-Parameter-Lesefehler: {0}'
+  fileNotPresent: Datei existiert nicht
+  fileNotSelect: Keine Datei ausgewählt oder Datei nicht verfügbar
+  fileTooMany: 'Zu viele Dateien: {0}'
+  fileEmpty: 'Dateiinhalt ist leer: {0}'
+  fileUnsupported: '@:common.fileSelect'
+  fileTooLarge: 'Datei ist größer als 5 MB: {0}'
+  fileReadError: 'Dateilesefehler: {0}'
