@@ -6,6 +6,8 @@
 
 - 在线预览地址：https://hgraceb.github.io/flop-player/
 
+- 使用示例代码：[demo.html](./public/demo.html)
+
 ## 特性
 
 1. 录像地图：可自由控制是否显示鼠标轨迹、点击位置、开空区域
@@ -66,11 +68,44 @@
 | options.background       | string\|undefined   | 遮罩背景样式                        | ''        |
 | options.listener         | function\|undefined | 退出录像播放页面的回调              | () => {}  |
 
+### flop.parseFiles(files, onSuccess, onError)
+
+录像解析接口，参数说明如下：
+
+| 参数      | 类型                              | 说明                                     | 默认值   |
+| --------- | --------------------------------- | ---------------------------------------- | -------- |
+| files     | FileList                          | 录像文件列表，当前只允许包含一个文件对象 | -        |
+| onSuccess | (video: Video) => void            | 录像解析成功的回调                       | -        |
+| onError   | (info: string) => void\|undefined | 录像解析失败的回调                       | () => {} |
+
+Video 类型说明如下（Video 的其他方法和属性只在 Flop Player 内部使用，未来很有可能发生变化）：
+
+| 方法            | 类型         | 说明                                                        |
+| --------------- | ------------ | ----------------------------------------------------------- |
+| getTime         | () => number | 获取游戏真实时间（毫秒）                                    |
+| getLevel        | () => number | 获取游戏级别，0：未知，1：初级，2：中级，3：高级，4：自定义 |
+| getBBBV         | () => number | 获取理论最少左键点击数                                      |
+| getLeftClicks   | () => number | 获取左键点击数                                              |
+| getRightClicks  | () => number | 获取右键点击数                                              |
+| getDoubleClicks | () => number | 获取双击点击数                                              |
+
 ## 关于
 
 - 本工程所有测试录像均来自[扫雷网](https://saolei.wang/)、[Authoritative Minesweeper](https://minesweepergame.com/) 公开资源及个人录像
+- 本工程的页面 UI 和实现逻辑主要参考自：Winmine、Minesweeper Arbiter 0.52.3、Minesweeper Clone 2007、 Minesweeper Clone 0.97、Freesweeper 10、Viennasweeper 3.0、Minesweeper X 1.15
 
 ## 其他
 
 - [Ant Design Vue](https://2x.antdv.com/components/overview/)：🌈 An enterprise-class UI components based on Ant Design and Vue. 🐜
+- [Babel](https://github.com/babel/babel)：🐠 Babel is a compiler for writing next generation JavaScript.
+- [chardet](https://github.com/runk/node-chardet)：Character encoding detection tool for NodeJS
+- [copy-text-to-clipboard](https://github.com/sindresorhus/copy-text-to-clipboard)：Copy text to the clipboard in modern browsers (0.2 kB)
+- [Day.js](https://github.com/iamkun/dayjs)：⏰ Day.js 2kB immutable date-time library alternative to Moment.js with the same modern API
+- [ESLint](https://github.com/eslint/eslint)：Find and fix problems in your JavaScript code.
 - [Minesweeper RAW Video Format](https://github.com/thefinerminer/minesweeper-rawvf)：This project hosts code for converting different videos formats into RAWVF.
+- [number-precision](https://github.com/nefe/number-precision)：🚀1K tiny & fast lib for doing addition, subtraction, multiplication and division operations precisely
+- [TypeScript](https://github.com/microsoft/TypeScript)：TypeScript is a superset of JavaScript that compiles to clean JavaScript output.
+- [Vue 3.0](https://github.com/vuejs/vue-next)：🖖 Vue.js is a progressive, incrementally-adoptable JavaScript framework for building UI on the web.
+- [Vue I18n](https://github.com/intlify/vue-i18n-next)：Vue I18n for Vue 3
+- [Vuex](https://github.com/vuejs/vuex)：🗃️ Centralized State Management for Vue.js.
+- [YAML](https://github.com/eemeli/yaml/)：JavaScript parser and stringifier for YAML
