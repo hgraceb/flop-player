@@ -76,6 +76,8 @@ export default defineComponent({
       // 首次赋值时更新，方便在 iframe 中调试，避免热更新时无法退出游戏页面
       immediate: true
     })
+    // 通知父窗口当前页面已经加载完成
+    if (parent.flop.onload) parent.flop.onload()
     return { maskBackground }
   }
 })
