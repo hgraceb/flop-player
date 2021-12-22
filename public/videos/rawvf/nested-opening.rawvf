@@ -1,0 +1,1911 @@
+RawVF_Version: Rev3
+Program: FreeSweeper
+Version: R10
+Player: 双击设置姓名
+Timestamp: 2021-10-16T16:06:24
+Level: expert
+Width: 30
+Height: 16
+Mines: 112
+Skin: default
+SquareSize: 16
+Mode: upk
+Board:
+000000000000000000000000000000
+000000000000000000000000000000
+00**************************00
+00*000000000000000000000000*00
+00*000000000000000000000000*00
+00*000000000000000000000000*00
+00*000******************000*00
+00*000*0000000000000000*000*00
+00*000*0000000000000000*000*00
+00*000******************000*00
+00*000000000000000000000000*00
+00*000000000000000000000000*00
+00*000000000000000000000000*00
+00**************************00
+000000000000000000000000000000
+000000000000000000000000000000
+0.000 start
+0.000 lc (74 3)
+0.000 lr (74 3)
+number0 5 1
+number0 4 1
+number3 4 2
+number3 5 2
+number0 6 1
+number3 6 2
+number0 3 1
+number2 3 2
+number0 7 1
+number3 7 2
+number0 2 1
+number1 2 2
+number0 8 1
+number3 8 2
+number0 1 1
+number0 1 2
+number0 9 1
+number3 9 2
+number0 1 3
+number2 2 3
+number0 10 1
+number3 10 2
+number0 1 4
+number3 2 4
+number0 11 1
+number3 11 2
+number0 1 5
+number3 2 5
+number0 12 1
+number3 12 2
+number0 1 6
+number3 2 6
+number0 13 1
+number3 13 2
+number0 1 7
+number3 2 7
+number0 14 1
+number3 14 2
+number0 1 8
+number3 2 8
+number0 15 1
+number3 15 2
+number0 1 9
+number3 2 9
+number0 16 1
+number3 16 2
+number0 1 10
+number3 2 10
+number0 17 1
+number3 17 2
+number0 1 11
+number3 2 11
+number0 18 1
+number3 18 2
+number0 1 12
+number3 2 12
+number0 19 1
+number3 19 2
+number0 1 13
+number3 2 13
+number0 20 1
+number3 20 2
+number0 1 14
+number2 2 14
+number0 21 1
+number3 21 2
+number0 1 15
+number1 2 15
+number0 22 1
+number3 22 2
+number0 1 16
+number0 2 16
+number0 23 1
+number3 23 2
+number2 3 15
+number0 3 16
+number0 24 1
+number3 24 2
+number3 4 15
+number0 4 16
+number0 25 1
+number3 25 2
+number3 5 15
+number0 5 16
+number0 26 1
+number3 26 2
+number3 6 15
+number0 6 16
+number0 27 1
+number3 27 2
+number3 7 15
+number0 7 16
+number0 28 1
+number2 28 2
+number3 8 15
+number0 8 16
+number0 29 1
+number1 29 2
+number3 9 15
+number0 9 16
+number0 30 1
+number0 30 2
+number3 10 15
+number0 10 16
+number2 29 3
+number0 30 3
+number3 11 15
+number0 11 16
+number3 29 4
+number0 30 4
+number3 12 15
+number0 12 16
+number3 29 5
+number0 30 5
+number3 13 15
+number0 13 16
+number3 29 6
+number0 30 6
+number3 14 15
+number0 14 16
+number3 29 7
+number0 30 7
+number3 15 15
+number0 15 16
+number3 29 8
+number0 30 8
+number3 16 15
+number0 16 16
+number3 29 9
+number0 30 9
+number3 17 15
+number0 17 16
+number3 29 10
+number0 30 10
+number3 18 15
+number0 18 16
+number3 29 11
+number0 30 11
+number3 19 15
+number0 19 16
+number3 29 12
+number0 30 12
+number3 20 15
+number0 20 16
+number3 29 13
+number0 30 13
+number3 21 15
+number0 21 16
+number2 29 14
+number0 30 14
+number3 22 15
+number0 22 16
+number1 29 15
+number0 30 15
+number3 23 15
+number0 23 16
+number0 29 16
+number0 30 16
+number3 24 15
+number0 24 16
+number2 28 15
+number0 28 16
+number3 25 15
+number0 25 16
+number3 27 15
+number0 27 16
+number3 26 15
+number0 26 16
+0.024 mv (74 4)
+0.054 mv (74 5)
+0.062 mv (74 6)
+0.072 mv (74 7)
+0.078 mv (74 8)
+0.084 mv (74 9)
+0.086 mv (74 10)
+0.090 mv (74 11)
+0.094 mv (74 12)
+0.098 mv (74 13)
+0.099 mv (74 14)
+0.104 mv (74 15)
+0.109 mv (74 16)
+0.115 mv (74 17)
+0.119 mv (74 18)
+0.127 mv (74 19)
+0.135 mv (74 20)
+0.141 mv (74 21)
+0.144 mv (74 22)
+0.151 mv (74 23)
+0.156 mv (74 24)
+0.162 mv (74 25)
+0.163 mv (74 26)
+0.169 mv (74 27)
+0.173 mv (74 28)
+0.179 mv (74 29)
+0.181 mv (74 30)
+0.185 mv (74 31)
+0.190 mv (74 32)
+0.194 mv (74 33)
+0.199 mv (74 34)
+0.201 mv (74 35)
+0.206 mv (74 36)
+0.213 mv (74 37)
+0.218 mv (74 38)
+0.220 mv (74 39)
+0.227 mv (74 40)
+0.233 mv (74 41)
+0.240 mv (74 42)
+0.244 mv (74 43)
+0.250 mv (74 44)
+0.257 mv (74 45)
+0.263 mv (74 46)
+0.268 mv (74 47)
+0.276 mv (74 48)
+0.291 mv (74 49)
+0.299 mv (73 49)
+0.307 mv (73 50)
+0.316 mv (73 51)
+0.327 mv (73 52)
+0.334 mv (73 53)
+0.342 mv (73 54)
+0.345 mv (72 54)
+0.346 mv (72 55)
+0.354 mv (72 56)
+0.361 mv (72 57)
+0.370 mv (72 58)
+0.375 mv (72 59)
+0.388 mv (72 60)
+0.450 lc (72 60)
+pressed 5 4
+0.504 lr (72 60)
+number3 5 4
+0.997 mv (71 67)
+0.999 mv (71 68)
+1.004 mv (71 69)
+1.009 mv (71 70)
+1.015 mv (71 71)
+1.019 mv (71 72)
+1.027 mv (71 73)
+1.039 lc (71 73)
+pressed 5 5
+1.106 lr (71 73)
+number0 5 5
+number5 4 4
+number3 4 5
+number3 4 6
+number0 5 6
+number3 6 4
+number0 6 5
+number1 6 6
+number3 4 7
+number0 5 7
+number2 6 7
+number3 7 4
+number0 7 5
+number2 7 6
+number3 4 8
+number0 5 8
+number3 6 8
+number3 8 4
+number0 8 5
+number3 8 6
+number3 4 9
+number0 5 9
+number3 6 9
+number3 9 4
+number0 9 5
+number3 9 6
+number3 4 10
+number0 5 10
+number2 6 10
+number3 10 4
+number0 10 5
+number3 10 6
+number3 4 11
+number0 5 11
+number1 6 11
+number3 11 4
+number0 11 5
+number3 11 6
+number3 4 12
+number0 5 12
+number0 6 12
+number3 12 4
+number0 12 5
+number3 12 6
+number5 4 13
+number3 5 13
+number3 6 13
+number2 7 11
+number0 7 12
+number3 7 13
+number3 13 4
+number0 13 5
+number3 13 6
+number3 8 11
+number0 8 12
+number3 8 13
+number3 14 4
+number0 14 5
+number3 14 6
+number3 9 11
+number0 9 12
+number3 9 13
+number3 15 4
+number0 15 5
+number3 15 6
+number3 10 11
+number0 10 12
+number3 10 13
+number3 16 4
+number0 16 5
+number3 16 6
+number3 11 11
+number0 11 12
+number3 11 13
+number3 17 4
+number0 17 5
+number3 17 6
+number3 12 11
+number0 12 12
+number3 12 13
+number3 18 4
+number0 18 5
+number3 18 6
+number3 13 11
+number0 13 12
+number3 13 13
+number3 19 4
+number0 19 5
+number3 19 6
+number3 14 11
+number0 14 12
+number3 14 13
+number3 20 4
+number0 20 5
+number3 20 6
+number3 15 11
+number0 15 12
+number3 15 13
+number3 21 4
+number0 21 5
+number3 21 6
+number3 16 11
+number0 16 12
+number3 16 13
+number3 22 4
+number0 22 5
+number3 22 6
+number3 17 11
+number0 17 12
+number3 17 13
+number3 23 4
+number0 23 5
+number3 23 6
+number3 18 11
+number0 18 12
+number3 18 13
+number3 24 4
+number0 24 5
+number2 24 6
+number3 19 11
+number0 19 12
+number3 19 13
+number3 25 4
+number0 25 5
+number1 25 6
+number3 20 11
+number0 20 12
+number3 20 13
+number3 26 4
+number0 26 5
+number0 26 6
+number3 21 11
+number0 21 12
+number3 21 13
+number5 27 4
+number3 27 5
+number3 27 6
+number2 25 7
+number0 26 7
+number3 27 7
+number3 22 11
+number0 22 12
+number3 22 13
+number3 25 8
+number0 26 8
+number3 27 8
+number3 23 11
+number0 23 12
+number3 23 13
+number3 25 9
+number0 26 9
+number3 27 9
+number2 24 11
+number0 24 12
+number3 24 13
+number2 25 10
+number0 26 10
+number3 27 10
+number1 25 11
+number0 25 12
+number3 25 13
+number0 26 11
+number3 27 11
+number0 26 12
+number3 26 13
+number3 27 12
+number5 27 13
+1.118 mv (71 74)
+1.147 mv (71 75)
+1.151 mv (71 76)
+1.156 mv (72 77)
+1.162 mv (72 78)
+1.168 mv (72 79)
+1.171 mv (72 80)
+1.173 mv (73 80)
+1.178 mv (73 81)
+1.186 mv (73 82)
+1.200 mv (73 83)
+1.220 mv (73 84)
+1.228 mv (74 84)
+1.236 mv (74 85)
+1.252 mv (74 86)
+1.274 mv (74 87)
+1.279 mv (74 88)
+1.292 mv (74 89)
+1.304 mv (74 90)
+1.316 mv (74 91)
+1.324 mv (74 92)
+1.341 mv (74 93)
+1.348 mv (75 93)
+1.371 mv (75 94)
+1.426 mv (75 95)
+1.458 mv (75 96)
+1.465 mv (75 97)
+1.477 mv (75 98)
+1.479 mv (76 98)
+1.489 mv (76 99)
+1.491 mv (77 99)
+1.502 mv (77 100)
+1.509 mv (77 101)
+1.512 mv (78 101)
+1.522 mv (78 102)
+1.531 mv (79 102)
+1.535 mv (79 103)
+1.544 mv (79 104)
+1.545 mv (80 104)
+1.548 mv (80 105)
+1.552 mv (81 105)
+1.558 mv (81 106)
+1.566 mv (82 106)
+1.569 mv (82 107)
+1.583 mv (83 107)
+1.584 mv (83 108)
+1.590 mv (83 109)
+1.599 mv (84 109)
+1.610 mv (85 109)
+1.616 mv (85 110)
+2.118 mv (85 109)
+2.436 mv (85 110)
+2.451 mv (86 110)
+2.497 mv (92 117)
+2.499 mv (96 120)
+2.501 mv (96 121)
+2.503 mv (97 121)
+2.505 mv (98 121)
+2.506 mv (98 122)
+2.510 mv (99 122)
+2.513 mv (99 123)
+2.519 mv (100 123)
+2.520 mv (100 124)
+2.526 mv (100 125)
+2.531 mv (101 125)
+2.540 mv (101 126)
+2.541 mv (102 126)
+2.562 mv (102 127)
+2.572 mv (103 127)
+2.586 mv (103 128)
+2.591 mv (104 128)
+2.609 mv (104 129)
+2.620 mv (105 129)
+2.630 mv (105 130)
+2.648 mv (106 130)
+2.687 mv (106 131)
+2.701 mv (107 131)
+2.755 mv (108 131)
+2.809 mv (109 131)
+2.819 mv (110 131)
+2.835 mv (111 131)
+2.853 mv (112 131)
+2.957 mv (112 130)
+2.961 mv (113 130)
+2.984 mv (114 130)
+3.036 mv (115 130)
+3.054 mv (115 129)
+3.073 mv (116 129)
+3.083 mv (116 128)
+3.093 mv (117 128)
+3.106 mv (118 128)
+3.172 mv (119 128)
+3.194 mv (119 127)
+3.200 mv (120 127)
+3.247 lc (120 127)
+pressed 8 8
+3.305 lr (120 127)
+number5 8 8
+3.647 mv (125 127)
+3.651 mv (126 127)
+3.656 mv (126 126)
+3.659 mv (127 126)
+3.682 mv (128 126)
+3.705 mv (129 126)
+3.729 mv (129 125)
+3.741 mv (130 125)
+3.804 lc (130 125)
+pressed 9 8
+3.860 lr (130 125)
+number3 9 8
+3.889 mv (131 125)
+3.902 mv (132 125)
+3.912 mv (133 125)
+3.927 mv (134 125)
+3.938 mv (135 125)
+3.940 mv (135 124)
+3.982 mv (136 124)
+4.075 mv (136 125)
+4.084 mv (137 125)
+4.088 mv (137 126)
+4.095 mv (137 127)
+4.102 mv (137 128)
+4.107 mv (137 129)
+4.110 mv (138 130)
+4.117 mv (138 131)
+4.125 mv (138 132)
+4.134 mv (138 133)
+4.139 mv (138 134)
+4.147 mv (138 135)
+4.156 mv (138 136)
+4.169 lc (138 136)
+pressed 9 9
+4.170 mv (138 137)
+4.183 mv (138 138)
+4.251 lr (138 138)
+number3 9 9
+4.357 mv (137 138)
+4.387 mv (136 138)
+4.410 mv (135 138)
+4.427 mv (134 138)
+4.433 mv (133 138)
+4.443 mv (132 138)
+4.449 mv (131 138)
+4.454 mv (131 137)
+4.455 mv (130 137)
+4.459 mv (129 137)
+4.465 mv (128 137)
+4.467 mv (128 136)
+4.473 mv (127 136)
+4.482 mv (126 136)
+4.488 mv (125 136)
+4.526 mv (125 135)
+4.550 lc (125 135)
+pressed 8 9
+4.614 lr (125 135)
+number5 8 9
+4.686 mv (126 135)
+4.689 mv (127 135)
+4.696 mv (128 135)
+4.702 mv (129 135)
+4.705 mv (129 134)
+4.708 mv (130 134)
+4.711 mv (131 134)
+4.718 mv (132 134)
+4.723 mv (133 134)
+4.730 mv (134 134)
+4.732 mv (134 133)
+4.733 mv (135 133)
+4.742 mv (136 133)
+4.743 mv (136 132)
+4.752 mv (137 132)
+4.768 mv (138 132)
+4.776 mv (139 132)
+4.787 mv (139 131)
+4.789 mv (140 131)
+4.796 mv (141 131)
+4.803 mv (142 131)
+4.806 mv (143 131)
+4.809 mv (143 130)
+4.811 mv (144 130)
+4.815 mv (145 130)
+4.819 mv (146 130)
+4.821 mv (147 130)
+4.824 mv (147 129)
+4.825 mv (148 129)
+4.829 mv (149 128)
+4.833 mv (150 128)
+4.836 mv (151 128)
+4.841 mv (152 128)
+4.842 mv (152 127)
+4.848 mv (153 127)
+4.857 mv (153 126)
+4.858 mv (154 126)
+4.907 lc (154 126)
+pressed 10 8
+4.963 lr (154 126)
+number3 10 8
+4.990 mv (154 127)
+4.995 mv (154 128)
+4.999 mv (154 129)
+5.000 mv (154 130)
+5.003 mv (154 131)
+5.006 mv (154 132)
+5.009 mv (154 133)
+5.010 mv (154 134)
+5.013 mv (154 135)
+5.017 mv (154 136)
+5.021 mv (154 137)
+5.023 mv (154 138)
+5.028 mv (154 139)
+5.030 mv (153 139)
+5.034 mv (153 140)
+5.044 mv (153 141)
+5.052 mv (153 142)
+5.071 lc (153 142)
+pressed 10 9
+5.136 lr (153 142)
+number3 10 9
+5.171 mv (154 142)
+5.172 mv (154 141)
+5.177 mv (154 140)
+5.180 mv (155 140)
+5.184 mv (156 140)
+5.185 mv (156 139)
+5.190 mv (157 139)
+5.191 mv (157 138)
+5.196 mv (158 137)
+5.199 mv (158 136)
+5.202 mv (159 136)
+5.204 mv (159 135)
+5.205 mv (160 135)
+5.210 mv (160 134)
+5.211 mv (161 134)
+5.215 mv (161 133)
+5.217 mv (162 132)
+5.223 mv (163 131)
+5.227 mv (164 131)
+5.229 mv (164 130)
+5.234 mv (165 130)
+5.235 mv (165 129)
+5.238 mv (165 128)
+5.247 mv (165 127)
+5.250 mv (166 127)
+5.262 mv (166 126)
+5.298 mv (166 125)
+5.324 lc (166 125)
+pressed 11 8
+5.407 lr (166 125)
+number3 11 8
+5.413 mv (166 126)
+5.431 mv (166 127)
+5.438 mv (166 128)
+5.442 mv (167 128)
+5.444 mv (167 129)
+5.447 mv (167 130)
+5.454 mv (167 131)
+5.463 mv (167 132)
+5.481 lc (167 132)
+pressed 11 9
+5.518 mv (168 132)
+5.564 lr (168 132)
+number3 11 9
+5.592 mv (169 132)
+5.599 mv (170 132)
+5.603 mv (171 132)
+5.605 mv (172 132)
+5.607 mv (172 131)
+5.609 mv (173 131)
+5.613 mv (174 131)
+5.615 mv (174 130)
+5.617 mv (175 130)
+5.618 mv (176 130)
+5.621 mv (177 129)
+5.623 mv (177 128)
+5.624 mv (178 128)
+5.629 mv (179 128)
+5.630 mv (180 127)
+5.634 mv (181 127)
+5.635 mv (181 126)
+5.638 mv (182 126)
+5.640 mv (182 125)
+5.643 mv (183 125)
+5.647 mv (183 124)
+5.651 mv (183 123)
+5.652 mv (184 123)
+5.657 mv (185 123)
+5.669 mv (185 122)
+5.704 lc (185 122)
+pressed 12 8
+5.779 lr (185 122)
+number3 12 8
+5.790 mv (185 123)
+5.798 mv (185 124)
+5.801 mv (185 125)
+5.805 mv (185 126)
+5.808 mv (185 127)
+5.812 mv (185 128)
+5.817 mv (185 129)
+5.818 mv (185 130)
+5.821 mv (185 131)
+5.825 mv (185 132)
+5.829 mv (185 133)
+5.831 mv (185 134)
+5.837 mv (185 135)
+5.843 mv (185 136)
+5.853 mv (185 137)
+5.866 lc (185 137)
+pressed 12 9
+5.942 lr (185 137)
+number3 12 9
+5.994 mv (185 136)
+5.997 mv (186 136)
+6.002 mv (186 135)
+6.005 mv (187 135)
+6.009 mv (187 134)
+6.012 mv (188 134)
+6.014 mv (188 133)
+6.016 mv (189 133)
+6.018 mv (189 132)
+6.024 mv (190 131)
+6.029 mv (190 130)
+6.031 mv (191 130)
+6.036 mv (191 129)
+6.040 mv (192 128)
+6.042 mv (193 128)
+6.046 mv (193 127)
+6.049 mv (194 127)
+6.052 mv (194 126)
+6.056 mv (195 126)
+6.059 mv (195 125)
+6.063 mv (196 125)
+6.067 mv (197 124)
+6.072 mv (197 123)
+6.082 mv (198 123)
+6.117 lc (198 123)
+pressed 13 8
+6.206 lr (198 123)
+number3 13 8
+6.227 mv (198 124)
+6.231 mv (198 125)
+6.237 mv (198 126)
+6.242 mv (198 127)
+6.247 mv (198 128)
+6.252 mv (198 129)
+6.255 mv (198 130)
+6.263 mv (198 131)
+6.274 mv (198 132)
+6.300 lc (198 132)
+pressed 13 9
+6.380 lr (198 132)
+number3 13 9
+6.440 mv (199 132)
+6.446 mv (199 131)
+6.451 mv (200 131)
+6.454 mv (201 131)
+6.458 mv (201 130)
+6.461 mv (202 130)
+6.468 mv (203 130)
+6.469 mv (203 129)
+6.474 mv (204 128)
+6.478 mv (205 128)
+6.485 mv (206 127)
+6.493 mv (207 127)
+6.495 mv (207 126)
+6.501 mv (208 126)
+6.503 mv (209 126)
+6.505 mv (209 125)
+6.511 mv (210 125)
+6.514 mv (210 124)
+6.517 mv (211 124)
+6.519 mv (211 123)
+6.524 mv (212 123)
+6.529 mv (213 123)
+6.531 mv (213 122)
+6.547 mv (214 122)
+6.575 lc (214 122)
+pressed 14 8
+6.579 mv (214 121)
+6.651 lr (214 121)
+number3 14 8
+6.658 mv (214 122)
+6.674 mv (214 123)
+6.679 mv (214 124)
+6.682 mv (214 125)
+6.686 mv (214 126)
+6.691 mv (214 127)
+6.695 mv (214 128)
+6.700 mv (214 129)
+6.702 mv (214 130)
+6.709 mv (214 131)
+6.713 mv (215 131)
+6.718 mv (215 132)
+6.733 lc (215 132)
+pressed 14 9
+6.809 lr (215 132)
+number3 14 9
+6.865 mv (216 132)
+6.875 mv (217 132)
+6.879 mv (218 132)
+6.880 mv (218 131)
+6.886 mv (219 131)
+6.892 mv (220 131)
+6.893 mv (220 130)
+6.897 mv (221 130)
+6.899 mv (222 130)
+6.903 mv (222 129)
+6.904 mv (223 129)
+6.907 mv (223 128)
+6.908 mv (224 128)
+6.912 mv (225 128)
+6.914 mv (225 127)
+6.915 mv (226 127)
+6.919 mv (227 127)
+6.921 mv (227 126)
+6.923 mv (228 126)
+6.927 mv (229 126)
+6.928 mv (229 125)
+6.929 mv (230 125)
+6.932 mv (231 125)
+6.934 mv (231 124)
+6.937 mv (232 124)
+6.938 mv (232 123)
+6.944 mv (233 123)
+6.949 mv (234 122)
+6.969 mv (234 121)
+6.980 mv (235 121)
+7.019 lc (235 121)
+pressed 15 8
+7.101 lr (235 121)
+number3 15 8
+7.115 mv (235 122)
+7.119 mv (235 123)
+7.123 mv (235 124)
+7.124 mv (235 125)
+7.127 mv (235 126)
+7.130 mv (235 127)
+7.133 mv (235 128)
+7.134 mv (236 128)
+7.137 mv (236 129)
+7.139 mv (236 130)
+7.143 mv (236 131)
+7.149 mv (236 132)
+7.154 mv (236 133)
+7.159 mv (236 134)
+7.174 lc (236 134)
+pressed 15 9
+7.227 mv (237 134)
+7.264 lr (237 134)
+number3 15 9
+7.282 mv (238 134)
+7.293 mv (239 134)
+7.300 mv (240 134)
+7.305 mv (241 134)
+7.307 mv (242 134)
+7.312 mv (243 134)
+7.315 mv (243 133)
+7.317 mv (244 133)
+7.319 mv (244 132)
+7.321 mv (245 132)
+7.323 mv (246 132)
+7.328 mv (247 132)
+7.329 mv (247 131)
+7.333 mv (248 131)
+7.338 mv (248 130)
+7.339 mv (249 130)
+7.347 mv (250 129)
+7.352 mv (251 128)
+7.362 mv (251 127)
+7.371 mv (252 127)
+7.379 mv (252 126)
+7.416 lc (252 126)
+pressed 16 8
+7.494 lr (252 126)
+number3 16 8
+7.505 mv (252 127)
+7.513 mv (252 128)
+7.518 mv (252 129)
+7.522 mv (252 130)
+7.526 mv (252 131)
+7.531 mv (252 132)
+7.536 mv (252 133)
+7.538 mv (252 134)
+7.543 mv (252 135)
+7.550 mv (252 136)
+7.559 mv (252 137)
+7.564 lc (252 137)
+pressed 16 9
+7.574 mv (252 138)
+7.638 lr (252 138)
+number3 16 9
+7.685 mv (252 137)
+7.692 mv (252 136)
+7.693 mv (253 136)
+7.700 mv (254 135)
+7.703 mv (255 135)
+7.706 mv (255 134)
+7.710 mv (256 134)
+7.712 mv (256 133)
+7.715 mv (257 132)
+7.721 mv (257 131)
+7.722 mv (258 131)
+7.726 mv (259 131)
+7.727 mv (259 130)
+7.732 mv (260 130)
+7.733 mv (260 129)
+7.735 mv (260 128)
+7.739 mv (261 128)
+7.742 mv (261 127)
+7.746 mv (262 127)
+7.748 mv (262 126)
+7.749 mv (263 126)
+7.756 mv (263 125)
+7.759 mv (264 125)
+7.764 mv (264 124)
+7.771 mv (264 123)
+7.811 lc (264 123)
+pressed 17 8
+7.887 lr (264 123)
+number3 17 8
+7.901 mv (264 124)
+7.907 mv (264 125)
+7.913 mv (264 126)
+7.917 mv (264 127)
+7.922 mv (264 128)
+7.926 mv (264 129)
+7.929 mv (264 130)
+7.933 mv (264 131)
+7.940 mv (264 132)
+7.945 mv (264 133)
+7.949 mv (264 134)
+7.963 lc (264 134)
+pressed 17 9
+7.968 mv (264 135)
+8.043 lr (264 135)
+number3 17 9
+8.076 mv (264 134)
+8.077 mv (265 134)
+8.085 mv (266 134)
+8.089 mv (267 134)
+8.091 mv (267 133)
+8.093 mv (268 133)
+8.096 mv (268 132)
+8.097 mv (269 132)
+8.102 mv (270 132)
+8.105 mv (271 131)
+8.109 mv (272 131)
+8.114 mv (272 130)
+8.115 mv (273 130)
+8.119 mv (274 130)
+8.120 mv (274 129)
+8.121 mv (275 129)
+8.123 mv (275 128)
+8.125 mv (276 128)
+8.129 mv (276 127)
+8.130 mv (277 127)
+8.134 mv (278 127)
+8.136 mv (278 126)
+8.137 mv (279 126)
+8.142 mv (279 125)
+8.143 mv (280 125)
+8.149 mv (280 124)
+8.152 mv (280 123)
+8.153 mv (281 123)
+8.163 mv (281 122)
+8.202 lc (281 122)
+pressed 18 8
+8.277 lr (281 122)
+number3 18 8
+8.288 mv (281 123)
+8.296 mv (281 124)
+8.299 mv (281 125)
+8.304 mv (281 126)
+8.309 mv (281 127)
+8.315 mv (281 128)
+8.320 mv (281 129)
+8.323 mv (281 130)
+8.331 mv (281 131)
+8.340 lc (281 131)
+pressed 18 9
+8.342 mv (281 132)
+8.415 mv (281 133)
+8.440 mv (281 134)
+8.451 lr (281 134)
+number3 18 9
+8.453 mv (281 135)
+8.460 mv (282 135)
+8.462 mv (282 136)
+8.477 mv (283 136)
+8.485 mv (284 136)
+8.500 mv (285 136)
+8.514 mv (286 136)
+8.516 mv (286 135)
+8.521 mv (287 135)
+8.524 mv (287 134)
+8.526 mv (288 134)
+8.531 mv (288 133)
+8.533 mv (289 133)
+8.536 mv (289 132)
+8.542 mv (290 132)
+8.544 mv (290 131)
+8.552 mv (291 130)
+8.557 mv (292 130)
+8.563 mv (292 129)
+8.566 mv (292 128)
+8.570 mv (293 128)
+8.575 mv (293 127)
+8.582 mv (294 127)
+8.585 mv (294 126)
+8.594 mv (294 125)
+8.596 mv (295 125)
+8.603 mv (296 125)
+8.607 mv (296 124)
+8.616 mv (296 123)
+8.648 lc (296 123)
+pressed 19 8
+8.708 mv (296 124)
+8.719 lr (296 124)
+number3 19 8
+8.722 mv (296 125)
+8.730 mv (296 126)
+8.734 mv (296 127)
+8.735 mv (297 127)
+8.738 mv (297 128)
+8.741 mv (297 129)
+8.742 mv (297 130)
+8.745 mv (297 131)
+8.748 mv (298 131)
+8.749 mv (298 132)
+8.752 mv (298 133)
+8.754 mv (298 134)
+8.758 mv (298 135)
+8.761 mv (299 135)
+8.762 mv (299 136)
+8.767 mv (300 137)
+8.769 mv (300 138)
+8.774 mv (300 139)
+8.783 mv (300 140)
+8.784 mv (301 140)
+8.816 lc (301 140)
+pressed 19 9
+8.865 lr (301 140)
+number3 19 9
+8.893 mv (302 140)
+8.904 mv (302 139)
+8.906 mv (303 139)
+8.910 mv (304 139)
+8.912 mv (304 138)
+8.917 mv (305 138)
+8.920 mv (305 137)
+8.922 mv (306 137)
+8.924 mv (306 136)
+8.927 mv (307 136)
+8.930 mv (308 136)
+8.931 mv (308 135)
+8.936 mv (309 135)
+8.939 mv (309 134)
+8.941 mv (310 134)
+8.946 mv (311 133)
+8.949 mv (311 132)
+8.952 mv (312 132)
+8.954 mv (313 132)
+8.958 mv (313 131)
+8.960 mv (314 131)
+8.965 mv (315 131)
+8.966 mv (315 130)
+8.974 mv (316 130)
+8.976 mv (316 129)
+8.978 mv (317 129)
+8.981 mv (317 128)
+8.992 mv (318 127)
+9.005 mv (318 126)
+9.018 mv (318 125)
+9.046 mv (318 124)
+9.067 lc (318 124)
+pressed 20 8
+9.141 lr (318 124)
+number3 20 8
+9.152 mv (318 125)
+9.166 mv (318 126)
+9.173 mv (318 127)
+9.181 mv (318 128)
+9.186 mv (318 129)
+9.190 mv (318 130)
+9.197 mv (318 131)
+9.207 mv (318 132)
+9.213 lc (318 132)
+pressed 20 9
+9.221 mv (318 133)
+9.233 mv (318 134)
+9.261 mv (317 134)
+9.301 lr (317 134)
+number3 20 9
+9.319 mv (318 134)
+9.334 mv (319 134)
+9.343 mv (320 134)
+9.346 mv (321 134)
+9.352 mv (322 134)
+9.354 mv (322 133)
+9.357 mv (323 133)
+9.360 mv (323 132)
+9.363 mv (324 132)
+9.367 mv (325 132)
+9.371 mv (325 131)
+9.375 mv (326 131)
+9.381 mv (326 130)
+9.382 mv (327 130)
+9.389 mv (327 129)
+9.391 mv (328 129)
+9.393 mv (328 128)
+9.397 mv (329 128)
+9.400 mv (329 127)
+9.407 mv (329 126)
+9.413 mv (330 126)
+9.415 mv (330 125)
+9.435 mv (330 124)
+9.460 lc (330 124)
+pressed 21 8
+9.525 mv (330 125)
+9.526 lr (330 125)
+number3 21 8
+9.543 mv (330 126)
+9.550 mv (330 127)
+9.555 mv (330 128)
+9.560 mv (330 129)
+9.562 mv (330 130)
+9.566 mv (330 131)
+9.571 mv (330 132)
+9.572 mv (329 132)
+9.576 mv (329 133)
+9.579 mv (329 134)
+9.585 mv (329 135)
+9.592 mv (329 136)
+9.605 mv (329 137)
+9.616 lc (329 137)
+pressed 21 9
+9.692 lr (329 137)
+number3 21 9
+9.702 mv (329 138)
+9.722 mv (330 138)
+9.737 mv (331 138)
+9.742 mv (331 137)
+9.746 mv (332 137)
+9.747 mv (332 136)
+9.750 mv (333 136)
+9.754 mv (333 135)
+9.756 mv (334 135)
+9.760 mv (334 134)
+9.764 mv (335 134)
+9.766 mv (335 133)
+9.769 mv (335 132)
+9.774 mv (336 132)
+9.776 mv (336 131)
+9.781 mv (337 131)
+9.784 mv (337 130)
+9.792 mv (337 129)
+9.797 mv (337 128)
+9.800 mv (338 128)
+9.806 mv (338 127)
+9.815 mv (338 126)
+9.825 mv (338 125)
+9.832 mv (339 125)
+9.837 mv (339 124)
+9.842 mv (339 123)
+9.853 mv (339 122)
+9.857 mv (340 122)
+9.890 lc (340 122)
+pressed 22 8
+9.961 lr (340 122)
+number3 22 8
+9.985 mv (340 123)
+9.996 mv (340 124)
+10.000 mv (340 125)
+10.006 mv (340 126)
+10.012 mv (340 127)
+10.018 mv (340 128)
+10.026 mv (340 129)
+10.029 mv (340 130)
+10.038 mv (340 131)
+10.043 mv (339 131)
+10.049 mv (339 132)
+10.053 lc (339 132)
+pressed 22 9
+10.062 mv (339 133)
+10.072 mv (339 134)
+10.131 lr (339 134)
+number3 22 9
+10.167 mv (340 134)
+10.174 mv (341 134)
+10.182 mv (341 133)
+10.183 mv (342 133)
+10.188 mv (342 132)
+10.189 mv (343 132)
+10.196 mv (344 132)
+10.197 mv (344 131)
+10.201 mv (345 131)
+10.204 mv (346 131)
+10.207 mv (346 130)
+10.213 mv (347 130)
+10.218 mv (347 129)
+10.223 mv (348 129)
+10.223 mv (348 128)
+10.235 mv (349 128)
+10.237 mv (349 127)
+10.244 mv (350 127)
+10.251 mv (350 126)
+10.263 mv (351 126)
+10.267 mv (351 125)
+10.278 mv (352 125)
+10.283 mv (352 124)
+10.289 mv (353 124)
+10.290 mv (353 123)
+10.295 mv (354 123)
+10.302 mv (354 122)
+10.307 mv (355 122)
+10.311 mv (355 121)
+10.321 mv (356 121)
+10.322 mv (356 120)
+10.328 mv (356 119)
+10.360 lc (356 119)
+pressed 23 8
+10.440 mv (356 120)
+10.441 lr (356 120)
+number5 23 8
+10.450 mv (356 121)
+10.456 mv (356 122)
+10.461 mv (356 123)
+10.465 mv (356 124)
+10.467 mv (356 125)
+10.471 mv (356 126)
+10.475 mv (356 127)
+10.479 mv (356 128)
+10.480 mv (355 128)
+10.483 mv (355 129)
+10.484 mv (355 130)
+10.488 mv (355 131)
+10.492 mv (355 132)
+10.496 mv (355 133)
+10.498 mv (355 134)
+10.504 mv (355 135)
+10.514 mv (355 136)
+10.518 lc (355 136)
+pressed 23 9
+10.612 lr (353 129)
+number5 23 9
+flag 3 3
+flag 3 4
+flag 3 5
+flag 3 6
+flag 3 7
+flag 3 8
+flag 3 9
+flag 3 10
+flag 3 11
+flag 3 12
+flag 3 13
+flag 3 14
+flag 4 3
+flag 4 14
+flag 5 3
+flag 5 14
+flag 6 3
+flag 6 14
+flag 7 3
+flag 7 7
+flag 7 8
+flag 7 9
+flag 7 10
+flag 7 14
+flag 8 3
+flag 8 7
+flag 8 10
+flag 8 14
+flag 9 3
+flag 9 7
+flag 9 10
+flag 9 14
+flag 10 3
+flag 10 7
+flag 10 10
+flag 10 14
+flag 11 3
+flag 11 7
+flag 11 10
+flag 11 14
+flag 12 3
+flag 12 7
+flag 12 10
+flag 12 14
+flag 13 3
+flag 13 7
+flag 13 10
+flag 13 14
+flag 14 3
+flag 14 7
+flag 14 10
+flag 14 14
+flag 15 3
+flag 15 7
+flag 15 10
+flag 15 14
+flag 16 3
+flag 16 7
+flag 16 10
+flag 16 14
+flag 17 3
+flag 17 7
+flag 17 10
+flag 17 14
+flag 18 3
+flag 18 7
+flag 18 10
+flag 18 14
+flag 19 3
+flag 19 7
+flag 19 10
+flag 19 14
+flag 20 3
+flag 20 7
+flag 20 10
+flag 20 14
+flag 21 3
+flag 21 7
+flag 21 10
+flag 21 14
+flag 22 3
+flag 22 7
+flag 22 10
+flag 22 14
+flag 23 3
+flag 23 7
+flag 23 10
+flag 23 14
+flag 24 3
+flag 24 7
+flag 24 8
+flag 24 9
+flag 24 10
+flag 24 14
+flag 25 3
+flag 25 14
+flag 26 3
+flag 26 14
+flag 27 3
+flag 27 14
+flag 28 3
+flag 28 4
+flag 28 5
+flag 28 6
+flag 28 7
+flag 28 8
+flag 28 9
+flag 28 10
+flag 28 11
+flag 28 12
+flag 28 13
+flag 28 14
+pressed 5 1
+number0 5 1
+number0 4 1
+number3 4 2
+number3 5 2
+number0 6 1
+number3 6 2
+number0 3 1
+number2 3 2
+number0 7 1
+number3 7 2
+number0 2 1
+number1 2 2
+number0 8 1
+number3 8 2
+number0 1 1
+number0 1 2
+number0 9 1
+number3 9 2
+number0 1 3
+number2 2 3
+number0 10 1
+number3 10 2
+number0 1 4
+number3 2 4
+number0 11 1
+number3 11 2
+number0 1 5
+number3 2 5
+number0 12 1
+number3 12 2
+number0 1 6
+number3 2 6
+number0 13 1
+number3 13 2
+number0 1 7
+number3 2 7
+number0 14 1
+number3 14 2
+number0 1 8
+number3 2 8
+number0 15 1
+number3 15 2
+number0 1 9
+number3 2 9
+number0 16 1
+number3 16 2
+number0 1 10
+number3 2 10
+number0 17 1
+number3 17 2
+number0 1 11
+number3 2 11
+number0 18 1
+number3 18 2
+number0 1 12
+number3 2 12
+number0 19 1
+number3 19 2
+number0 1 13
+number3 2 13
+number0 20 1
+number3 20 2
+number0 1 14
+number2 2 14
+number0 21 1
+number3 21 2
+number0 1 15
+number1 2 15
+number0 22 1
+number3 22 2
+number0 1 16
+number0 2 16
+number0 23 1
+number3 23 2
+number2 3 15
+number0 3 16
+number0 24 1
+number3 24 2
+number3 4 15
+number0 4 16
+number0 25 1
+number3 25 2
+number3 5 15
+number0 5 16
+number0 26 1
+number3 26 2
+number3 6 15
+number0 6 16
+number0 27 1
+number3 27 2
+number3 7 15
+number0 7 16
+number0 28 1
+number2 28 2
+number3 8 15
+number0 8 16
+number0 29 1
+number1 29 2
+number3 9 15
+number0 9 16
+number0 30 1
+number0 30 2
+number3 10 15
+number0 10 16
+number2 29 3
+number0 30 3
+number3 11 15
+number0 11 16
+number3 29 4
+number0 30 4
+number3 12 15
+number0 12 16
+number3 29 5
+number0 30 5
+number3 13 15
+number0 13 16
+number3 29 6
+number0 30 6
+number3 14 15
+number0 14 16
+number3 29 7
+number0 30 7
+number3 15 15
+number0 15 16
+number3 29 8
+number0 30 8
+number3 16 15
+number0 16 16
+number3 29 9
+number0 30 9
+number3 17 15
+number0 17 16
+number3 29 10
+number0 30 10
+number3 18 15
+number0 18 16
+number3 29 11
+number0 30 11
+number3 19 15
+number0 19 16
+number3 29 12
+number0 30 12
+number3 20 15
+number0 20 16
+number3 29 13
+number0 30 13
+number3 21 15
+number0 21 16
+number2 29 14
+number0 30 14
+number3 22 15
+number0 22 16
+number1 29 15
+number0 30 15
+number3 23 15
+number0 23 16
+number0 29 16
+number0 30 16
+number3 24 15
+number0 24 16
+number2 28 15
+number0 28 16
+number3 25 15
+number0 25 16
+number3 27 15
+number0 27 16
+number3 26 15
+number0 26 16
+pressed 5 4
+number3 5 4
+pressed 5 5
+number0 5 5
+number5 4 4
+number3 4 5
+number3 4 6
+number0 5 6
+number3 6 4
+number0 6 5
+number1 6 6
+number3 4 7
+number0 5 7
+number2 6 7
+number3 7 4
+number0 7 5
+number2 7 6
+number3 4 8
+number0 5 8
+number3 6 8
+number3 8 4
+number0 8 5
+number3 8 6
+number3 4 9
+number0 5 9
+number3 6 9
+number3 9 4
+number0 9 5
+number3 9 6
+number3 4 10
+number0 5 10
+number2 6 10
+number3 10 4
+number0 10 5
+number3 10 6
+number3 4 11
+number0 5 11
+number1 6 11
+number3 11 4
+number0 11 5
+number3 11 6
+number3 4 12
+number0 5 12
+number0 6 12
+number3 12 4
+number0 12 5
+number3 12 6
+number5 4 13
+number3 5 13
+number3 6 13
+number2 7 11
+number0 7 12
+number3 7 13
+number3 13 4
+number0 13 5
+number3 13 6
+number3 8 11
+number0 8 12
+number3 8 13
+number3 14 4
+number0 14 5
+number3 14 6
+number3 9 11
+number0 9 12
+number3 9 13
+number3 15 4
+number0 15 5
+number3 15 6
+number3 10 11
+number0 10 12
+number3 10 13
+number3 16 4
+number0 16 5
+number3 16 6
+number3 11 11
+number0 11 12
+number3 11 13
+number3 17 4
+number0 17 5
+number3 17 6
+number3 12 11
+number0 12 12
+number3 12 13
+number3 18 4
+number0 18 5
+number3 18 6
+number3 13 11
+number0 13 12
+number3 13 13
+number3 19 4
+number0 19 5
+number3 19 6
+number3 14 11
+number0 14 12
+number3 14 13
+number3 20 4
+number0 20 5
+number3 20 6
+number3 15 11
+number0 15 12
+number3 15 13
+number3 21 4
+number0 21 5
+number3 21 6
+number3 16 11
+number0 16 12
+number3 16 13
+number3 22 4
+number0 22 5
+number3 22 6
+number3 17 11
+number0 17 12
+number3 17 13
+number3 23 4
+number0 23 5
+number3 23 6
+number3 18 11
+number0 18 12
+number3 18 13
+number3 24 4
+number0 24 5
+number2 24 6
+number3 19 11
+number0 19 12
+number3 19 13
+number3 25 4
+number0 25 5
+number1 25 6
+number3 20 11
+number0 20 12
+number3 20 13
+number3 26 4
+number0 26 5
+number0 26 6
+number3 21 11
+number0 21 12
+number3 21 13
+number5 27 4
+number3 27 5
+number3 27 6
+number2 25 7
+number0 26 7
+number3 27 7
+number3 22 11
+number0 22 12
+number3 22 13
+number3 25 8
+number0 26 8
+number3 27 8
+number3 23 11
+number0 23 12
+number3 23 13
+number3 25 9
+number0 26 9
+number3 27 9
+number2 24 11
+number0 24 12
+number3 24 13
+number2 25 10
+number0 26 10
+number3 27 10
+number1 25 11
+number0 25 12
+number3 25 13
+number0 26 11
+number3 27 11
+number0 26 12
+number3 26 13
+number3 27 12
+number5 27 13
+pressed 8 8
+number5 8 8
+pressed 9 8
+number3 9 8
+pressed 9 9
+number3 9 9
+pressed 8 9
+number5 8 9
+pressed 10 8
+number3 10 8
+pressed 10 9
+number3 10 9
+pressed 11 8
+number3 11 8
+pressed 11 9
+number3 11 9
+pressed 12 8
+number3 12 8
+pressed 12 9
+number3 12 9
+pressed 13 8
+number3 13 8
+pressed 13 9
+number3 13 9
+pressed 14 8
+number3 14 8
+pressed 14 9
+number3 14 9
+pressed 15 8
+number3 15 8
+pressed 15 9
+number3 15 9
+pressed 16 8
+number3 16 8
+pressed 16 9
+number3 16 9
+pressed 17 8
+number3 17 8
+pressed 17 9
+number3 17 9
+pressed 18 8
+number3 18 8
+pressed 18 9
+number3 18 9
+pressed 19 8
+number3 19 8
+pressed 19 9
+number3 19 9
+pressed 20 8
+number3 20 8
+pressed 20 9
+number3 20 9
+pressed 21 8
+number3 21 8
+pressed 21 9
+number3 21 9
+pressed 22 8
+number3 22 8
+pressed 22 9
+number3 22 9
+pressed 23 8
+number5 23 8
+pressed 23 9
+number5 23 9
+flag 3 3
+flag 3 4
+flag 3 5
+flag 3 6
+flag 3 7
+flag 3 8
+flag 3 9
+flag 3 10
+flag 3 11
+flag 3 12
+flag 3 13
+flag 3 14
+flag 4 3
+flag 4 14
+flag 5 3
+flag 5 14
+flag 6 3
+flag 6 14
+flag 7 3
+flag 7 7
+flag 7 8
+flag 7 9
+flag 7 10
+flag 7 14
+flag 8 3
+flag 8 7
+flag 8 10
+flag 8 14
+flag 9 3
+flag 9 7
+flag 9 10
+flag 9 14
+flag 10 3
+flag 10 7
+flag 10 10
+flag 10 14
+flag 11 3
+flag 11 7
+flag 11 10
+flag 11 14
+flag 12 3
+flag 12 7
+flag 12 10
+flag 12 14
+flag 13 3
+flag 13 7
+flag 13 10
+flag 13 14
+flag 14 3
+flag 14 7
+flag 14 10
+flag 14 14
+flag 15 3
+flag 15 7
+flag 15 10
+flag 15 14
+flag 16 3
+flag 16 7
+flag 16 10
+flag 16 14
+flag 17 3
+flag 17 7
+flag 17 10
+flag 17 14
+flag 18 3
+flag 18 7
+flag 18 10
+flag 18 14
+flag 19 3
+flag 19 7
+flag 19 10
+flag 19 14
+flag 20 3
+flag 20 7
+flag 20 10
+flag 20 14
+flag 21 3
+flag 21 7
+flag 21 10
+flag 21 14
+flag 22 3
+flag 22 7
+flag 22 10
+flag 22 14
+flag 23 3
+flag 23 7
+flag 23 10
+flag 23 14
+flag 24 3
+flag 24 7
+flag 24 8
+flag 24 9
+flag 24 10
+flag 24 14
+flag 25 3
+flag 25 14
+flag 26 3
+flag 26 14
+flag 27 3
+flag 27 14
+flag 28 3
+flag 28 4
+flag 28 5
+flag 28 6
+flag 28 7
+flag 28 8
+flag 28 9
+flag 28 10
+flag 28 11
+flag 28 12
+flag 28 13
+flag 28 14

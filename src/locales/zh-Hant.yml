@@ -1,0 +1,66 @@
+menu:
+  game:
+    title: 遊戲
+    localVideo: 選擇本地文件
+    fileDrag: 檢測文件拖放
+    marks: 標記問號 (?)
+    share:
+      copy: 複製分享鏈接
+      open: 打開分享鏈接
+      copied: 分享鏈接已複製到剪貼板
+      error: 分享鏈接複製失敗
+    download: 下載錄像文件
+  options:
+    title: 選項
+    language: 繁體中文
+    toggleLanguages: 切換語言
+    squareSize: 方塊邊長
+    videoMap:
+      title: 錄像地圖
+      move: 鼠標移動
+      left: 鼠標左鍵
+      right: 鼠標右鍵
+      double: 鼠標雙擊
+      opening: 開空
+  help:
+    title: 幫助
+    source: 開源代碼
+    bugs: 問題反饋
+    version: 版本信息
+    author:
+      title: 作者
+      blog: 我的博客
+      domain: 我的地盤
+  exit:
+    title: 退出
+
+game:
+  upk: 重開
+  anonymous: 佚名
+
+controlBar:
+  play: 播放
+  pause: 暫停
+  replay: 重放
+  displayVideoMap: 顯示錄像地圖
+  hideVideoMap: 隱藏錄像地圖
+  reset: 重置
+
+common:
+  loading: 加載中...
+  copied: '複製成功: {0}'
+  fileSelect: '請選擇一個 avf/mvf/rmv/rawvf 文件'
+
+error:
+  copy: '複製失敗: {0}'
+  videoParse: '錄像解析出錯：'
+  uriRequest: '數據請求出錯：{0}'
+  invalidStatus: '無效的狀態碼：{0}'
+  shareParams: '分享參數解析失敗: {0}'
+  fileNotPresent: 文件不存在
+  fileNotSelect: 未選擇文件或者文件無法訪問
+  fileTooMany: '文件數量過多：{0}'
+  fileEmpty: '文件內容為空：{0}'
+  fileUnsupported: '@:common.fileSelect'
+  fileTooLarge: '文件大小超過 5 MB：{0}'
+  fileReadError: '文件讀取出錯：{0}'

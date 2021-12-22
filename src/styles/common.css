@@ -1,0 +1,24 @@
+/* 背景颜色 */
+body {
+    background-color: transparent !important;
+}
+
+/* 应用容器 */
+#app {
+    /* 让子元素可以垂直居中 */
+    height: 100%;
+    display: flex;
+}
+
+/* 裁剪元素框外的内容，并且不显示滚动条 */
+.overflow-hidden {
+    overflow: hidden !important;
+}
+
+/* 修改 ant-design-vue 的菜单样式 */
+.ant-menu-vertical.ant-menu-sub {
+    /* 覆盖二级菜单的最小宽度设置，让二级菜单的宽度根据内容自适应 */
+    min-width: 0 !important;
+    /* 提升二级菜单最大高度属性的优先级，因为使用 splitChunks 对样式文件进行拆分后，样式文件加载顺序不可控，可能导致菜单无法显示 */
+    max-height: calc(100vh - 100px) !important;
+}
