@@ -29,24 +29,6 @@
 
   ![flop-player-file-drag](./docs/flop-player-file-drag.png)
 
-## 使用
-
-1. 将 Flop Player 打包后的代码复制到工程目录下
-
-2. 引入样式文件，或者将[样式源码](./public/index.css)直接复制到已有的样式文件中
-
-   ```html
-   <link href="index.min.css" rel="stylesheet" type="text/css">
-   ```
-
-3. 添加一个 `<iframe>` 标签，指定 `src` 为 `index.html`，并添加一个名为 `flop-player-display-none` 的 `class`，`<iframe>` 的基础布局可以自定义，也可以使用默认提供的 `flop-player-iframe`
-
-   ```html
-   <iframe class="flop-player-iframe flop-player-display-none" src="index.html"></iframe>
-   ```
-
-4. 等待 Flop Player 加载完成后，可以通过 `window.flop` 调用播放录像和解析录像的接口，Flop Player 的代码文件体积有 1MB 左右，首次加载时可能需要等待一段时间，建议可以开启 `gzip` 压缩优化加载速度
-
 ## 接口
 
 ### flop.playVideo(uri, options)
@@ -88,6 +70,42 @@ Video 类型说明如下（Video 的其他方法和属性只在 Flop Player 内�
 | getLeftClicks   | () => number | 获取左键点击数                                              |
 | getRightClicks  | () => number | 获取右键点击数                                              |
 | getDoubleClicks | () => number | 获取双击点击数                                              |
+
+### flop.onload()
+
+此方法需要调用者主动重写，Flop Player 将在页面加载完成时调用，如：
+
+```js
+if (window.flop) {
+    console.log('Flop Player Loaded')
+} else {
+    window.flop = {
+        onload: function () {
+            console.log('Flop Player Loaded')
+        }
+    }
+}
+```
+
+## 使用
+
+1. 将 Flop Player 打包后的代码复制到工程目录下
+
+2. 引入样式文件，或者将[样式源码](./public/index.css)直接复制到已有的样式文件中
+
+   ```html
+   <link href="index.min.css" rel="stylesheet" type="text/css">
+   ```
+
+3. 添加一个 `<iframe>` 标签，指定 `src` 为 `index.html`，并添加一个名为 `flop-player-display-none` 的 `class`，`<iframe>` 的基础布局可以自定义，也可以使用默认提供的 `flop-player-iframe`
+
+   ```html
+   <iframe class="flop-player-iframe flop-player-display-none" src="index.html"></iframe>
+   ```
+
+4. 等待 Flop Player 加载完成（`onload`）后，可以调用播放录像（`playVideo`）和解析录像（`parseFiles`）的接口
+
+5. Flop Player 的代码文件体积有 1MB 左右，首次加载时可能需要等待一段时间，建议可以开启 `gzip` 压缩优化加载速度，不过要注意，开启 `gzip` 压缩可能会消耗服务端一定的性能，可以根据实际情况决定是否开启
 
 ## 关于
 
