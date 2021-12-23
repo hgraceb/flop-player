@@ -16,7 +16,7 @@ menu:
     toggleLanguages: 切換語言
     squareSize: 方塊邊長
     videoMap:
-      title: 錄像地圖
+      title: 鼠標路徑
       move: 鼠標移動
       left: 鼠標左鍵
       right: 鼠標右鍵
@@ -42,8 +42,8 @@ controlBar:
   play: 播放
   pause: 暫停
   replay: 重放
-  displayVideoMap: 顯示錄像地圖
-  hideVideoMap: 隱藏錄像地圖
+  displayVideoMap: 顯示鼠標路徑
+  hideVideoMap: 隱藏鼠標路徑
   reset: 重置
 
 common:

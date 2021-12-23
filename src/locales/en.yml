@@ -16,7 +16,7 @@ menu:
     toggleLanguages: Languages
     squareSize: Square Size
     videoMap:
-      title: Video map
+      title: Mouse path
       move: Mouse move
       left: Left click
       right: Right click
@@ -42,8 +42,8 @@ controlBar:
   play: Play
   pause: Pause
   replay: Replay
-  displayVideoMap: Display video map
-  hideVideoMap: Hide video map
+  displayVideoMap: Display mouse path
+  hideVideoMap: Hide mouse path
   reset: Reset
 
 common:

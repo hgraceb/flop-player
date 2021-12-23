@@ -21,7 +21,7 @@ menu:
     squareSize: 方块边长
     # 切换轨迹图显示状态
     videoMap:
-      title: 录像地图
+      title: 鼠标路径
       move: 鼠标移动
       left: 鼠标左键
       right: 鼠标右键
@@ -49,8 +49,8 @@ controlBar:
   play: 播放
   pause: 暂停
   replay: 重放
-  displayVideoMap: 显示录像地图
-  hideVideoMap: 隐藏录像地图
+  displayVideoMap: 显示鼠标路径
+  hideVideoMap: 隐藏鼠标路径
   reset: 重置
 
 # 通用
