@@ -114,7 +114,7 @@ if (window.flop) {
 
 ## 其他
 
-- [Ant Design Vue](https://2x.antdv.com/components/overview/)：🌈 An enterprise-class UI components based on Ant Design and Vue. 🐜
+- [Ant Design Vue](https://github.com/vueComponent/ant-design-vue)：🌈 An enterprise-class UI components based on Ant Design and Vue. 🐜
 - [Babel](https://github.com/babel/babel)：🐠 Babel is a compiler for writing next generation JavaScript.
 - [chardet](https://github.com/runk/node-chardet)：Character encoding detection tool for NodeJS
 - [copy-text-to-clipboard](https://github.com/sindresorhus/copy-text-to-clipboard)：Copy text to the clipboard in modern browsers (0.2 kB)
@@ -125,5 +125,6 @@ if (window.flop) {
 - [TypeScript](https://github.com/microsoft/TypeScript)：TypeScript is a superset of JavaScript that compiles to clean JavaScript output.
 - [Vue 3.0](https://github.com/vuejs/vue-next)：🖖 Vue.js is a progressive, incrementally-adoptable JavaScript framework for building UI on the web.
 - [Vue I18n](https://github.com/intlify/vue-i18n-next)：Vue I18n for Vue 3
+- [VueUse](https://github.com/vueuse/vueuse)：Collection of essential Vue Composition Utilities for Vue 2 and 3
 - [Vuex](https://github.com/vuejs/vuex)：🗃️ Centralized State Management for Vue.js.
-- [YAML](https://github.com/eemeli/yaml/)：JavaScript parser and stringifier for YAML
+- [YAML](https://github.com/eemeli/yaml)：JavaScript parser and stringifier for YAML
