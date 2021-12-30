@@ -1,9 +1,9 @@
 menu:
   game:
     title: Spiel
-    localVideo: Lokale Datei auswählen
-    fileDrag: Ziehen und Ablegen erkennen
-    marks: Fragezeichen
+    localVideo: Datei auswählen
+    fileDrag: Ziehen und Ablegen
+    marks: Fragezeichen (?)
     share:
       copy: Link kopieren
       open: Link öffnen
