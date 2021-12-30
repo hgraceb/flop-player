@@ -13,50 +13,99 @@
 <iframe class="flop-player-iframe flop-player-display-none" src="index.html"></iframe>
 
 <div>
-    <input id="file" type="file">
-    3BV<input id="3bv">
-    RTime<input id="time">
-    Error<input id="error">
+    <input id="file" disabled type="file">
+    <table border="1">
+        <thead>
+        <tr>
+            <th>parseFiles 方法参数</th>
+            <th>方法名称</th>
+            <th>方法类型</th>
+            <th>方法说明</th>
+            <th>方法返回值</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td rowspan="6">onSuccess : (video: Video) => void</td>
+            <td>Video.getTime</td>
+            <td>() => number</td>
+            <td>获取游戏真实时间（毫秒）</td>
+            <td id="Time"></td>
+        </tr>
+        <tr>
+            <td>Video.getLevel</td>
+            <td>() => number</td>
+            <td>获取游戏级别<br />0：未知，1：初级，2：中级，3：高级，4：自定义</td>
+            <td id="Level"></td>
+        </tr>
+        <tr>
+            <td>Video.getBBBV</td>
+            <td>() => number</td>
+            <td>获取最少左键点击数</td>
+            <td id="BBBV"></td>
+        </tr>
+        <tr>
+            <td>Video.getLeftClicks</td>
+            <td>() => number</td>
+            <td>获取左键点击数</td>
+            <td id="LeftClicks"></td>
+        </tr>
+        <tr>
+            <td>Video.getRightClicks</td>
+            <td>() => number</td>
+            <td>获取右键点击数</td>
+            <td id="RightClicks"></td>
+        </tr>
+        <tr>
+            <td>Video.getDoubleClicks</td>
+            <td>() => number</td>
+            <td>获取双击点击数</td>
+            <td id="DoubleClicks"></td>
+        </tr>
+        <tr>
+            <td rowspan="6">onError : (info: string) => void</td>
+            <td>info</td>
+            <td>string</td>
+            <td>错误信息</td>
+            <td id="Error"></td>
+        </tr>
+        </tbody>
+    </table>
     <br /><br />
-    <button onclick="playVideo('./videos/avf/arbiter_beg.avf')" type="button">arbiter_beg.avf</button>
-    <button onclick="playVideo('./videos/avf/arbiter_int.avf')" type="button">arbiter_int.avf</button>
-    <button onclick="playVideo('./videos/avf/arbiter_exp.avf')" type="button">arbiter_exp.avf</button>
-    <br /><br />
-    <button onclick="playVideo('./videos/avf/Cus_8x30_30mines.avf')" type="button">Cus_8x30_30mines.avf</button>
-    <button onclick="playVideo('./videos/avf/Cus_20x20_20mines.avf')" type="button">Cus_20x20_20mines.avf</button>
-    <button onclick="playVideo('./videos/avf/Cus_30x8_30mines.avf')" type="button">Cus_30x8_30mines.avf</button>
-    <button onclick="playVideo('./videos/avf/wasted_clicks_test.avf')" type="button">wasted_clicks_test.avf</button>
+    <button disabled onclick="playVideo('./videos/avf/arbiter_beg.avf')" type="button">arbiter_beg.avf</button>
+    <button disabled onclick="playVideo('./videos/avf/arbiter_int.avf')" type="button">arbiter_int.avf</button>
+    <button disabled onclick="playVideo('./videos/avf/arbiter_exp.avf')" type="button">arbiter_exp.avf</button>
+    <button disabled onclick="playVideo('./videos/avf/Cus_8x30_30mines.avf')" type="button">Cus_8x30_30mines.avf</button>
+    <button disabled onclick="playVideo('./videos/avf/Cus_20x20_20mines.avf')" type="button">Cus_20x20_20mines.avf</button>
+    <button disabled onclick="playVideo('./videos/avf/Cus_30x8_30mines.avf')" type="button">Cus_30x8_30mines.avf</button>
+    <button disabled onclick="playVideo('./videos/avf/wasted_clicks_test.avf')" type="button">wasted_clicks_test.avf</button>
     <br /><br /><br />
-    <button onclick="playVideo('https://example.com/error_uri_blocked.rawvf')" type="button">error_uri_blocked.rawvf</button>
+    <button disabled onclick="playVideo('https://example.com/error_uri_blocked.rawvf')" type="button">error_uri_blocked.rawvf</button>
+    <button disabled onclick="playVideo('./videos/error/error_file_not_found.rawvf')" type="button">error_file_not_found.rawvf</button>
+    <button disabled onclick="playVideo('./videos/error/error_file_unsupported_type.txt')" type="button">error_file_unsupported_type.txt</button>
+    <button disabled onclick="playVideo('./videos/error/error_parser_unexpected_end.rawvf')" type="button">error_parser_unexpected_end.rawvf</button>
+    <button disabled onclick="playVideo('./videos/error/error_parser_unexpected_flow.rawvf')" type="button">error_parser_unexpected_flow.rawvf</button>
     <br /><br />
-    <button onclick="playVideo('./videos/error/error_file_not_found.rawvf')" type="button">error_file_not_found.rawvf</button>
-    <button onclick="playVideo('./videos/error/error_file_unsupported_type.txt')" type="button">error_file_unsupported_type.txt</button>
-    <br /><br />
-    <button onclick="playVideo('./videos/error/error_parser_unexpected_end.rawvf')" type="button">error_parser_unexpected_end.rawvf</button>
-    <button onclick="playVideo('./videos/error/error_parser_unexpected_flow.rawvf')" type="button">error_parser_unexpected_flow.rawvf</button>
-    <br /><br />
-    <button onclick="playVideo('./videos/error/error_video_content_empty.rawvf')" type="button">error_video_content_empty.rawvf</button>
-    <button onclick="playVideo('./videos/error/error_video_invalid_event.rawvf')" type="button">error_video_invalid_event.rawvf</button>
-    <br /><br />
-    <button onclick="playVideo('./videos/error/error_video_no_board_5120KB.rawvf')" type="button">error_video_no_board_5120KB.rawvf</button>
-    <button onclick="playVideo('./videos/error/error_video_size_exceeds_5121KB.rawvf')" type="button">error_video_size_exceeds_5121KB.rawvf</button>
-    <button onclick="playVideo('./videos/error/error_video_unsupported_marathon.rawvf')" type="button">error_video_unsupported_marathon.rawvf</button>
+    <button disabled onclick="playVideo('./videos/error/error_video_content_empty.rawvf')" type="button">error_video_content_empty.rawvf</button>
+    <button disabled onclick="playVideo('./videos/error/error_video_invalid_event.rawvf')" type="button">error_video_invalid_event.rawvf</button>
+    <button disabled onclick="playVideo('./videos/error/error_video_no_board_5120KB.rawvf')" type="button">error_video_no_board_5120KB.rawvf</button>
+    <button disabled onclick="playVideo('./videos/error/error_video_size_exceeds_5121KB.rawvf')" type="button">error_video_size_exceeds_5121KB.rawvf</button>
+    <button disabled onclick="playVideo('./videos/error/error_video_unsupported_marathon.rawvf')" type="button">error_video_unsupported_marathon.rawvf</button>
     <br /><br /><br />
-    <button onclick="playVideo('./videos/mvf/0.96_beta_or_earlier.mvf')" type="button">0.96_beta_or_earlier.mvf</button>
-    <button onclick="playVideo('./videos/mvf/0.97_beta.mvf')" type="button">0.97_beta.mvf</button>
-    <br /><br />
-    <button onclick="playVideo('./videos/mvf/2006_release_1.mvf')" type="button">2006_release_1.mvf</button>
-    <button onclick="playVideo('./videos/mvf/2006_release_2.mvf')" type="button">2006_release_2.mvf</button>
-    <button onclick="playVideo('./videos/mvf/2007_release_1.mvf')" type="button">2007_release_1.mvf</button>
-    <button onclick="playVideo('./videos/mvf/2007_release_2.mvf')" type="button">2007_release_2.mvf</button>
+    <button disabled onclick="playVideo('./videos/mvf/0.96_beta_or_earlier.mvf')" type="button">0.96_beta_or_earlier.mvf</button>
+    <button disabled onclick="playVideo('./videos/mvf/0.97_beta.mvf')" type="button">0.97_beta.mvf</button>
+    <button disabled onclick="playVideo('./videos/mvf/2006_release_1.mvf')" type="button">2006_release_1.mvf</button>
+    <button disabled onclick="playVideo('./videos/mvf/2006_release_2.mvf')" type="button">2006_release_2.mvf</button>
+    <button disabled onclick="playVideo('./videos/mvf/2007_release_1.mvf')" type="button">2007_release_1.mvf</button>
+    <button disabled onclick="playVideo('./videos/mvf/2007_release_2.mvf')" type="button">2007_release_2.mvf</button>
     <br /><br /><br />
-    <button onclick="playVideo('./videos/rawvf/Cus_1x1_0mines.rawvf')" type="button">Cus_1x1_0mines.rawvf</button>
-    <button onclick="playVideo('./videos/rawvf/custom.rawvf')" type="button">custom.rawvf</button>
-    <button onclick="playVideo('./videos/rawvf/nested-opening.rawvf')" type="button">nested-opening.rawvf</button>
+    <button disabled onclick="playVideo('./videos/rawvf/Cus_1x1_0mines.rawvf')" type="button">Cus_1x1_0mines.rawvf</button>
+    <button disabled onclick="playVideo('./videos/rawvf/custom.rawvf')" type="button">custom.rawvf</button>
+    <button disabled onclick="playVideo('./videos/rawvf/nested-opening.rawvf')" type="button">nested-opening.rawvf</button>
     <br /><br /><br />
-    <button onclick="playVideo('./videos/rmv/beg.rmv')" type="button">beg.rmv</button>
-    <button onclick="playVideo('./videos/rmv/int.rmv')" type="button">int.rmv</button>
-    <button onclick="playVideo('./videos/rmv/exp.rmv')" type="button">exp.rmv</button>
+    <button disabled onclick="playVideo('./videos/rmv/beg.rmv')" type="button">beg.rmv</button>
+    <button disabled onclick="playVideo('./videos/rmv/int.rmv')" type="button">int.rmv</button>
+    <button disabled onclick="playVideo('./videos/rmv/exp.rmv')" type="button">exp.rmv</button>
     <br /><br /><br />
 </div>
 
@@ -75,15 +124,20 @@
      *
      * @param video 录像信息
      * @param {function(): number} video.getTime 获取游戏真实时间（毫秒）
+     * @param {function(): number} video.getLevel 获取游戏级别，0：未知，1：初级，2：中级，3：高级，4：自定义
      * @param {function(): number} video.getBBBV 获取游戏最少左键点击数
+     * @param {function(): number} video.getLeftClicks 获取左键点击数
+     * @param {function(): number} video.getRightClicks 获取右键键点击数
+     * @param {function(): number} video.getDoubleClicks 获取双击点击数
      */
     function onSuccess(video) {
-        const element3bv = document.getElementById('3bv')
-        const elementTime = document.getElementById('time')
-        const elementError = document.getElementById('error')
-        element3bv.value = element3bv.title = video.getBBBV().toString()
-        elementTime.value = elementTime.title = (video.getTime() / 1000).toString()
-        elementError.value = elementError.title = ''
+        document.getElementById('Time').innerText = video.getTime().toString()
+        document.getElementById('Level').innerText = video.getLevel().toString()
+        document.getElementById('BBBV').innerText = video.getBBBV().toString()
+        document.getElementById('LeftClicks').innerText = video.getLeftClicks().toString()
+        document.getElementById('RightClicks').innerText = video.getRightClicks().toString()
+        document.getElementById('DoubleClicks').innerText = video.getDoubleClicks().toString()
+        document.getElementById('Error').innerText = ''
     }
 
     /**
@@ -92,12 +146,13 @@
      * @param {string} info 错误信息，文本语言默认为用户选择的语言
      */
     function onError(info) {
-        const element3bv = document.getElementById('3bv')
-        const elementTime = document.getElementById('time')
-        const elementError = document.getElementById('error')
-        element3bv.value = element3bv.title = ''
-        elementTime.value = elementTime.title = ''
-        elementError.value = elementError.title = info
+        document.getElementById('Time').innerText = ''
+        document.getElementById('Level').innerText = ''
+        document.getElementById('BBBV').innerText = ''
+        document.getElementById('LeftClicks').innerText = ''
+        document.getElementById('RightClicks').innerText = ''
+        document.getElementById('DoubleClicks').innerText = ''
+        document.getElementById('Error').innerText = info
     }
 
     /**
@@ -161,8 +216,21 @@
         })
     }
 
-    window.onload = function () {
-        document.getElementById('file').addEventListener('change', fileChange)
+    /**
+     * 激活禁用的元素
+     */
+    function active() {
+        const elements = document.querySelectorAll(':disabled')
+        for (let i = 0; i < elements.length; i++) {
+            elements[i].disabled = false
+        }
+    }
+
+    /**
+     * 播放器加载完成
+     */
+    function playerOnload() {
+        active()
         const uri = './videos/avf/arbiter_exp.avf'
         playVideo(uri, {
             share: {
@@ -172,6 +240,17 @@
             background: 'rgba(0, 0, 0, .5)'
         })
     }
+
+    (function () {
+        document.getElementById('file').addEventListener('change', fileChange)
+        if (isIE() || window.flop) {
+            active()
+        } else {
+            window.flop = {
+                onload: playerOnload
+            }
+        }
+    })()
 </script>
 
 </body>
