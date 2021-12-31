@@ -33,6 +33,9 @@ function getDefaultLocale () {
     } else if (/^en\b/i.test(language)) {
       // 英语
       return 'en'
+    } else if (/^de\b/i.test(language)) {
+      // german
+      return 'de'
     }
   }
   // 默认使用英语
