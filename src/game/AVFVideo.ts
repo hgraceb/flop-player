@@ -256,23 +256,19 @@ export class AVFVideo extends BaseVideo {
 
     // Search through bytes for timestamp which starts after the first '[' bracket
     // Note timestamp_a only became a full timestamp (with year and month) in version 0.46.1
-    while (cr[3] !== '['.charCodeAt(0)) {
+    // 因为在属于时间戳部分的 '[' 字符之前还可能出现其他 '[' 字符，所以与后面的 '|' 字符结合判断当前的 '[' 字符是否属于时间戳部分
+    while (cr[3] !== '['.charCodeAt(0) || cr[5] !== '|'.charCodeAt(0)) {
       cr[0] = cr[1]
       cr[1] = cr[2]
       cr[2] = cr[3]
-      cr[3] = this.getNum()
+      cr[3] = cr[4]
+      cr[4] = cr[5]
+      cr[5] = this.getNum()
     }
-    cr[0] = cr[1]
-    cr[1] = cr[2]
-    cr[2] = cr[3]
-    cr[3] = this.getNum()
 
     // See if Questionmark option was turned on
-    if (cr[0] !== 17 && cr[0] !== 127) return 0
-    this.qm = cr[0] === 17
-
-    // Throw away the next byte (the first '[' before timestamp)
-    this.getChar()
+    if (cr[1] !== 17 && cr[1] !== 127) return 0
+    this.qm = cr[1] === 17
 
     // Fetch timestamp
     // Timestamp_a is when game starts, Timestamp_b is when game ends
