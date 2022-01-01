@@ -56,7 +56,7 @@ export default defineComponent({
     // 问题反馈链接
     const urlBugs = 'https://github.com/hgraceb/flop-player/issues'
     // 版本信息
-    const versionInfo = '1.0.0'
+    const versionInfo = '1.0.2'
     // 复制版本信息
     const copyVersionInfo = () => copy(versionInfo) ? message.info(t('common.copied', [versionInfo])) : message.error(t('error.copy', [versionInfo]))
     // 我的博客链接
