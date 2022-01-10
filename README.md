@@ -20,6 +20,7 @@
 - 主页
 
   ![flop-player-main](./docs/flop-player-main.png)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fhgraceb%2Fflop-player.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fhgraceb%2Fflop-player?ref=badge_shield)
 
 - 菜单
 
@@ -128,3 +129,7 @@ if (window.flop) {
 - [VueUse](https://github.com/vueuse/vueuse)：Collection of essential Vue Composition Utilities for Vue 2 and 3
 - [Vuex](https://github.com/vuejs/vuex)：🗃️ Centralized State Management for Vue.js.
 - [YAML](https://github.com/eemeli/yaml)：JavaScript parser and stringifier for YAML
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fhgraceb%2Fflop-player.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fhgraceb%2Fflop-player?ref=badge_large)
