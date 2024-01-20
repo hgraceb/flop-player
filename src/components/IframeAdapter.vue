@@ -67,10 +67,10 @@ export default defineComponent({
     watch(computed(() => store.state.exit), (exit) => {
       if (exit) {
         exitListener.value()
-        self.frameElement.classList.add(classDisplayNone)
+        self.frameElement!.classList.add(classDisplayNone)
         parent.document.body.classList.remove(classOverflowHidden)
       } else {
-        self.frameElement.classList.remove(classDisplayNone)
+        self.frameElement!.classList.remove(classDisplayNone)
         parent.document.body.classList.add(classOverflowHidden)
       }
     }, {
