@@ -145,8 +145,9 @@ export class RawVideo extends BaseVideo {
       event.column = Math.floor(xx / this.mSquareSize)
       // 计算得到当前行
       event.row = Math.floor(yy / this.mSquareSize)
-      event.x = xx
-      event.y = yy
+      // the rest of the application assumes a square size of 16. Scale events for initial support.
+      event.x = xx * 16 / this.mSquareSize
+      event.y = yy * 16 / this.mSquareSize
       this.mEvents.push(event)
     }
   }
