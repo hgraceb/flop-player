@@ -64,6 +64,8 @@ export class RawVideo extends BaseVideo {
       } else if (option === 'mode') {
         // 不支持作弊模式，作弊模式下有很多额外的可选项，如：Lives、Autoflag、Lawnmower、ElmarTechnique、NonoMouse、SuperClick、SuperFlag
         if (value === 'cheat') this.error('This program doesn\'t support cheat RawVF')
+      } else if (option === 'squaresize') {
+        this.mSquareSize = Number(value)
       } else if (option === 'board') {
         break
       }
