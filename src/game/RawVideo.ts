@@ -142,9 +142,9 @@ export class RawVideo extends BaseVideo {
         this.error(`Invalid mouse event: "${lineStr}"`)
       }
       // 计算得到当前列
-      event.column = Math.floor(xx / 16)
+      event.column = Math.floor(xx / this.mSquareSize)
       // 计算得到当前行
-      event.row = Math.floor(yy / 16)
+      event.row = Math.floor(yy / this.mSquareSize)
       event.x = xx
       event.y = yy
       this.mEvents.push(event)
