@@ -133,17 +133,20 @@ export class RawVideo extends BaseVideo {
       // 如果后续没有待处理字符，则认为当前行记录的是其他事件，如：游戏事件（start、boom、won、nonstandard）、滚动事件（sx、sy）
       if (str.length === 0) continue
       // 获取 X 轴精确坐标
-      event.x = Number(getNext(' '))
+      const xx = Number(getNext(' '))
       // 获取 Y 轴精确坐标
-      event.y = Number(getNext(')'))
+      const yy = Number(getNext(')'))
+
       // 判断录像事件是否成功获取，其中事件时间是整数（单位：毫秒）；X 坐标和 Y 坐标可以超出游戏区域，如：-1
-      if (!Number.isInteger(event.time) || event.mouse === undefined || !Number.isInteger(event.x) || !Number.isInteger(event.y)) {
+      if (!Number.isInteger(event.time) || event.mouse === undefined || !Number.isInteger(xx) || !Number.isInteger(yy)) {
         this.error(`Invalid mouse event: "${lineStr}"`)
       }
       // 计算得到当前列
-      event.column = Math.floor(event.x / 16)
+      event.column = Math.floor(xx / 16)
       // 计算得到当前行
-      event.row = Math.floor(event.y / 16)
+      event.row = Math.floor(yy / 16)
+      event.x = xx
+      event.y = yy
       this.mEvents.push(event)
     }
   }
