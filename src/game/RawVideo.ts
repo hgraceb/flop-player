@@ -11,6 +11,7 @@ export class RawVideo extends BaseVideo {
   protected mBoard: number[] = []
   protected mEvents: VideoEvent[] = []
   protected mPlayer: Uint8Array = new Uint8Array()
+  protected mSquareSize = 16
 
   constructor (data: ArrayBuffer) {
     super(data)
