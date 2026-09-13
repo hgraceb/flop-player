@@ -11,7 +11,9 @@ export class RawVideo extends BaseVideo {
   protected mBoard: number[] = []
   protected mEvents: VideoEvent[] = []
   protected mPlayer: Uint8Array = new Uint8Array()
-  protected mSquareSize = 16
+
+  // Square size in pixels
+  private squareSize = 16
 
   constructor (data: ArrayBuffer) {
     super(data)
@@ -65,7 +67,8 @@ export class RawVideo extends BaseVideo {
         // 不支持作弊模式，作弊模式下有很多额外的可选项，如：Lives、Autoflag、Lawnmower、ElmarTechnique、NonoMouse、SuperClick、SuperFlag
         if (value === 'cheat') this.error('This program doesn\'t support cheat RawVF')
       } else if (option === 'squaresize') {
-        this.mSquareSize = Number(value)
+        this.squareSize = Number(value)
+        if (!Number.isInteger(this.squareSize) || this.squareSize <= 0) this.error(`Invalid square size: "${value}"`)
       } else if (option === 'board') {
         break
       }
@@ -142,12 +145,12 @@ export class RawVideo extends BaseVideo {
         this.error(`Invalid mouse event: "${lineStr}"`)
       }
       // 计算得到当前列
-      event.column = Math.floor(xx / this.mSquareSize)
+      event.column = Math.floor(xx / this.squareSize)
       // 计算得到当前行
-      event.row = Math.floor(yy / this.mSquareSize)
-      // the rest of the application assumes a square size of 16. Scale events for initial support.
-      event.x = xx * 16 / this.mSquareSize
-      event.y = yy * 16 / this.mSquareSize
+      event.row = Math.floor(yy / this.squareSize)
+      // The rest of the application assumes a square size of 16. Scale events for initial support.
+      event.x = xx * 16 / this.squareSize
+      event.y = yy * 16 / this.squareSize
       this.mEvents.push(event)
     }
   }
